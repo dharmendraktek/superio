@@ -43,8 +43,8 @@ const DashboardCandidatesHeader = () => {
                                     <Image
                                         alt="brand"
                                         src="/images/Ktek Logo_Final-10.png"
-                                        width={80}
-                                        height={5}
+                                        width={60}
+                                        height={4}
                                         priority
                                     />
                                 </Link>
