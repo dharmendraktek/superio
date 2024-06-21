@@ -37,7 +37,7 @@ const Index = () => {
           <div className="row">
             <div className="col-xl-12 col-lg-12 px-5 mt-5">
               <div className="shadow rounded-1" style={{width:'100%', height:'700px'}}>
-
+    
               </div>
             </div>
           

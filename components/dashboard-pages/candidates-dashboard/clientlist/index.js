@@ -40,7 +40,7 @@ const Index = () => {
         <div className="dashboard-outer">
           <div className="row">
           <div className="col-xl-12 col-lg-12 px-5 mt-3">
-            <div className="d-flex justify-content-end">
+            {/* <div className="d-flex justify-content-end">
                  <div>
                    <div className="position-relative">
                      <button onClick={() => setOpen(!open)} className="border px-2 rounded-1">
@@ -59,7 +59,7 @@ const Index = () => {
                       }
                    </div>
                  </div>
-            </div>
+            </div> */}
             </div>
             <div className="col-xl-12 col-lg-12 px-5">
                <ClientTable />

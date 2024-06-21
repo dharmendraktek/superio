@@ -14,10 +14,10 @@ const ClientTable = () => {
       <ClientDeleteModal />
       <ClientUpdateModal />
       <div className="d-flex justify-content-end">
-         <div>
-          <input type="text" style={{width:"45px"}} />
-          <button className="bg-primary" style={{width:"45px"}}></button>
-         </div>
+        <div>
+          <input type="text" style={{ width: "45px" }} />
+          <button className="bg-primary" style={{ width: "45px" }}></button>
+        </div>
       </div>
       <div className="table_div">
         <table className="default-table">
@@ -46,7 +46,10 @@ const ClientTable = () => {
                   <tr className="">
                     {item.select == "input" && (
                       <td className="d-flex mt-3 ">
-                        <input type="checkbox" />
+                        <input type="checkbox"  
+                          
+                          
+                        />
                         <div
                           onClick={() => {
                             if (expand) {
@@ -56,6 +59,7 @@ const ClientTable = () => {
                             }
                           }}
                           className="mx-2 px-2 text-primary fw-bold fs-6"
+                      
                         >
                           <span className="">
                             {item.client_id == expand ? "-" : "+"}
@@ -167,6 +171,11 @@ const ClientTable = () => {
               );
             })}
             {/* End tr */}
+            {clientData.length == 0 && (
+            <tr className="text-center mt-5">
+              <td colSpan={11}>No data found</td>
+            </tr>
+          )}
           </tbody>
         </table>
       </div>

@@ -46,12 +46,12 @@ const Index = () => {
           <div className="row">
             <div className="col-xl-12 col-lg-12 px-5 mt-5">
               <div className="d-flex justify-content-between">
-              <div className="d-flex border border-primary " style={{width:"300px"}}>
+              <div className="d-flex border border-primary rounded-1" style={{width:"300px"}}>
                 {tabsName.map((item, index) => {
                   return (
                     <div
-                      style={{width:"150px"}}
-                      className={`text-center cursor-pointer ${
+                      style={{width:"150px", borderLeft:'2px'}}
+                      className={`text-center cursor-pointer rounded-1 ${
                         active == item.id
                           ? "bg-primary text-white"
                           : "bg-white text-black"
@@ -64,7 +64,7 @@ const Index = () => {
                 })}
               </div>
               <div className="position-relative">
-                <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} style={{width:"350px", height:"45px"}} className="border border-primary px-4 rounded-2 h-100" placeholder="Search anything..." />
+                <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} style={{width:"350px", height:"45px"}} className="border border-primary px-4 rounded-1 h-100" placeholder="Search anything..." />
                 <span className="position-absolute fs-4 text-primary" style={{left:"2px"}}>{reactIcons.search}</span>
                 {search &&
                 <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>

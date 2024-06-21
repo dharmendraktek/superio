@@ -23,7 +23,7 @@ const UserTable = ({ active, search, setSearch }) => {
       }`
     );
     setLoading(false);
-    setUserData(response.data ? response.data : []);
+    setUserData(response.data ? response.data.results : []);
   };
   useEffect(() => {
     getUserList(search);
