@@ -43,7 +43,7 @@ const initialStateContact = {
   email: "",
   ownership: "",
   status: "",
-  is_active: 1,
+  is_active: "",
 };
 
 const ClientTable = () => {
@@ -86,7 +86,7 @@ const ClientTable = () => {
 
   useEffect(() => {
     getClientNameList();
-    if (contactDetails) {
+    if (client) {
       setContactData((...prev) => ({
         ...prev,
         name: contactDetails.name,
@@ -101,7 +101,7 @@ const ClientTable = () => {
         is_active: 1,
       }));
     }
-  }, [contactDetails]);
+  }, []);
 
   const getClientList = async (search) => {
     const response = await axios.get(
@@ -119,7 +119,6 @@ const ClientTable = () => {
     const response = await axios.get(BASE_URL + "/operations-users/");
     setOwnerList(response.data);
   };
-
   useEffect(() => {
     getOwnerList();
   }, []);
@@ -190,16 +189,20 @@ const ClientTable = () => {
     }
   };
 
-  const getClientNameList = async () => {
-    const response = await axios.get(BASE_URL + "/clients-dropdown/");
+  const getClientNameList = async (search) => {
+    const response = await axios.get(
+      BASE_URL +
+        `/clients-list/?active=${active == 1 ? true : false}${
+          search ? `&search=${search}` : ""
+        }`
+    );
     if (response.status) {
-      setClientNameList(response.data);
+      setClientNameList(response.data.results);
     }
   };
 
   const handleContactChange = (e) => {
     const { name, value } = e.target;
-    console.log("-------------e ", name, value)
     setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -207,14 +210,13 @@ const ClientTable = () => {
     try {
       setContLoading(true);
       const response = await axios.post(
-        BASE_URL + "/contact-manager/",
-        contactData
+        BASE_URL + "/create-client-contact/",
+        clientData
       );
       if (response.status) {
         setContLoading(false);
         toast.success("You have been created client contact successfully!");
-        getClientList();
-        setContactData(initialStateContact)
+        // getClientList();
       }
     } catch (err) {
       setContLoading(false);
@@ -226,21 +228,19 @@ const ClientTable = () => {
     try {
       setContLoading(true);
       const response = await axios.patch(
-        BASE_URL + `/contact-manager/${contactData.client_ref}/`,
+        BASE_URL + `/update-client-contact/${contactDetails.id}/`,
         contactData
       );
       if (response.status) {
         setContLoading(false);
         toast.success("You have been updated client contact successfylly!");
-        getClientList();
+        // getClientList();
       }
     } catch (err) {
       setLoading(false);
       toast.error(err.response || "Something went wrong!");
     }
   };
-
-  console.log("------------contact data ata ", contactData )
 
   return (
     <>
@@ -324,10 +324,7 @@ const ClientTable = () => {
                   data-bs-target="#offcanvasRight"
                   aria-controls="offcanvasRight"
                   className="cursor-pointer text-black hover-bg-gray px-2"
-                  onClick={() =>{
-                    setOpen(!open)
-                    setClient(initialState)
-                    }}
+                  onClick={() => setClient(initialState)}
                 >
                   Client
                 </li>
@@ -336,7 +333,6 @@ const ClientTable = () => {
                   data-bs-target="#offcanvasLeft"
                   aria-controls="offcanvasLeft"
                   className="cursor-pointer  text-black hover-bg-gray px-2"
-                  onClick={() => setOpen(!open)}
                 >
                   Contact
                 </li>
@@ -362,10 +358,6 @@ const ClientTable = () => {
               className="btn-close text-reset"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
-              onClick={() =>{
-                setContactDetails('')
-                setContactData(initialStateContact)
-                }}
             >
               {/* Cancel */}
             </button>
@@ -373,15 +365,7 @@ const ClientTable = () => {
         </div>
         <div className="offcanvas-body">
           <div className="d-flex justify-content-end">
-            <button
-              className="theme-btn btn-style-two small"
-              onClick={() => {
-                setContactData(initialStateContact);
-                setContactDetails("");
-              }}
-            >
-              New
-            </button>
+            <button className="theme-btn btn-style-two small">New</button>
             <button
               className="theme-btn btn-style-one mx-2 small"
               onClick={() => {
@@ -408,13 +392,12 @@ const ClientTable = () => {
                 className="client-form-input"
                 name="client_ref"
                 onChange={handleContactChange}
-                disabled={contactDetails}
               >
                 <option>Select</option>
                 {clientNameList.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>
-                      {item.client_name}
+                      {/* {item.user.username} */}
                     </option>
                   );
                 })}
@@ -446,12 +429,12 @@ const ClientTable = () => {
                 value={contactData.ownership}
                 className="client-form-input"
                 name="ownership "
-                onChange={(e) => setContactData((prev) => ({...prev, ownership:e.target.value}))}
+                onChange={handleContactChange}
               >
                 <option>Select</option>
                 {ownerList.map((item, index) => {
                   return (
-                    <option key={index} selected value={item.user.id}>
+                    <option key={index} value={item.id}>
                       {item.user.username}
                     </option>
                   );
@@ -520,7 +503,6 @@ const ClientTable = () => {
             className="btn-close text-reset"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
-            onClick={() => setForm(initialState)}
           ></button>
         </div>
         <div className="offcanvas-body">
@@ -528,8 +510,8 @@ const ClientTable = () => {
             <button
               className="theme-btn btn-style-one mx-2 small"
               onClick={() => {
-                setClientData(initialState);
-                setClient("");
+                setClientData(initialStateContact);
+                setContactDetails("");
               }}
             >
               New
@@ -721,45 +703,41 @@ const ClientTable = () => {
                     {
                       <td className="d-flex mt-3 ">
                         <input type="checkbox" />
-                        {item.contact_manager.length > 0 && (
-                          <>
-                            <div
-                              onClick={() => {
-                                if (expand == item.id) {
-                                  setExpand(null);
-                                  setClientData((prev) => {
-                                    const update = [...prev];
-                                    update[index]["open"] = false;
-                                    return update;
-                                  });
-                                } else {
-                                  setExpand(item.id);
-                                  setClientData((prev) => {
-                                    const update = [...prev];
-                                    update[index]["open"] = true;
-                                    return update;
-                                  });
-                                }
-                              }}
-                              className="mx-2 px-2 text-primary cursor-pointer fw-bold fs-6"
-                            >
-                              <span className="cursor-pointer">
-                                {item.id == expand ? "-" : "+"}
-                              </span>
-                            </div>
-                            <div
-                              className="bg-primary text-white mt-1 px-2 ml-2"
-                              style={{
-                                width: "24px",
-                                height: "24px",
-                                fontSize: "12px",
-                                borderRadius: "3px",
-                              }}
-                            >
-                              {item.contact_manager.length}
-                            </div>
-                          </>
-                        )}
+                        <div
+                          onClick={() => {
+                            if (expand) {
+                              setExpand(null);
+                              setClientData((prev) => {
+                                const update = [...prev];
+                                update[index]["open"] = false;
+                                return update;
+                              });
+                            } else {
+                              setExpand(item.id);
+                              setClientData((prev) => {
+                                const update = [...prev];
+                                update[index]["open"] = true;
+                                return update;
+                              });
+                            }
+                          }}
+                          className="mx-2 px-2 text-primary fw-bold fs-6"
+                        >
+                          <span className="cursor-pointer">
+                            {item.id == expand ? "-" : "+"}
+                          </span>
+                        </div>
+                        <div
+                          className="bg-primary text-white mt-1 px-2 ml-2"
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            fontSize: "12px",
+                            borderRadius: "3px",
+                          }}
+                        >
+                          3
+                        </div>
                       </td>
                     }
                     <td>{item.id}</td>
@@ -780,7 +758,7 @@ const ClientTable = () => {
                     {/* <td className="total-jobs">{item.industry}</td> */}
                     <td className="used">{item.status}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td className="status">{item.owner_name}</td>
+                    <td className="status">{item.client_owner}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>
@@ -857,13 +835,13 @@ const ClientTable = () => {
                               <th>Office number</th>
                               <th>Designation</th>
                               <th>Mobile Number</th>
-                              {/* <th>Location</th> */}
+                              <th>Location</th>
                               <th>OwnerShip</th>
                               <th>Status</th>
-                              {/* <th>Created By</th> */}
+                              <th>Created By</th>
                             </thead>
                             <tbody>
-                              {/* <tr>
+                              <tr>
                                 <td
                                   className="cursor-pointer"
                                   data-bs-toggle="offcanvas"
@@ -881,30 +859,29 @@ const ClientTable = () => {
                                 <td>Dharmendra patel</td>
                                 <td>-</td>
                                 <td>-</td>
-                              </tr> */}
-                              {item.contact_manager.map((contact, _index) => {
-                                return (
-                                  <tr key={_index}>
-                                    <td
-                                      onClick={() => setContactDetails(contact)}
-                                      data-bs-toggle="offcanvas"
-                                      data-bs-target="#offcanvasLeft"
-                                      aria-controls="offcanvasLeft"
-                                      className="cursor-pointer fw-bold"
-                                    >
-                                      {contact.name}
-                                    </td>
-                                    <td>{contact.email}</td>
-                                    <td>{contact.off_cont}</td>
-                                    <td>{contact.designation}</td>
-                                    <td>{contact.contact}</td>
-                                    {/* <td>Alaska</td> */}
-                                    <td>{contact.ownership}</td>
-                                    <td>{contact.status}</td>
-                                    {/* <td>{contact.createdBy}</td> */}
-                                  </tr>
-                                );
-                              })}
+                              </tr>
+                              {/* {item.contactDetails.map((contact, _index) => {
+                                return(
+                              <tr key={_index}>
+                                <td 
+                                                                   onClick={() => setContactDetails(contact)}
+
+                                    data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasLeft"
+                  aria-controls="offcanvasLeft"
+                                >{contact.name}</td>
+                                <td>{contact.email}</td>
+                                <td>{contact.off_cont}</td>
+                                <td>{contact.designation}</td>
+                                <td>{contact.contact}</td>
+                                <td>Alaska</td>
+                                <td>{contact.ownership}</td>
+                                <td>-</td>
+                                <td>-</td>
+                              </tr>
+                                )
+                              })
+                              } */}
                             </tbody>
                           </table>
                         </div>

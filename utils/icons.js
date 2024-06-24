@@ -24,4 +24,5 @@ export const reactIcons = {
     list:<MdPlaylistAddCircle />,
     upload:<FaCloudUploadAlt/>,
     downarrow:<IoIosArrowDown />
+    
 }

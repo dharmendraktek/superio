@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import AddJob from "@/components/dashboard-pages/candidates-dashboard/addjob";
+import AddClient from "@/components/dashboard-pages/candidates-dashboard/addclient";
 
 
 export const metadata = {
@@ -10,7 +10,7 @@ export const metadata = {
 const index = () => {
   return (
     <>
-     <AddJob />
+     <AddClient />
     </>
   );
 };

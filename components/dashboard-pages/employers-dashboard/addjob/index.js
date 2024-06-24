@@ -1,3 +1,4 @@
+"use client"
 import MobileMenu from "../../../header/MobileMenu";
 import LoginPopup from "../../../common/form/login/LoginPopup";
 import DashboardCandidatesSidebar from "../../../header/DashboardCandidatesSidebar";
@@ -12,8 +13,12 @@ import MenuToggler from "../../MenuToggler";
 import MyProfile from './components/components/my-profile';
 import Link from "next/link";
 import { reactIcons } from "@/utils/icons";
+import ManualCreation from "./components/ManualCreation";
+import JobParse from "./components/JobParse";
+import { useState } from "react";
 
 const Index = () => {
+  const [tab, setTab] = useState(null);
   return (
     <div className="page-wrapper">
       <span className="header-span"></span>
@@ -35,12 +40,13 @@ const Index = () => {
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="row">
+            {tab == null &&
             <div className="col-xl-12 col-lg-12 px-5 mt-5">
                <div className="d-flex justify-content-center">
                     <div className="mt-5 text-center" >
                          <h2>New Job Posting</h2>
                          <div className="d-flex">
-                         <div className="my-3 me-3 cursor-pointer" style={{width:'160px'}}>
+                         <div onClick={() => setTab('Manual Creation')} className="my-3 me-3 cursor-pointer" style={{width:'160px'}}>
                             <div className="text-center rounded-1 py-3" style={{background:"#1fa0e4"}}>
                                  <span className="text-white fs-2">{reactIcons.list}</span>
                                  <p className="text-white fs-5">
@@ -48,7 +54,7 @@ const Index = () => {
                                  </p>
                             </div>
                          </div>
-                         <div className="my-3 me-3 cursor-pointer" style={{width:'160px'}} >
+                         <div onClick={() => setTab('Parse Job Details')} className="my-3 me-3 cursor-pointer" style={{width:'160px'}} >
                             <div className=" text-center rounded-1 py-3" style={{background:"#ea88b9"}}>
                                  <span className="text-white fs-2">{reactIcons.upload}</span>
                                  <p className="text-white fs-5">
@@ -60,7 +66,15 @@ const Index = () => {
                     </div>
                </div>
             </div>
-          
+            }
+            <div>
+              {tab == 'Manual Creation' &&
+              <ManualCreation tab={tab} setTab={setTab} />
+              }
+              {tab == 'Parse Job Details' &&
+              <JobParse tab={tab} setTab={setTab} />
+              }
+            </div>
           </div>
           {/* End .row profile and notificatins */}
         </div>

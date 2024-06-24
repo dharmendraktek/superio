@@ -277,7 +277,7 @@ const HeaderNavContent = () => {
             //   isActiveParent(homeItems, usePathname()) ? "current" : ""
             // } dropdown`}
           >
-            <Link href='/candidates-dashboard/dashboard'>
+            <Link href='/employers-dashboard/dashboard'>
             <span>Dashboard</span>
             </Link>
             {/* <div className="mega-menu">
@@ -311,7 +311,7 @@ const HeaderNavContent = () => {
             //   isActiveParent(homeItems, usePathname()) ? "current" : ""
             // } dropdown`}
           >
-            <Link href='/candidates-dashboard/user-list'>
+            <Link href='/employers-dashboard/user-list'>
             <span>User</span>
             </Link>
             {/* <div className="mega-menu">
@@ -346,7 +346,7 @@ const HeaderNavContent = () => {
             } dropdown has-mega-menu`}
             id="has-mega-menu"
           >
-              <Link href='/candidates-dashboard/client-list'>
+              <Link href='/employers-dashboard/client-list'>
             <span>Client</span>
             </Link>
           </li>
@@ -356,7 +356,7 @@ const HeaderNavContent = () => {
             } dropdown has-mega-menu`}
             id="has-mega-menu"
           >
-              <Link href='/candidates-dashboard/job-posts'>
+              <Link href='/employers-dashboard/job-posts'>
             <span>Job Posting</span>
             </Link>
           </li>
