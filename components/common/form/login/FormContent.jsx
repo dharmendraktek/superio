@@ -35,7 +35,7 @@ const FormContent = () => {
       if (response.status) {
         toast.success("You are logged in successfully");
         setLoading(false);
-        window.location.href = "/candidates-dashboard/dashboard";
+        window.location.href = "/employers-dashboard/dashboard";
       }
     } catch (err) {
       setLoading(false);

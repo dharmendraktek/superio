@@ -8,6 +8,12 @@ import { MdPlaylistAddCircle } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
+import { MdCalendarMonth } from "react-icons/md";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { BsInfoCircleFill } from "react-icons/bs";
+
+
 
 
 
@@ -23,6 +29,9 @@ export const reactIcons = {
     close:<IoMdCloseCircleOutline />,
     list:<MdPlaylistAddCircle />,
     upload:<FaCloudUploadAlt/>,
-    downarrow:<IoIosArrowDown />
-    
+    downarrow:<IoIosArrowDown />,
+    calendar:<MdCalendarMonth />,
+    arrowleft:<MdKeyboardArrowLeft />,
+    arrowright:<MdKeyboardArrowRight />,
+    info:<BsInfoCircleFill />,
 }

@@ -5,7 +5,10 @@
 import React, { forwardRef } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import moment from 'moment';
-import { reactIcons } from '@utils/icons';
+import { reactIcons } from '@/utils/icons';
+import "react-datepicker/dist/react-datepicker.css";
+
+
 const DatePickerCustom = ({
   error,
   className,
@@ -15,7 +18,7 @@ const DatePickerCustom = ({
 }) => {
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
-      className="flex justify-between text-black  w-full pr-8"
+      className="d-flex justify-content-between text-black  w-full pe-8"
       onClick={onClick}
       ref={ref}
     >
@@ -26,8 +29,8 @@ const DatePickerCustom = ({
   return (
     <div className="">
       <div
-        className={`flex items-center px-4 border-c relative rounded-md h-[45px] date-sm w-48 ${
-          error ? ' border-red-500 ' : 'border-c'
+        className={`d-flex justify-items-center px-2 border border-secondary rounded-1 position-relative rounded-md h-[45px] date-sm w-48 ${
+          error ? ' border-red ' : 'border-c'
         } ${className}`}
       >
         <ReactDatePicker
@@ -61,22 +64,22 @@ const DatePickerCustom = ({
             prevMonthButtonDisabled,
             nextMonthButtonDisabled,
           }) => (
-            <div className="flex justify-between items-center gap-6 px-2 py-1">
+            <div className="d-flex justify-content-between justify-items-center gap-6 px-2 py-1">
               <button
-                className="flex-center w-9 h-9 bg-primary-100 rounded-full text-16 text-white"
+                className="flex-center w-9 h-9 bg-primary-100 rounded-full fs-5 text-black"
                 onClick={decreaseMonth}
                 disabled={prevMonthButtonDisabled}
               >
                 {reactIcons.arrowleft}
               </button>
               <div>
-                <h6 className="text-16 font-semibold leading-[1]">
+                <h6 className="fs-4 font-semibold leading-[1]">
                   {moment(date).format('MMMM')}
                 </h6>
               </div>
 
               <button
-                className="flex-center w-9 h-9 bg-primary-100 rounded-full text-16 text-white"
+                className="flex-center w-9 h-9 bg-primary-100 rounded-full fs-5 text-black"
                 onClick={increaseMonth}
                 disabled={nextMonthButtonDisabled}
               >
@@ -85,8 +88,8 @@ const DatePickerCustom = ({
             </div>
           )}
         />
-        <span className="ay-center z-[3] pointer-events-none text-gray-500 text-18 right-2">
-          {reactIcons.arrowdown}
+        <span className="ay-center z-[3]  pointer-events-none text-gray-500 text-18 position-absolute" style={{right:"8px"}}>
+          {reactIcons.calendar}
         </span>
       </div>
       {error && <div className="text-12 text-red-500 font-medium">{error}</div>}
