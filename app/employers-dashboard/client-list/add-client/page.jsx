@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import AddClient from "@/components/dashboard-pages/candidates-dashboard/addclient";
+import AddClient from "@/components/dashboard-pages/employers-dashboard/addclient";
 
 
 export const metadata = {

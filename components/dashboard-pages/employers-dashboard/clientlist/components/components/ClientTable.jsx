@@ -242,6 +242,8 @@ const ClientTable = () => {
     }
   };
 
+  console.log("-------client ", client)
+
   return (
     <>
       <ClientDeleteModal />

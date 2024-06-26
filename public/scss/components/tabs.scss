@@ -96,11 +96,12 @@ Default Tabs
 }
 
 .client-form-input{
-  border: 1px solid gray;
+  border: 1px solid rgb(8, 8, 8);
   border-radius: 3px;
   width: 100%;
   padding: 0px 5px;
-  height: 30px;
+  height: 36px;
+  color: rgb(39, 39, 39);
 }
 
 .form-mult-box {
@@ -108,4 +109,28 @@ Default Tabs
   border: 1px solid gray;
   border-radius: 3px;
   height: 30px;
+}
+
+.manual-form {
+  position: relative; /* Set the position to relative to contain the absolutely positioned border */
+  height: 100%; /* Set the height of the div to 100% */
+  border-top: 5px solid blue;
+  border-radius: 5px;
+}
+
+// .manual-form::before {
+//   content: ''; /* Add content to the pseudo-element */
+//   position: absolute; /* Set the position to absolute to position the border */
+//   top: 0; /* Position the border at the top of the div */
+//   left: 0; /* Position the border at the left of the div */
+//   width: 2px; /* Set the width of the border to 100px */
+//   height: 60px; /* Set the height of the border to 100% */
+//   background-color: blue; /* Set the color of the border */
+// }
+
+.manual-form p {
+ font-size: 16px;
+ font-weight: 600;
+ color: black;
+ margin-bottom: 5px;
 }

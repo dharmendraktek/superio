@@ -19,6 +19,8 @@ import { useState } from "react";
 
 const Index = () => {
   const [tab, setTab] = useState(null);
+
+  console.log("------------tab ", tab);
   return (
     <div className="page-wrapper">
       <span className="header-span"></span>
@@ -46,7 +48,7 @@ const Index = () => {
                     <div className="mt-5 text-center" >
                          <h2>New Job Posting</h2>
                          <div className="d-flex">
-                         <div onClick={() => setTab('Manual Creation')} className="my-3 me-3 cursor-pointer" style={{width:'160px'}}>
+                         <div onClick={() => setTab(1)} className="my-3 me-3 cursor-pointer" style={{width:'160px'}}>
                             <div className="text-center rounded-1 py-3" style={{background:"#1fa0e4"}}>
                                  <span className="text-white fs-2">{reactIcons.list}</span>
                                  <p className="text-white fs-5">
@@ -54,7 +56,7 @@ const Index = () => {
                                  </p>
                             </div>
                          </div>
-                         <div onClick={() => setTab('Parse Job Details')} className="my-3 me-3 cursor-pointer" style={{width:'160px'}} >
+                         <div onClick={() => setTab(2)} className="my-3 me-3 cursor-pointer" style={{width:'160px'}} >
                             <div className=" text-center rounded-1 py-3" style={{background:"#ea88b9"}}>
                                  <span className="text-white fs-2">{reactIcons.upload}</span>
                                  <p className="text-white fs-5">
@@ -68,24 +70,21 @@ const Index = () => {
             </div>
             }
             <div>
-              {tab == 'Manual Creation' &&
-              <ManualCreation tab={tab} setTab={setTab} />
-              }
-              {tab == 'Parse Job Details' &&
+               {tab == 1 && 
+               <ManualCreation tab={tab} setTab={setTab} />
+               }
+              {tab == 2 &&
               <JobParse tab={tab} setTab={setTab} />
               }
             </div>
           </div>
-          {/* End .row profile and notificatins */}
         </div>
-        {/* End dashboard-outer */}
       </section>
       {/* <!-- End Dashboard --> */}
 
       {/* <CopyrightFooter /> */}
-      {/* <!-- End Copyright --> */}
+   
     </div>
-    // End page-wrapper
   );
 };
 

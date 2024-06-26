@@ -1,18 +1,29 @@
 "use client";
-// import UserUpdateModal from "./UserUpdateModal";
-// import UserDeleteModal from "./components/UserDeleteModal";
-
-import { useState } from "react";
-import ClientUpdateModal from "../ClientUpdateModal";
-import ClientDeleteModal from "./ClientDeleteModal";
+import { useEffect, useState } from "react";
 import { clientData,  jobPostsTableField } from "./constant";
+import axios from "axios";
+import { BASE_URL } from "@/utils/endpoints";
 
 const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
+  const [jobPostList, setJobPostList] = useState();
+
+  useEffect(() => {
+     getJobpostsList();
+  }, [])
+
+
+  const getJobpostsList = async() => {
+    console.log("--------------job post list ")
+   const response = await axios.get(BASE_URL+'/jobs/');
+   console.log("---------------resposne ", response);
+   if(response.status){
+     setJobPostList(response.data);
+   }
+  }
+
   return (
     <>
-      <ClientDeleteModal />
-      <ClientUpdateModal />
       <div className="d-flex justify-content-end">
          <div>
           <input type="text" style={{width:"45px"}} />
@@ -24,7 +35,6 @@ const JobPostsTable = () => {
           <thead className="">
             <tr>
               {jobPostsTableField.map((item, index) => {
-                console.log("--------item ", item);
                 return (
                   <>
                     {item.title == "input" ? (
@@ -48,7 +58,7 @@ const JobPostsTable = () => {
                     {item.select == "input" && (
                       <td className="d-flex mt-3 ">
                         <input type="checkbox" />
-                        <div
+                        {/* <div
                           onClick={() => {
                             if (expand) {
                               setExpand(null);
@@ -61,7 +71,7 @@ const JobPostsTable = () => {
                           <span className="">
                             {item.client_id == expand ? "-" : "+"}
                           </span>
-                        </div>
+                        </div> */}
                         <div
                           className="bg-primary text-white mt-1 px-2 ml-2"
                           style={{
@@ -130,7 +140,7 @@ const JobPostsTable = () => {
                       </div>
                     </td>
                   </tr>
-                  {item.client_id == expand && (
+                  {/* {item.client_id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={15}>
                         <div className="mx-5" style={{ width: "500px" }}>
@@ -148,7 +158,7 @@ const JobPostsTable = () => {
                             </thead>
                             <tbody>
                               <tr>
-                                <td>Fleck</td>
+                                <td>Fleck po</td>
                                 <td>fleckjoy@gmail.com</td>
                                 <td>-</td>
                                 <td>-</td>
@@ -163,7 +173,7 @@ const JobPostsTable = () => {
                         </div>
                       </td>
                     </tr>
-                  )}
+                  )} */}
                 </>
               );
             })}

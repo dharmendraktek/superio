@@ -1,18 +1,12 @@
 "use client";
-// import UserUpdateModal from "./UserUpdateModal";
-// import UserDeleteModal from "./components/UserDeleteModal";
 
 import { useState } from "react";
-import ClientUpdateModal from "../ClientUpdateModal";
-import ClientDeleteModal from "./ClientDeleteModal";
 import { clientData, clientTableField } from "./constant";
 
 const ClientTable = () => {
   const [expand, setExpand] = useState(null);
   return (
     <>
-      <ClientDeleteModal />
-      <ClientUpdateModal />
       <div className="d-flex justify-content-end">
         <div>
           <input type="text" style={{ width: "45px" }} />

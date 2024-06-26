@@ -3,8 +3,7 @@
 // import UserDeleteModal from "./components/UserDeleteModal";
 
 import { useEffect, useState } from "react";
-import ClientUpdateModal from "../ClientUpdateModal";
-import ClientDeleteModal from "./ClientDeleteModal";
+
 import { clientData, clientTableField } from "./constant";
 import axios from "axios";
 import { BASE_URL } from "@/utils/endpoints";
@@ -240,12 +239,10 @@ const ClientTable = () => {
     }
   };
 
-  console.log("------------contact data ata ", contactData )
+  console.log("------------contact data ata ", client)
 
   return (
     <>
-      <ClientDeleteModal />
-      <ClientUpdateModal />
       <div className="d-flex justify-content-between">
         <div className="d-flex">
           <div
@@ -537,7 +534,7 @@ const ClientTable = () => {
             <button
               className="theme-btn btn-style-two small"
               onClick={() => {
-                if (client) {
+                if (client.client_name) {
                   handleUpdateClient(client.id);
                 } else {
                   handleCreateClient();

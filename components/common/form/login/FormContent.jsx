@@ -29,7 +29,7 @@ const FormContent = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        BASE_URL+"/api/login/",
+        BASE_URL+"/login/",
         form
       );
       if (response.status) {
