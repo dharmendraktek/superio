@@ -1,34 +1,71 @@
 "use client";
+// import UserUpdateModal from "./UserUpdateModal";
+// import UserDeleteModal from "./components/UserDeleteModal";
+
 import { useEffect, useState } from "react";
-import { clientData,  jobPostsTableField } from "./constant";
+
+import { clientData, jobPostsTableField } from "./constant";
 import axios from "axios";
+import moment from "moment";
+import Link from "next/link";
 import { BASE_URL } from "@/utils/endpoints";
+import { reactIcons } from "@/utils/icons";
 
 const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
-  const [jobPostList, setJobPostList] = useState();
+  const [jobPostList, setJobPostList] = useState([]);
+  const [search, setSearch] = useState();
 
   useEffect(() => {
-     getJobpostsList();
-  }, [])
+    getJobpostsList();
+  }, []);
 
+  const getJobpostsList = async () => {
+    const response = await axios.get(BASE_URL + `/jobs/${search ?`?search=${search}` :''}`);
+    if (response.status) {
+      setJobPostList(response.data);
+    }
+  };
 
-  const getJobpostsList = async() => {
-    console.log("--------------job post list ")
-   const response = await axios.get(BASE_URL+'/jobs/');
-   console.log("---------------resposne ", response);
-   if(response.status){
-     setJobPostList(response.data);
-   }
-  }
+  useEffect(() => {
+     if(search){
+      getJobpostsList(search)
+     }
+  }, [search])
 
   return (
     <>
-      <div className="d-flex justify-content-end">
-         <div>
-          <input type="text" style={{width:"45px"}} />
-          <button className="bg-primary" style={{width:"45px"}}></button>
-         </div>
+      <div className="d-flex justify-content-between my-2">
+        <div className="position-relative">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: "350px" }}
+            className="border border-primary px-4 rounded-1"
+            placeholder="Search anything..."
+          />
+          <span
+            className="position-absolute fs-4 text-primary"
+            style={{ left: "2px" }}
+          >
+            {reactIcons.search}
+          </span>
+          {search && (
+            <span
+              onClick={() => setSearch("")}
+              className="position-absolute cursor-pointer	  text-primary fs-5"
+              style={{ right: "8px" }}
+            >
+              {reactIcons.close}
+            </span>
+          )}
+        </div>
+        <Link href="/employers-dashboard/job-posts/add-job-posts">
+          <button className="bg-primary px-3 text-white rounded-1 py-1">
+            + New
+          </button>
+        </Link>
       </div>
       <div className="table_div">
         <table className="default-table">
@@ -42,20 +79,19 @@ const JobPostsTable = () => {
                         <input type="checkbox" />
                       </th>
                     ) : (
-                      <th key={index}>{item.title}</th>
+                      <th key={index} style={{width:'100px'}}>{item.title}</th>
                     )}
                   </>
                 );
               })}
             </tr>
           </thead>
-
           <tbody>
-            {clientData.map((item, index) => {
+            {jobPostList.map((item, index) => {
               return (
                 <>
-                  <tr className="">
-                    {item.select == "input" && (
+                  <tr key={index} className="">
+                    {true && (
                       <td className="d-flex mt-3 ">
                         <input type="checkbox" />
                         {/* <div
@@ -72,7 +108,7 @@ const JobPostsTable = () => {
                             {item.client_id == expand ? "-" : "+"}
                           </span>
                         </div> */}
-                        <div
+                        {/* <div
                           className="bg-primary text-white mt-1 px-2 ml-2"
                           style={{
                             width: "24px",
@@ -82,31 +118,41 @@ const JobPostsTable = () => {
                           }}
                         >
                           3
-                        </div>
+                        </div> */}
                       </td>
                     )}
-                    <td>{item.client_id}</td>
+                    <td style={{width:'100px'}}>
+                      <Link href='/employers-dashboard/job-posts/[id]'  as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}  >
+                      {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
+                      {item.job_code}
+                      </Link>
+                    </td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td className="package">
-                      {item.client_name}
+                      {item.title}
                       {/* <a href="#">Super CV Pack</a> */}
                     </td>
-                    <td className="expiry">{item.Contact_number}</td>
-                    <td>{item.website}</td>
-                    <td className="total-jobs">{item.industry}</td>
-                    <td className="used">{item.status}</td>
-                    <td className="remaining">{item.category}</td>
-                    <td className="status">{item.primary_owner}</td>
-                    <td className="status">{item.business_unit}</td>
-                    <td className="expiry">{item.job_posting}</td>
+                    <td className="expiry">{"-"}</td>
+                    <td>{item.city}</td>
+                    <td className="total-jobs">{item.state}</td>
+                    <td className="used">{item.job_status}</td>
+                    <td className="remaining">
+                      {item.currency}/{item.amount}/{item.payment_frequency}
+                    </td>
+                    <td className="status">{"-"}</td>
+                    <td className="status">{item.contact_manager_name}</td>
+                    <td className="expiry">{item.assign_name}</td>
                     <td className="" style={{ width: "200px" }}>
-                      {item.created_by}
+                      {"-"}
                     </td>
                     <td className="" style={{ width: "200px" }}>
-                      {item.created_on}
+                      {moment(item.created_at).format("dd-mm-yyyy hh:mm A")}
                     </td>
                     <td className="" style={{ width: "200px" }}>
-                      {item.modified_on}
+                      {moment(item.updated_at).format("dd-mm-yyyy hh:mm A")}
+                    </td>
+                    <td className="" style={{ width: "200px" }}>
+                      {"-"}
                     </td>
                     <td>
                       <div className="option-box">
@@ -158,7 +204,7 @@ const JobPostsTable = () => {
                             </thead>
                             <tbody>
                               <tr>
-                                <td>Fleck po</td>
+                                <td>Fleck</td>
                                 <td>fleckjoy@gmail.com</td>
                                 <td>-</td>
                                 <td>-</td>

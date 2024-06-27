@@ -1,10 +1,10 @@
 
 export const jobPostsTableField = [
   
-  {title:'Prioriy'},
+  {title:'Priority'},
   {title:'Job Code'},
   {title:'Job Title'},
-  {title:'Business Unit'},
+  // {title:'Business Unit'},
   {title:'Client'},
   // {title:'Client Job ID'},
   {title:'Location'},
@@ -13,7 +13,7 @@ export const jobPostsTableField = [
   {title:'Client Bill Rate/Salery'},
   // {title:'Pay Rate/Salery'},
   {title:'Delivery Manager'},
-  {title:'Primary Recruiter'},
+  {title:'Contact Manager'},
   {title:'Assigned To'},
   {title:'Job Created By'},
   {title:'Job Created'},

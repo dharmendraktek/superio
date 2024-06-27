@@ -106,9 +106,11 @@ Default Tabs
 
 .form-mult-box {
   width: 140px;
-  border: 1px solid gray;
+  border: 1px solid rgb(8, 8, 8);
   border-radius: 3px;
-  height: 30px;
+  height: 36px;
+  color: rgb(39, 39, 39);
+
 }
 
 .manual-form {
@@ -130,7 +132,7 @@ Default Tabs
 
 .manual-form p {
  font-size: 16px;
- font-weight: 600;
+ font-weight: 500;
  color: black;
  margin-bottom: 5px;
 }

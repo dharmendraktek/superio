@@ -29,9 +29,10 @@ const DatePickerCustom = ({
   return (
     <div className="">
       <div
-        className={`d-flex justify-items-center px-2 border border-secondary rounded-1 position-relative rounded-md h-[45px] date-sm w-48 ${
+        className={`d-flex justify-items-center px-2 border border-black  rounded-1 position-relative rounded-md h-[45px] date-sm w-48 ${
           error ? ' border-red ' : 'border-c'
         } ${className}`}
+        style={{height:'36px', border:'1px solid rgb(8, 8, 8)'}}
       >
         <ReactDatePicker
           onChange={(date) => {

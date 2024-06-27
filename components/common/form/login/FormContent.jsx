@@ -13,6 +13,10 @@ const FormContent = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState({
+    emailErr:'',
+    passErr:''
+  });
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -23,7 +27,11 @@ const FormContent = () => {
   };
 
   const handleLogin = async () => {
-    if (!form.email && !form.password) {
+    if (!form.email ) {
+      setError((prev) => ({...prev, emailErr:"This field is required."}))
+      return;
+    }else if(!form.password){
+      setError((prev) => ({...prev, passErr:"This field is required."}))
       return;
     }
     try {
@@ -58,8 +66,15 @@ const FormContent = () => {
           name="email"
           onChange={handleChange}
           placeholder="Email"
+          onKeyDown={(e) => {
+            setError((prev) => ({...prev, emailErr:""}))
+            if (e.code == "Enter") {
+              handleLogin();
+            }
+          }}
           required
         />
+        <span className="text-danger">{error.emailErr}</span>
       </div>
       {/* name */}
 
@@ -71,12 +86,14 @@ const FormContent = () => {
           onChange={handleChange}
           placeholder="Password"
           onKeyDown={(e) => {
+            setError((prev) => ({...prev, passErr:""}))
             if (e.code == "Enter") {
-              handleLogin;
+              handleLogin();
             }
           }}
           required
         />
+        <span className="text-danger">{error.passErr}</span>
       </div>
       {/* password */}
 
@@ -127,11 +144,11 @@ const FormContent = () => {
           </Link>
         </div>
 
-        <div className="divider">
+        {/* <div className="divider">
           <span>or</span>
-        </div>
+        </div> */}
 
-        <LoginWithSocial />
+        {/* <LoginWithSocial /> */}
       </div>
       {/* End bottom-box LoginWithSocial */}
     </div>

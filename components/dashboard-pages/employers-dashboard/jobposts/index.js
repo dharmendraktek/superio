@@ -35,14 +35,7 @@ const Index = () => {
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="row">
-          <div className="col-xl-12 col-lg-12 px-5 mt-5">
-              <div className="d-flex justify-content-end">
-                  <Link href='/employers-dashboard/job-posts/add-job-posts'>
-                  <button className="bg-primary px-3 text-white rounded-1 py-1">+ New</button>
-                  </Link>
-              </div>
-           </div>
-            <div className="col-xl-12 col-lg-12 px-5 ">
+            <div className="col-xl-12 col-lg-12 px-5">
                <JobPostsTable />
             </div>
           

@@ -21,7 +21,6 @@ const LoginPopup = () => {
               <div id="login-modal">
                 {/* <!-- Login Form --> */}
                 <div className="login-form default-form">
-                  <button>login</button>
                   <FormContent />
                 </div>
                 {/* <!--End Login Form --> */}

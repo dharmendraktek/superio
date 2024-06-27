@@ -45,9 +45,9 @@ const ShopHeader = () => {
             <div className="logo">
               <Link href="/">
                 <Image
-                  width={154}
-                  height={50}
-                  src="/images/logo.svg"
+                  width={60}
+                  height={4}
+                  src="/images/Ktek Logo_Final-10.png"
                   alt="brand"
                 />
               </Link>

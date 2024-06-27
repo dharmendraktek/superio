@@ -12,6 +12,8 @@ import { MdCalendarMonth } from "react-icons/md";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { BsInfoCircleFill } from "react-icons/bs";
+import { IoIosArrowRoundBack } from "react-icons/io";
+
 
 
 
@@ -34,4 +36,5 @@ export const reactIcons = {
     arrowleft:<MdKeyboardArrowLeft />,
     arrowright:<MdKeyboardArrowRight />,
     info:<BsInfoCircleFill />,
+    backarrow:<IoIosArrowRoundBack />
 }

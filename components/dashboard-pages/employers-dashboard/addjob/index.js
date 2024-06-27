@@ -20,7 +20,6 @@ import { useState } from "react";
 const Index = () => {
   const [tab, setTab] = useState(null);
 
-  console.log("------------tab ", tab);
   return (
     <div className="page-wrapper">
       <span className="header-span"></span>

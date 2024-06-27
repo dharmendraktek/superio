@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { jobTypes, langList, priorityTypes } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
-import HtmlEditor from "@/components/common/Editor";
+import HtmlEditor from "@/components/common/HtmlEditor";
 
 const initialState = {
   job_code: "",
@@ -41,10 +41,12 @@ const initialState = {
   description: "",
   post_on_portal: "",
   is_active: 1,
+  priority:'',
   post_on_portal: true,
+  post_date_on_portal: "",
 };
 
-const ManualCreation = ({ setTab }) => {
+const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
   const [clientNameList, setClientNameList] = useState([]);
@@ -59,11 +61,56 @@ const ManualCreation = ({ setTab }) => {
   const [skills, setSkills] = useState("");
   const [secondarySkills, setSecondarySkills] = useState();
   const [openLang, setOpenLang] = useState(false);
+  const [descriptionData, setDescriptionData] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    if (jobData) {
+      setForm((prev) => ({
+        ...prev,
+        job_code: jobData.job_code,
+        title: jobData.title,
+        currency: jobData.currency,
+        amount: jobData.amount,
+        payment_frequency: jobData.payment_frequency,
+        job_type: jobData.job_type,
+        start_date: jobData.start_date,
+        end_date: jobData.end_date,
+        remote: jobData.remote,
+        lob: jobData.lob,
+        address: jobData.address,
+        country: jobData.country,
+        state:jobData.state,
+        city: jobData.city,
+        job_status:jobData.job_status,
+        client:jobData.client,
+        contact_manager:jobData.contact_manager,
+        interview_mode: jobData.interview_mode,
+        application_form: jobData.application_form,
+        primary_skills: jobData.primary_skills ? jobData.primary_skills : [],
+        secondary_skills: jobData.secondary_skills ? jobData.secondary_skills : [],
+        languages: jobData.languages,
+        experience: jobData.experience,
+        number_of_position: jobData.number_of_position,
+        job_head_account_manager: jobData.job_head_account_manager,
+        job_account_manager:jobData.job_account_manager,
+        job_delivery_manager:jobData.job_delivery_manager,
+        assign:jobData.assign,
+        tax_term: "",
+        department:jobData.department,
+        // description: jobData.description,
+        description: '<p>Job Description</p>',
+        is_active: 1,
+        post_on_portal: true,
+        post_date_on_portal: "",
+        priority:jobData.priority,
+      }));
+    }
+  }, [jobData]);
 
   useEffect(() => {
     if (form.country) {
@@ -88,21 +135,20 @@ const ManualCreation = ({ setTab }) => {
 
   const handleGetDepartment = async () => {
     const response = await axios.get(BASE_URL + "/department-list/");
-    console.log("----resoibse departmendt lis t", response);
     setDepartmentList(response.data);
   };
 
   const handleGetJobCode = async () => {
-    const response = await axios.get(BASE_URL + "/next-job-code/");
-    // console.log("------------resposen job code ", response);
-    if (response.status) {
-      setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
+    if(!jobData){
+      const response = await axios.get(BASE_URL + "/next-job-code/");
+      if (response.status) {
+        setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
+      }
     }
   };
 
   const handleGetLobs = async () => {
     const response = await axios.get(BASE_URL + "/lob/");
-    console.log("-------lbo ", response);
     if (response.status) {
       setLobList(response.data);
     }
@@ -127,8 +173,8 @@ const ManualCreation = ({ setTab }) => {
   const handleGetUsersList = async () => {
     const response = await axios.get(BASE_URL + "/users/");
     if (response.status) {
-      console.log("--------respone ", response.data);
       setUsersList(response.data);
+      
     }
   };
 
@@ -138,9 +184,9 @@ const ManualCreation = ({ setTab }) => {
       const response = await axios.post(BASE_URL + "/jobs/", form);
       if (response.status) {
         toast.success("Job post created successfully !");
+        setForm(initialState);
       }
     } catch (err) {
-      console.log("--------eror ", err);
       toast.error(err.response || "Something went wrong");
     }
   };
@@ -168,8 +214,13 @@ const ManualCreation = ({ setTab }) => {
     }));
   };
 
-  console.log("-------lang list ", langList);
-  console.log("-------form lang ", form.languages);
+  // useEffect(() => {
+  //   if (descriptionData) {
+  //     setForm((prev) => ({ ...prev, description: descriptionData }));
+  //   }
+  // }, [descriptionData]);
+
+  console.log("---------------form ", form);
 
   return (
     <div className="p-5">
@@ -183,7 +234,13 @@ const ManualCreation = ({ setTab }) => {
             Save
           </button>
           <button
-            onClick={() => setTab(null)}
+            onClick={() => {
+              if (tab) {
+                setTab(null);
+              } else {
+                setOpen(true);
+              }
+            }}
             className="theme-btn btn-style-three small"
           >
             Cancel
@@ -221,24 +278,29 @@ const ManualCreation = ({ setTab }) => {
             <div className="d-flex gap-3">
               <select
                 name="currency"
+                value={form.currency}
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
+                <option>Select</option>
                 <option>USD</option>
                 <option>INR</option>
               </select>
               <input
                 name="amount"
                 type="text"
+                value={form.amount}
                 placeholder="Rate"
                 onChange={handleChange}
                 className="px-2 client-input-style form-mult-box form-mult-box"
               />
               <select
+                value={form.payment_frequency}
                 name="payment_frequency"
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
+                <option>Select</option>
                 <option>Hourly</option>
                 <option>Monthly</option>
                 <option>Annually</option>
@@ -253,6 +315,7 @@ const ManualCreation = ({ setTab }) => {
                 type="radio"
                 name="remote"
                 value="yes"
+                checked={form.remote == 'yes'}
               />
               <span>Yes</span> {" "}
               <input
@@ -260,6 +323,7 @@ const ManualCreation = ({ setTab }) => {
                 type="radio"
                 name="remote"
                 value="no"
+                checked={form.remote == 'no'}
               />
               <span>No</span> {" "}
               <input
@@ -267,6 +331,7 @@ const ManualCreation = ({ setTab }) => {
                 type="radio"
                 name="remote"
                 value="Hybrid"
+                checked={form.remote == 'Hybrid'}
               />
               <span>Hybrid</span>
             </div>
@@ -456,6 +521,7 @@ const ManualCreation = ({ setTab }) => {
             <textarea
               name="address"
               onChange={handleChange}
+              value={form.address}
               className="client-form-input"
               style={{ height: "65px" }}
             />
@@ -611,9 +677,8 @@ const ManualCreation = ({ setTab }) => {
                           type="checkbox"
                           checked={item.is_checked}
                           onChange={(e) => {
-                            console.log("-----e.trar ", e.target.checked)
                             if (e.target.checked) {
-                              langList[index]['is_checked'] = e.target.checked;
+                              langList[index]["is_checked"] = e.target.checked;
                               setForm((prev) => ({
                                 ...prev,
                                 languages: [
@@ -622,7 +687,6 @@ const ManualCreation = ({ setTab }) => {
                                 ],
                               }));
                             } else {
-                              
                               langList[index]["is_checked"] = e.target.checked;
                               setForm((prev) => ({
                                 ...prev,
@@ -748,11 +812,16 @@ const ManualCreation = ({ setTab }) => {
           </div>
           <div className="col-4 my-1">
             <p>Career Portal Published Date</p>
-            <DatePickerCustom />
+            <DatePickerCustom
+              handleDate={(date) =>
+                setForm((prev) => ({ ...prev, post_date_on_portal: date }))
+              }
+              date={form.post_date_on_portal}
+            />
           </div>
-          <div className="col-12 my-1">
+          <div className="col-12 my-1" style={{ height: "300px" }}>
             <p>Job Description</p>
-            {/* <HtmlEditor /> */}
+            <HtmlEditor setDescriptionData={setDescriptionData} form={form} />
           </div>
           <div className="col-12 my-1">
             <h4>Documents</h4>

@@ -33,9 +33,9 @@ const Header = () => {
               <div className="logo">
                 <Link href="/" className="noSticky">
                   <Image
-                    width={154}
-                    height={50}
-                    src="/images/logo-2.svg"
+                    width={75}
+                    height={5}
+                    src="/images/Ktek Logo_Final-10.png"
                     alt="logo"
                     title="brand"
                   />
