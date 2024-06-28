@@ -5,18 +5,21 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
 
 
-const HtmlEditor = ({setDescriptionData, form}) => {
-  const [intState, setIntState] = useState();
+const HtmlEditor = ({setDescriptionData, form, wrapperStyle}) => {
+
+  
+    const blocksFromHTML = convertFromHTML(form.description);
+    const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+    const initialEditorState = EditorState.createWithContent(contentState);
+  const [intState, setIntState] = useState('<p>New job description of the Python developer</p>');
+  const [editorState, setEditorState] = useState(initialEditorState);
+
   useEffect(() => {
      if(form.description){
+
       setIntState(form.description);
      }
   }, [form.description])
-
-  const blocksFromHTML = convertFromHTML(form.description);
-  const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-  const initialEditorState = EditorState.createWithContent(contentState);
-  const [editorState, setEditorState] = useState(initialEditorState);
 
 
   const onEditorStateChange = (newEditorState) => {
@@ -25,8 +28,8 @@ const HtmlEditor = ({setDescriptionData, form}) => {
   
   const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
   useEffect(() => {
-    if(content !== '<p></p>'){
-      // setDescriptionData(content)
+    if(content !== '<p></p>\n'){
+      setDescriptionData(content)
     }
   }, [content])
 
@@ -34,6 +37,10 @@ const HtmlEditor = ({setDescriptionData, form}) => {
   return (
     <>
       <Editor
+        wrapperStyle ={
+         wrapperStyle
+        }
+        // initialContentState={'<p>hiii this is job description</p>'}
         editorState={editorState}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"

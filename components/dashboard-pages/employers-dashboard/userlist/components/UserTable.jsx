@@ -7,6 +7,7 @@ import axios from "axios";
 
 import { toast } from "react-toastify";
 import { BASE_URL } from "@/utils/endpoints";
+import Pagination from "@/components/common/Pagination";
 // import { SyncLoader } from "react-spinners";
 
 const UserTable = ({ active, search, setSearch }) => {
@@ -14,20 +15,24 @@ const UserTable = ({ active, search, setSearch }) => {
   const [item, setItem] = useState();
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [dataCount, setDataCount] = useState();
+  const [page, setPage] = useState(0);
 
   const getUserList = async (search) => {
     setLoading(true);
     const response = await axios.get(
-      `${BASE_URL}/usersprofile/?active=${active == 1 ? true : false}${
+      `${BASE_URL}/usersprofile/?active=${active == 1 ? true : false}&page=${page+1}${
         search ? `&search=${search}` : ""
       }`
     );
     setLoading(false);
     setUserData(response.data ? response.data.results : []);
+    console.log("-----datacoujt ", response.data)
+    setDataCount(response.data.count);
   };
   useEffect(() => {
     getUserList(search);
-  }, [active, search]);
+  }, [active, search, page]);
 
   const handleDeleteUser = async (id) => {
     const response = await axios.delete(`${BASE_URL}/usersprofile/${id}/`);
@@ -61,8 +66,9 @@ const UserTable = ({ active, search, setSearch }) => {
         loading={loading}
         size={10}
       /> */}
+      <div className="table_div">
       <table className="default-table ">
-        <thead>
+        <thead className="position-sticky">
           <tr>
             <th>Id</th>
             <th>Empcode</th>
@@ -77,20 +83,19 @@ const UserTable = ({ active, search, setSearch }) => {
             <th className="text-center">Action</th>
           </tr>
         </thead>
-
-        <tbody style={{}}>
+        <tbody>
           {userData.map((item, index) => {
             return (
               <tr key={index}>
                 <td>{item.id}</td>
                 <td className="trans-id">{item.empcode}</td>
                 <td className="package">
-                  {item.user.username}
+                  {item.user.first_name} {item.user.last_name}
                   {/* <a href="#">Super CV Pack</a> */}
                 </td>
                 <td className="expiry">{item.user.email}</td>
                 <td className="total-jobs">{item.user_skype_id}</td>
-                <td className="used">{item.role_name}</td>
+                <td className="">{item.role_name}</td>
                 <td className="remaining">{item.team}</td>
                 <td className="status">
                   {item.user_branch == 1 ? "INDIA" : "USA"}
@@ -159,6 +164,8 @@ const UserTable = ({ active, search, setSearch }) => {
           )}
         </tbody>
       </table>
+      </div>
+      <Pagination dataCount={dataCount} page={page} setPage={setPage} />
     </>
   );
 };

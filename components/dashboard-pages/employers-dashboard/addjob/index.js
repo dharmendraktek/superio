@@ -70,7 +70,7 @@ const Index = () => {
             }
             <div>
                {tab == 1 && 
-               <ManualCreation tab={tab} setTab={setTab} />
+               <ManualCreation tab={tab} setTab={setTab} name='create' />
                }
               {tab == 2 &&
               <JobParse tab={tab} setTab={setTab} />

@@ -63,6 +63,8 @@ const ClientTable = () => {
   const [contactDetails, setContactDetails] = useState();
   const [contLoading, setContLoading] = useState(false);
   const [contactSearch, setContactSearch] = useState();
+  const [page, setPage] = useState(0)
+  const [dataCount, setDataCount] = useState();
 
   useEffect(() => {
     if (client) {
@@ -105,12 +107,13 @@ const ClientTable = () => {
   const getClientList = async (search) => {
     const response = await axios.get(
       BASE_URL +
-        `/clients-list/?active=${active == 1 ? true : false}${
+        `/clients-list/?active=${active == 1 ? true : false}&page=${page+1}${
           search ? `&search=${search}` : ""
         }`
     );
     if (response.status) {
       setClientData(response.data.results);
+      setDataCount(response.data.count)
     }
   };
 
@@ -125,7 +128,7 @@ const ClientTable = () => {
 
   useEffect(() => {
     getClientList(search);
-  }, [search, active]);
+  }, [search, active, page]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -917,16 +920,17 @@ const ClientTable = () => {
             {/* End tr */}
           </tbody>
         </table>
-        <div className="d-flex  justify-content-end">
-          {/* <Pagination 
-         page={1}
-        //  setPage={}
-         dataCount={40}
-         pageSize={10}
-        //  setPageSize={setPageSize}
-        /> */}
-        </div>
+        
       </div>
+      {dataCount > 25 &&
+      <Pagination 
+         page={page}
+         setPage={setPage}
+         dataCount={dataCount}
+         pageSize={25}
+        //  setPageSize={setPageSize}
+        />
+      }
     </>
   );
 };

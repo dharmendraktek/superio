@@ -215,7 +215,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                         >
                           {teamList.map((item) => {
                             return (
-                              <option key={item.id} selected>
+                              <option key={item.id} value={item.id} selected>
                                 {item.team_name}
                               </option>
                             );

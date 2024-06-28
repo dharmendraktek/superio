@@ -15,6 +15,9 @@ const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
   const [jobPostList, setJobPostList] = useState([]);
   const [search, setSearch] = useState();
+  const [page, setPage] = useState(0);
+  const [dataCount, setDataCount] = useState(10);
+
 
   useEffect(() => {
     getJobpostsList();
@@ -24,6 +27,7 @@ const JobPostsTable = () => {
     const response = await axios.get(BASE_URL + `/jobs/${search ?`?search=${search}` :''}`);
     if (response.status) {
       setJobPostList(response.data);
+      // setDataCount(response?.data.)
     }
   };
 
@@ -227,6 +231,15 @@ const JobPostsTable = () => {
           </tbody>
         </table>
       </div>
+      {dataCount > 25 &&
+      <Pagination 
+         page={page}
+         setPage={setPage}
+         dataCount={dataCount}
+         pageSize={25}
+        //  setPageSize={setPageSize}
+        />
+      }
     </>
   );
 };

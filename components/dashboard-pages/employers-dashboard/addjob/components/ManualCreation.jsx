@@ -7,6 +7,8 @@ import { jobTypes, langList, priorityTypes } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import HtmlEditor from "@/components/common/HtmlEditor";
+import Image from "next/image";
+import { BeatLoader } from "react-spinners";
 
 const initialState = {
   job_code: "",
@@ -41,12 +43,20 @@ const initialState = {
   description: "",
   post_on_portal: "",
   is_active: 1,
-  priority:'',
+  priority: "",
   post_on_portal: true,
-  post_date_on_portal: "",
+  // post_date_on_portal: "",
 };
 
-const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
+const ManualCreation = ({
+  setTab,
+  tab,
+  setOpen,
+  open,
+  jobData,
+  handleGetJobDetails,
+  name,
+}) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
   const [clientNameList, setClientNameList] = useState([]);
@@ -68,6 +78,14 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // useEffect(() => {
+  //   if(jobData.languages){
+  //       jobData.forEach((item) => {
+
+  //       })
+  //   }
+  // }, [jobData.languages])
+
   useEffect(() => {
     if (jobData) {
       setForm((prev) => ({
@@ -84,30 +102,31 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
         lob: jobData.lob,
         address: jobData.address,
         country: jobData.country,
-        state:jobData.state,
+        state: jobData.state,
         city: jobData.city,
-        job_status:jobData.job_status,
-        client:jobData.client,
-        contact_manager:jobData.contact_manager,
+        job_status: jobData.job_status,
+        client: jobData.client,
+        contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
         primary_skills: jobData.primary_skills ? jobData.primary_skills : [],
-        secondary_skills: jobData.secondary_skills ? jobData.secondary_skills : [],
+        secondary_skills: jobData.secondary_skills
+          ? jobData.secondary_skills
+          : [],
         languages: jobData.languages,
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
         job_head_account_manager: jobData.job_head_account_manager,
-        job_account_manager:jobData.job_account_manager,
-        job_delivery_manager:jobData.job_delivery_manager,
-        assign:jobData.assign,
+        job_account_manager: jobData.job_account_manager,
+        job_delivery_manager: jobData.job_delivery_manager,
+        assign: jobData.assign,
         tax_term: "",
-        department:jobData.department,
-        // description: jobData.description,
-        description: '<p>Job Description</p>',
+        department: jobData.department,
+        description: jobData.description,
         is_active: 1,
         post_on_portal: true,
-        post_date_on_portal: "",
-        priority:jobData.priority,
+        // post_date_on_portal:form.post_date_on_portal,
+        priority: jobData.priority,
       }));
     }
   }, [jobData]);
@@ -139,7 +158,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
   };
 
   const handleGetJobCode = async () => {
-    if(!jobData){
+    if (!jobData) {
       const response = await axios.get(BASE_URL + "/next-job-code/");
       if (response.status) {
         setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
@@ -174,19 +193,28 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
     const response = await axios.get(BASE_URL + "/users/");
     if (response.status) {
       setUsersList(response.data);
-      
     }
   };
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(BASE_URL + "/jobs/", form);
+      const response = jobData
+        ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
+        : await axios.post(BASE_URL + "/jobs/", form);
       if (response.status) {
-        toast.success("Job post created successfully !");
-        setForm(initialState);
+        if (jobData) {
+          setIsLoading(false);
+          toast.success("Job post updated successfully !");
+          handleGetJobDetails();
+        } else {
+          setIsLoading(false);
+          setForm(initialState);
+          toast.success("Job post created successfully !");
+        }
       }
     } catch (err) {
+      setIsLoading(true);
       toast.error(err.response || "Something went wrong");
     }
   };
@@ -214,24 +242,30 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
     }));
   };
 
-  // useEffect(() => {
-  //   if (descriptionData) {
-  //     setForm((prev) => ({ ...prev, description: descriptionData }));
-  //   }
-  // }, [descriptionData]);
+  useEffect(() => {
+    if (descriptionData) {
+      setForm((prev) => ({ ...prev, description: descriptionData }));
+    }
+  }, [descriptionData]);
 
-  console.log("---------------form ", form);
+ console.log("------------name ", name);
 
   return (
     <div className="p-5">
       <div className="d-flex justify-content-between">
-        <h4>New Job Posting</h4>
+        <h4>{jobData ? "Update Job Posting" : "New Job Posting"}</h4>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
             onClick={handleSubmit}
           >
-            Save
+            {isLoading ? (
+              <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
+            ) : jobData ? (
+              "Update"
+            ) : (
+              "Save"
+            )}
           </button>
           <button
             onClick={() => {
@@ -248,11 +282,11 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
         </div>
       </div>
       <div className="shadow px-3 py-3 mt-2 border-2 border-top-primary manual-form">
-        <div className="my-2">
+        <div className="my-2 px-5">
           <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
         </div>
-        <div className="row">
-          <div className="col-4 my-1">
+        <div className="row px-5">
+          <div className="col-4 my-2">
             <p>Job Code</p>
             <input
               name="job_code"
@@ -263,7 +297,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               disabled={form.job_code}
             />
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Job Title</p>
             <input
               name="title"
@@ -273,7 +307,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               type="text"
             />
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Current Bill/Rate</p>
             <div className="d-flex gap-3">
               <select
@@ -307,7 +341,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               </select>
             </div>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Remote Job</p>
             <div className="d-flex gap-2">
               <input
@@ -315,7 +349,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
                 type="radio"
                 name="remote"
                 value="yes"
-                checked={form.remote == 'yes'}
+                checked={form.remote == "yes"}
               />
               <span>Yes</span> {" "}
               <input
@@ -323,7 +357,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
                 type="radio"
                 name="remote"
                 value="no"
-                checked={form.remote == 'no'}
+                checked={form.remote == "no"}
               />
               <span>No</span> {" "}
               <input
@@ -331,12 +365,12 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
                 type="radio"
                 name="remote"
                 value="Hybrid"
-                checked={form.remote == 'Hybrid'}
+                checked={form.remote == "Hybrid"}
               />
               <span>Hybrid</span>
             </div>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Job Start Date</p>
             <DatePickerCustom
               handleDate={(date) => {
@@ -347,7 +381,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               date={form.start_date}
             />
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Job End Date</p>
             <DatePickerCustom
               handleDate={(date) =>
@@ -356,7 +390,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               date={form.end_date}
             />
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Names of LOB</p>
             <select
               value={form.lob}
@@ -375,7 +409,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Country</p>
             <select
               className="client-form-input"
@@ -394,7 +428,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>State</p>
             <select
               className="client-form-input"
@@ -416,7 +450,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               )}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>City</p>
             <input
               name="city"
@@ -426,7 +460,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               type="text"
             />
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Job Status</p>
             <select
               value={form.job_status}
@@ -439,7 +473,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               <option value="inactive">Inactive</option>
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Job Type</p>
             <select
               value={form.job_type}
@@ -453,7 +487,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Client</p>
             <select
               value={form.client}
@@ -471,7 +505,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Contact Manager</p>
             <select
               value={form.contact_manager}
@@ -489,7 +523,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Priority</p>
             <select
               value={form.priority}
@@ -503,7 +537,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Application Form</p>
             <select
               value={form.application_form}
@@ -516,7 +550,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               <option value="Referral Portal Form">Referral Portal Form</option>
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Address</p>
             <textarea
               name="address"
@@ -529,7 +563,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
           <div className="col-12 my-2">
             <h4>Skills</h4>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Experience</p>
             <div className="d-flex gap-2">
               <input
@@ -545,7 +579,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               <span>Years</span>
             </div>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>
               Primary Skills{" "}
               <span
@@ -598,7 +632,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               </div>
             </div>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>
               Secondary Skills{" "}
               <span
@@ -651,7 +685,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               </div>
             </div>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Languages</p>
             <div className="position-relative">
               <div
@@ -708,7 +742,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
           <div className="col-12 my-2">
             <h4>Organizational Information</h4>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Number of positions</p>
             <input
               name="number_of_position"
@@ -718,7 +752,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               type="text"
             />
           </div>
-          {/* <div className="col-4 my-1">
+          {/* <div className="col-4 my-2">
             <p>Maximum Allowed Submissions</p>
             <input
               name="job-code"
@@ -728,7 +762,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               type="text"
             />
           </div> */}
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Tax Terms</p>
             <select className="client-form-input" name="tax_term">
               <option>Select</option>
@@ -737,7 +771,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               <option value="inactive">Part Time</option>
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Head Account Managers</p>
             <select
               value={form.job_head_account_manager}
@@ -750,7 +784,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Department</p>
             <select
               value={form.department}
@@ -764,7 +798,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Delivery Manager</p>
             <select
               value={form.job_delivery_manager}
@@ -778,7 +812,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Account Manager</p>
             <select
               value={form.job_account_manager}
@@ -792,7 +826,7 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          <div className="col-4 my-2">
             <p>Assigned To</p>
             <select
               className="client-form-input"
@@ -810,7 +844,8 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               })}
             </select>
           </div>
-          <div className="col-4 my-1">
+          { form.post_on_portal &&
+          <div className="col-4 my-2">
             <p>Career Portal Published Date</p>
             <DatePickerCustom
               handleDate={(date) =>
@@ -819,12 +854,53 @@ const ManualCreation = ({ setTab, tab, setOpen, open, jobData }) => {
               date={form.post_date_on_portal}
             />
           </div>
-          <div className="col-12 my-1" style={{ height: "300px" }}>
+          }
+          <div className="col-12 my-1" >
             <p>Job Description</p>
-            <HtmlEditor setDescriptionData={setDescriptionData} form={form} />
+            {name == "update" && form.description && (
+              <HtmlEditor
+                setDescriptionData={setDescriptionData}
+                form={form}
+                wrapperStyle={{
+                  border: "1px solid gray",
+                  minHeight: "250px",
+                  borderRadius: "3px",
+                }}
+              />
+            )}
+            {name == "create" && (
+              <HtmlEditor
+                setDescriptionData={setDescriptionData}
+                form={form}
+                wrapperStyle={{
+                  border: "1px solid gray",
+                  minHeight: "250px",
+                  borderRadius: "3px",
+                }}
+              />
+            )}
+            <div className="mt-4 d-flex gap-2 ">
+               <input type='checkbox' checked={form.post_on_portal} onChange={(e) => setForm((prev) => ({...prev, post_on_portal:e.target.checked }))} />
+               <label className="fw-medium">Post Job on Career Portal</label>
+            </div>
           </div>
           <div className="col-12 my-1">
             <h4>Documents</h4>
+            <label>
+              <div
+                htmlFor="#upload"
+                className="border border-black rounded-1 p-2"
+                style={{ width: "60px", height: "60px" }}
+              >
+                <Image
+                  width={90}
+                  height={10}
+                  src="/images/upload.png"
+                  alt="brand"
+                />
+              </div>
+              <input type="file" id="upload" className="d-none" />
+            </label>
           </div>
         </div>
       </div>

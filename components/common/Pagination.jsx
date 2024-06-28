@@ -5,7 +5,7 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
     setPage(event.selected);
   };
   return (
-    <div className="py-4 flex justify-end items-center">
+    <div className="py-4 d-flex justify-content-end align-items-center">
       {/* <div>
         <label className="text-black">Page Size</label>
         <select
@@ -22,12 +22,12 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
         onPageChange={handlePageClick}
         forcePage={page}
         pageRangeDisplayed={2}
-        pageCount={Math.ceil(dataCount / pageSize)}
+        pageCount={Math.ceil(dataCount / 25)}
         previousLabel="Prev"
         renderOnZeroPageCount={null}
-        containerClassName="flex justify-center text-black gap-2 items-center"
+        containerClassName="d-flex justify-content-center text-black gap-2 align-items-center"
         pageClassName="pagination-item-style"
-        activeClassName="bg-yellow text-white"
+        activeClassName="bg-primary text-white"
         previousClassName="pagination-item-style"
         nextClassName="pagination-item-style"
         disabledClassName="disabled-item"
