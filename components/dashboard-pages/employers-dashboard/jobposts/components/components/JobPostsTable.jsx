@@ -10,6 +10,7 @@ import moment from "moment";
 import Link from "next/link";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import { getReq } from "@/utils/apiHandlers";
 
 const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
@@ -24,7 +25,7 @@ const JobPostsTable = () => {
   }, []);
 
   const getJobpostsList = async () => {
-    const response = await axios.get(BASE_URL + `/jobs/${search ?`?search=${search}` :''}`);
+    const response = await getReq(`/jobs/${search ?`?search=${search}` :''}`);
     if (response.status) {
       setJobPostList(response.data);
       // setDataCount(response?.data.)
@@ -80,10 +81,10 @@ const JobPostsTable = () => {
                   <>
                     {item.title == "input" ? (
                       <th>
-                        <input type="checkbox" />
+                        <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : (
-                      <th key={index} style={{width:'100px'}}>{item.title}</th>
+                      <th  style={{widows:'250px'}} key={index} >{item.title}</th>
                     )}
                   </>
                 );
@@ -125,27 +126,27 @@ const JobPostsTable = () => {
                         </div> */}
                       </td>
                     )}
-                    <td style={{width:'100px'}}>
+                    <td style={{width:'120px'}}>
                       <Link href='/employers-dashboard/job-posts/[id]'  as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}  >
                       {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
                       {item.job_code}
                       </Link>
                     </td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
-                    <td className="package">
+                    <td>
                       {item.title}
                       {/* <a href="#">Super CV Pack</a> */}
                     </td>
-                    <td className="expiry">{"-"}</td>
+                    <td className="">{"-"}</td>
                     <td>{item.city}</td>
-                    <td className="total-jobs">{item.state}</td>
-                    <td className="used">{item.job_status}</td>
-                    <td className="remaining">
+                    <td className="">{item.state}</td>
+                    <td className="">{item.job_status}</td>
+                    <td className="">
                       {item.currency}/{item.amount}/{item.payment_frequency}
                     </td>
-                    <td className="status">{"-"}</td>
-                    <td className="status">{item.contact_manager_name}</td>
-                    <td className="expiry">{item.assign_name}</td>
+                    <td className="">{"-"}</td>
+                    <td className="">{item.contact_manager_name}</td>
+                    <td className="">{item.assign_name}</td>
                     <td className="" style={{ width: "200px" }}>
                       {"-"}
                     </td>

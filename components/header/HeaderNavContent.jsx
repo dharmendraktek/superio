@@ -360,6 +360,16 @@ const HeaderNavContent = () => {
             <span>Job Posting</span>
             </Link>
           </li>
+          <li
+            className={`${
+              isActiveParent(clientItems, usePathname()) ? "current" : ""
+            } dropdown has-mega-menu`}
+            id="has-mega-menu"
+          >
+              <Link href='/employers-dashboard/all-applicants'>
+            <span>Applicants</span>
+            </Link>
+          </li>
         </ul>
       </nav>
     </>

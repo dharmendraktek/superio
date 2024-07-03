@@ -248,7 +248,6 @@ const ManualCreation = ({
     }
   }, [descriptionData]);
 
- console.log("------------name ", name);
 
   return (
     <div className="p-5">

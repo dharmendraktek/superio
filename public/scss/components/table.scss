@@ -26,30 +26,36 @@ tbody tr:nth-child(even) {
 }
 
 
+
 .default-table thead {
-  background: #f5f7fc;
+  background: #77a6f7;
   border-radius: 8px;
   color: #ffffff;
-  position: sticky;
+  // position: sticky;
 
 }
 
 .default-table thead th {
-  position: relative;
+  // position: relative;
   padding: 10px 30px;
   font-size: 16px;
-  color: var(--primary-color);
+  // color: var(--primary-color);
   font-weight: 500;
   line-height: 30px;
   white-space: nowrap;
-  // width: 250px;
+  color: #ffffff;
+  font-size: 18px;
+  // width: fit-content;
+  width: 250px;
 }
 
 .default-table tbody tr td{
   // position: relative;
   // border-top: 1px solid #ecedf2;
-  text-align: center!important;
+  // text-align: center!important;
   height: 40px !important;
+  padding: 10px 12px;
+  width: fit-content;
 }
 .default-table tbody tr {
   position: relative;
@@ -58,11 +64,11 @@ tbody tr:nth-child(even) {
 
 .default-table thead th {
   position: relative;
-  padding: 10px 30px;
-  font-size: 16px;
-  color: #696969;
-  font-weight: 400;
-  width: fit-content;
+  padding: 10px 12px;
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 500;
+  width: 250px;
 }
 
 
@@ -80,18 +86,29 @@ tbody tr:nth-child(even) {
 /* width of the scrollbar */
 }
 .table_div::-webkit-scrollbar-thumb {
-  background-color: lightgray; 
+  background-color: #77a6f7; 
 /* color of the scrollbar thumb */
 }
-.pagination-item-style {
-  width: fit-content;
-  display: flex;
-  justify-content: center;
-  padding: 0px 8px;
-  height: 28px;
-  align-items: center;
-  font-size: 16px;
-  border-radius: 4px;
-  color: #3B71CA;
-  border: 1px solid #3B71CA;
+
+.w-5{
+  width: 50px;
+  text-align: left;
+}
+.w-10{
+   width: 100px;
+}
+.w-15{
+  width: 150px;
+}
+
+.w-20 {
+  width: 200px;
+}
+
+.w-25{
+  width: 250px;
+}
+
+.w-30 {
+  width: 300px;
 }

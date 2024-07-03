@@ -99,7 +99,7 @@ const Notes = () => {
                   className="btn-close text-reset"
                   data-bs-dismiss="offcanvas"
                   aria-label="Close"
-                  onClick={() => setForm(initialState)}
+                  // onClick={() => setForm(initialState)}
                 ></button>
               </div>
               <div className="offcanvas-body">

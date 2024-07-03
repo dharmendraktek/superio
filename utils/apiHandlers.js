@@ -107,8 +107,8 @@ export const postApiReq = async (endpoint, data) => {
     .catch((err) => {
       if (err.response.data.status == 401) {
         // handleLogout();
-        removeAuthCookie();
-        localStorage.removeItem('is_user_token');
+        // removeAuthCookie();
+        // localStorage.removeItem('is_user_token');
         // window.location = '/';
         return handleApiError(err);
       } else {
@@ -121,15 +121,15 @@ export const postReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .post(url, data, header)
+    .post(url, data)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
       if (err.response.data.status == 401) {
         // handleLogout();
-        removeAuthCookie();
-        localStorage.removeItem('is_user_token');
+        // removeAuthCookie();
+        // localStorage.removeItem('is_user_token');
         window.location = '/';
       } else {
         return handleApiError(err);
@@ -140,8 +140,28 @@ export const postReq = async (endpoint, data) => {
 export const patchReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
 
+  return await patchReq(url, data)
+    .then((response) => {
+      console.log("----respnes",response)
+      return responseFormatter(true, response.data, null);
+    })
+    .catch((err) => {
+      if (err.response.data.status == 401) {
+        // handleLogout();
+        // removeAuthCookie();
+        // localStorage.removeItem('is_user_token');
+        window.location = '/';
+      } else {
+        return handleApiError(err);
+      }
+    });
+};
+
+export const getReq = async(endpoint) => {
+  const url = BASE_URL + endpoint;
+
   return await axios
-    .patch(url, data, header)
+    .get(url)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
@@ -155,15 +175,26 @@ export const patchReq = async (endpoint, data) => {
         return handleApiError(err);
       }
     });
+    
 };
 
-export const getReq = async(endpoint) => {
+export const deleteReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
-  console.log("---------end point ", url);
 
-  const response = await axios.get(url);
-    // .then((response) => {
-      console.log("------get response ", response);
-    // })
+  return await axios
+    .delete(url)
+    .then((response) => {
+      return responseFormatter(true, response.data, null);
+    })
+    .catch((err) => {
+      if (err.response.data.status == 401) {
+        // handleLogout();
+        // removeAuthCookie();
+        // localStorage.removeItem('is_user_token');
+        window.location = '/';
+      } else {
+        return handleApiError(err);
+      }
+    });
     
 };

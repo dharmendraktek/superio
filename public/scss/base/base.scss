@@ -5,6 +5,12 @@
   --primary-2nd-hover-bg-color: #e9a000;
 }
 
+.gradient-color-1 {
+  background: rgb(99,44,102);
+  background: linear-gradient(90deg, rgba(99,44,102,1) 48%, rgba(189,136,156,1) 100%);
+}
+
+
 a {
   color: var(--primary-color);
 }
@@ -189,4 +195,33 @@ li {
       transform: translate(-50%, -50%);
     }
   }
+}
+
+.pagination-item-style {
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  padding: 0px 8px;
+  height: 30px;
+  align-items: center;
+  font-size: 16px;
+  border-radius:100%;
+  color: #3B71CA;
+  // border: 1px solid #3B71CA;
+}
+
+.pagination-container{
+  background-color: #f3fcff;
+  border-radius: 20px;
+  padding: 8px 20px;
+}
+
+.table_div::-webkit-scrollbar {
+  width:5px; 
+  height: 5px;
+/* width of the scrollbar */
+}
+.table_div::-webkit-scrollbar-thumb {
+  background-color: #3B71CA; 
+/* color of the scrollbar thumb */
 }

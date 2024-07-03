@@ -21,8 +21,8 @@ const tabsName = [
 ];
 
 const Index = () => {
-  const [active, setActive] = useState(1);
-  const [search, setSearch] = useState();
+  
+
   return (
     <div className="page-wrapper">
       <span className="header-span"></span>
@@ -44,39 +44,8 @@ const Index = () => {
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="row">
-            <div className="col-xl-12 col-lg-12 px-5 mt-5">
-              <div className="d-flex justify-content-between">
-              <div className="d-flex border border-primary rounded-1" style={{width:"300px"}}>
-                {tabsName.map((item, index) => {
-                  return (
-                    <div
-                      style={{width:"150px", borderLeft:'2px'}}
-                      className={`text-center cursor-pointer rounded-1 ${
-                        active == item.id
-                          ? "bg-primary text-white"
-                          : "bg-white text-black"
-                      }`}
-                      key={index}
-                    >
-                      <li onClick={() => setActive(item.id)}>{item.name}</li>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="position-relative">
-                <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} style={{width:"350px", height:"45px"}} className="border border-primary px-4 rounded-1 h-100" placeholder="Search anything..." />
-                <span className="position-absolute fs-4 text-primary" style={{left:"2px"}}>{reactIcons.search}</span>
-                {search &&
-                <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
-                }
-                {/* <div>
-                  <button>Upload File</button>
-                </div> */}
-              </div>
-              </div>
-            </div>
             <div className="col-xl-12 col-lg-12 px-5 mt-3">
-              <UserTable active={active} search={search} setSearch={setSearch} />
+              <UserTable  />
             </div>
           </div>
           {/* End .row profile and notificatins */}

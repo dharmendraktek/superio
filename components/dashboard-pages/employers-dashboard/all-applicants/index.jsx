@@ -7,10 +7,11 @@ import CopyrightFooter from "../../CopyrightFooter";
 import WidgetContentBox from "./components/WidgetContentBox";
 import WidgetTopFilterBox from "./components/WidgetTopFilterBox";
 import MenuToggler from "../../MenuToggler";
+import ApplicantTable from "./components/ApplicantTable";
 
 const index = () => {
   return (
-    <div className="page-wrapper dashboard">
+    <div className="page-wrapper">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 
@@ -23,33 +24,22 @@ const index = () => {
       <MobileMenu />
       {/* End MobileMenu */}
 
-      <DashboardEmployerSidebar />
+      {/* <DashboardEmployerSidebar /> */}
       {/* <!-- End User Sidebar Menu --> */}
 
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
         <div className="dashboard-outer">
-          <BreadCrumb title="All Applicants!" />
+          {/* <BreadCrumb title="All Applicants!" /> */}
           {/* breadCrumb */}
 
           <MenuToggler />
           {/* Collapsible sidebar button */}
 
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-lg-12 px-5 mt-4">
               {/* <!-- Ls widget --> */}
-              <div className="ls-widget">
-                <div className="tabs-box">
-                  <div className="widget-title">
-                    <h4>Applicant</h4>
-                    <WidgetTopFilterBox />
-                  </div>
-                  {/* End top widget filter bar */}
-
-                  <WidgetContentBox />
-                  {/* End widget-content */}
-                </div>
-              </div>
+                    <ApplicantTable />
             </div>
           </div>
           {/* End .row */}

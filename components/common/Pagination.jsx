@@ -1,3 +1,4 @@
+import { reactIcons } from '@/utils/icons';
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 const Pagination = ({ dataCount, pageSize, setPage, page }) => {
@@ -5,7 +6,7 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
     setPage(event.selected);
   };
   return (
-    <div className="py-4 d-flex justify-content-end align-items-center">
+    <div className="py-4 d-flex justify-content-center align-items-center">
       {/* <div>
         <label className="text-black">Page Size</label>
         <select
@@ -18,14 +19,14 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
         </select>
       </div> */}
       <ReactPaginate
-        nextLabel="Next"
+        nextLabel={<span className='fs-4'>{reactIcons.fastForward}</span>}        
         onPageChange={handlePageClick}
         forcePage={page}
         pageRangeDisplayed={2}
-        pageCount={Math.ceil(dataCount / 25)}
-        previousLabel="Prev"
+        pageCount={Math.ceil(dataCount/ 25)}
+        previousLabel={<span className='fs-4'>{reactIcons.fastBackward}</span>}
         renderOnZeroPageCount={null}
-        containerClassName="d-flex justify-content-center text-black gap-2 align-items-center"
+        containerClassName="d-flex justify-content-center text-black gap-2 align-items-center pagination-container"
         pageClassName="pagination-item-style"
         activeClassName="bg-primary text-white"
         previousClassName="pagination-item-style"

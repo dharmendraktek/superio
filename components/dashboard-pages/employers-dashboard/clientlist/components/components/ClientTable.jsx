@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import { BeatLoader } from "react-spinners";
 import Pagination from "@/components/common/Pagination";
+import { getReq, patchReq, postReq } from "@/utils/apiHandlers";
 
 const tabsName = [
   { id: 1, name: "ACTIVE USERS" },
@@ -105,8 +106,7 @@ const ClientTable = () => {
   }, [contactDetails]);
 
   const getClientList = async (search) => {
-    const response = await axios.get(
-      BASE_URL +
+    const response = await getReq(
         `/clients-list/?active=${active == 1 ? true : false}&page=${page+1}${
           search ? `&search=${search}` : ""
         }`
@@ -118,8 +118,8 @@ const ClientTable = () => {
   };
 
   const getOwnerList = async () => {
-    const response = await axios.get(BASE_URL + "/operations-users/");
-    setOwnerList(response.data);
+    const response = await getReq("/operations-users/");
+    setOwnerList(response.data ? response.data : []);
   };
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const ClientTable = () => {
   const handleCreateClient = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(BASE_URL + "/create-client/", form);
+      const response = await postReq("/create-client/", form);
       if (response.status) {
         setLoading(false);
         toast.success("You have been created client successfully!");
@@ -153,8 +153,7 @@ const ClientTable = () => {
   const handleUpdateClient = async () => {
     try {
       setLoading(true);
-      const response = await axios.patch(
-        BASE_URL + `/update-client/${client.id}/`,
+      const response = await patchReq(`/update-client/${client.id}/`,
         form
       );
       if (response.status) {
@@ -178,14 +177,19 @@ const ClientTable = () => {
   }, [form.client_country]);
 
   const handleActiveClient = async (id) => {
+    // const response = await patchReq(`/activate-client/${id}/`);
     const response = await axios.patch(BASE_URL + `/activate-client/${id}/`);
+
     if (response.status) {
       toast.success("Client status updated successfully !");
       getClientList();
     }
   };
   const handleInactiveClient = async (id) => {
+    console
+    // const response = await patchReq(`/delete-client/${id}/`);
     const response = await axios.patch(BASE_URL + `/delete-client/${id}/`);
+
     if (response.status) {
       toast.success("Client status updated successfully !");
       getClientList();
@@ -193,7 +197,7 @@ const ClientTable = () => {
   };
 
   const getClientNameList = async () => {
-    const response = await axios.get(BASE_URL + "/clients-dropdown/");
+    const response = await getReq("/clients-dropdown/");
     if (response.status) {
       setClientNameList(response.data);
     }
@@ -207,8 +211,7 @@ const ClientTable = () => {
   const handleCreateClientContact = async () => {
     try {
       setContLoading(true);
-      const response = await axios.post(
-        BASE_URL + "/contact-manager/",
+      const response = await postReq("/contact-manager/",
         contactData
       );
       if (response.status) {
@@ -226,8 +229,7 @@ const ClientTable = () => {
   const handleUpdateClientContact = async () => {
     try {
       setContLoading(true);
-      const response = await axios.patch(
-        BASE_URL + `/contact-manager/${contactData.client_ref}/`,
+      const response = await patchReq(`/contact-manager/${contactData.client_ref}/`,
         contactData
       );
       if (response.status) {
@@ -240,6 +242,8 @@ const ClientTable = () => {
       toast.error(err.response || "Something went wrong!");
     }
   };
+
+  console.log("------owner list ", ownerList);
 
 
   return (
@@ -409,7 +413,7 @@ const ClientTable = () => {
                 disabled={contactDetails}
               >
                 <option>Select</option>
-                {clientNameList.map((item, index) => {
+                {clientNameList?.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>
                       {item.client_name}
@@ -717,7 +721,7 @@ const ClientTable = () => {
                 <>
                   <tr key={index} className="">
                     {
-                      <td className="d-flex mt-3 ">
+                      <td className="d-flex mt-1">
                         <input type="checkbox" />
                         {item.contact_manager.length > 0 && (
                           <>
@@ -763,7 +767,7 @@ const ClientTable = () => {
                     <td>{item.id}</td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td
-                      className="package hover-overlay cursor-pointer"
+                      className="package hover-overlay cursor-pointer text-primary"
                       data-bs-toggle="offcanvas"
                       data-bs-target="#offcanvasRight"
                       aria-controls="offcanvasRight"
@@ -792,7 +796,7 @@ const ClientTable = () => {
                     </td>
                     <td>
                       <div className="option-box">
-                        <ul className="option-list">
+                        <ul className="d-flex justify-content-start option-list">
                           <li>
                             <button
                               className="package cursor-pointer"
@@ -850,7 +854,7 @@ const ClientTable = () => {
                           <div></div>
                           <table>
                             <thead>
-                              <th>Name</th>
+                              <th style={{width:"150px"}}>Name</th>
                               <th>Email</th>
                               <th>Office number</th>
                               <th>Designation</th>
@@ -889,6 +893,7 @@ const ClientTable = () => {
                                       data-bs-target="#offcanvasLeft"
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
+                                      style={{width:'250px'}}
                                     >
                                       {contact.name}
                                     </td>
