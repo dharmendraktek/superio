@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import HtmlEditor from "@/components/common/HtmlEditor";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
+import SelectWithSearch from "@/components/common/SelectWithSearch";
 
 const initialState = {
   job_code: "",
@@ -64,7 +65,7 @@ const ManualCreation = ({
   const [clientManagerList, setClientManagerList] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [departmentList, setDepartmentList] = useState([]);
-
+ 
   const countryList = Country.getAllCountries();
   const stateList = State.getStatesOfCountry(countryCode);
   const [isLoading, setIsLoading] = useState(false);
@@ -84,7 +85,8 @@ const ManualCreation = ({
 
   //       })
   //   }
-  // }, [jobData.languages])
+  // }, [jobData.languages])\
+  console.log("------------lis t ", usersList);
 
   useEffect(() => {
     if (jobData) {
@@ -134,7 +136,7 @@ const ManualCreation = ({
   useEffect(() => {
     if (form.country) {
       let country = countryList.find((item) => item.name == form.country);
-      setCountryCode(country.isoCode);
+      setCountryCode(country?.isoCode);
     }
   }, [form.country]);
 
@@ -247,7 +249,6 @@ const ManualCreation = ({
       setForm((prev) => ({ ...prev, description: descriptionData }));
     }
   }, [descriptionData]);
-
 
   return (
     <div className="p-5">
@@ -837,24 +838,31 @@ const ManualCreation = ({
               {usersList.map((item) => {
                 return (
                   <option key={item.id} value={item.id}>
-                    {item.username}
+                    <span>{item.username}</span>
                   </option>
                 );
               })}
             </select>
           </div>
-          { form.post_on_portal &&
-          <div className="col-4 my-2">
-            <p>Career Portal Published Date</p>
-            <DatePickerCustom
-              handleDate={(date) =>
-                setForm((prev) => ({ ...prev, post_date_on_portal: date }))
-              }
-              date={form.post_date_on_portal}
-            />
-          </div>
-          }
-          <div className="col-12 my-1" >
+          {form.post_on_portal && (
+            <div className="col-4 my-2">
+              <p>Career Portal Published Date</p>
+              <DatePickerCustom
+                handleDate={(date) =>
+                  setForm((prev) => ({ ...prev, post_date_on_portal: date }))
+                }
+                date={form.post_date_on_portal}
+              />
+            </div>
+          )}
+            {/* <div className="col-4 my-2">
+              <p>Job Delegation</p>
+              <SelectWithSearch 
+                list={usersList}
+                setList={setUsersList}
+              />
+            </div> */}
+          <div className="col-12 my-1">
             <p>Job Description</p>
             {name == "update" && form.description && (
               <HtmlEditor
@@ -879,8 +887,17 @@ const ManualCreation = ({
               />
             )}
             <div className="mt-4 d-flex gap-2 ">
-               <input type='checkbox' checked={form.post_on_portal} onChange={(e) => setForm((prev) => ({...prev, post_on_portal:e.target.checked }))} />
-               <label className="fw-medium">Post Job on Career Portal</label>
+              <input
+                type="checkbox"
+                checked={form.post_on_portal}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    post_on_portal: e.target.checked,
+                  }))
+                }
+              />
+              <label className="fw-medium">Post Job on Career Portal</label>
             </div>
           </div>
           <div className="col-12 my-1">

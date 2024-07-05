@@ -16,6 +16,7 @@ import { reactIcons } from "@/utils/icons";
 import ManualCreation from "./components/ManualCreation";
 import JobParse from "./components/JobParse";
 import { useState } from "react";
+import ParseEmailJobTable from "./components/ParseEmailJobTable";
 
 const Index = () => {
   const [tab, setTab] = useState(null);
@@ -44,22 +45,32 @@ const Index = () => {
             {tab == null &&
             <div className="col-xl-12 col-lg-12 px-5 mt-5">
                <div className="d-flex justify-content-center">
-                    <div className="mt-5 text-center" >
+                    <div className="mt-5 mb-3 text-center" >
                          <h2>New Job Posting</h2>
-                         <div className="d-flex">
-                         <div onClick={() => setTab(1)} className="my-3 me-3 cursor-pointer" style={{width:'160px'}}>
-                            <div className="text-center rounded-1 py-3" style={{background:"#1fa0e4"}}>
-                                 <span className="text-white fs-2">{reactIcons.list}</span>
-                                 <p className="text-white fs-5">
+                         <div className="d-flex gap-3">
+                         <div onClick={() => setTab(1)} className="my-3 me-3 cursor-pointer" style={{width:'210px', }}>
+                            <div className="text-center rounded-1 py-3" style={{background:"#1fa0e4", height:"120px"}}>
+                                 <span className="text-white fs-1">{reactIcons.list}</span>
+                                 <p className="text-white fs-5 my-3 fw-semibold">
                                    Manual Creation
                                  </p>
                             </div>
                          </div>
-                         <div onClick={() => setTab(2)} className="my-3 me-3 cursor-pointer" style={{width:'160px'}} >
+                         <div
+                          onClick={() => setTab(2)} className="my-3  cursor-pointer" style={{width:'210px', height:"115px"}} >
                             <div className=" text-center rounded-1 py-3" style={{background:"#ea88b9"}}>
-                                 <span className="text-white fs-2">{reactIcons.upload}</span>
-                                 <p className="text-white fs-5">
-                                   Parse Job Details
+                                 <span className="text-white fs-1">{reactIcons.copy}</span>
+                                 <p className="text-white fs-5 fw-semibold">
+                                   Copy Paste Parse Job Details
+                                 </p>
+                            </div>
+                         </div>
+                         <div
+                          onClick={() => setTab(3)} className="my-3 cursor-pointer" style={{width:'210px', height:"115px"}} >
+                            <div className=" text-center rounded-1 py-3 bg-primary" >
+                                 <span className="text-white fs-1">{reactIcons.emailRead}</span>
+                                 <p className="text-white fs-5 fw-semibold">
+                                   Parse Job Details by Email
                                  </p>
                             </div>
                          </div>
@@ -74,6 +85,10 @@ const Index = () => {
                }
               {tab == 2 &&
               <JobParse tab={tab} setTab={setTab} />
+              }
+              {
+                tab == 3 &&
+                <ParseEmailJobTable />
               }
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    token:'',
     category: [
         {
             id: 1,
@@ -29,8 +30,12 @@ const initialState = {
 export const employerSlice = createSlice({
     name: "employer",
     initialState,
-    reducers: {},
+    reducers: {
+        login: (state, action) => {
+            token=action.payload
+          },
+    },
 });
 
-export const {} = employerSlice.actions;
+export const {login} = employerSlice.actions;
 export default employerSlice.reducer;

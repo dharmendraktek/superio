@@ -19,12 +19,12 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
         </select>
       </div> */}
       <ReactPaginate
-        nextLabel={<span className='fs-4'>{reactIcons.fastForward}</span>}        
+        nextLabel={<span className='fs-6'>{reactIcons.fastForward}</span>}        
         onPageChange={handlePageClick}
         forcePage={page}
         pageRangeDisplayed={2}
         pageCount={Math.ceil(dataCount/ 25)}
-        previousLabel={<span className='fs-4'>{reactIcons.fastBackward}</span>}
+        previousLabel={<span className='fs-6'>{reactIcons.fastBackward}</span>}
         renderOnZeroPageCount={null}
         containerClassName="d-flex justify-content-center text-black gap-2 align-items-center pagination-container"
         pageClassName="pagination-item-style"

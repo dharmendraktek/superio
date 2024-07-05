@@ -13,29 +13,42 @@ const Index = () => {
   const [bulkResumeFiles, setBulkResumeFiles] = useState([]);
 
   const handleFileChange = (e) => {
-    console.log("----------e---", e.target.files);
     const button = document.getElementById("uploadResumeModal");
-  
     setResume(e.target.files[0]);
-    // Simulate a click on the button
     button.click();
   };
 
   const handleBulkUploadFile = (e) => {
     const button = document.getElementById("uploadBulkResumeModal");
-    // let arr = [];
-    // arr.push(e.target.files)
-
     setBulkResumeFiles(Object.values(e.target.files))
     button.click();
   }
-  console.log("-------------- bulk resmue files ", bulkResumeFiles)
+
+  const handleDeleteFile = (index) => {
+       let updated = [...bulkResumeFiles]
+       let filteredData = updated.filter((item, _index) => _index !== index)
+       setBulkResumeFiles(filteredData);
+      
+  }
   
-  const handleSelectAll = () => {
-    // setBulkResumeFiles((prev) => {
-    //   return prev.map((item) => ({ ...item, isSelect: true, ...item })
-    // )
-    // })
+  const handleSelectAll = (checked) => {
+    const data = [...bulkResumeFiles];
+    const updatedFileArray = data.map(file => {
+      file['isSelect'] = checked; 
+      return file; 
+    });
+    setBulkResumeFiles(updatedFileArray);
+  }
+  const handleSelectOne = (index, value) => {
+    // const data = [...bulkResumeFiles];
+    // const updatedFileArray = data[index]['isSelect'] = value;
+    // setBulkResumeFiles(updatedFileArray);
+  }  
+
+  function formatFileSize(bytes, decimalPoint) {
+    if (bytes === 0) return '0 Bytes';
+    var k = 1000, dm = decimalPoint || 2, sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    return (bytes / Math.pow(k, 1)).toFixed(dm) + ' ' + sizes[1];
   }
 
   return (
@@ -87,7 +100,7 @@ const Index = () => {
                 ></button> */}
               </div>
               <div className="modal-body">
-                <h5>You are trying to parse "{resume}"</h5>
+                <h5>You are trying to parse "{resume?.name}"</h5>
               </div>
               <div className="d-flex justify-content-center gap-2 py-2">
                 <button
@@ -123,7 +136,7 @@ const Index = () => {
             data-bs-toggle="modal"
             data-bs-target="#parseBulkResumeModal"
           >
-            Launch demo modal
+            upload
           </button>
           <div className="modal-dialog modal-xl">
             <div className="modal-content">
@@ -141,6 +154,7 @@ const Index = () => {
               <div className="modal-body">
                 <div className="px-2 gap-2 d-flex">
                 <button
+                  htmlFor='upload'
                   // type="button"
                   className="theme-btn btn-style-one small fs-6"
                   data-bs-dismiss="modal"
@@ -167,7 +181,7 @@ const Index = () => {
                 </div>
                 <div className="d-flex justify-content-between align-items-center my-3 px-2">
                   <div className="d-flex align-items-center gap-2">
-                  <input type="checkbox" onClick={handleSelectAll} />
+                  <input type="checkbox" onChange={(e) => handleSelectAll(e.target.checked)} />
                   <label>Select All</label>
                   </div>
                   <div className="d-flex gap-2">
@@ -187,15 +201,13 @@ const Index = () => {
                     <button className="theme-btn btn-style-one small">Apply All</button>
                   </div>
                 </div>
-                <div>
+                <div style={{maxHeight:"300px", overflowY:'auto'}}>
                   <table className="" style={{width:"100%", border:"1px solid lightgray"}}>
                     {bulkResumeFiles.map((item, index) => {
-
-                      // console.log("--------item ", item.Files);
                       return(
                     <tr key={index} className="py-2">
                       <td className="px-2">
-                        <input type="checkbox" />
+                        <input type="checkbox" checked={item.isSelect} onChange={(e) => handleSelectOne(index, e.target.checked)} />
                       </td>
                       <td style={{width:"700px"}}>
                         <span>{item.name}</span>
@@ -204,11 +216,13 @@ const Index = () => {
                         }
                       </td>
                       <td>
-                        <span>127 kb</span>
+                        {item.size &&
+                        <span>{formatFileSize(item?.size, 2)}</span>
+                        }
                         <div className='rounded-2 my-2 border border-primary' style={{width:"100px", height:"15px", background:'green'}} ></div>
                       </td>
                       <td>
-                        <button className="theme-btn btn-style-four small">Cancel</button>
+                        <button onClick={() => handleDeleteFile(index)} className="theme-btn btn-style-four small">Cancel</button>
                       </td>
                     </tr>
                       )

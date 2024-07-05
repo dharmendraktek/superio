@@ -220,6 +220,9 @@ const ClientTable = () => {
         getClientList();
         setContactData(initialStateContact)
       }
+      if(response.error){
+        setContLoading(false);
+      }
     } catch (err) {
       setContLoading(false);
       toast.error(err.response || "Something went wrong!");
@@ -243,7 +246,6 @@ const ClientTable = () => {
     }
   };
 
-  console.log("------owner list ", ownerList);
 
 
   return (
@@ -721,7 +723,7 @@ const ClientTable = () => {
                 <>
                   <tr key={index} className="">
                     {
-                      <td className="d-flex mt-1">
+                      <td className="d-flex align-items-center mt-3">
                         <input type="checkbox" />
                         {item.contact_manager.length > 0 && (
                           <>
@@ -804,6 +806,7 @@ const ClientTable = () => {
                               data-bs-target="#offcanvasRight"
                               aria-controls="offcanvasRight"
                               onClick={() => setClient(item)}
+                              data-text='Update client'
                             >
                               {/* <a
                             href="#"

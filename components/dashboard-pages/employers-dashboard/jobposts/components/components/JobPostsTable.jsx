@@ -142,7 +142,7 @@ const JobPostsTable = () => {
                     <td className="">{item.state}</td>
                     <td className="">{item.job_status}</td>
                     <td className="">
-                      {item.currency}/{item.amount}/{item.payment_frequency}
+                      {item.currency}{item.currency ?'/' : ''}{item.amount}{item.amount ?'/' : ''}{item.payment_frequency}
                     </td>
                     <td className="">{"-"}</td>
                     <td className="">{item.contact_manager_name}</td>

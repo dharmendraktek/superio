@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { BeatLoader } from "react-spinners";
 import { BASE_URL } from "@/utils/endpoints";
+import { useDispatch } from "react-redux";
+import { login } from "@/features/employer/employerSlice";
 
 const FormContent = () => {
   const [form, setForm] = useState({
@@ -20,6 +22,7 @@ const FormContent = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,9 +44,11 @@ const FormContent = () => {
         form
       );
       if (response.status) {
+        console.log("------------token ", response);
         toast.success("You are logged in successfully");
         setLoading(false);
-        window.location.href = "/employers-dashboard/dashboard";
+        // window.location.href = "/employers-dashboard/dashboard";
+        dispatch(login(response.data))
       }
     } catch (err) {
       setLoading(false);

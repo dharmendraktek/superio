@@ -24,6 +24,8 @@ import { FaForward } from "react-icons/fa";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
+import { MdCopyAll } from "react-icons/md";
+import { MdOutlineMarkEmailRead } from "react-icons/md";
 
 
 
@@ -60,4 +62,7 @@ export const reactIcons = {
     addcircle:<MdOutlineAddCircle />,
     cancel:<RiDeleteBack2Fill />,
     delete: <MdDelete />,
+    copy:<MdCopyAll />,
+    emailRead:<MdOutlineMarkEmailRead />,
+    
 }
