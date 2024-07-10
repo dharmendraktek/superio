@@ -141,6 +141,7 @@ const ClientTable = () => {
       const response = await postReq("/create-client/", form);
       if (response.status) {
         setLoading(false);
+        setForm(initialState)
         toast.success("You have been created client successfully!");
         getClientList();
       }
@@ -532,7 +533,7 @@ const ClientTable = () => {
             <button
               className="theme-btn btn-style-two mx-2 small"
               onClick={() => {
-                setClientData(initialState);
+                setForm(initialState);
                 setClient("");
               }}
             >
@@ -697,7 +698,7 @@ const ClientTable = () => {
           </div>
         </div>
       </div>
-      <div className="table_div">
+      <div className="table_div custom-scroll-sm">
         <table className="default-table">
           <thead className="">
             <tr>
@@ -705,11 +706,11 @@ const ClientTable = () => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th>
+                      <th style={{width:'200px'}}>
                         <input type="checkbox" />
                       </th>
                     ) : (
-                      <th key={index}>{item.title}</th>
+                      <th style={{width:'200px'}} key={index}>{item.title}</th>
                     )}
                   </>
                 );
@@ -723,7 +724,7 @@ const ClientTable = () => {
                 <>
                   <tr key={index} className="">
                     {
-                      <td className="d-flex align-items-center mt-3">
+                      <td className="d-flex align-items-center">
                         <input type="checkbox" />
                         {item.contact_manager.length > 0 && (
                           <>
@@ -767,24 +768,21 @@ const ClientTable = () => {
                       </td>
                     }
                     <td>{item.id}</td>
-                    {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td
-                      className="package hover-overlay cursor-pointer text-primary"
+                      className=" hover-overlay cursor-pointer text-primary"
                       data-bs-toggle="offcanvas"
                       data-bs-target="#offcanvasRight"
                       aria-controls="offcanvasRight"
                       onClick={() => setClient(item)}
                     >
                       {item.client_name}
-                      {/* <a href="#">Super CV Pack</a> */}
                     </td>
                     <td>{item.client_email}</td>
-                    <td className="expiry">{item.client_cont}</td>
+                    <td >{item.client_cont}</td>
                     <td>{item.client_website}</td>
-                    {/* <td className="total-jobs">{item.industry}</td> */}
-                    <td className="used">{item.status}</td>
+                    <td >{item.status}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td className="status">{item.owner_name}</td>
+                    <td >{item.owner_name}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>

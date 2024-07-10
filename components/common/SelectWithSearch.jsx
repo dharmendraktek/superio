@@ -1,6 +1,6 @@
 import { reactIcons } from "@/utils/icons";
 
-const SelectWithSearch = ({list, setList}) => {
+const SelectWithSearch = ({list, setList, onChange}) => {
  return(
     <div className="position-relative">
     <div
@@ -25,26 +25,7 @@ const SelectWithSearch = ({list, setList}) => {
               <input
                 type="checkbox"
                 checked={item.is_checked}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    list[index]["is_checked"] = e.target.checked;
-                    setList((prev) => ({
-                      ...prev,
-                      languages: [
-                        ...prev,
-                        { name: item.username },
-                      ],
-                    }));
-                  } else {
-                    list[index]["is_checked"] = e.target.checked;
-                    setList((prev) => ({
-                      ...prev,
-                      languages: prev.languages.filter(
-                        (_item, _index) => _item.username !== item.username
-                      ),
-                    }));
-                  }
-                }}
+                onChange={onChange}
               />
               <span className="mx-2">{item.username}</span>
             </div>

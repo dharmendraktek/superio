@@ -3,13 +3,16 @@ import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
-import { jobTypes, langList, priorityTypes } from "./constant";
+import { jobStatus, jobTypes, priorityTypes } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import HtmlEditor from "@/components/common/HtmlEditor";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
+import LanguageModal from "./components/LanguageModal";
+import UsersModal from "./components/UsersModal";
+import { getReq } from "@/utils/apiHandlers";
 
 const initialState = {
   job_code: "",
@@ -22,7 +25,7 @@ const initialState = {
   end_date: "",
   remote: "",
   lob: "",
-  address: "",
+  aress: "",
   country: "",
   city: "",
   job_status: "",
@@ -38,7 +41,7 @@ const initialState = {
   job_head_account_manager: "",
   job_account_manager: "",
   job_delivery_manager: "",
-  assign: "",
+  assign: [],
   tax_term: "",
   department: "",
   description: "",
@@ -57,6 +60,7 @@ const ManualCreation = ({
   jobData,
   handleGetJobDetails,
   name,
+  jobType,
 }) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
@@ -65,7 +69,7 @@ const ManualCreation = ({
   const [clientManagerList, setClientManagerList] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [departmentList, setDepartmentList] = useState([]);
- 
+
   const countryList = Country.getAllCountries();
   const stateList = State.getStatesOfCountry(countryCode);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,6 +77,10 @@ const ManualCreation = ({
   const [secondarySkills, setSecondarySkills] = useState();
   const [openLang, setOpenLang] = useState(false);
   const [descriptionData, setDescriptionData] = useState();
+  const [languageList, setLanguageList] = useState([]);
+  const [teamId, setTeamId] = useState();
+  const [assignList, setAssignList] = useState([]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,16 +94,17 @@ const ManualCreation = ({
   //       })
   //   }
   // }, [jobData.languages])\
-  console.log("------------lis t ", usersList);
+
 
   useEffect(() => {
     if (jobData) {
+      setAssignList(jobData.assign_details ? jobData.assign_details : [])
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
         title: jobData.title,
         currency: jobData.currency,
-        amount: jobData.amount,
+        amount: jobData.amount !== 'Not specified' ? jobData.amount : 0 ,
         payment_frequency: jobData.payment_frequency,
         job_type: jobData.job_type,
         start_date: jobData.start_date,
@@ -111,20 +120,18 @@ const ManualCreation = ({
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
-        primary_skills: jobData.primary_skills ? jobData.primary_skills : [],
-        secondary_skills: jobData.secondary_skills
-          ? jobData.secondary_skills
-          : [],
-        languages: jobData.languages,
+        primary_skills: jobData.secondary_skills =='Not specified' ? [] : typeof jobData.primary_skills == 'object' ? jobData.primary_skills : typeof jobData.primary_skills == 'string' ? jobData.primary_skills.split(',').map(name => ({ name })) : [] ,
+        secondary_skills: jobData.secondary_skills =='Not specified' ? [] :  typeof jobData.secondary_skills == 'object' ? jobData.secondary_skills : typeof jobData.secondary_skills == 'string' ? jobData.secondary_skills.split(',').map(name => ({ name })) : [] ,
+        languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
         job_head_account_manager: jobData.job_head_account_manager,
         job_account_manager: jobData.job_account_manager,
         job_delivery_manager: jobData.job_delivery_manager,
-        assign: jobData.assign,
+        assign: jobData.assign ? jobData.assign : [],
         tax_term: "",
         department: jobData.department,
-        description: jobData.description,
+        description: jobData.description ? jobData.description : "<p></p>",
         is_active: 1,
         post_on_portal: true,
         // post_date_on_portal:form.post_date_on_portal,
@@ -146,6 +153,7 @@ const ManualCreation = ({
     handleGetLobs();
     handleGetJobCode();
     handleGetDepartment();
+    handleGetLanguageList();
   }, []);
 
   useEffect(() => {
@@ -153,6 +161,11 @@ const ManualCreation = ({
       handleGetClientContactManagers();
     }
   }, [form.client]);
+
+  const handleGetLanguageList = async () => {
+    const response = await getReq("/language/");
+    setLanguageList(response.data);
+  };
 
   const handleGetDepartment = async () => {
     const response = await axios.get(BASE_URL + "/department-list/");
@@ -201,12 +214,15 @@ const ManualCreation = ({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = jobData
-        ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
-        : await axios.post(BASE_URL + "/jobs/", form);
+      const response =
+        jobData && jobType == "Email"
+          ? await axios.patch(BASE_URL + `/temp-jobs/${jobData.id}/`, form)
+          : name == 'update'
+          ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
+          : await axios.post(BASE_URL + "/jobs/", form);
+      setIsLoading(false);
       if (response.status) {
         if (jobData) {
-          setIsLoading(false);
           toast.success("Job post updated successfully !");
           handleGetJobDetails();
         } else {
@@ -250,10 +266,23 @@ const ManualCreation = ({
     }
   }, [descriptionData]);
 
+
   return (
     <div className="p-5">
+      <LanguageModal />
+      <UsersModal
+        usersList={usersList}
+        form={form}
+        setForm={setForm}
+        setUsersList={setUsersList}
+        teamId={teamId}
+        setTeamId={setTeamId}
+        handleGetUsersList={handleGetUsersList}
+        assignList={assignList}
+        setAssignList={setAssignList}
+      />
       <div className="d-flex justify-content-between">
-        <h4>{jobData ? "Update Job Posting" : "New Job Posting"}</h4>
+        <h4>{name =='update' ? "Update Job Posting" : "New Job Posting"}</h4>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
@@ -261,7 +290,7 @@ const ManualCreation = ({
           >
             {isLoading ? (
               <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
-            ) : jobData ? (
+            ) : name =='update' ? (
               "Update"
             ) : (
               "Save"
@@ -286,6 +315,7 @@ const ManualCreation = ({
           <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
         </div>
         <div className="row px-5">
+          {!jobType &&
           <div className="col-4 my-2">
             <p>Job Code</p>
             <input
@@ -297,6 +327,7 @@ const ManualCreation = ({
               disabled={form.job_code}
             />
           </div>
+          }
           <div className="col-4 my-2">
             <p>Job Title</p>
             <input
@@ -469,8 +500,9 @@ const ManualCreation = ({
               onChange={handleChange}
             >
               <option>Select</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              {jobStatus.map((item, index) => {
+                return <option value={item.name}>{item.name}</option>;
+              })}
             </select>
           </div>
           <div className="col-4 my-2">
@@ -619,7 +651,7 @@ const ManualCreation = ({
                       key={index}
                       className="mx-1 px-1 gap-6 text-white rounded bg-primary"
                     >
-                      <span>{item.name}</span>
+                      <span>{item.name ? item.name : item}</span>
                       <span
                         className="cursor-pointer ms-2"
                         onClick={() => handleRemoveSkills(index)}
@@ -672,7 +704,7 @@ const ManualCreation = ({
                       key={index}
                       className="mx-1 px-1 gap-6 text-white rounded bg-primary"
                     >
-                      <span>{item.name}</span>
+                      <span>{item.name ? item.name : item}</span>
                       <span
                         className="cursor-pointer ms-2"
                         onClick={() => handleRemoveSecondarySkills(index)}
@@ -687,7 +719,7 @@ const ManualCreation = ({
           </div>
           <div className="col-4 my-2">
             <p>Languages</p>
-            <div className="position-relative">
+            <div className="position-relative cursor-pointer">
               <div
                 className="client-form-input d-flex justify-content-between"
                 onClick={() => setOpenLang(!openLang)}
@@ -704,15 +736,29 @@ const ManualCreation = ({
                   className="position-absolute bg-white border border-1 w-100 px-2"
                   style={{ top: "33px", zIndex: 10000 }}
                 >
-                  {langList.map((item, index) => {
+                  <div>
+                    <button
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#languageModal"
+                      className="theme-btn btn-style-three small d-flex align-items-center"
+                      onClick={() => setOpenLang(false)}
+                      style={{ width: "100%" }}
+                    >
+                      {/* <span>{reactIcons.addcircle}</span> */}
+                      <span>Add</span>
+                    </button>
+                  </div>
+                  {languageList.map((item, index) => {
                     return (
                       <div key={index} className="">
                         <input
                           type="checkbox"
-                          checked={item.is_checked}
+                          checked={form?.languages?.find(
+                            (_item) => _item.name == item.name
+                          )}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              langList[index]["is_checked"] = e.target.checked;
                               setForm((prev) => ({
                                 ...prev,
                                 languages: [
@@ -721,7 +767,6 @@ const ManualCreation = ({
                                 ],
                               }));
                             } else {
-                              langList[index]["is_checked"] = e.target.checked;
                               setForm((prev) => ({
                                 ...prev,
                                 languages: prev.languages.filter(
@@ -780,7 +825,7 @@ const ManualCreation = ({
               onChange={handleChange}
             >
               {usersList.map((item) => {
-                return <option key={item.id}>{item.username}</option>;
+                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
               })}
             </select>
           </div>
@@ -808,7 +853,7 @@ const ManualCreation = ({
             >
               <option>Select</option>
               {usersList.map((item) => {
-                return <option key={item.id}>{item.username}</option>;
+                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
               })}
             </select>
           </div>
@@ -822,13 +867,21 @@ const ManualCreation = ({
             >
               <option>Select</option>
               {usersList.map((item) => {
-                return <option key={item.id}>{item.username}</option>;
+                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
               })}
             </select>
           </div>
-          <div className="col-4 my-2">
-            <p>Assigned To</p>
-            <select
+          {!jobType && (
+            <div className="col-4 my-2">
+              <p>Assigned To</p>
+              <div className="client-form-input d-flex justify-content-between">
+                <div>
+                  {assignList.map((item) => {
+                    return <span>{item.first_name}</span>;
+                  })}
+                </div>
+              </div>
+              {/* <select
               className="client-form-input"
               name="assign"
               value={form.assign}
@@ -842,9 +895,17 @@ const ManualCreation = ({
                   </option>
                 );
               })}
-            </select>
-          </div>
-          {form.post_on_portal && (
+            </select> */}
+              <span
+                className="cursor-pointer text-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#usersModal"
+              >
+                assign
+              </span>
+            </div>
+          )}
+          {!jobType && form.post_on_portal && (
             <div className="col-4 my-2">
               <p>Career Portal Published Date</p>
               <DatePickerCustom
@@ -855,11 +916,12 @@ const ManualCreation = ({
               />
             </div>
           )}
-            {/* <div className="col-4 my-2">
+          {/* <div className="col-4 my-2">
               <p>Job Delegation</p>
               <SelectWithSearch 
                 list={usersList}
                 setList={setUsersList}
+                onChange={handleJobDelegation}
               />
             </div> */}
           <div className="col-12 my-1">
@@ -886,38 +948,42 @@ const ManualCreation = ({
                 }}
               />
             )}
-            <div className="mt-4 d-flex gap-2 ">
-              <input
-                type="checkbox"
-                checked={form.post_on_portal}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    post_on_portal: e.target.checked,
-                  }))
-                }
-              />
-              <label className="fw-medium">Post Job on Career Portal</label>
-            </div>
-          </div>
-          <div className="col-12 my-1">
-            <h4>Documents</h4>
-            <label>
-              <div
-                htmlFor="#upload"
-                className="border border-black rounded-1 p-2"
-                style={{ width: "60px", height: "60px" }}
-              >
-                <Image
-                  width={90}
-                  height={10}
-                  src="/images/upload.png"
-                  alt="brand"
+            {!jobType && (
+              <div className="mt-4 d-flex gap-2 ">
+                <input
+                  type="checkbox"
+                  checked={form.post_on_portal}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      post_on_portal: e.target.checked,
+                    }))
+                  }
                 />
+                <label className="fw-medium">Post Job on Career Portal</label>
               </div>
-              <input type="file" id="upload" className="d-none" />
-            </label>
+            )}
           </div>
+          {!jobType && (
+            <div className="col-12 my-1">
+              <h4>Documents</h4>
+              <label>
+                <div
+                  htmlFor="#upload"
+                  className="border border-black rounded-1 p-2"
+                  style={{ width: "60px", height: "60px" }}
+                >
+                  <Image
+                    width={90}
+                    height={10}
+                    src="/images/upload.png"
+                    alt="brand"
+                  />
+                </div>
+                <input type="file" id="upload" className="d-none" />
+              </label>
+            </div>
+          )}
         </div>
       </div>
     </div>

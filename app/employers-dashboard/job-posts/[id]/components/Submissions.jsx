@@ -1,14 +1,16 @@
 "use client"
 
 import { useState } from "react";
+import Stepper from "./Stepper";
 
 const tabsName = [
     { id: 1, name: "Pipline" },
-    { id: 2, name: "Client Submissions" },
-    { id: 3, name: "Interviews" },
-    { id: 4, name: "Confirmations" },
-    { id: 5, name: "Placements" },
-    { id: 6, name: "Not Joined" },
+    { id: 2, name: "All" },
+    { id: 3, name: "Client Submissions" },
+    { id: 4, name: "Interviews" },
+    { id: 5, name: "Confirmations" },
+    { id: 6, name: "Placements" },
+    { id: 7, name: "Not Joined" },
   ];
 
 
@@ -25,7 +27,7 @@ const Submissions = () => {
                 <div
                   key={index}
                   onClick={() => setTab(item.id)}
-                  className={`tabs ${tab == item.id ? 'bg-primary text-white border-primary' : 'bg-white text-black'} border text-black align-items-center border-1 rounded-2 ps-2 d-flex gap-3`}
+                  className={`tabs ${tab == item.id ? 'bg-primary text-white border-primary' : 'bg-white text-black'} border text-black cursor-pointer align-items-center border-1 rounded-2 ps-2 d-flex gap-3`}
                 >
                   <span className="fs-6">{item.name}</span>
                   <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">4</div>
@@ -37,7 +39,7 @@ const Submissions = () => {
           {tab == 1 &&
           <>
         {/* <hr className="border border-secondary"></hr> */}
-             <div className="px-4 Py-3">
+             <div className="px-4 py-3">
                 <div className="border py-1 px-3 rounded-1 d-flex justify-content-between border-top-black border-end-black">
                   <div>
                   <p>NAME</p>
@@ -49,28 +51,23 @@ const Submissions = () => {
                   <p>CONTACT/LOCATION</p>
                   </div>
                   <div>
+                  <p></p>
+                  </div>
+                  <div>
                   <p>PAY RATE/WORK AUTH</p>
                   </div>
                   <div>
                   <p>STATUS</p>
                   </div>
+                  <div>
+                  <p></p>
+                  </div>
+                  <div>
+                  <p></p>
+                  </div>
                 </div>
-                <div className="py-2 px-3 rounded-1 d-flex justify-content-between ">
-                  <div>
-                  <p></p>
-                  </div>
-                  <div>
-                  <p></p>
-                  </div>
-                  <div>
-                  <p></p>
-                  </div>
-                  <div>
-                  <p></p>
-                  </div>
-                  <div>
-                  <p></p>
-                  </div>
+                <div className="py-2  rounded-1 d-flex justify-content-between ">
+                  <Stepper />
                 </div>
              </div>
           </>

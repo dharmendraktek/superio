@@ -44,7 +44,6 @@ const FormContent = () => {
         form
       );
       if (response.status) {
-        console.log("------------token ", response);
         toast.success("You are logged in successfully");
         setLoading(false);
         // window.location.href = "/employers-dashboard/dashboard";

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Submissions from "./components/Submissions";
 import Notes from "./components/Notes";
 import Documents from "./components/Documents";
+import JobSearchBoard from "./components/JobSearchBoard";
 
 
 
@@ -59,11 +60,11 @@ const Index = () => {
           <MenuToggler />
           {/* Collapsible sidebar button */}
 
-          <div className="row">
-            <div className="col-lg-12">
+          <div className="row mx-3">
+            <div className={`${ open ? 'col-lg-9' : 'col-12'}`}>
               {open ? (
                 <>
-                  <div className="shadow mx-5 my-3 px-4 py-4">
+                  <div className="shadow  my-3 px-4 py-4">
                     <div className="d-flex gap-2 align-items-center">
                       <Link href="/employers-dashboard/job-posts">
                         <span className="fs-2">{reactIcons.backarrow}</span>
@@ -73,7 +74,7 @@ const Index = () => {
                     </div>
                     <div>
                       <div className="d-flex">
-                        <p className="me-2">client name</p> |{" "}
+                        <p className="me-2">{jobData?.client_name ? jobData.client_name : '-' }</p> |{" "}
                         <p className="mx-2">
                           {" "}
                           {jobData?.address} {jobData?.city} {jobData?.state}{" "}
@@ -98,7 +99,7 @@ const Index = () => {
                       <div>
                         <span>Delivery Manager</span>
                         <br />
-                        <strong>Name</strong>
+                        <strong>{jobData?.delivery_manager_name}</strong>
                       </div>
                       <div>
                         <span>Client Bill Rate/Salery</span>
@@ -125,13 +126,13 @@ const Index = () => {
                       }
                     </div>
                   </div>
-                  <div className="my-2 mx-5">
+                  <div className="my-2">
                  <Submissions />
                   </div>
-                  <div className="my-2 mx-5">
+                  <div className="my-2">
                  <Notes />
                   </div>
-                  <div className="my-2 mx-5">
+                  <div className="my-2">
                  <Documents />
                   </div>
                 </>
@@ -139,6 +140,11 @@ const Index = () => {
                 <ManualCreation setOpen={setOpen} jobData={jobData}  name='update'  handleGetJobDetails={handleGetJobDetails}  />
               )}
             </div>
+            {open &&
+            <div className="col-3 my-3">
+              <JobSearchBoard />
+            </div>
+            }
           </div>
           {/* End .row */}
         </div>

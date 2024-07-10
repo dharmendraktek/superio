@@ -11,13 +11,15 @@ import Link from "next/link";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { getReq } from "@/utils/apiHandlers";
+import Pagination from "@/components/common/Pagination";
+import { removeSpecialChar } from "@/utils/constant";
 
 const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
   const [jobPostList, setJobPostList] = useState([]);
   const [search, setSearch] = useState();
   const [page, setPage] = useState(0);
-  const [dataCount, setDataCount] = useState(10);
+  const [dataCount, setDataCount] = useState();
 
 
   useEffect(() => {
@@ -25,18 +27,20 @@ const JobPostsTable = () => {
   }, []);
 
   const getJobpostsList = async () => {
-    const response = await getReq(`/jobs/${search ?`?search=${search}` :''}`);
+    const response = await getReq(`/jobs/?page=${page+1}${search ?`&search=${search}` :''}`);
     if (response.status) {
-      setJobPostList(response.data);
-      // setDataCount(response?.data.)
+      setJobPostList(response.data.results);
+      setDataCount(response?.data.count)
     }
   };
 
   useEffect(() => {
-     if(search){
+     
       getJobpostsList(search)
-     }
-  }, [search])
+     
+  }, [search, page])
+
+
 
   return (
     <>
@@ -72,19 +76,19 @@ const JobPostsTable = () => {
           </button>
         </Link>
       </div>
-      <div className="table_div">
-        <table className="default-table">
+      <div className="table_div custom-scroll-sm">
+        <table className="default-table ">
           <thead className="">
             <tr>
               {jobPostsTableField.map((item, index) => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th>
+                      <th style={{width:'50px'}}>
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : (
-                      <th  style={{widows:'250px'}} key={index} >{item.title}</th>
+                      <th style={{width:'200px'}}  key={index} >{removeSpecialChar(item.title)}</th>
                     )}
                   </>
                 );
@@ -97,7 +101,7 @@ const JobPostsTable = () => {
                 <>
                   <tr key={index} className="">
                     {true && (
-                      <td className="d-flex mt-3 ">
+                      <td className="d-flex">
                         <input type="checkbox" />
                         {/* <div
                           onClick={() => {
@@ -126,7 +130,7 @@ const JobPostsTable = () => {
                         </div> */}
                       </td>
                     )}
-                    <td style={{width:'120px'}}>
+                    <td >
                       <Link href='/employers-dashboard/job-posts/[id]'  as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}  >
                       {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
                       {item.job_code}
@@ -137,27 +141,36 @@ const JobPostsTable = () => {
                       {item.title}
                       {/* <a href="#">Super CV Pack</a> */}
                     </td>
-                    <td className="">{"-"}</td>
+                    <td className="">{item.client_name}</td>
                     <td>{item.city}</td>
                     <td className="">{item.state}</td>
                     <td className="">{item.job_status}</td>
                     <td className="">
                       {item.currency}{item.currency ?'/' : ''}{item.amount}{item.amount ?'/' : ''}{item.payment_frequency}
                     </td>
-                    <td className="">{"-"}</td>
+                    <td className="">{item.delivery_manager_name}</td>
                     <td className="">{item.contact_manager_name}</td>
-                    <td className="">{item.assign_name}</td>
-                    <td className="" style={{ width: "200px" }}>
+                    <td className="">
+                      <div className="d-flex">
+                        {item.assign_details.map((item) => {
+                          return(
+                            <span>{item.first_name},</span>
+                          )
+                        })
+                        }
+                      </div>
+                    </td>
+                    <td className="" >
                       {"-"}
                     </td>
-                    <td className="" style={{ width: "200px" }}>
-                      {moment(item.created_at).format("dd-mm-yyyy hh:mm A")}
+                    <td className="" >
+                      {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="" style={{ width: "200px" }}>
-                      {moment(item.updated_at).format("dd-mm-yyyy hh:mm A")}
+                    <td className="" >
+                      {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="" style={{ width: "200px" }}>
-                      {"-"}
+                    <td className="" >
+                      {item.head_account_manager_name}
                     </td>
                     <td>
                       <div className="option-box">
@@ -233,7 +246,7 @@ const JobPostsTable = () => {
         </table>
       </div>
       {dataCount > 25 &&
-      <Pagination 
+      <Pagination
          page={page}
          setPage={setPage}
          dataCount={dataCount}

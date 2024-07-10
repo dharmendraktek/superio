@@ -65,14 +65,14 @@ const ApplicantTable = () => {
         </Link>
       </div>
       <div className="mt-2">
-        <div className="table_div">
+        <div className="table_div custom-scroll-sm">
           <table className="default-table ">
             <thead className="position-sticky">
               <tr>
-                <th>
+                <th style={{width:'100px'}}>
                   <input type="checkbox" />
                 </th>
-                <th className="w-10">Applicant ID</th>
+                <th className="">Applicant ID</th>
                 <th>Applicant Name</th>
                 <th>Email Address</th>
                 <th>Mobile Number</th>

@@ -100,7 +100,7 @@ export const postApiReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .post(url, data, header)
+    .post(url, data)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
@@ -108,7 +108,7 @@ export const postApiReq = async (endpoint, data) => {
       if (err.response.data.status == 401) {
         // handleLogout();
         // removeAuthCookie();
-        // localStorage.removeItem('is_user_token');
+        localStorage.removeItem('is_user_token');
         // window.location = '/';
         return handleApiError(err);
       } else {
@@ -142,7 +142,6 @@ export const patchReq = async (endpoint, data) => {
 
   return await patchReq(url, data)
     .then((response) => {
-      console.log("----respnes",response)
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {

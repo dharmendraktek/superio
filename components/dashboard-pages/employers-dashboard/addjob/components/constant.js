@@ -17,3 +17,11 @@ export const langList = [
     {name:'Chinese', is_checked:false},
     {name:'Japaneese', is_checked:false},
 ]
+
+export const jobStatus = [
+    {name:'Active'},
+    {name:'Inative'},
+    {name:'Hold'},
+    {name:'Closed'},
+    {name:'Slow'},
+]

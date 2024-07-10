@@ -27,6 +27,7 @@ import { MdDelete } from "react-icons/md";
 import { MdCopyAll } from "react-icons/md";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 
+import { RiTeamFill } from "react-icons/ri";
 
 
 
@@ -64,5 +65,6 @@ export const reactIcons = {
     delete: <MdDelete />,
     copy:<MdCopyAll />,
     emailRead:<MdOutlineMarkEmailRead />,
+    team:<RiTeamFill />,
     
 }

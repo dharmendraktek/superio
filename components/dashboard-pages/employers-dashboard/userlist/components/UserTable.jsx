@@ -114,44 +114,44 @@ const UserTable = () => {
               </div>
               </div>
             </div>
-      <div className="table_div">
+      <div className="table_div  custom-scroll-sm">
       <table className="default-table ">
-        <thead className="position-sticky">
+        <thead>
           <tr>
-            <th className="w-10">Id</th>
-            <th>Empcode</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Skype Id</th>
-            <th>Role</th>
-            <th>Team</th>
-            <th>Branch</th>
-            <th>Department</th>
-            <th>Reporting Manager</th>
-            <th className="">Action</th>
+            {/* <th style={{width:'70px'}}>Id</th> */}
+            <th style={{width:'100px'}}>Empcode</th>
+            <th style={{width:'200px'}}>Name</th>
+            <th style={{width:'300px'}}>Email</th>
+            <th style={{width:"300px"}}>Skype Id</th>
+            <th style={{width:"300px"}}>Role</th>
+            <th style={{width:"150px"}}>Team</th>
+            <th style={{width:"100px"}}>Branch</th>
+            <th style={{width:"100px"}}>Department</th>
+            <th style={{width:"200px"}}>Reporting Manager</th>
+            <th className="" style={{width:"100px"}}>Action</th>
           </tr>
         </thead>
         <tbody style={{width:'100%'}}>
           {userData.map((item, index) => {
             return (
               <tr key={index}>
-                <td className="w-10">{item.id}</td>
-                <td className="trans-id">{item.empcode}</td>
-                <td className="package">
+                {/* <td style={{width:'70px'}}>{item.id}</td> */}
+                <td style={{width:'100px'}}>{item.empcode}</td>
+                <td style={{width:'200px'}}>
                   {/* {item.username} */}
                   {item.user.first_name} {item.user.last_name}
                   {/* <a href="#">Super CV Pack</a> */}
                 </td>
-                <td className="expiry">{item.user.email}</td>
-                <td className="total-jobs">{item.user_skype_id}</td>
-                <td className="">{item.role_name}</td>
-                <td className="remaining">{item.team}</td>
-                <td className="status">
+                <td style={{width:'300px'}}>{item.user.email}</td>
+                <td style={{width:'300px'}}>{item.user_skype_id}</td>
+                <td style={{width:"300px"}}  >{item.role_name}</td>
+                <td style={{width:"150px"}}>{item.team}</td>
+                <td style={{width:"100px"}}>
                   {item.user_branch == 1 ? "INDIA" : "USA"}
                 </td>
-                <td className="status">{item.department_name}</td>
-                <td className="status">{item.reportingmanager_name}</td>
-                <td className="text-center">
+                <td style={{width:"100px"}}>{item.department_name}</td>
+                <td className="" style={{width:"300px"}} >{item.reportingmanager_name}</td>
+                <td className="text-center" style={{width:"100px"}}>
                   <div className="option-box text-center">
                     <ul className="option-list">
                       <li>

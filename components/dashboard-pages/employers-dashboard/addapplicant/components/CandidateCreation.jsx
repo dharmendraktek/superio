@@ -41,7 +41,6 @@ const CandidateCreation = ({tab, setTab}) => {
      setForm((prev) => ({...prev, [name]:value}))
   }
 
-  console.log("------------form ", form);
 
   return (
     <div className="shadow py-3 px-4">

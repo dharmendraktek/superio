@@ -31,7 +31,7 @@ const Notes = () => {
                     tab == item.id
                       ? "bg-primary text-white border-primary"
                       : "bg-white text-black"
-                  } border text-black align-items-center border-1 rounded-2 ps-2 d-flex gap-3`}
+                  } border text-black align-items-center cursor-pointer border-1 rounded-2 ps-2 d-flex gap-3`}
                 >
                   <span className="fs-6">{item.name}</span>
                   <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">
