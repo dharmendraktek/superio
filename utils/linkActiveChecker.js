@@ -1,5 +1,5 @@
 // is active parent check
-export const isActiveParent = (data = [ ], path) => {
+export const isActiveParent = (data = [], path) => {
   if (data?.length !== 0) {
     return data?.some(({ items }) =>
       items?.some(

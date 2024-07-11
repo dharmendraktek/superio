@@ -22,10 +22,13 @@ const Index = () => {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
   const [viewMore, setViewMore] = useState(false);
+  const [noteData, setNoteData] = useState([]);
+
 
   const handleGetJobDetails = async () => {
     const response = await axios.get(BASE_URL + `/jobs/${jobId}/`);
     setJobData(response.data);
+    setNoteData(response.data.notes);
   };
 
   useEffect(() => {
@@ -130,10 +133,10 @@ const Index = () => {
                  <Submissions />
                   </div>
                   <div className="my-2">
-                 <Notes />
+                 <Notes jobId={jobId} noteData={noteData} setNoteData={setNoteData} />
                   </div>
                   <div className="my-2">
-                 <Documents />
+                 <Documents jobId={jobId}/>
                   </div>
                 </>
               ) : (

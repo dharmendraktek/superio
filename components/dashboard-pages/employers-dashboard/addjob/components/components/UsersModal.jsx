@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 
 
-const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, handleGetUsersList, setAssignList, assignList}) => {
+const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, handleGetUsersList, setAssignList, assignList, search, setSearch, handleClose}) => {
   const [teamList, setTeamList] = useState([]);
 
   useEffect(() =>{
@@ -17,10 +17,10 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
   useEffect(() => {
     if(teamId)
     handleGetTeamMamber();
-    else
+    else if(!teamId)
     handleGetUsersList()
 
-  }, [teamId])
+  }, [teamId, search])
 
 
   const handleGetTeamName = async() => {
@@ -32,19 +32,28 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
 
 
   const handleGetTeamMamber = async() => {
-    const response = await getReq(`/team-users/${teamId}/`);
+    const response = await getReq(`/team-users/${teamId}/${search ? `?search=${search}` : ''}`);
     if(response.status){
-      setUsersList(response.data);
+      let merged = response.data.map((item) => {
+        return {
+          'teamname':item.teamname,
+          ...item.user
+        }
+      })
+      setUsersList(merged);
     }
   }
+   
   
+
+
     return(
         <div className="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-xl">
           <div className="modal-content">
             <div className="modal-header border border-bottom-primary">
               <h5 className="modal-title" id="usersModalLabel">Assign Team Members</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="row">
@@ -55,9 +64,9 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
                      <div className="custom-scroll-sm" style={{minHeight:"250px",maxHeight:'300px', overflowY:'scroll'}}>
                   {teamList.map((item) => {
                       return(
-                        <li className="d-flex gap-2 cursor-pointer" onClick={() => setTeamId(item.id)}>
+                        <li className={`d-flex gap-2 cursor-pointer ${item.id == teamId ? 'text-primary' : ''}`} onClick={() => setTeamId(item.id)}>
                           <span className="fs-5">{reactIcons.team}</span>
-                          <span className="fs-6">{item.team_name}</span>
+                          <span className="fs-6 fw-semibold">{item.team_name}</span>
                         </li>
                       )
                   })
@@ -66,13 +75,13 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
                    </div>
                 </div>
                 <div className="col-5">
-                    <input type="text" placeholder="Seach..." className="client-form-input" />
+                    <input type="text" placeholder="Seach..." className="client-form-input" onChange={(e) => setSearch(e.target.value)} />
                   <div className="mt-2 custom-scroll-sm" style={{minHeight:"250px",maxHeight:'345px', overflowY:'scroll'}}>
                     {usersList?.map((item, index) => {
                       return(
                     <div className="d-flex gap-2 my-1" key={index}>
                        <input type="checkbox" 
-                        checked={form?.assign?.find(_item => _item == item.id)}
+                        checked={assignList.find(_item => _item.id == item.id) ? true : false}
                         onChange={(e) => {
                           if (e.target.checked) {
                             let temp = [...assignList]
@@ -101,11 +110,7 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
                         }}
                        
                        />
-                       {teamId ?
-                       <span>{item?.user?.first_name} {item?.user?.last_name} ({item.user.email})</span>
-                       :
-                       <span>{item.first_name} {item.last_name} ({item.email})</span>
-                       }
+                       <span className="text-primary">{item?.first_name} {item?.last_name} ({item?.email})</span>
                     </div>
                       )
                     })
@@ -115,14 +120,19 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
                 <div className="col-4">
                 <div>
                   {assignList.map((item) => {
-                    return <p>{item.first_name} ({item.email})</p>;
+                    return(
+                      <div className="d-flex gap-2">
+                        <p className="text-black">{item.first_name} ({item.email})</p>
+                        <span onClick={() => handleClose(item)} className="text-danger cursor-pointer">{reactIcons.close}</span>
+                      </div>
+                    ) 
                   })}
                 </div>
                 </div>
               </div>
             </div>
             <div className="modal-footer">
-              <button  type="button" className="theme-btn btn-style-one small">Save</button>
+              <button  type="button" className="theme-btn btn-style-one small" data-bs-dismiss="modal">Save</button>
               <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Close</button>
             </div>
           </div>

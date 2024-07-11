@@ -851,11 +851,11 @@ const ClientTable = () => {
                   {item.id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={7}>
-                        <div className="mx-5" style={{ width: "600px" }}>
+                        <div className="mx-5" style={{ width: "1500px" }}>
                           <div></div>
                           <table>
                             <thead>
-                              <th style={{width:"150px"}}>Name</th>
+                              <th >Name</th>
                               <th>Email</th>
                               <th>Office number</th>
                               <th>Designation</th>
@@ -894,7 +894,7 @@ const ClientTable = () => {
                                       data-bs-target="#offcanvasLeft"
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
-                                      style={{width:'250px'}}
+                                     
                                     >
                                       {contact.name}
                                     </td>

@@ -28,8 +28,9 @@ import { MdCopyAll } from "react-icons/md";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 
 import { RiTeamFill } from "react-icons/ri";
+import { HiDotsVertical } from "react-icons/hi";
 
-
+import { RiEdit2Fill } from "react-icons/ri";
 
 
 
@@ -66,5 +67,8 @@ export const reactIcons = {
     copy:<MdCopyAll />,
     emailRead:<MdOutlineMarkEmailRead />,
     team:<RiTeamFill />,
+    dots:<HiDotsVertical />,
+    edit:<RiEdit2Fill />
+    
     
 }

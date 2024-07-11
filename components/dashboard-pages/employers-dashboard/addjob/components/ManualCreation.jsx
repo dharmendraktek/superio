@@ -80,7 +80,7 @@ const ManualCreation = ({
   const [languageList, setLanguageList] = useState([]);
   const [teamId, setTeamId] = useState();
   const [assignList, setAssignList] = useState([]);
-
+  const [search, setSearch] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,16 +95,15 @@ const ManualCreation = ({
   //   }
   // }, [jobData.languages])\
 
-
   useEffect(() => {
     if (jobData) {
-      setAssignList(jobData.assign_details ? jobData.assign_details : [])
+      setAssignList(jobData.assign_details ? jobData.assign_details : []);
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
         title: jobData.title,
         currency: jobData.currency,
-        amount: jobData.amount !== 'Not specified' ? jobData.amount : 0 ,
+        amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
         payment_frequency: jobData.payment_frequency,
         job_type: jobData.job_type,
         start_date: jobData.start_date,
@@ -120,8 +119,22 @@ const ManualCreation = ({
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
-        primary_skills: jobData.secondary_skills =='Not specified' ? [] : typeof jobData.primary_skills == 'object' ? jobData.primary_skills : typeof jobData.primary_skills == 'string' ? jobData.primary_skills.split(',').map(name => ({ name })) : [] ,
-        secondary_skills: jobData.secondary_skills =='Not specified' ? [] :  typeof jobData.secondary_skills == 'object' ? jobData.secondary_skills : typeof jobData.secondary_skills == 'string' ? jobData.secondary_skills.split(',').map(name => ({ name })) : [] ,
+        primary_skills:
+          jobData.secondary_skills == "Not specified"
+            ? []
+            : typeof jobData.primary_skills == "object"
+            ? jobData.primary_skills
+            : typeof jobData.primary_skills == "string"
+            ? jobData.primary_skills.split(",").map((name) => ({ name }))
+            : [],
+        secondary_skills:
+          jobData.secondary_skills == "Not specified"
+            ? []
+            : typeof jobData.secondary_skills == "object"
+            ? jobData.secondary_skills
+            : typeof jobData.secondary_skills == "string"
+            ? jobData.secondary_skills.split(",").map((name) => ({ name }))
+            : [],
         languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
@@ -149,12 +162,16 @@ const ManualCreation = ({
 
   useEffect(() => {
     handleGetClientNames();
-    handleGetUsersList();
     handleGetLobs();
     handleGetJobCode();
     handleGetDepartment();
     handleGetLanguageList();
+    handleGetUsersList();
   }, []);
+
+  useEffect(() => {
+    handleGetUsersList();
+  }, [search]);
 
   useEffect(() => {
     if (form.client) {
@@ -205,7 +222,9 @@ const ManualCreation = ({
   };
 
   const handleGetUsersList = async () => {
-    const response = await axios.get(BASE_URL + "/users/");
+    const response = await axios.get(
+      BASE_URL + `/users/${search ? `?search=${search}` : ""}`
+    );
     if (response.status) {
       setUsersList(response.data);
     }
@@ -217,7 +236,7 @@ const ManualCreation = ({
       const response =
         jobData && jobType == "Email"
           ? await axios.patch(BASE_URL + `/temp-jobs/${jobData.id}/`, form)
-          : name == 'update'
+          : name == "update"
           ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
           : await axios.post(BASE_URL + "/jobs/", form);
       setIsLoading(false);
@@ -266,6 +285,26 @@ const ManualCreation = ({
     }
   }, [descriptionData]);
 
+  const handleClose = (item) => {
+    let temp = [...assignList];
+    let newTemp = temp.filter((_item) => _item.id !== item.id);
+    setAssignList(newTemp);
+    setForm((prev) => ({
+      ...prev,
+      assign: prev.assign.filter((_item, _index) => _item !== item.id),
+    }));
+  };
+
+  const handleFileUpload = (e) => {
+    console.log("---------e.target field ", e.target.files);
+    //   let file = e.target.files[0]
+    //   const formData = new FormData();
+    //   formData.append('file', file);
+    //   formData.append('job', jobId)
+
+    //  const response =  axios.post(BASE_URL + `/documents/`, formData)
+    //  console.log("-----------resposne upload documet ", response);
+  };
 
   return (
     <div className="p-5">
@@ -280,9 +319,12 @@ const ManualCreation = ({
         handleGetUsersList={handleGetUsersList}
         assignList={assignList}
         setAssignList={setAssignList}
+        search={search}
+        setSearch={setSearch}
+        handleClose={handleClose}
       />
       <div className="d-flex justify-content-between">
-        <h4>{name =='update' ? "Update Job Posting" : "New Job Posting"}</h4>
+        <h4>{name == "update" ? "Update Job Posting" : "New Job Posting"}</h4>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
@@ -290,7 +332,7 @@ const ManualCreation = ({
           >
             {isLoading ? (
               <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
-            ) : name =='update' ? (
+            ) : name == "update" ? (
               "Update"
             ) : (
               "Save"
@@ -315,19 +357,19 @@ const ManualCreation = ({
           <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
         </div>
         <div className="row px-5">
-          {!jobType &&
-          <div className="col-4 my-2">
-            <p>Job Code</p>
-            <input
-              name="job_code"
-              value={form.job_code}
-              onChange={handleChange}
-              className="client-form-input"
-              type="text"
-              disabled={form.job_code}
-            />
-          </div>
-          }
+          {!jobType && (
+            <div className="col-4 my-2">
+              <p>Job Code</p>
+              <input
+                name="job_code"
+                value={form.job_code}
+                onChange={handleChange}
+                className="client-form-input"
+                type="text"
+                disabled={form.job_code}
+              />
+            </div>
+          )}
           <div className="col-4 my-2">
             <p>Job Title</p>
             <input
@@ -618,6 +660,7 @@ const ManualCreation = ({
                 data-bs-toggle="tooltip"
                 data-bs-placement="top-right"
                 title="Please enter skills enter button as seprator"
+                className="text-primary"
               >
                 {reactIcons.info}
               </span>
@@ -649,11 +692,12 @@ const ManualCreation = ({
                   return (
                     <div
                       key={index}
-                      className="mx-1 px-1 gap-6 text-white rounded bg-primary"
+                      className="mx-1 px-1 gap-6 text-white rounded"
+                      style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
                       <span
-                        className="cursor-pointer ms-2"
+                        className="cursor-pointer text-black ms-2"
                         onClick={() => handleRemoveSkills(index)}
                       >
                         {reactIcons.close}
@@ -667,13 +711,14 @@ const ManualCreation = ({
           <div className="col-4 my-2">
             <p>
               Secondary Skills{" "}
-              <span
+              <button
                 data-bs-toggle="tooltip"
                 data-bs-placement="top-right"
                 title="Please enter skills enter button as seprator"
+                className="text-primary"
               >
-                {reactIcons.info}
-              </span>
+                <span>{reactIcons.info}</span>
+              </button>
             </p>
             <div className="position-relative">
               <input
@@ -702,11 +747,12 @@ const ManualCreation = ({
                   return (
                     <div
                       key={index}
-                      className="mx-1 px-1 gap-6 text-white rounded bg-primary"
+                      className="mx-1 px-1 gap-6 text-white rounded"
+                      style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
                       <span
-                        className="cursor-pointer ms-2"
+                        className="cursor-pointer ms-2 text-black"
                         onClick={() => handleRemoveSecondarySkills(index)}
                       >
                         {reactIcons.close}
@@ -724,9 +770,18 @@ const ManualCreation = ({
                 className="client-form-input d-flex justify-content-between"
                 onClick={() => setOpenLang(!openLang)}
               >
-                <div>
-                  {form.languages.map((item) => {
-                    return <span>{item.name},</span>;
+                <div className="d-flex gap-2">
+                  {form.languages.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="my-1 px-1 text-white d-flex gap-1 rounded-1"
+                        style={{ background: "var(--primary-2nd-color)" }}
+                      >
+                        <span>{item.name}</span>
+                        {/* <span onClick={() => handleClose(item)} className="text-black fs-6 cursor-pointer">{reactIcons.close}</span> */}
+                      </div>
+                    );
                   })}
                 </div>
                 <span className=" float-end">{reactIcons.downarrow}</span>
@@ -825,7 +880,11 @@ const ManualCreation = ({
               onChange={handleChange}
             >
               {usersList.map((item) => {
-                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
+                return (
+                  <option key={item.id}>
+                    {item.first_name} {item.last_name} ({item.email})
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -853,7 +912,11 @@ const ManualCreation = ({
             >
               <option>Select</option>
               {usersList.map((item) => {
-                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
+                return (
+                  <option key={item.id}>
+                    {item.first_name} {item.last_name} ({item.email})
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -867,7 +930,11 @@ const ManualCreation = ({
             >
               <option>Select</option>
               {usersList.map((item) => {
-                return <option key={item.id}>{item.first_name} {item.last_name} ({item.email})</option>;
+                return (
+                  <option key={item.id}>
+                    {item.first_name} {item.last_name} ({item.email})
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -875,9 +942,22 @@ const ManualCreation = ({
             <div className="col-4 my-2">
               <p>Assigned To</p>
               <div className="client-form-input d-flex justify-content-between">
-                <div>
+                <div className="d-flex gap-2">
                   {assignList.map((item) => {
-                    return <span>{item.first_name}</span>;
+                    return (
+                      <div
+                        className="my-1 px-1 text-white d-flex gap-1 rounded-1"
+                        style={{ background: "var(--primary-2nd-color)" }}
+                      >
+                        <span>{item.first_name}</span>
+                        <span
+                          onClick={() => handleClose(item)}
+                          className="text-black fs-6 cursor-pointer"
+                        >
+                          {reactIcons.close}
+                        </span>
+                      </div>
+                    );
                   })}
                 </div>
               </div>
@@ -980,7 +1060,14 @@ const ManualCreation = ({
                     alt="brand"
                   />
                 </div>
-                <input type="file" id="upload" className="d-none" />
+                <input
+                  type="file"
+                  id="upload"
+                  onChange={(e) => {
+                    console.log("-------e ", e.target.files)
+                  }}
+                  className="d-none"
+                />
               </label>
             </div>
           )}

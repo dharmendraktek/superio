@@ -3,6 +3,7 @@
   --primary-hover-bg-color: #0146a6;
   --primary-2nd-color: #f9ab00;
   --primary-2nd-hover-bg-color: #e9a000;
+  --theme-color-first : #77a6f7;
 }
 
 .gradient-color-1 {
@@ -216,12 +217,26 @@ li {
   padding: 8px 20px;
 }
 
-.table_div::-webkit-scrollbar {
-  width:5px; 
-  height: 5px;
-/* width of the scrollbar */
+.custom-scroll-sm::-webkit-scrollbar {
+  background-color: var(--theme-color-first);
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
 }
-.table_div::-webkit-scrollbar-thumb {
-  background-color: #3B71CA; 
-/* color of the scrollbar thumb */
+.custom-scroll-sm::-webkit-scrollbar-track {
+  background-color:lightgray;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+}
+.custom-scroll-sm::-webkit-scrollbar-thumb {
+  background-color:var(--theme-color-first);
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+}
+
+.modal-header{
+  background-color: var(--theme-color-first);
+  color: white;
 }

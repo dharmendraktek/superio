@@ -29,7 +29,7 @@ tbody tr:nth-child(even) {
 
 .default-table thead {
   background: #77a6f7;
-  border-radius: 8px;
+  border-radius: 4px;
   color: #ffffff;
   display: table;
   width: 100%;
@@ -91,24 +91,7 @@ tbody tr:nth-child(even) {
 }
 
 
-.custom-scroll-sm::-webkit-scrollbar {
-  background-color: #77a6f7;
-  border-radius: 10px;
-  width: 10px;
-  height: 10px;
-}
-.custom-scroll-sm::-webkit-scrollbar-track {
-  background-color:lightgray;
-  border-radius: 5px;
-  width: 10px;
-  height: 10px;
-}
-.custom-scroll-sm::-webkit-scrollbar-thumb {
-  background-color: #77a6f7;
-  border-radius: 5px;
-  width: 10px;
-  height: 10px;
-}
+
 // ::-webkit-scrollbar {
 //   background-color: #77a6f7;
 //   border-radius: 5px;

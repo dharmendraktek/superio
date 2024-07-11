@@ -2,44 +2,46 @@ import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js';
+import {
+  ContentState,
+  EditorState,
+  convertFromHTML,
+  convertToRaw,
+} from "draft-js";
 
-
-const HtmlEditor = ({setDescriptionData, form, wrapperStyle}) => {
-
-  
-    const blocksFromHTML = convertFromHTML(form.description);
-    const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-    const initialEditorState = EditorState.createWithContent(contentState);
-  const [intState, setIntState] = useState('<p>New job description of the Python developer</p>');
+const HtmlEditor = ({ setDescriptionData, form, wrapperStyle }) => {
+  const blocksFromHTML = convertFromHTML(form.description);
+  const contentState = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
+  );
+  const initialEditorState = EditorState.createWithContent(contentState);
+  const [intState, setIntState] = useState(
+    "<p>New job description of the Python developer</p>"
+  );
   const [editorState, setEditorState] = useState(initialEditorState);
 
   useEffect(() => {
-     if(form.description){
-
+    if (form.description) {
       setIntState(form.description);
-     }
-  }, [form.description])
-
+    }
+  }, [form.description]);
 
   const onEditorStateChange = (newEditorState) => {
-          setEditorState(newEditorState);
+    setEditorState(newEditorState);
   };
-  
+
   const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
   useEffect(() => {
-    if(content !== '<p></p>\n'){
-      setDescriptionData(content)
+    if (content !== "<p></p>\n") {
+      setDescriptionData(content);
     }
-  }, [content])
-
+  }, [content]);
 
   return (
     <>
       <Editor
-        wrapperStyle ={
-         wrapperStyle
-        }
+        wrapperStyle={wrapperStyle}
         // initialContentState={'<p>hiii this is job description</p>'}
         editorState={editorState}
         toolbarClassName="toolbarClassName"
