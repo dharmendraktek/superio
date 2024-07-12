@@ -31,6 +31,8 @@ import { RiTeamFill } from "react-icons/ri";
 import { HiDotsVertical } from "react-icons/hi";
 
 import { RiEdit2Fill } from "react-icons/ri";
+import { IoMdEye } from "react-icons/io";
+
 
 
 
@@ -68,7 +70,6 @@ export const reactIcons = {
     emailRead:<MdOutlineMarkEmailRead />,
     team:<RiTeamFill />,
     dots:<HiDotsVertical />,
-    edit:<RiEdit2Fill />
-    
-    
+    edit:<RiEdit2Fill />,
+    view:<IoMdEye />
 }

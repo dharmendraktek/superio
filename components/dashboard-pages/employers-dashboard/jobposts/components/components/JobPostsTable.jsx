@@ -13,6 +13,7 @@ import { reactIcons } from "@/utils/icons";
 import { getReq } from "@/utils/apiHandlers";
 import Pagination from "@/components/common/Pagination";
 import { removeSpecialChar } from "@/utils/constant";
+import Loader from "@/components/common/Loader";
 
 const JobPostsTable = () => {
   const [expand, setExpand] = useState(null);
@@ -20,30 +21,31 @@ const JobPostsTable = () => {
   const [search, setSearch] = useState();
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getJobpostsList();
   }, []);
 
   const getJobpostsList = async () => {
-    const response = await getReq(`/jobs/?page=${page+1}${search ?`&search=${search}` :''}`);
+    setIsLoading(true);
+    const response = await getReq(
+      `/jobs/?page=${page + 1}${search ? `&search=${search}` : ""}`
+    );
+    setIsLoading(false);
     if (response.status) {
       setJobPostList(response.data.results);
-      setDataCount(response?.data.count)
+      setDataCount(response?.data.count);
     }
   };
 
   useEffect(() => {
-     
-      getJobpostsList(search)
-     
-  }, [search, page])
-
-
+    getJobpostsList(search);
+  }, [search, page]);
 
   return (
     <>
+      {isLoading && <Loader />}
       <div className="d-flex justify-content-between my-2">
         <div className="position-relative">
           <input
@@ -84,11 +86,13 @@ const JobPostsTable = () => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th style={{width:'50px'}}>
+                      <th style={{ width: "50px" }}>
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : (
-                      <th style={{width:'200px'}}  key={index} >{removeSpecialChar(item.title)}</th>
+                      <th style={{ width: "200px" }} key={index}>
+                        {removeSpecialChar(item.title)}
+                      </th>
                     )}
                   </>
                 );
@@ -130,10 +134,13 @@ const JobPostsTable = () => {
                         </div> */}
                       </td>
                     )}
-                    <td >
-                      <Link href='/employers-dashboard/job-posts/[id]'  as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}  >
-                      {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
-                      {item.job_code}
+                    <td>
+                      <Link
+                        href="/employers-dashboard/job-posts/[id]"
+                        as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}
+                      >
+                        {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
+                        {item.job_code}
                       </Link>
                     </td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
@@ -146,50 +153,52 @@ const JobPostsTable = () => {
                     <td className="">{item.state}</td>
                     <td className="">{item.job_status}</td>
                     <td className="">
-                      {item.currency}{item.currency ?'/' : ''}{item.amount}{item.amount ?'/' : ''}{item.payment_frequency}
+                      {item.currency}
+                      {item.currency ? "/" : ""}
+                      {item.amount}
+                      {item.amount ? "/" : ""}
+                      {item.payment_frequency}
                     </td>
                     <td className="">{item.delivery_manager_name}</td>
                     <td className="">{item.contact_manager_name}</td>
                     <td className="">
                       <div className="d-flex">
                         {item.assign_details.map((item) => {
-                          return(
-                            <span>{item.first_name},</span>
-                          )
-                        })
-                        }
+                          return <span>{item.first_name},</span>;
+                        })}
                       </div>
                     </td>
-                    <td className="" >
-                      {"-"}
-                    </td>
-                    <td className="" >
+                    <td className="">{"-"}</td>
+                    <td className="">
                       {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="" >
+                    <td className="">
                       {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="" >
-                      {item.head_account_manager_name}
-                    </td>
+                    <td className="">{item.head_account_manager_name}</td>
                     <td>
                       <div className="option-box">
                         <ul className="option-list">
                           <li>
-                            <button
-                              data-bs-toggle="modal"
-                              data-bs-target="#clientUpdateModal"
-                              data-text="Edit User"
+                            <Link
+                              href="/employers-dashboard/job-posts/[id]"
+                              as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}
                             >
-                              {/* <a
+                              <button
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#clientUpdateModal"
+                                data-text="Edit User"
+                              >
+                                {/* <a
                             href="#"
                             className="theme-btn btn-style-three call-modal"
                             data-bs-toggle="modal"
                             data-bs-target="#userUpdateModal"
                           > */}
-                              <span className="las la-edit"></span>
-                              {/* </a> */}
-                            </button>
+                                <span className="las la-edit"></span>
+                                {/* </a> */}
+                              </button>
+                            </Link>
                           </li>
                           <li>
                             <button
@@ -245,15 +254,15 @@ const JobPostsTable = () => {
           </tbody>
         </table>
       </div>
-      {dataCount > 25 &&
-      <Pagination
-         page={page}
-         setPage={setPage}
-         dataCount={dataCount}
-         pageSize={25}
-        //  setPageSize={setPageSize}
+      {dataCount > 25 && (
+        <Pagination
+          page={page}
+          setPage={setPage}
+          dataCount={dataCount}
+          pageSize={25}
+          //  setPageSize={setPageSize}
         />
-      }
+      )}
     </>
   );
 };

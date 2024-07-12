@@ -123,8 +123,8 @@ const Index = () => {
                     </div>
                     <div>
                       <h4>Job Description</h4>
-                      <div className="mt-2" dangerouslySetInnerHTML={{__html:  viewMore ?  jobData?.description?.slice(0, jobData?.description?.length) : jobData?.description?.slice(0, 1250) }} />
-                      {jobData?.description?.length > 1250 &&
+                      <div className="mt-2" dangerouslySetInnerHTML={{__html:  viewMore ?  jobData?.description?.slice(0, jobData?.description?.length) : jobData?.description?.slice(0, 500) }} />
+                      {jobData?.description?.length > 500 &&
                       <button onClick={() => setViewMore(!viewMore)} className="theme-btn btn-style-one small mt-2">{viewMore ? 'Less' : 'More'}</button>
                       }
                     </div>
@@ -136,11 +136,11 @@ const Index = () => {
                  <Notes jobId={jobId} noteData={noteData} setNoteData={setNoteData} />
                   </div>
                   <div className="my-2">
-                 <Documents jobId={jobId}/>
+                 <Documents jobId={jobId} jobData={jobData} handleGetJobDetails={handleGetJobDetails}/>
                   </div>
                 </>
               ) : (
-                <ManualCreation setOpen={setOpen} jobData={jobData}  name='update'  handleGetJobDetails={handleGetJobDetails}  />
+                <ManualCreation setOpen={setOpen} jobData={jobData} setJobData={setJobData}  name='update'  handleGetJobDetails={handleGetJobDetails}  />
               )}
             </div>
             {open &&

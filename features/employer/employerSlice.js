@@ -25,6 +25,7 @@ const initialState = {
         },
     ],
     companySize: [],
+    employerDetails : [],
 };
 
 export const employerSlice = createSlice({
@@ -34,8 +35,11 @@ export const employerSlice = createSlice({
         login: (state, action) => {
             token=action.payload
           },
+        employeeDetail : (state, action) => {
+            console.log("---------------employeee action details ", action.payload);
+        }
     },
 });
 
-export const {login} = employerSlice.actions;
+export const {login, employeeDetail} = employerSlice.actions;
 export default employerSlice.reducer;

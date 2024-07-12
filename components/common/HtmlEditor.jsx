@@ -38,11 +38,26 @@ const HtmlEditor = ({ setDescriptionData, form, wrapperStyle }) => {
     }
   }, [content]);
 
+  const toolbarOptions = {
+    // options: ['fontFamily', 'fontSize'], // Add font name and font size options
+    fontFamily: {
+      options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Verdana'],
+    },
+    fontSize: {
+      options: [8, 10, 12, 14, 18, 24, 36],
+    },
+  };
+
+
   return (
     <>
       <Editor
         wrapperStyle={wrapperStyle}
         // initialContentState={'<p>hiii this is job description</p>'}
+        editorStyle={{
+          padding:'0px 10px'
+        }}
+        toolbar={toolbarOptions}
         editorState={editorState}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"

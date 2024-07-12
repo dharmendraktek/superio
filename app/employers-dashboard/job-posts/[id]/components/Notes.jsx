@@ -197,8 +197,8 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
               id="offcanvasRight"
               aria-labelledby="offcanvasRightLabel"
             >
-              <div className="offcanvas-header">
-                <h5 id="offcanvasRightLabel">Add Notes</h5>
+              <div className="offcanvas-header" style={{background:'var(--theme-color-first)'}}>
+                <h5 id="offcanvasRightLabel" className="text-white">Add Notes</h5>
                 <button
                   type="button"
                   className="btn-close text-reset"

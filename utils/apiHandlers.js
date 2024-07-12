@@ -27,13 +27,12 @@ import { BASE_URL } from './endpoints';
 //   }
 // };
 
-// let header = isDevelopment
-//   ? {
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem('is_user_token')}`,
-//       },
-//     }
-//   : { withCredentials: true };
+let header =  {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('is_user_token')}`,
+      },
+    }
+ 
 
 // export const setAuthCookie = () => {
 //   return Cookies.set(
@@ -160,7 +159,7 @@ export const getReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .get(url)
+    .get(url, header)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })

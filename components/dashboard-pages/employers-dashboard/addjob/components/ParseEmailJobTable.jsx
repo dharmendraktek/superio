@@ -39,7 +39,9 @@ const ParseEmailJobTable = () => {
   }, []);
 
   return (
-    <div className="p-5">
+    <>
+        <div className="px-5 py-1">
+      <h3>Parse Job Post By Email</h3>
       {open ? (
         <>
         <div className="table_div custom-scroll-sm">
@@ -171,8 +173,9 @@ const ParseEmailJobTable = () => {
           handleGetJobDetails={handleGetParseJobByEmail}
         />
       )}
-      
     </div>
+      
+    </>
   );
 };
 

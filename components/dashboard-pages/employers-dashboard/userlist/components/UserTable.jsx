@@ -11,6 +11,7 @@ import Pagination from "@/components/common/Pagination";
 import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import { SyncLoader } from "react-spinners";
+import Loader from "@/components/common/Loader";
 
 const tabsName = [
   { id: 1, name: "ACTIVE USERS" },
@@ -26,6 +27,7 @@ const UserTable = () => {
   const [page, setPage] = useState(0);
   const [active, setActive] = useState(1);
   const [search, setSearch] = useState();
+
   
 
   const getUserList = async (search) => {
@@ -65,6 +67,9 @@ const UserTable = () => {
 
   return (
     <>
+    {loading &&
+      <Loader />
+    }
       <UserUpdateModal getUserList={getUserList} item={item} />
       <UserDeleteModal
         active={active}

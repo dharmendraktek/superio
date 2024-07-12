@@ -1,5 +1,7 @@
+import { getReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
+import { employeeDetail } from "./employerSlice";
 
 
 export const handleGetLobs = async() => {
@@ -29,3 +31,12 @@ export const handleGetUsersList = async() => {
       setUsersList(response.data);
     }
   } 
+
+
+export const getUserDetails = async() => {
+    const response = await getReq('/current-user/');
+    console.log("------------response ", response);
+    if(response.status){
+      return response.data
+    }
+}

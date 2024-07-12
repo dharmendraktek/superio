@@ -14,6 +14,7 @@ import moment from "moment";
 import { BeatLoader } from "react-spinners";
 import Pagination from "@/components/common/Pagination";
 import { getReq, patchReq, postReq } from "@/utils/apiHandlers";
+import Loader from "@/components/common/Loader";
 
 const tabsName = [
   { id: 1, name: "ACTIVE USERS" },
@@ -64,8 +65,9 @@ const ClientTable = () => {
   const [contactDetails, setContactDetails] = useState();
   const [contLoading, setContLoading] = useState(false);
   const [contactSearch, setContactSearch] = useState();
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (client) {
@@ -106,14 +108,16 @@ const ClientTable = () => {
   }, [contactDetails]);
 
   const getClientList = async (search) => {
+    setIsLoading(true);
     const response = await getReq(
-        `/clients-list/?active=${active == 1 ? true : false}&page=${page+1}${
-          search ? `&search=${search}` : ""
-        }`
+      `/clients-list/?active=${active == 1 ? true : false}&page=${page + 1}${
+        search ? `&search=${search}` : ""
+      }`
     );
+    setIsLoading(false);
     if (response.status) {
       setClientData(response.data.results);
-      setDataCount(response.data.count)
+      setDataCount(response.data.count);
     }
   };
 
@@ -141,7 +145,7 @@ const ClientTable = () => {
       const response = await postReq("/create-client/", form);
       if (response.status) {
         setLoading(false);
-        setForm(initialState)
+        setForm(initialState);
         toast.success("You have been created client successfully!");
         getClientList();
       }
@@ -154,9 +158,7 @@ const ClientTable = () => {
   const handleUpdateClient = async () => {
     try {
       setLoading(true);
-      const response = await patchReq(`/update-client/${client.id}/`,
-        form
-      );
+      const response = await patchReq(`/update-client/${client.id}/`, form);
       if (response.status) {
         setLoading(false);
         toast.success("You have been updated client successfylly!");
@@ -187,7 +189,7 @@ const ClientTable = () => {
     }
   };
   const handleInactiveClient = async (id) => {
-    console
+    console;
     // const response = await patchReq(`/delete-client/${id}/`);
     const response = await axios.patch(BASE_URL + `/delete-client/${id}/`);
 
@@ -212,16 +214,14 @@ const ClientTable = () => {
   const handleCreateClientContact = async () => {
     try {
       setContLoading(true);
-      const response = await postReq("/contact-manager/",
-        contactData
-      );
+      const response = await postReq("/contact-manager/", contactData);
       if (response.status) {
         setContLoading(false);
         toast.success("You have been created client contact successfully!");
         getClientList();
-        setContactData(initialStateContact)
+        setContactData(initialStateContact);
       }
-      if(response.error){
+      if (response.error) {
         setContLoading(false);
       }
     } catch (err) {
@@ -233,7 +233,8 @@ const ClientTable = () => {
   const handleUpdateClientContact = async () => {
     try {
       setContLoading(true);
-      const response = await patchReq(`/contact-manager/${contactData.client_ref}/`,
+      const response = await patchReq(
+        `/contact-manager/${contactData.client_ref}/`,
         contactData
       );
       if (response.status) {
@@ -247,10 +248,9 @@ const ClientTable = () => {
     }
   };
 
-
-
   return (
     <>
+      {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
         <div className="d-flex">
           <div
@@ -329,10 +329,10 @@ const ClientTable = () => {
                   data-bs-target="#offcanvasRight"
                   aria-controls="offcanvasRight"
                   className="cursor-pointer text-black hover-bg-gray px-2"
-                  onClick={() =>{
-                    setOpen(!open)
-                    setClient(initialState)
-                    }}
+                  onClick={() => {
+                    setOpen(!open);
+                    setClient(initialState);
+                  }}
                 >
                   Client
                 </li>
@@ -367,10 +367,10 @@ const ClientTable = () => {
               className="btn-close text-reset"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
-              onClick={() =>{
-                setContactDetails('')
-                setContactData(initialStateContact)
-                }}
+              onClick={() => {
+                setContactDetails("");
+                setContactData(initialStateContact);
+              }}
             >
               {/* Cancel */}
             </button>
@@ -451,7 +451,12 @@ const ClientTable = () => {
                 value={contactData.ownership}
                 className="client-form-input"
                 name="ownership "
-                onChange={(e) => setContactData((prev) => ({...prev, ownership:e.target.value}))}
+                onChange={(e) =>
+                  setContactData((prev) => ({
+                    ...prev,
+                    ownership: e.target.value,
+                  }))
+                }
               >
                 <option>Select</option>
                 {ownerList.map((item, index) => {
@@ -706,11 +711,13 @@ const ClientTable = () => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th style={{width:'200px'}}>
+                      <th style={{ width: "200px" }}>
                         <input type="checkbox" />
                       </th>
                     ) : (
-                      <th style={{width:'200px'}} key={index}>{item.title}</th>
+                      <th style={{ width: "200px" }} key={index}>
+                        {item.title}
+                      </th>
                     )}
                   </>
                 );
@@ -778,11 +785,11 @@ const ClientTable = () => {
                       {item.client_name}
                     </td>
                     <td>{item.client_email}</td>
-                    <td >{item.client_cont}</td>
+                    <td>{item.client_cont}</td>
                     <td>{item.client_website}</td>
-                    <td >{item.status}</td>
+                    <td>{item.status}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td >{item.owner_name}</td>
+                    <td>{item.owner_name}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>
@@ -804,7 +811,7 @@ const ClientTable = () => {
                               data-bs-target="#offcanvasRight"
                               aria-controls="offcanvasRight"
                               onClick={() => setClient(item)}
-                              data-text='Update client'
+                              data-text="Update client"
                             >
                               {/* <a
                             href="#"
@@ -855,7 +862,7 @@ const ClientTable = () => {
                           <div></div>
                           <table>
                             <thead>
-                              <th >Name</th>
+                              <th>Name</th>
                               <th>Email</th>
                               <th>Office number</th>
                               <th>Designation</th>
@@ -894,7 +901,6 @@ const ClientTable = () => {
                                       data-bs-target="#offcanvasLeft"
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
-                                     
                                     >
                                       {contact.name}
                                     </td>
@@ -926,17 +932,16 @@ const ClientTable = () => {
             {/* End tr */}
           </tbody>
         </table>
-        
       </div>
-      {dataCount > 25 &&
-      <Pagination 
-         page={page}
-         setPage={setPage}
-         dataCount={dataCount}
-         pageSize={25}
-        //  setPageSize={setPageSize}
+      {dataCount > 25 && (
+        <Pagination
+          page={page}
+          setPage={setPage}
+          dataCount={dataCount}
+          pageSize={25}
+          //  setPageSize={setPageSize}
         />
-      }
+      )}
     </>
   );
 };

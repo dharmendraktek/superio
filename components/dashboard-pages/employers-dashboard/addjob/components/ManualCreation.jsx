@@ -12,7 +12,8 @@ import { BeatLoader } from "react-spinners";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import LanguageModal from "./components/LanguageModal";
 import UsersModal from "./components/UsersModal";
-import { getReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
+import { currencyJson } from "@/utils/currency";
 
 const initialState = {
   job_code: "",
@@ -21,8 +22,8 @@ const initialState = {
   amount: "",
   payment_frequency: "",
   job_type: "",
-  start_date: "",
-  end_date: "",
+  start_date: new Date(),
+  end_date: new Date(),
   remote: "",
   lob: "",
   aress: "",
@@ -45,7 +46,7 @@ const initialState = {
   tax_term: "",
   department: "",
   description: "",
-  post_on_portal: "",
+  post_on_portal: new Date(),
   is_active: 1,
   priority: "",
   post_on_portal: true,
@@ -61,6 +62,7 @@ const ManualCreation = ({
   handleGetJobDetails,
   name,
   jobType,
+  setJobData
 }) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
@@ -81,6 +83,8 @@ const ManualCreation = ({
   const [teamId, setTeamId] = useState();
   const [assignList, setAssignList] = useState([]);
   const [search, setSearch] = useState();
+  const [documents, setDocuments] = useState([]);
+  const [option, setOption] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -242,9 +246,15 @@ const ManualCreation = ({
       setIsLoading(false);
       if (response.status) {
         if (jobData) {
+          if(documents.length > 0){
+            handleSaveDocuments(jobData.id);
+          }
           toast.success("Job post updated successfully !");
           handleGetJobDetails();
         } else {
+          if(documents.length > 0){
+            handleSaveDocuments(response.data.id);
+          }
           setIsLoading(false);
           setForm(initialState);
           toast.success("Job post created successfully !");
@@ -296,18 +306,38 @@ const ManualCreation = ({
   };
 
   const handleFileUpload = (e) => {
-    console.log("---------e.target field ", e.target.files);
-    //   let file = e.target.files[0]
-    //   const formData = new FormData();
-    //   formData.append('file', file);
-    //   formData.append('job', jobId)
+    let file = e.target.files;
+    Object.values(file).forEach((item) => {
+      setDocuments((prev) => [...prev, item]);
+    });
+  };
 
-    //  const response =  axios.post(BASE_URL + `/documents/`, formData)
-    //  console.log("-----------resposne upload documet ", response);
+  const handleSaveDocuments = async (jobId) => {
+    const formData = new FormData();
+    documents.forEach((file, index) => {
+      formData.append("files", file);
+    });
+    formData.append("job", jobId);
+    const response = await postReq(`/documents/`, formData);
+    if (response.status) {
+      // toast.success("Documents added sucessfully");
+    }
+  };
+
+  const handleRemoveDoc = async (id) => {
+    const response = await deleteReq(`/documents/${id}/`);
+    if (response.status) {
+      toast.success("Document deleted successfully");
+      setJobData((prev) => ({
+        ...prev, 
+        documents:prev.documents.filter((_item) => _item.id !== id)
+      }))
+      // handleGetJobDetails();
+    }
   };
 
   return (
-    <div className="p-5">
+    <div className="px-5 py-2">
       <LanguageModal />
       <UsersModal
         usersList={usersList}
@@ -352,7 +382,7 @@ const ManualCreation = ({
           </button>
         </div>
       </div>
-      <div className="shadow px-3 py-3 mt-2 border-2 border-top-primary manual-form">
+      <div className="shadow px-3 py-3 mt-2 border-5 manual-form" style={{borderTopColor:'var(--theme-color-first)'}}>
         <div className="my-2 px-5">
           <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
         </div>
@@ -390,8 +420,12 @@ const ManualCreation = ({
                 className="client-input-style form-mult-box"
               >
                 <option>Select</option>
-                <option>USD</option>
-                <option>INR</option>
+                {currencyJson.map((item, index) => {
+                   return(
+                     <option value={item.code}> {item.code} ({item.name})</option>
+                   )
+                })
+                }
               </select>
               <input
                 name="amount"
@@ -687,12 +721,12 @@ const ManualCreation = ({
                 className="client-form-input"
                 type="text"
               />
-              <div className="d-flex position-absolute mt-1">
+              <div className="d-flex position-absolute flex-wrap mt-1">
                 {form.primary_skills.map((item, index) => {
                   return (
                     <div
                       key={index}
-                      className="mx-1 px-1 gap-6 text-white rounded"
+                      className="mx-1 my-1 px-1 gap-6 text-black fw-medium  rounded"
                       style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
@@ -742,12 +776,12 @@ const ManualCreation = ({
                 className="client-form-input"
                 type="text"
               />
-              <div className="d-flex position-absolute mt-1">
+              <div className="d-flex position-absolute  flex-wrap mt-1">
                 {form.secondary_skills.map((item, index) => {
                   return (
                     <div
                       key={index}
-                      className="mx-1 px-1 gap-6 text-white rounded"
+                      className="mx-1 px-1 my-1 gap-6 text-black fw-medium rounded"
                       style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
@@ -769,13 +803,14 @@ const ManualCreation = ({
               <div
                 className="client-form-input d-flex justify-content-between"
                 onClick={() => setOpenLang(!openLang)}
+                style={{height:'fit-content'}}
               >
-                <div className="d-flex gap-2">
+                <div className="d-flex flex-wrap gap-2">
                   {form.languages.map((item, index) => {
                     return (
                       <div
                         key={index}
-                        className="my-1 px-1 text-white d-flex gap-1 rounded-1"
+                        className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
                         style={{ background: "var(--primary-2nd-color)" }}
                       >
                         <span>{item.name}</span>
@@ -879,6 +914,7 @@ const ManualCreation = ({
               name="job_head_account_manager"
               onChange={handleChange}
             >
+              <option>Select</option>
               {usersList.map((item) => {
                 return (
                   <option key={item.id}>
@@ -941,12 +977,12 @@ const ManualCreation = ({
           {!jobType && (
             <div className="col-4 my-2">
               <p>Assigned To</p>
-              <div className="client-form-input d-flex justify-content-between">
-                <div className="d-flex gap-2">
+              <div className="client-form-input d-flex justify-content-between" >
+                <div className="d-flex flex-wrap gap-2">
                   {assignList.map((item) => {
                     return (
                       <div
-                        className="my-1 px-1 text-white d-flex gap-1 rounded-1"
+                        className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
                         style={{ background: "var(--primary-2nd-color)" }}
                       >
                         <span>{item.first_name}</span>
@@ -1063,14 +1099,76 @@ const ManualCreation = ({
                 <input
                   type="file"
                   id="upload"
+                  multiple
                   onChange={(e) => {
-                    console.log("-------e ", e.target.files)
+                    handleFileUpload(e)
                   }}
                   className="d-none"
                 />
               </label>
             </div>
           )}
+          <div className="d-flex flex-wrap">
+          {jobData?.documents?.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border m-2   position-relative d-flex align-items-center  rounded-1"
+                    onMouseEnter={() => setOption(item.id)}
+                    onMouseLeave={() => setOption(false)}
+                    style={{ width: "48%", height: "60px", background:'aliceblue' }}
+                  >
+                    {option == item.id && (
+                      <div
+                        className="position-absolute d-flex gap-2 align-items-center px-2 justify-content-end"
+                        style={{
+                          width: "100%",
+                          height: "60px",
+                          top: "0px",
+                          background: "rgba(0, 0, 0, 0.5)",
+                          zIndex: "10000",
+                        }}
+                      >
+                        {/* <div className="d-flex justify-content-center align-items-center" style={{width:"30px",height:'30px', background:'white', borderRadius:'50%' }}>
+                    <span className="text-primary cursor-pointer">{reactIcons.edit}</span>
+                    </div> */}
+                        <div
+                          data-bs-toggle="modal"
+                          data-bs-target="#viewDocModal"
+                          className="d-flex justify-content-center align-items-center"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            background: "white",
+                            borderRadius: "50%",
+                          }}
+                          onClick={() => setImg(item.file)}
+                        >
+                          <span className="text-primary cursor-pointer">
+                            {reactIcons.view}
+                          </span>
+                        </div>
+                        <div
+                          onClick={() => handleRemoveDoc(item.id)}
+                          className="d-flex justify-content-center align-items-center"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            background: "white",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <span className="text-primary cursor-pointer">
+                            {reactIcons.delete}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <span className="p-2 fw-semibold">{item.file}</span>
+                  </div>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>

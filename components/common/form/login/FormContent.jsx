@@ -16,8 +16,8 @@ const FormContent = () => {
     password: "",
   });
   const [error, setError] = useState({
-    emailErr:'',
-    passErr:''
+    emailErr: "",
+    passErr: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -30,24 +30,22 @@ const FormContent = () => {
   };
 
   const handleLogin = async () => {
-    if (!form.email ) {
-      setError((prev) => ({...prev, emailErr:"This field is required."}))
+    if (!form.email) {
+      setError((prev) => ({ ...prev, emailErr: "This field is required." }));
       return;
-    }else if(!form.password){
-      setError((prev) => ({...prev, passErr:"This field is required."}))
+    } else if (!form.password) {
+      setError((prev) => ({ ...prev, passErr: "This field is required." }));
       return;
     }
     try {
       setLoading(true);
-      const response = await axios.post(
-        BASE_URL+"/login/",
-        form
-      );
+      const response = await axios.post(BASE_URL + "/login/", form);
       if (response.status) {
+        localStorage.setItem("is_user_token", response.data.access);
         toast.success("You are logged in successfully");
         setLoading(false);
-        // window.location.href = "/employers-dashboard/dashboard";
-        dispatch(login(response.data))
+        window.location.href = "/employers-dashboard/dashboard";
+        dispatch(login(response.data));
       }
     } catch (err) {
       setLoading(false);
@@ -71,7 +69,7 @@ const FormContent = () => {
           onChange={handleChange}
           placeholder="Email"
           onKeyDown={(e) => {
-            setError((prev) => ({...prev, emailErr:""}))
+            setError((prev) => ({ ...prev, emailErr: "" }));
             if (e.code == "Enter") {
               handleLogin();
             }
@@ -90,7 +88,7 @@ const FormContent = () => {
           onChange={handleChange}
           placeholder="Password"
           onKeyDown={(e) => {
-            setError((prev) => ({...prev, passErr:""}))
+            setError((prev) => ({ ...prev, passErr: "" }));
             if (e.code == "Enter") {
               handleLogin();
             }

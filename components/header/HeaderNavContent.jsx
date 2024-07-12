@@ -17,8 +17,14 @@ import {
   isActiveParentChaild,
 } from "../../utils/linkActiveChecker";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { getUserDetails } from "@/features/employer/employerAction";
 
 const HeaderNavContent = () => {
+
+  useEffect(() => {
+        getUserDetails();
+  }, [])
   return (
     <>
       <nav className="nav main-menu">
