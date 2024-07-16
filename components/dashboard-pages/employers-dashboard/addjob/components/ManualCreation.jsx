@@ -1,7 +1,7 @@
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
-import { Country, State } from "country-state-city";
+import { City, Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
 import { jobStatus, jobTypes, priorityTypes } from "./constant";
 import { reactIcons } from "@/utils/icons";
@@ -12,8 +12,9 @@ import { BeatLoader } from "react-spinners";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import LanguageModal from "./components/LanguageModal";
 import UsersModal from "./components/UsersModal";
-import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq, postReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
+import JobPostCommentsModal from "./components/JobPostCommentsModal";
 
 const initialState = {
   job_code: "",
@@ -39,9 +40,9 @@ const initialState = {
   languages: [],
   experience: "",
   number_of_position: "",
-  job_head_account_manager: "",
-  job_account_manager: "",
-  job_delivery_manager: "",
+  head_account_manager: "",
+  account_manager: "",
+  delivery_manager: "",
   assign: [],
   tax_term: "",
   department: "",
@@ -62,7 +63,7 @@ const ManualCreation = ({
   handleGetJobDetails,
   name,
   jobType,
-  setJobData
+  setJobData,
 }) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
@@ -85,6 +86,11 @@ const ManualCreation = ({
   const [search, setSearch] = useState();
   const [documents, setDocuments] = useState([]);
   const [option, setOption] = useState(false);
+  const [comments, setComments] = useState();
+  const [commentsErr, setCommentsErr] = useState("");
+
+  // const cityList = City?.getAllCities('MP');
+  // console.log("----------city list ", cityList);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,6 +108,7 @@ const ManualCreation = ({
   useEffect(() => {
     if (jobData) {
       setAssignList(jobData.assign_details ? jobData.assign_details : []);
+      setComments(jobData.comment);
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
@@ -142,9 +149,9 @@ const ManualCreation = ({
         languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
-        job_head_account_manager: jobData.job_head_account_manager,
-        job_account_manager: jobData.job_account_manager,
-        job_delivery_manager: jobData.job_delivery_manager,
+        head_account_manager: jobData.head_account_manager,
+        account_manager: jobData.account_manager,
+        delivery_manager: jobData.delivery_manager,
         assign: jobData.assign ? jobData.assign : [],
         tax_term: "",
         department: jobData.department,
@@ -235,6 +242,13 @@ const ManualCreation = ({
   };
 
   const handleSubmit = async () => {
+    if (name == "update" && !comments) {
+      setCommentsErr("This field is required");
+      return;
+    } else {
+      console.log("-----------commmetns ", comments);
+      form["comment"] = comments;
+    }
     try {
       setIsLoading(true);
       const response =
@@ -242,17 +256,17 @@ const ManualCreation = ({
           ? await axios.patch(BASE_URL + `/temp-jobs/${jobData.id}/`, form)
           : name == "update"
           ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
-          : await axios.post(BASE_URL + "/jobs/", form);
+          : await postApiReq("/jobs/", form);
       setIsLoading(false);
       if (response.status) {
         if (jobData) {
-          if(documents.length > 0){
+          if (documents.length > 0) {
             handleSaveDocuments(jobData.id);
           }
           toast.success("Job post updated successfully !");
           handleGetJobDetails();
         } else {
-          if(documents.length > 0){
+          if (documents.length > 0) {
             handleSaveDocuments(response.data.id);
           }
           setIsLoading(false);
@@ -329,16 +343,25 @@ const ManualCreation = ({
     if (response.status) {
       toast.success("Document deleted successfully");
       setJobData((prev) => ({
-        ...prev, 
-        documents:prev.documents.filter((_item) => _item.id !== id)
-      }))
+        ...prev,
+        documents: prev.documents.filter((_item) => _item.id !== id),
+      }));
       // handleGetJobDetails();
     }
   };
 
+
   return (
     <div className="px-5 py-2">
       <LanguageModal />
+      <JobPostCommentsModal
+        comments={comments}
+        setComments={setComments}
+        commentsErr={commentsErr}
+        setCommentsErr={setCommentsErr}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+      />
       <UsersModal
         usersList={usersList}
         form={form}
@@ -358,7 +381,9 @@ const ManualCreation = ({
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
-            onClick={handleSubmit}
+            onClick={name == "create" ? handleSubmit : ""}
+            data-bs-toggle="modal"
+            data-bs-target={name == "update" ? "#commentsModal" : ""}
           >
             {isLoading ? (
               <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
@@ -382,7 +407,10 @@ const ManualCreation = ({
           </button>
         </div>
       </div>
-      <div className="shadow px-3 py-3 mt-2 border-5 manual-form" style={{borderTopColor:'var(--theme-color-first)'}}>
+      <div
+        className="shadow px-3 py-3 mt-2 border-5 manual-form"
+        style={{ borderTopColor: "var(--theme-color-first)" }}
+      >
         <div className="my-2 px-5">
           <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
         </div>
@@ -421,11 +449,13 @@ const ManualCreation = ({
               >
                 <option>Select</option>
                 {currencyJson.map((item, index) => {
-                   return(
-                     <option value={item.code}> {item.code} ({item.name})</option>
-                   )
-                })
-                }
+                  return (
+                    <option value={item.code}>
+                      {" "}
+                      {item.code} ({item.name})
+                    </option>
+                  );
+                })}
               </select>
               <input
                 name="amount"
@@ -699,29 +729,17 @@ const ManualCreation = ({
                 {reactIcons.info}
               </span>
             </p>
-            <div className="position-relative">
-              <input
-                name="primary_skills"
-                value={skills}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setForm((prev) => ({
-                      ...prev,
-                      primary_skills: [
-                        ...prev.primary_skills,
-                        { name: skills },
-                      ],
-                    }));
-                    setSkills("");
-                  }
-                }}
-                onChange={(e) => {
-                  setSkills(e.target.value);
-                }}
-                className="client-form-input"
-                type="text"
-              />
-              <div className="d-flex position-absolute flex-wrap mt-1">
+            <div
+              className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
+              style={{
+                minHeight: "36px",
+                border: "1px solid black",
+                borderRadius: "3px",
+                maxHeight: "125px",
+                overflowY: "auto",
+              }}
+            >
+              <div className="d-flex  flex-wrap mt-1">
                 {form.primary_skills.map((item, index) => {
                   return (
                     <div
@@ -740,6 +758,27 @@ const ManualCreation = ({
                   );
                 })}
               </div>
+              <input
+                name="primary_skills"
+                value={skills}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    setForm((prev) => ({
+                      ...prev,
+                      primary_skills: [
+                        ...prev.primary_skills,
+                        { name: skills },
+                      ],
+                    }));
+                    setSkills("");
+                  }
+                }}
+                onChange={(e) => {
+                  setSkills(e.target.value);
+                }}
+                // className="client-form-input"
+                type="text"
+              />
             </div>
           </div>
           <div className="col-4 my-2">
@@ -754,29 +793,17 @@ const ManualCreation = ({
                 <span>{reactIcons.info}</span>
               </button>
             </p>
-            <div className="position-relative">
-              <input
-                name="secondary_skills"
-                value={secondarySkills}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setForm((prev) => ({
-                      ...prev,
-                      secondary_skills: [
-                        ...prev.secondary_skills,
-                        { name: secondarySkills },
-                      ],
-                    }));
-                    setSecondarySkills("");
-                  }
-                }}
-                onChange={(e) => {
-                  setSecondarySkills(e.target.value);
-                }}
-                className="client-form-input"
-                type="text"
-              />
-              <div className="d-flex position-absolute  flex-wrap mt-1">
+            <div
+              className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
+              style={{
+                minHeight: "36px",
+                border: "1px solid black",
+                borderRadius: "3px",
+                maxHeight: "125px",
+                overflowY: "auto",
+              }}
+            >
+              <div className="d-flex   flex-wrap mt-1">
                 {form.secondary_skills.map((item, index) => {
                   return (
                     <div
@@ -795,6 +822,27 @@ const ManualCreation = ({
                   );
                 })}
               </div>
+              <input
+                name="secondary_skills"
+                value={secondarySkills}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    setForm((prev) => ({
+                      ...prev,
+                      secondary_skills: [
+                        ...prev.secondary_skills,
+                        { name: secondarySkills },
+                      ],
+                    }));
+                    setSecondarySkills("");
+                  }
+                }}
+                onChange={(e) => {
+                  setSecondarySkills(e.target.value);
+                }}
+                // className="client-form-input"
+                type="text"
+              />
             </div>
           </div>
           <div className="col-4 my-2">
@@ -803,7 +851,7 @@ const ManualCreation = ({
               <div
                 className="client-form-input d-flex justify-content-between"
                 onClick={() => setOpenLang(!openLang)}
-                style={{height:'fit-content'}}
+                style={{ minHeight: "36px", maxHeight: "fit-content" }}
               >
                 <div className="d-flex flex-wrap gap-2">
                   {form.languages.map((item, index) => {
@@ -909,15 +957,16 @@ const ManualCreation = ({
           <div className="col-4 my-2">
             <p>Head Account Managers</p>
             <select
-              value={form.job_head_account_manager}
+              value={form.head_account_manager}
               className="client-form-input"
-              name="job_head_account_manager"
+              name="head_account_manager"
               onChange={handleChange}
             >
-              <option>Select</option>
+              <option value={''}>Select</option>
               {usersList.map((item) => {
+                // console.log("-------------item ", item);
                 return (
-                  <option key={item.id}>
+                  <option value={item.id} key={item.id}>
                     {item.first_name} {item.last_name} ({item.email})
                   </option>
                 );
@@ -932,7 +981,7 @@ const ManualCreation = ({
               name="department"
               onChange={handleChange}
             >
-              <option>Select</option>
+              <option value={''}>Select</option>
               {departmentList.map((item) => {
                 return <option value={item.id}>{item.dept_name}</option>;
               })}
@@ -941,15 +990,15 @@ const ManualCreation = ({
           <div className="col-4 my-2">
             <p>Delivery Manager</p>
             <select
-              value={form.job_delivery_manager}
+              value={form.delivery_manager}
               onChange={handleChange}
               className="client-form-input"
-              name="job_delivery_manager"
+              name="delivery_manager"
             >
-              <option>Select</option>
+              <option value={''}>Select</option>
               {usersList.map((item) => {
                 return (
-                  <option key={item.id}>
+                  <option value={item.id} key={item.id}>
                     {item.first_name} {item.last_name} ({item.email})
                   </option>
                 );
@@ -959,15 +1008,15 @@ const ManualCreation = ({
           <div className="col-4 my-2">
             <p>Account Manager</p>
             <select
-              value={form.job_account_manager}
+              value={form.account_manager}
               onChange={handleChange}
               className="client-form-input"
-              name="job_account_manager"
+              name="account_manager"
             >
-              <option>Select</option>
+              <option value={''}>Select</option>
               {usersList.map((item) => {
                 return (
-                  <option key={item.id}>
+                  <option value={item.id} key={item.id}>
                     {item.first_name} {item.last_name} ({item.email})
                   </option>
                 );
@@ -977,7 +1026,7 @@ const ManualCreation = ({
           {!jobType && (
             <div className="col-4 my-2">
               <p>Assigned To</p>
-              <div className="client-form-input d-flex justify-content-between" >
+              <div className="client-form-input d-flex justify-content-between">
                 <div className="d-flex flex-wrap gap-2">
                   {assignList.map((item) => {
                     return (
@@ -1013,11 +1062,18 @@ const ManualCreation = ({
               })}
             </select> */}
               <span
-                className="cursor-pointer text-primary"
+                className="cursor-pointer  text-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#usersModal"
               >
                 assign
+              </span>
+              <span
+                data-bs-toggle="modal"
+                data-bs-target="#usersModal"
+                className="text-primary fs-5"
+              >
+                {reactIcons.settings}
               </span>
             </div>
           )}
@@ -1101,7 +1157,7 @@ const ManualCreation = ({
                   id="upload"
                   multiple
                   onChange={(e) => {
-                    handleFileUpload(e)
+                    handleFileUpload(e);
                   }}
                   className="d-none"
                 />
@@ -1109,65 +1165,69 @@ const ManualCreation = ({
             </div>
           )}
           <div className="d-flex flex-wrap">
-          {jobData?.documents?.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="border m-2   position-relative d-flex align-items-center  rounded-1"
-                    onMouseEnter={() => setOption(item.id)}
-                    onMouseLeave={() => setOption(false)}
-                    style={{ width: "48%", height: "60px", background:'aliceblue' }}
-                  >
-                    {option == item.id && (
-                      <div
-                        className="position-absolute d-flex gap-2 align-items-center px-2 justify-content-end"
-                        style={{
-                          width: "100%",
-                          height: "60px",
-                          top: "0px",
-                          background: "rgba(0, 0, 0, 0.5)",
-                          zIndex: "10000",
-                        }}
-                      >
-                        {/* <div className="d-flex justify-content-center align-items-center" style={{width:"30px",height:'30px', background:'white', borderRadius:'50%' }}>
+            {jobData?.documents?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="border m-2   position-relative d-flex align-items-center  rounded-1"
+                  onMouseEnter={() => setOption(item.id)}
+                  onMouseLeave={() => setOption(false)}
+                  style={{
+                    width: "48%",
+                    height: "60px",
+                    background: "aliceblue",
+                  }}
+                >
+                  {option == item.id && (
+                    <div
+                      className="position-absolute d-flex gap-2 align-items-center px-2 justify-content-end"
+                      style={{
+                        width: "100%",
+                        height: "60px",
+                        top: "0px",
+                        background: "rgba(0, 0, 0, 0.5)",
+                        zIndex: "10000",
+                      }}
+                    >
+                      {/* <div className="d-flex justify-content-center align-items-center" style={{width:"30px",height:'30px', background:'white', borderRadius:'50%' }}>
                     <span className="text-primary cursor-pointer">{reactIcons.edit}</span>
                     </div> */}
-                        <div
-                          data-bs-toggle="modal"
-                          data-bs-target="#viewDocModal"
-                          className="d-flex justify-content-center align-items-center"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: "white",
-                            borderRadius: "50%",
-                          }}
-                          onClick={() => setImg(item.file)}
-                        >
-                          <span className="text-primary cursor-pointer">
-                            {reactIcons.view}
-                          </span>
-                        </div>
-                        <div
-                          onClick={() => handleRemoveDoc(item.id)}
-                          className="d-flex justify-content-center align-items-center"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: "white",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <span className="text-primary cursor-pointer">
-                            {reactIcons.delete}
-                          </span>
-                        </div>
+                      <div
+                        data-bs-toggle="modal"
+                        data-bs-target="#viewDocModal"
+                        className="d-flex justify-content-center align-items-center"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          background: "white",
+                          borderRadius: "50%",
+                        }}
+                        onClick={() => setImg(item.file)}
+                      >
+                        <span className="text-primary cursor-pointer">
+                          {reactIcons.view}
+                        </span>
                       </div>
-                    )}
-                    <span className="p-2 fw-semibold">{item.file}</span>
-                  </div>
-                );
-              })}
+                      <div
+                        onClick={() => handleRemoveDoc(item.id)}
+                        className="d-flex justify-content-center align-items-center"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          background: "white",
+                          borderRadius: "50%",
+                        }}
+                      >
+                        <span className="text-primary cursor-pointer">
+                          {reactIcons.delete}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  <span className="p-2 fw-semibold">{item.file}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

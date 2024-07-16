@@ -41,16 +41,16 @@ const Index = () => {
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
         <div className="dashboard-outer">
-           <div className="px-5 py-3">
-             <Link href='/employers-dashboard/job-posts/'>
              {/* <button className='theme-btn px-2 mx-4 btn-style-four small'> */}
+             {/* <span className="fs-5">Back</span> */}
+             {/* </button> */}
+           {/* <div className="px-5 py-3">
+             <Link href='/employers-dashboard/job-posts/'>
              <div className=" d-flex align-items-center justify-content-center" style={{width:'36px', height:'36px', borderRadius:'50%', background:'var(--primary-2nd-color)'}}>
              <span className="fs-2  text-black cursor-pointer">{reactIcons.backarrow}</span>
              </div>
-             {/* <span className="fs-5">Back</span> */}
-             {/* </button> */}
              </Link>
-           </div>
+           </div> */}
           <div className="row">
             {tab == null &&
             <div className="col-xl-12 col-lg-12 px-5 mt-5">

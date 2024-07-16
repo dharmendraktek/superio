@@ -13,8 +13,8 @@ import Submissions from "./components/Submissions";
 import Notes from "./components/Notes";
 import Documents from "./components/Documents";
 import JobSearchBoard from "./components/JobSearchBoard";
-
-
+import { getReq } from "@/utils/apiHandlers";
+import { currencyJson } from "@/utils/currency";
 
 const Index = () => {
   const [open, setOpen] = useState(true);
@@ -23,10 +23,17 @@ const Index = () => {
   const jobId = searchParams.get("jobId");
   const [viewMore, setViewMore] = useState(false);
   const [noteData, setNoteData] = useState([]);
+  const [searchString, setSearchString] = useState("");
 
+  const handleSearchString = async () => {
+    const response = await getReq(`/job-boolean-string/${jobId}/`);
+    if (response.status) {
+      setSearchString(response.data.boolean_string);
+    }
+  };
 
   const handleGetJobDetails = async () => {
-    const response = await axios.get(BASE_URL + `/jobs/${jobId}/`);
+    const response = await getReq(`/jobs/${jobId}/`);
     setJobData(response.data);
     setNoteData(response.data.notes);
   };
@@ -34,9 +41,9 @@ const Index = () => {
   useEffect(() => {
     if (jobId) {
       handleGetJobDetails();
+      handleSearchString();
     }
   }, [jobId]);
-
 
   return (
     <div className="page-wrapper">
@@ -64,7 +71,7 @@ const Index = () => {
           {/* Collapsible sidebar button */}
 
           <div className="row mx-3">
-            <div className={`${ open ? 'col-lg-9' : 'col-12'}`}>
+            <div className={`${open ? "col-lg-9" : "col-12"}`}>
               {open ? (
                 <>
                   <div className="shadow  my-3 px-4 py-4">
@@ -77,16 +84,27 @@ const Index = () => {
                     </div>
                     <div>
                       <div className="d-flex">
-                        <p className="me-2">{jobData?.client_name ? jobData.client_name : '-' }</p> |{" "}
+                        <p className="me-2">
+                          {jobData?.client_name ? jobData.client_name : "-"}
+                        </p>{" "}
+                        |{" "}
                         <p className="mx-2">
                           {" "}
                           {jobData?.address} {jobData?.city} {jobData?.state}{" "}
                           {jobData?.country}
                         </p>
                       </div>
-                      <div>
+                      <div className="d-flex gap-2">
                         <span> Assigned To - </span>
-                        <span>{jobData?.assign_name}</span>
+                        <div className="d-flex gap-1">
+                          {jobData?.assign_details.map((item) => {
+                            return (
+                              <span>
+                                {item.first_name} {item.last_name}
+                              </span>
+                            );
+                          })}
+                        </div>
                       </div>
                       <div>
                         <button
@@ -107,7 +125,15 @@ const Index = () => {
                       <div>
                         <span>Client Bill Rate/Salery</span>
                         <br />
-                        <strong>$140/yearly/Full Time</strong>
+                        <strong>
+                          {
+                            currencyJson.find(
+                              (item) => item.code == jobData?.currency
+                            )?.symbol
+                          }{" "}
+                          {jobData?.amount}/{jobData?.payment_frequency}/
+                          {jobData?.job_type}
+                        </strong>
                       </div>
                       <div>
                         <span>Pay Rate / Salery</span>
@@ -123,31 +149,63 @@ const Index = () => {
                     </div>
                     <div>
                       <h4>Job Description</h4>
-                      <div className="mt-2" dangerouslySetInnerHTML={{__html:  viewMore ?  jobData?.description?.slice(0, jobData?.description?.length) : jobData?.description?.slice(0, 500) }} />
-                      {jobData?.description?.length > 500 &&
-                      <button onClick={() => setViewMore(!viewMore)} className="theme-btn btn-style-one small mt-2">{viewMore ? 'Less' : 'More'}</button>
-                      }
+                      <div
+                        className="mt-2"
+                        dangerouslySetInnerHTML={{
+                          __html: viewMore
+                            ? jobData?.description?.slice(
+                                0,
+                                jobData?.description?.length
+                              )
+                            : jobData?.description?.slice(0, 500),
+                        }}
+                      />
+                      {jobData?.description?.length > 500 && (
+                        <button
+                          onClick={() => setViewMore(!viewMore)}
+                          className="theme-btn btn-style-one small mt-2"
+                        >
+                          {viewMore ? "Less" : "More"}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="my-2">
-                 <Submissions />
+                    <Submissions />
                   </div>
                   <div className="my-2">
-                 <Notes jobId={jobId} noteData={noteData} setNoteData={setNoteData} />
+                    <Notes
+                      jobId={jobId}
+                      noteData={noteData}
+                      setNoteData={setNoteData}
+                    />
                   </div>
                   <div className="my-2">
-                 <Documents jobId={jobId} jobData={jobData} handleGetJobDetails={handleGetJobDetails}/>
+                    <Documents
+                      jobId={jobId}
+                      jobData={jobData}
+                      handleGetJobDetails={handleGetJobDetails}
+                    />
                   </div>
                 </>
               ) : (
-                <ManualCreation setOpen={setOpen} jobData={jobData} setJobData={setJobData}  name='update'  handleGetJobDetails={handleGetJobDetails}  />
+                <ManualCreation
+                  setOpen={setOpen}
+                  jobData={jobData}
+                  setJobData={setJobData}
+                  name="update"
+                  handleGetJobDetails={handleGetJobDetails}
+                />
               )}
             </div>
-            {open &&
-            <div className="col-3 my-3">
-              <JobSearchBoard />
-            </div>
-            }
+            {open && (
+              <div className="col-3 my-3">
+                <JobSearchBoard
+                  searchString={searchString}
+                  setSearchString={setSearchString}
+                />
+              </div>
+            )}
           </div>
           {/* End .row */}
         </div>

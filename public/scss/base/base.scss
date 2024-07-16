@@ -260,3 +260,7 @@ li {
 .transparent-background {
   background-color: rgba(255, 255, 255, 0.5); /* RGBA color with 50% transparency */
 }
+
+.nextjs-toast-errors-parent {
+  display: none !important; /* Hide the parent container of the toast errors */
+}

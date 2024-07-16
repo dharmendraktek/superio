@@ -155,8 +155,8 @@ const UserTable = () => {
                   {item.user_branch == 1 ? "INDIA" : "USA"}
                 </td>
                 <td style={{width:"100px"}}>{item.department_name}</td>
-                <td className="" style={{width:"300px"}} >{item.reportingmanager_name}</td>
-                <td className="text-center" style={{width:"100px"}}>
+                <td className="" style={{width:"200px"}} >{item.reportingmanager_name}</td>
+                <td className="text-left" style={{width:"100px"}}>
                   <div className="option-box text-center">
                     <ul className="option-list">
                       <li>

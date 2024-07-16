@@ -159,7 +159,7 @@ export const getReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .get(url, header)
+    .get(url)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })

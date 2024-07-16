@@ -1,13 +1,16 @@
+import Link from "next/link";
 
 
-const JobSearchBoard = () => {
+const JobSearchBoard = ({searchString}) => {
+
+
     return(
         <div className="shadow p-3"> 
           <div className="mb-3">
             <h5>Search Criteria</h5>
           </div>
           <div className="">
-             <textarea type='text' value={"(\"React\") AND (\"React native\") AND (\".net\")"} className="border px-2 rounded-1 border-secondary"   style={{height:'90px', width:'100%'}}/>
+             <textarea type='text' value={searchString} className="border px-2 rounded-1 border-secondary"   style={{height:'90px', width:'100%'}}/>
              <div>
                 <p className="py-2">JOB TITLE</p>
                 <input type="text" className="client-form-input" />
@@ -63,7 +66,9 @@ const JobSearchBoard = () => {
              <div>
                 <div className="d-flex gap-2 my-3">
                     <button className="theme-btn btn-style-one small">Save</button>
+                    <Link href='/employers-dashboard/candidate-advanced-search' target="_blank">
                     <button className="theme-btn btn-style-four small">Save and Search</button>
+                    </Link>
                     <button className="theme-btn btn-style-four small">Search job Boards</button>
                 </div>
              </div>

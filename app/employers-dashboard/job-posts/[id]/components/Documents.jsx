@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
@@ -51,6 +51,15 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
       handleGetJobDetails();
     }
   };
+
+  const handleDownloadDoc = async(id) => {
+    window.open(BASE_URL+ `/documents/${id}/download/`);
+    // const response = await getReq(`/documents/${id}/download/`)
+    // if(response.data){
+    //   console.log("-------------resobse d", response);
+    //   window.open(response.data);
+    // }
+  }
 
   return (
     <div className="shadow h-50 py-2">
@@ -158,6 +167,20 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
                     <span className="text-primary cursor-pointer">{reactIcons.edit}</span>
                     </div> */}
                         <div
+                          className="d-flex justify-content-center align-items-center"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            background: "white",
+                            borderRadius: "50%",
+                          }}
+                          onClick={() => handleDownloadDoc(item.id)}
+                        >
+                          <span className="text-primary cursor-pointer">
+                            {reactIcons.download}
+                          </span>
+                        </div>
+                        <div
                           data-bs-toggle="modal"
                           data-bs-target="#viewDocModal"
                           className="d-flex justify-content-center align-items-center"
@@ -189,7 +212,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
                         </div>
                       </div>
                     )}
-                    <span className="p-2 fw-semibold">{item.file}</span>
+                    <span className="p-2 fw-semibold">{item.document_name}</span>
                   </div>
                 );
               })}

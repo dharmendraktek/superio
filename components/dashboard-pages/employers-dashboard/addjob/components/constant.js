@@ -20,7 +20,7 @@ export const langList = [
 
 export const jobStatus = [
     {name:'Active'},
-    {name:'Inative'},
+    {name:'Inactive'},
     {name:'Hold'},
     {name:'Closed'},
     {name:'Slow'},

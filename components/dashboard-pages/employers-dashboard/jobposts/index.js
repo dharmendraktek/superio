@@ -35,7 +35,7 @@ const Index = () => {
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="row">
-            <div className="col-xl-12 col-lg-12 px-5">
+            <div className="col-xl-12 col-lg-12 px-5 mt-3">
                <JobPostsTable />
             </div>
           

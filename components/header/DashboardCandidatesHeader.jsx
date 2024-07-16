@@ -28,8 +28,8 @@ const DashboardCandidatesHeader = () => {
     return (
         // <!-- Main Header-->
         <header
-            className={`main-header header-shaddow  ${
-                navbar ? "fixed-header " : ""
+            className={`main-header header-shaddow   ${
+                navbar ? "fixed-header " : "fixed-header"
             }`}
         >
             <div className="container-fluid">

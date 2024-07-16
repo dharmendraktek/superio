@@ -162,7 +162,7 @@ const JobPostsTable = () => {
                     <td className="">{item.delivery_manager_name}</td>
                     <td className="">{item.contact_manager_name}</td>
                     <td className="">
-                      <div className="d-flex">
+                      <div className="d-flex flex-wrap">
                         {item.assign_details.map((item) => {
                           return <span>{item.first_name},</span>;
                         })}

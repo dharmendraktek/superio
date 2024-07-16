@@ -27,7 +27,7 @@ const HeaderNavContent = () => {
   }, [])
   return (
     <>
-      <nav className="nav main-menu">
+      <nav className="nav main-menu" style={{height:'80px'}}>
         <ul className="navigation" id="navbar">
           {/* current dropdown */}
           {/* <li

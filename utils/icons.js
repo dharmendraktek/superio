@@ -32,6 +32,13 @@ import { HiDotsVertical } from "react-icons/hi";
 
 import { RiEdit2Fill } from "react-icons/ri";
 import { IoMdEye } from "react-icons/io";
+import { FaDownload } from "react-icons/fa";
+import { RiUserSettingsFill } from "react-icons/ri";
+import { CiNoWaitingSign } from "react-icons/ci";
+import { MdPending } from "react-icons/md";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
+
+
 
 
 
@@ -71,5 +78,10 @@ export const reactIcons = {
     team:<RiTeamFill />,
     dots:<HiDotsVertical />,
     edit:<RiEdit2Fill />,
-    view:<IoMdEye />
+    view:<IoMdEye />,
+    download:<FaDownload />,
+    settings:<RiUserSettingsFill />,
+    waiting: <CiNoWaitingSign />,
+    pending:<MdPending />,
+    checked:<IoCheckmarkCircleSharp />,
 }

@@ -32,19 +32,19 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
     let temp = [...noteData]
     temp.map((item) => {
       delete item['user']
-      item['user'] = 11;
+      item['user'] = 209;
       return item;
     })
     data =  temp.filter((item) => item.id !== updateNoteId)
-     data.push({ text: descriptionData, type: tab, user: 11, id: updateNoteId, created_at: new Date(), updated_at: new Date() })
+     data.push({ text: descriptionData, type: tab, user: 209, id: updateNoteId, created_at: new Date(), updated_at: new Date() })
     } else {
       let temp = [...noteData]
        updateData = temp.map((item) => {
          delete item['user']
-         item['user'] = 11;
+         item['user'] = 209;
          return item;
        })
-        updateData.push({ text: descriptionData, type: tab, user: 11, created_at: new Date(), updated_at: new Date()  });
+        updateData.push({ text: descriptionData, type: tab, user: 209, created_at: new Date(), updated_at: new Date()  });
       }
     const response = await axios.patch(BASE_URL + `/jobs/${jobId}/`, {
       notes_write: updateNoteId ? data : updateData,
@@ -120,7 +120,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                   <div className="d-flex justify-content-between mb-2 ">
                     <div>
                       <strong>
-                        {item.user.first_name} {item.user.last_name}
+                        {item?.user?.first_name} {item?.user?.last_name}
                       </strong>
                       <p>
                         {moment(item.created_at).format("DD-MM-YYYY hh:mm A")}

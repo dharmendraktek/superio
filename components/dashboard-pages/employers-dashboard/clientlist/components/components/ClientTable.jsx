@@ -725,7 +725,7 @@ const ClientTable = () => {
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="custom-scroll-sm" style={{height:'300px', overflow:'scroll'}}>
             {clientData?.map((item, index) => {
               return (
                 <>

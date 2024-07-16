@@ -6,7 +6,7 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
     setPage(event.selected);
   };
   return (
-    <div className="py-4 d-flex justify-content-center align-items-center">
+    <div className="py-2 d-flex justify-content-center align-items-center">
       {/* <div>
         <label className="text-black">Page Size</label>
         <select

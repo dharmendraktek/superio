@@ -1,9 +1,11 @@
 "use client";
 
+import Loader from "@/components/common/Loader";
 import Pagination from "@/components/common/Pagination";
+import { getReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import Link from "next/link";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export const applicantData = [
   {
@@ -26,9 +28,26 @@ const ApplicantTable = () => {
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
   // const [applicantData, setApplicantData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    handleGetApplicantList();
+  }, [])
+
+  const handleGetApplicantList = async() => {
+    // setIsLoading(true);
+    const response = await getReq('');
+    setIsLoading(false);
+    if(response.status){
+          // setApplicantData(response.data);
+    }
+  }
 
   return (
     <div>
+      {isLoading &&
+         <Loader />
+      }
       <div className="d-flex justify-content-between">
         <div className="position-relative">
           <input
@@ -72,37 +91,44 @@ const ApplicantTable = () => {
                 <th style={{width:'100px'}}>
                   <input type="checkbox" />
                 </th>
-                <th className="">Applicant ID</th>
-                <th>Applicant Name</th>
-                <th>Email Address</th>
-                <th>Mobile Number</th>
-                <th>City</th>
-                <th>Source</th>
-                <th>State</th>
-                <th>Applicant Status</th>
-                <th>Job Title</th>
-                <th>Ownership</th>
-                <th className="">Work Authorization</th>
+                <th className="" style={{width:'150px'}}>Applicant ID</th>
+                <th style={{width:'200px'}}>Applicant Name</th>
+                <th style={{width:'300px'}}>Email Address</th>
+                <th style={{width:'200px'}}>Mobile Number</th>
+                <th style={{width:'150px'}}>City</th>
+                <th style={{width:'200px'}}>Source</th>
+                <th style={{width:'200px'}}>State</th>
+                <th style={{width:'200px'}}>Applicant Status</th>
+                <th style={{width:'250px'}}>Job Title</th>
+                <th style={{width:'250px'}}>Ownership</th>
+                <th style={{width:'250px'}} className="">Work Authorization</th>
               </tr>
             </thead>
             <tbody>
               {applicantData.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td>
+                    <td  style={{width:'100px'}}>
                       <input type="checkbox" />
                     </td>
-                    <td className="w-10">{item.id}</td>
-                    <td className="">{item.name}</td>
-                    <td className="">{item.email}</td>
-                    <td className="">{item.mobile}</td>
-                    <td className="">{item.city}</td>
-                    <td className="">{item.source}</td>
-                    <td className="">{item.state}</td>
-                    <td className="">{item.status}</td>
-                    <td className="">{item.title}</td>
-                    <td className="c">{item.ownership}</td>
-                    <td className="text-center">
+                    <td className="" style={{width:'150px'}}>{item.id}</td>
+                    <td className="" style={{width:'200px'}}>
+                    <Link
+                          href="/employers-dashboard/all-applicants/:[id]"
+                          as={`/employers-dashboard/all-applicants/${item.id}`}
+                    >
+                      {item.name}
+                    </Link>
+                      </td>
+                    <td className="" style={{width:'300px'}}>{item.email}</td>
+                    <td className="" style={{width:'200px'}}>{item.mobile}</td>
+                    <td className="" style={{width:'150px'}}>{item.city}</td>
+                    <td className="" style={{width:'200px'}}>{item.source}</td>
+                    <td className="" style={{width:'200px'}}>{item.state}</td>
+                    <td className="" style={{width:'200px'}}>{item.status}</td>
+                    <td className="" style={{width:'250px'}}>{item.title}</td>
+                    <td className="c" style={{width:'250px'}}>{item.ownership}</td>
+                    <td className="text-center" style={{width:'250px'}}>
                       {item.authorization}
                       {/* <div className="option-box text-center">
                     <ul className="option-list">
