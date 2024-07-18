@@ -11,12 +11,13 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const tabsName = [
-  { id: 1, name: "Job Posting", value: "job" },
-  { id: 2, name: "Applicant Reference", value: "applicant" },
+  { id: 1, name: "Applicants", value: "applicant" },
+  { id: 2, name: "Submissions", value: "submission" },
+  { id: 3, name: "Pipline", value: "pipline" },
 ];
 
-const Notes = ({ jobId, noteData, setNoteData }) => {
-  const [tab, setTab] = useState("job");
+const ApplicantNotes = () => {
+  const [tab, setTab] = useState("applicant");
   const [form, setForm] = useState({
     description: "<p></p>",
   });
@@ -25,6 +26,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   const [updateNoteId, setUpdateNoteId] = useState();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [noteData, setNoteData] = useState([]);
 
   const handleCreateNotes = async () => {
     let data;
@@ -493,4 +495,4 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   );
 };
 
-export default Notes;
+export default ApplicantNotes;

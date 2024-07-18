@@ -22,9 +22,9 @@ import { getUserDetails } from "@/features/employer/employerAction";
 
 const HeaderNavContent = () => {
 
-  useEffect(() => {
-        getUserDetails();
-  }, [])
+  // useEffect(() => {
+  //       getUserDetails();
+  // }, [])
   return (
     <>
       <nav className="nav main-menu" style={{height:'80px'}}>

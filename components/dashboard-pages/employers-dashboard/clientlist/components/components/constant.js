@@ -1,21 +1,21 @@
 
 export const clientTableField = [
-  {title:"input"},
-  {title:'Client Id'},
-  {title:'Client Name'},
-  {title:'Email'},
-  {title:'Contact Number'},
-  {title:'Website'},
+  {title:"input", size:'130px'},
+  {title:'Client Id', size:'150px'},
+  {title:'Client Name', size:'250px'},
+  {title:'Email', size:'300px'},
+  {title:'Contact Number', size:'300px'},
+  {title:'Website', size:'300px'},
   // {title:'Industry'},
-  {title:'Status'},
+  {title:'Status', size:'150px'},
   // {title:'Category'},
-  {title:'Primary Owner'},
+  {title:'Primary Owner', size:'200px'},
   // {title:'Business Unit'},
   // {title:'Display on Job Posting'},
   // {title:'Created by'},
-  {title:'Created On'},
-  {title:'Modified On'},
-  {title:'Action'},
+  {title:'Created On', size:'250px'},
+  {title:'Modified On', size:'250px'},
+  {title:'Action', size:'150px'},
 ]
 
 export const clientData = [

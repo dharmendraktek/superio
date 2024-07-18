@@ -5,10 +5,10 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { BeatLoader } from "react-spinners";
 import { BASE_URL } from "@/utils/endpoints";
 import { useDispatch } from "react-redux";
 import { login } from "@/features/employer/employerSlice";
+import BtnBeatLoader from "../../BtnBeatLoader";
 
 const FormContent = () => {
   const [form, setForm] = useState({
@@ -123,7 +123,7 @@ const FormContent = () => {
           // name="log-in"
         >
           {loading ? (
-            <BeatLoader color={"#ffffff"} loading={loading} size={15} />
+            <BtnBeatLoader />
           ) : (
             "Log In"
           )}

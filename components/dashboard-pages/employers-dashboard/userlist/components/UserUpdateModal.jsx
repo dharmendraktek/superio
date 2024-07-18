@@ -1,9 +1,9 @@
 "use Client";
 
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 const initialState = {
@@ -26,8 +26,9 @@ const UserUpdateModal = ({ item, getUserList }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getUsersList = async () => {
-    const response = await axios.get(BASE_URL + "/usersprofile/");
-    setUserList(response.data.results);
+    const response = await axios.get(BASE_URL + "/users/");
+    console.log("-----------respoen sdfsfs", response.data);
+    setUserList(response.data);
   };
 
   const getTeamList = async () => {
@@ -282,10 +283,10 @@ const UserUpdateModal = ({ item, getUserList }) => {
                           {userList.map((item) => {
                             return (
                               <option
-                                value={item.user_reportingmanager}
+                                value={item.id}
                                 selected
                               >
-                                {item.reportingmanager_name}
+                                {item.first_name} {item.last_name} ({item.email})
                               </option>
                             );
                           })}
@@ -302,11 +303,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       disabled={isLoading}
                     >
                       {isLoading ? (
-                        <BeatLoader
-                          color={"#ffffff"}
-                          loading={isLoading}
-                          size={15}
-                        />
+                        <BtnBeatLoader />
                       ) : (
                         "Update"
                       )}

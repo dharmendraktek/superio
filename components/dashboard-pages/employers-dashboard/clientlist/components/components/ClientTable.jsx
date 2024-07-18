@@ -11,14 +11,14 @@ import { reactIcons } from "@/utils/icons";
 import { Country, State, City } from "country-state-city";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { BeatLoader } from "react-spinners";
 import Pagination from "@/components/common/Pagination";
 import { getReq, patchReq, postReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const tabsName = [
-  { id: 1, name: "ACTIVE USERS" },
-  { id: 2, name: "INACTIVE USERS" },
+  { id: 1, name: "ACTIVE CLIENT" },
+  { id: 2, name: "INACTIVE CLIENT" },
 ];
 
 const initialState = {
@@ -399,7 +399,7 @@ const ClientTable = () => {
               disabled={contLoading}
             >
               {contLoading ? (
-                <BeatLoader color={"#ffffff"} loading={contLoading} size={10} />
+                <BtnBeatLoader />
               ) : (
                 "Save"
               )}
@@ -462,7 +462,7 @@ const ClientTable = () => {
                 {ownerList.map((item, index) => {
                   return (
                     <option key={index} selected value={item.user.id}>
-                      {item.user.username}
+                      {item.user.first_name} {item.user.last_name} {item.user.email}
                     </option>
                   );
                 })}
@@ -556,7 +556,7 @@ const ClientTable = () => {
               disabled={loading}
             >
               {loading ? (
-                <BeatLoader color={"#ffffff"} loading={loading} size={10} />
+                <BtnBeatLoader />
               ) : (
                 "Save"
               )}
@@ -626,7 +626,7 @@ const ClientTable = () => {
                 {ownerList.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>
-                      {item.user.username}
+                      {item.user.first_name} {item.user.last_name} {item.user.email}
                     </option>
                   );
                 })}
@@ -711,11 +711,11 @@ const ClientTable = () => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th style={{ width: "200px" }}>
+                      <th key={index} style={{ width: `${item.size}` }}>
                         <input type="checkbox" />
                       </th>
                     ) : (
-                      <th style={{ width: "200px" }} key={index}>
+                      <th  style={{ width: `${item.size}` }} key={index}>
                         {item.title}
                       </th>
                     )}
@@ -731,7 +731,7 @@ const ClientTable = () => {
                 <>
                   <tr key={index} className="">
                     {
-                      <td className="d-flex align-items-center">
+                      <td className="d-flex align-items-center justify-content-between" style={{width:"130px"}}>
                         <input type="checkbox" />
                         {item.contact_manager.length > 0 && (
                           <>
@@ -753,29 +753,36 @@ const ClientTable = () => {
                                   });
                                 }
                               }}
-                              className="mx-2 px-2 text-primary cursor-pointer fw-bold fs-6"
+                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
+                              style={{background:'var(--primary-2nd-color)'}}
                             >
-                              <span className="cursor-pointer">
-                                {item.id == expand ? "-" : "+"}
-                              </span>
-                            </div>
                             <div
-                              className="bg-primary text-white mt-1 px-2 ml-2"
+                              className="text-white "
                               style={{
                                 width: "24px",
                                 height: "24px",
                                 fontSize: "12px",
                                 borderRadius: "3px",
+                                background:'var(--primary-2nd-color)'
                               }}
                             >
+                              <p className="text-white fw-medium" style={{fontSize:'15px'}}>
+
                               {item.contact_manager.length}
+                              </p>
+
+                            </div>
+                            <span className="cursor-pointer text-white fs-4">
+                                {item.id == expand ? reactIcons.arrowfillup : reactIcons.arrowfilldown}
+                              </span>
                             </div>
                           </>
                         )}
                       </td>
                     }
-                    <td>{item.id}</td>
+                    <td style={{width:"150px"}}>{item.id}</td>
                     <td
+                     style={{width:"250px"}}
                       className=" hover-overlay cursor-pointer text-primary"
                       data-bs-toggle="offcanvas"
                       data-bs-target="#offcanvasRight"
@@ -784,24 +791,24 @@ const ClientTable = () => {
                     >
                       {item.client_name}
                     </td>
-                    <td>{item.client_email}</td>
-                    <td>{item.client_cont}</td>
-                    <td>{item.client_website}</td>
-                    <td>{item.status}</td>
+                    <td style={{width:"300px"}}>{item.client_email}</td>
+                    <td style={{width:"300px"}}>{item.client_cont}</td>
+                    <td style={{width:"300px"}}>{item.client_website}</td>
+                    <td style={{width:"150px"}}>{item.status}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td>{item.owner_name}</td>
+                    <td style={{width:"200px"}}>{item.owner_name}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>
                       {item.created_by}
                     </td> */}
-                    <td className="" style={{ width: "200px" }}>
+                    <td className="" style={{ width: "250px" }}>
                       {moment(item.created_at).format("DD-MM-YYYY hh:mm A")}
                     </td>
-                    <td className="" style={{ width: "200px" }}>
+                    <td className="" style={{ width: "250px" }}>
                       {moment(item.updated_at).format("DD-MM-YYYY hh:mm A")}
                     </td>
-                    <td>
+                    <td style={{width:"150px"}}>
                       <div className="option-box">
                         <ul className="d-flex justify-content-start option-list">
                           <li>

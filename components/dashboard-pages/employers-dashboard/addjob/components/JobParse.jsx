@@ -4,9 +4,9 @@ import { postApiReq } from "@/utils/apiHandlers";
 import { useState } from "react";
 import ManualCreation from "./ManualCreation";
 import { toast } from "react-toastify";
-import { BeatLoader } from "react-spinners";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
-const JobParse = ({setTab}) => {
+const JobParse = ({setTab, tab}) => {
   const [form, setForm] = useState({
     description:''
   });
@@ -16,12 +16,16 @@ const JobParse = ({setTab}) => {
   const [isLoading, setIsLoading] = useState(false);
   const handleStartParse = async() => {
     try{
-      setIsLoading(false)
+      setIsLoading(true)
       const response = await postApiReq('/copy-paste-parse/', {job_description:descriptionData})
+      setIsLoading(false);
       let data = response.data.fields
+      console.log("-------------descripon", response)
       data['description'] = response.data.description;
+      console.log("--------------data ", data);
       setJobData(data);
     }catch(err){
+      setIsLoading(false);
       toast.error(err.response || 'Something went wrong')
     }
   }
@@ -30,7 +34,7 @@ const JobParse = ({setTab}) => {
   return (
     <>
     {jobData ?
-     <ManualCreation name='create' jobData={jobData} />
+     <ManualCreation name='parse' setTab={setTab} tab={tab} jobData={jobData} />
     :
     <div className="px-5 py-2">
       <div className="shadow rounded-1" style={{height:'700px'}}>
@@ -40,7 +44,7 @@ const JobParse = ({setTab}) => {
             <div>
             <button onClick={handleStartParse} className="theme-btn small btn-style-two fw-medium fs-6 text-black mx-2">
               {isLoading ? 
-              <BeatLoader color="#ffffff" size={15} />
+                <BtnBeatLoader />
                :'Start Parsing'
               }
             </button>

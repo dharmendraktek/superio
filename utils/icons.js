@@ -37,6 +37,12 @@ import { RiUserSettingsFill } from "react-icons/ri";
 import { CiNoWaitingSign } from "react-icons/ci";
 import { MdPending } from "react-icons/md";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropup } from "react-icons/io";
+import { MdLocationOn } from "react-icons/md";
+import { BiSolidPhoneCall } from "react-icons/bi";
+import { MdMail } from "react-icons/md";
+
 
 
 
@@ -84,4 +90,10 @@ export const reactIcons = {
     waiting: <CiNoWaitingSign />,
     pending:<MdPending />,
     checked:<IoCheckmarkCircleSharp />,
+    arrowfillup:<IoMdArrowDropup />,
+    arrowfilldown:<IoMdArrowDropdown />,
+    location:<MdLocationOn />,
+    phonecall:<BiSolidPhoneCall />,
+    mail:<MdMail />,
+
 }

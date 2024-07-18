@@ -17,6 +17,7 @@ import ManualCreation from "./components/ManualCreation";
 import JobParse from "./components/JobParse";
 import { useState } from "react";
 import ParseEmailJobTable from "./components/ParseEmailJobTable";
+import ParseJobEmailModal from "./components/components/ParseJobEmailModal";
 
 const Index = () => {
   const [tab, setTab] = useState(null);
@@ -33,6 +34,7 @@ const Index = () => {
       {/* End Header */}
 
       <MobileMenu />
+      <ParseJobEmailModal setTab={setTab} />
       {/* End MobileMenu */}
 
       {/* <DashboardCandidatesSidebar /> */}
@@ -76,8 +78,11 @@ const Index = () => {
                             </div>
                          </div>
                          <div
-                          onClick={() => setTab(3)} className="my-3 cursor-pointer" style={{width:'210px', height:"115px"}} >
-                            <div className=" text-center rounded-1 py-3 bg-primary" >
+                           className="my-3 cursor-pointer" style={{width:'210px', height:"115px"}} >
+                            <div  
+                                data-bs-toggle="modal"
+                                data-bs-target="#parseJobEmailModal" 
+                                className=" text-center rounded-1 py-3 bg-primary" >
                                  <span className="text-white fs-1">{reactIcons.emailRead}</span>
                                  <p className="text-white fs-5 fw-semibold">
                                    Parse Job Details by Email

@@ -2,11 +2,11 @@
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import { currencyJson } from "@/utils/currency";
 import { Country, State } from "country-state-city";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { noticePeriodOption } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
-import { postApiReq } from "@/utils/apiHandlers";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
 
 
 const initialState = {
@@ -27,7 +27,7 @@ const initialState = {
   source: "",
   referred_by: "",
   status: "",
-  ownership: "",
+  ownership: [],
   job_title: "",
   relocation: "",
   secondary_skills: [],
@@ -36,14 +36,28 @@ const initialState = {
   skype_id:'',
   linkedin:'',
   authorization:'',
+  authorization_expiry:'',
   is_clearance:'',
   clearance:'',
   relocation:'',
   current_compay:'',
   tax_terms:'',
   notice_period:'',
-  current_ctc:'',
-
+  experience:'',
+  preferred_location:'',
+  tex_terms:'',
+  industry:'',
+  expect_currency:'',
+  expect_amount:'',
+  expect_payment_frequency:'',
+  expect_job_type:'',
+  pancard:'',
+  aadharcard:'',
+  lwd:'',
+  current_currency:'',
+  current_amount:'',
+  current_payment_frequency:'',
+  current_job_type:'',
 }
 
 const CandidateCreation = ({ tab, setTab }) => {
@@ -55,6 +69,9 @@ const CandidateCreation = ({ tab, setTab }) => {
   const [secondarySkills, setSecondarySkills] = useState([]);
   const [skills, setSkills] = useState("");
   const [form, setForm] = useState(initialState);
+  const [usersList, setUsersList] = useState([]);
+  const [ownerList, setOwnerList] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,9 +96,20 @@ const CandidateCreation = ({ tab, setTab }) => {
     }));
   };
 
+  useEffect(() => {
+      handleGetUsersList();
+  }, [])
+
+  const handleGetUsersList = async () => {
+    const response = await getReq(`/users/`);
+    if (response.status) {
+      setUsersList(response.data);
+    }
+  };
+
   const handleSubmit = async() => {
     try{
-        const response = await postApiReq('', form)
+        const response = await postApiReq('/applicants/', form)
         if(response.status){
           toast.success('Applicant created successfully')
         }
@@ -94,6 +122,8 @@ const CandidateCreation = ({ tab, setTab }) => {
     }
   }
 
+  console.log("----------form ", form);
+  
 
   return (
     <div className="shadow py-3 px-5">
@@ -335,13 +365,16 @@ const CandidateCreation = ({ tab, setTab }) => {
         </div>
         <div className="col-4 my-1">
           <p>Source</p>
-          <input
+          <select
             name="source"
             onChange={handleChange}
             value={form.source}
             type="text"
             className="client-form-input"
-          />
+          >
+            <option>Dice</option>
+            <option>Monester</option>
+          </select>
         </div>
         <div className="col-4 my-1">
           <p>Experience</p>
@@ -369,12 +402,86 @@ const CandidateCreation = ({ tab, setTab }) => {
             <option>Placed</option>
           </select>
         </div>
-        <div className="col-4 my-1">
-          <p>Ownership</p>
-          <select type="text" name="ownership" value={form.ownership}  onChange={handleChange} className="client-form-input" >
-           <option>Select</option>
-          </select>
-        </div>
+      
+        <div className="col-4 my-2">
+            <p>Ownership</p>
+            <div className="position-relative cursor-pointer">
+              <div
+                className="client-form-input d-flex justify-content-between custom-scroll-sm"
+                onClick={() => setOpen(!open)}
+                style={{ minHeight: "36px", maxHeight: "100px", overflow:'auto' }}
+              >
+                <div className="d-flex flex-wrap gap-2">
+                  {ownerList.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
+                        style={{ background: "var(--primary-2nd-color)" }}
+                      >
+                        <span>{item.first_name} {item.last_name}</span>
+                        {/* <span onClick={() => handleClose(item)} className="text-black fs-6 cursor-pointer">{reactIcons.close}</span> */}
+                      </div>
+                    );
+                  })}
+                </div>
+                <span className=" float-end">{reactIcons.downarrow}</span>
+              </div>
+              {open && (
+                <div
+                  className="position-absolute bg-white border border-1 w-100 px-2 custom-scroll-sm"
+                  style={{ top: "33px", zIndex: 10000 }}
+                >
+                  {/* <div>
+                    <button
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#languageModal"
+                      className="theme-btn btn-style-three small d-flex align-items-center"
+                      onClick={() => setOpen(false)}
+                      style={{ width: "100%" }}
+                    >
+                      <span>Add</span>
+                    </button>
+                  </div> */}
+                  {usersList.map((item, index) => {
+                    return (
+                      <div key={index} className="">
+                        <input
+                          type="checkbox"
+                          checked={form?.ownership?.find(
+                            (_item) => _item == item.id
+                          )}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setOwnerList((prev) => [...prev, item])
+                              setForm((prev) => ({
+                                ...prev,
+                                ownership: [
+                                  ...prev.ownership,
+                                  item.id
+                                ],
+                              }));
+                            } else {
+                              const updatedOwnerList = ownerList.filter((_item) => _item.id !== item.id)
+                               setOwnerList(updatedOwnerList);
+                              setForm((prev) => ({
+                                ...prev,
+                                ownership: prev.ownership.filter(
+                                  (_item) => _item !== item.id
+                                ),
+                              }));
+                            }
+                          }}
+                        />
+                        <span className="mx-2">{item.first_name} {item.last_name} {item.email}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
         <div className="col-4 my-1">
           <p>Job Title</p>
           <input name='job_title' value={form.job_title} onChange={handleChange} type="text" className="client-form-input" />
@@ -383,8 +490,8 @@ const CandidateCreation = ({ tab, setTab }) => {
             <p>Expected Pay</p>
             <div className="d-flex gap-3">
               <select
-                name="currency"
-                value={form.currency}
+                name="expect_currency"
+                value={form.expect_currency}
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -397,16 +504,16 @@ const CandidateCreation = ({ tab, setTab }) => {
                 }
               </select>
               <input
-                name="amount"
+                name="expect_amount"
                 type="text"
-                value={form.amount}
+                value={form.expect_amount}
                 placeholder="Rate"
                 onChange={handleChange}
                 className="px-2 client-input-style form-mult-box form-mult-box"
               />
               <select
-                value={form.payment_frequency}
-                name="payment_frequency"
+                value={form.expect_payment_frequency}
+                name="expect_payment_frequency"
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -416,8 +523,8 @@ const CandidateCreation = ({ tab, setTab }) => {
                 <option>Annually</option>
               </select>
               <select
-                value={form.payment_frequency}
-                name="payment_frequency"
+                value={form.expect_job_type}
+                name="expect_job_type"
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -456,7 +563,7 @@ const CandidateCreation = ({ tab, setTab }) => {
         </div>
         <div className="col-4 my-1">
           <p>Current Company</p>
-          <input type="text" className="client-form-input" />
+          <input name="current_company" onChange={handleChange} value={form.current_compay} type="text" className="client-form-input" />
         </div>
         <div className="col-4 my-2">
             <p>
@@ -568,18 +675,24 @@ const CandidateCreation = ({ tab, setTab }) => {
               />
             </div>
           </div>
+          <div className="col-4 my-1">
+          <p>Work Authorization Expiry</p>
+           <DatePickerCustom  handleDate={(date) => setForm((prev) => ({ ...prev, authorization_expiry: date }))}
+            date={form.authorization_expiry} />
+        </div>
         <div className="col-4 my-1">
           <p>Tax Terms</p>
-          <select  className="client-form-input" >
+          <select name="tax_terms" value={form.tax_terms} onChange={handleChange} className="client-form-input" >
             <option>select</option>
             <option>Contract</option>
             <option>Full Time</option>
             <option>Part Time</option>
             </select>
         </div>
+       
         <div className="col-4 my-1">
           <p>Notice Period</p>
-          <select  className="client-form-input" >
+          <select value={form.notice_period} name="notice_period" onChange={handleChange} className="client-form-input" >
             <option>Select</option>
             {noticePeriodOption.map((item, index) => {
               return(
@@ -589,13 +702,28 @@ const CandidateCreation = ({ tab, setTab }) => {
 
             }
             </select>
+            {form.notice_period == 'Currently Serving Notice Period' &&
+              <div className="py-2">
+                <DatePickerCustom 
+                  handleDate={(date) => setForm((prev) => ({ ...prev, lwd: date }))}
+                  date={form.lwd}
+                />
+              </div>
+            }
+        </div>
+        <div className="col-4 my-1">
+          <p>Industry</p>
+          <select type="text" onChange={handleChange} name="industry" value={form.industry} className="client-form-input" >
+             <option>Software</option>
+             <option>Hardware</option>
+            </select>
         </div>
         <div className="col-4 my-1">
           <p>Current CTC</p>
           <div className="d-flex gap-3">
               <select
-                name="currency"
-                value={form.currency}
+                name="current_currency"
+                value={form.current_currency}
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -608,16 +736,16 @@ const CandidateCreation = ({ tab, setTab }) => {
                 }
               </select>
               <input
-                name="amount"
+                name="current_amount"
                 type="text"
-                value={form.amount}
+                value={form.current_amount}
                 placeholder="Rate"
                 onChange={handleChange}
                 className="px-2 client-input-style form-mult-box form-mult-box"
               />
               <select
-                value={form.payment_frequency}
-                name="payment_frequency"
+                value={form.current_payment_frequency}
+                name="current_payment_frequency"
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -627,8 +755,8 @@ const CandidateCreation = ({ tab, setTab }) => {
                 <option>Annually</option>
               </select>
               <select
-                value={form.payment_frequency}
-                name="payment_frequency"
+                value={form.current_job_type}
+                name="current_job_type"
                 onChange={handleChange}
                 className="client-input-style form-mult-box"
               >
@@ -639,6 +767,15 @@ const CandidateCreation = ({ tab, setTab }) => {
                 <option>Full Time</option>
               </select>
             </div>
+        </div>
+        
+        <div className="col-4 my-1">
+          <p>Pan Card Number</p>
+          <input type="text" onChange={handleChange} name="pancard" value={form.pancard} className="client-form-input" />
+        </div>
+        <div className="col-4 my-1">
+          <p>Aadhar Card Number</p>
+          <input type="text" onChange={handleChange} name="aadharcard" value={form.aadharcard} className="client-form-input" />
         </div>
       </div>
     </div>

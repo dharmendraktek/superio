@@ -7,27 +7,27 @@ import { reactIcons } from "@/utils/icons";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 
-export const applicantData = [
-  {
-    id: 672652,
-    name: "Anil Patel",
-    email: "anilpatel365@gmail.com",
-    mobile: "9610465261",
-    city: "Indore",
-    source: "Dice",
-    state: "Madhyapradesh",
-    status: "New Lead",
-    title: "Full stack developer",
-    ownership: "-",
-    authorization: "-",
-  },
-];
+// export const applicantData = [
+//   {
+//     id: 672652,
+//     name: "Anil Patel",
+//     email: "anilpatel365@gmail.com",
+//     mobile: "9610465261",
+//     city: "Indore",
+//     source: "Dice",
+//     state: "Madhyapradesh",
+//     status: "New Lead",
+//     title: "Full stack developer",
+//     ownership: "-",
+//     authorization: "-",
+//   },
+// ];
 
 const ApplicantTable = () => {
   const [search, setSearch] = useState();
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-  // const [applicantData, setApplicantData] = useState([]);
+  const [applicantData, setApplicantData] = useState([]); 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const ApplicantTable = () => {
 
   const handleGetApplicantList = async() => {
     // setIsLoading(true);
-    const response = await getReq('');
+    const response = await getReq('/applicants/');
     setIsLoading(false);
     if(response.status){
-          // setApplicantData(response.data);
+          setApplicantData(response.data);
     }
   }
 
@@ -93,13 +93,15 @@ const ApplicantTable = () => {
                 </th>
                 <th className="" style={{width:'150px'}}>Applicant ID</th>
                 <th style={{width:'200px'}}>Applicant Name</th>
+                <th style={{width:'250px'}}>Job Title</th>
                 <th style={{width:'300px'}}>Email Address</th>
-                <th style={{width:'200px'}}>Mobile Number</th>
+                <th style={{width:'300px'}}>Mobile Number</th>
+                <th style={{width:'300px'}}>Primary Skills</th>
+                <th style={{width:'200px'}}>Secondary Skills</th>
                 <th style={{width:'150px'}}>City</th>
                 <th style={{width:'200px'}}>Source</th>
                 <th style={{width:'200px'}}>State</th>
                 <th style={{width:'200px'}}>Applicant Status</th>
-                <th style={{width:'250px'}}>Job Title</th>
                 <th style={{width:'250px'}}>Ownership</th>
                 <th style={{width:'250px'}} className="">Work Authorization</th>
               </tr>
@@ -117,16 +119,18 @@ const ApplicantTable = () => {
                           href="/employers-dashboard/all-applicants/:[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
                     >
-                      {item.name}
+                      {item.firstname} {item.middlename} {item.lastname}
                     </Link>
                       </td>
+                    <td className="" style={{width:'250px'}}>{item.job_title}</td>
                     <td className="" style={{width:'300px'}}>{item.email}</td>
                     <td className="" style={{width:'200px'}}>{item.mobile}</td>
+                    <td style={{width:'300px'}}>primary</td>
+                    <td style={{width:'300px'}}>secondary</td>
                     <td className="" style={{width:'150px'}}>{item.city}</td>
                     <td className="" style={{width:'200px'}}>{item.source}</td>
                     <td className="" style={{width:'200px'}}>{item.state}</td>
                     <td className="" style={{width:'200px'}}>{item.status}</td>
-                    <td className="" style={{width:'250px'}}>{item.title}</td>
                     <td className="c" style={{width:'250px'}}>{item.ownership}</td>
                     <td className="text-center" style={{width:'250px'}}>
                       {item.authorization}

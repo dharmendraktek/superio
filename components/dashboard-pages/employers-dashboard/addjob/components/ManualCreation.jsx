@@ -8,13 +8,13 @@ import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import HtmlEditor from "@/components/common/HtmlEditor";
 import Image from "next/image";
-import { BeatLoader } from "react-spinners";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import LanguageModal from "./components/LanguageModal";
 import UsersModal from "./components/UsersModal";
 import { deleteReq, getReq, postApiReq, postReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
 import JobPostCommentsModal from "./components/JobPostCommentsModal";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const initialState = {
   job_code: "",
@@ -190,6 +190,8 @@ const ManualCreation = ({
     }
   }, [form.client]);
 
+  
+
   const handleGetLanguageList = async () => {
     const response = await getReq("/language/");
     setLanguageList(response.data);
@@ -201,12 +203,12 @@ const ManualCreation = ({
   };
 
   const handleGetJobCode = async () => {
-    if (!jobData) {
-      const response = await axios.get(BASE_URL + "/next-job-code/");
+    // if (!jobData) {
+      const response = await getReq("/next-job-code/");
       if (response.status) {
         setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
       }
-    }
+    // }
   };
 
   const handleGetLobs = async () => {
@@ -242,11 +244,10 @@ const ManualCreation = ({
   };
 
   const handleSubmit = async () => {
-    if (name == "update" && !comments) {
+    if ((name == "update" && !comments) && !jobType == 'Email') {
       setCommentsErr("This field is required");
       return;
-    } else {
-      console.log("-----------commmetns ", comments);
+    } else if(!jobType == 'Email') {
       form["comment"] = comments;
     }
     try {
@@ -335,6 +336,7 @@ const ManualCreation = ({
     const response = await postReq(`/documents/`, formData);
     if (response.status) {
       // toast.success("Documents added sucessfully");
+      setDocuments([]);
     }
   };
 
@@ -349,6 +351,16 @@ const ManualCreation = ({
       // handleGetJobDetails();
     }
   };
+
+  const handleCloseDoc = (index) => {
+    let update = [...documents];
+    let filtered = update.filter((item, ind) => ind !== index);
+
+    setDocuments(filtered);
+  };
+
+
+  console.log("---------manual creat job data", form);
 
 
   return (
@@ -377,16 +389,16 @@ const ManualCreation = ({
         handleClose={handleClose}
       />
       <div className="d-flex justify-content-between">
-        <h4>{name == "update" ? "Update Job Posting" : "New Job Posting"}</h4>
+        <h4>{name == "update"  ? "Update Job Posting" : "New Job Posting"}</h4>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
-            onClick={name == "create" ? handleSubmit : ""}
+            onClick={name == "create" || jobType == 'Email' ? handleSubmit : ""}
             data-bs-toggle="modal"
-            data-bs-target={name == "update" ? "#commentsModal" : ""}
+            data-bs-target={name == "update" && !(jobType =="Email") ? "#commentsModal" : ""}
           >
             {isLoading ? (
-              <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
+              <BtnBeatLoader />
             ) : name == "update" ? (
               "Update"
             ) : (
@@ -962,7 +974,7 @@ const ManualCreation = ({
               name="head_account_manager"
               onChange={handleChange}
             >
-              <option value={''}>Select</option>
+              <option value={""}>Select</option>
               {usersList.map((item) => {
                 // console.log("-------------item ", item);
                 return (
@@ -981,7 +993,7 @@ const ManualCreation = ({
               name="department"
               onChange={handleChange}
             >
-              <option value={''}>Select</option>
+              <option value={""}>Select</option>
               {departmentList.map((item) => {
                 return <option value={item.id}>{item.dept_name}</option>;
               })}
@@ -995,7 +1007,7 @@ const ManualCreation = ({
               className="client-form-input"
               name="delivery_manager"
             >
-              <option value={''}>Select</option>
+              <option value={""}>Select</option>
               {usersList.map((item) => {
                 return (
                   <option value={item.id} key={item.id}>
@@ -1013,7 +1025,7 @@ const ManualCreation = ({
               className="client-form-input"
               name="account_manager"
             >
-              <option value={''}>Select</option>
+              <option value={""}>Select</option>
               {usersList.map((item) => {
                 return (
                   <option value={item.id} key={item.id}>
@@ -1098,7 +1110,7 @@ const ManualCreation = ({
             </div> */}
           <div className="col-12 my-1">
             <p>Job Description</p>
-            {name == "update" && form.description && (
+            {(name == "update" || name == 'parse') && form.description && (
               <HtmlEditor
                 setDescriptionData={setDescriptionData}
                 form={form}
@@ -1109,7 +1121,7 @@ const ManualCreation = ({
                 }}
               />
             )}
-            {name == "create" && (
+            {name == "create" && form.description && (
               <HtmlEditor
                 setDescriptionData={setDescriptionData}
                 form={form}
@@ -1164,70 +1176,92 @@ const ManualCreation = ({
               </label>
             </div>
           )}
-          <div className="d-flex flex-wrap">
-            {jobData?.documents?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="border m-2   position-relative d-flex align-items-center  rounded-1"
-                  onMouseEnter={() => setOption(item.id)}
-                  onMouseLeave={() => setOption(false)}
-                  style={{
-                    width: "48%",
-                    height: "60px",
-                    background: "aliceblue",
-                  }}
-                >
-                  {option == item.id && (
-                    <div
-                      className="position-absolute d-flex gap-2 align-items-center px-2 justify-content-end"
-                      style={{
-                        width: "100%",
-                        height: "60px",
-                        top: "0px",
-                        background: "rgba(0, 0, 0, 0.5)",
-                        zIndex: "10000",
-                      }}
+          <div className=" flex-wrap">
+            <div className="d-flex gap-2 flex-wrap">
+              {documents.map((item, index) => {
+                return (
+                  <div
+                    className="d-flex justify-content-between align-items-center rounded-1 my-2 px-2 bg-secondary"
+                    style={{ width: "100%", height: "50px" }}
+                    key={index}
+                  >
+                    <p>{item?.name}</p>
+                    <p></p>
+                    <span
+                      onClick={() => handleCloseDoc(index)}
+                      className="text-danger cursor-pointer"
                     >
-                      {/* <div className="d-flex justify-content-center align-items-center" style={{width:"30px",height:'30px', background:'white', borderRadius:'50%' }}>
+                      {reactIcons.close}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {documents.length == 0 &&
+              jobData?.documents?.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border m-2   position-relative d-flex align-items-center  rounded-1"
+                    onMouseEnter={() => setOption(item.id)}
+                    onMouseLeave={() => setOption(false)}
+                    style={{
+                      width: "48%",
+                      height: "60px",
+                      background: "aliceblue",
+                    }}
+                  >
+                    {option == item.id && (
+                      <div
+                        className="position-absolute d-flex gap-2 align-items-center px-2 justify-content-end"
+                        style={{
+                          width: "100%",
+                          height: "60px",
+                          top: "0px",
+                          background: "rgba(0, 0, 0, 0.5)",
+                          zIndex: "10000",
+                        }}
+                      >
+                        {/* <div className="d-flex justify-content-center align-items-center" style={{width:"30px",height:'30px', background:'white', borderRadius:'50%' }}>
                     <span className="text-primary cursor-pointer">{reactIcons.edit}</span>
                     </div> */}
-                      <div
-                        data-bs-toggle="modal"
-                        data-bs-target="#viewDocModal"
-                        className="d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          background: "white",
-                          borderRadius: "50%",
-                        }}
-                        onClick={() => setImg(item.file)}
-                      >
-                        <span className="text-primary cursor-pointer">
-                          {reactIcons.view}
-                        </span>
+                        <div
+                          data-bs-toggle="modal"
+                          data-bs-target="#viewDocModal"
+                          className="d-flex justify-content-center align-items-center"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            background: "white",
+                            borderRadius: "50%",
+                          }}
+                          onClick={() => setImg(item.file)}
+                        >
+                          <span className="text-primary cursor-pointer">
+                            {reactIcons.view}
+                          </span>
+                        </div>
+                        <div
+                          onClick={() => handleRemoveDoc(item.id)}
+                          className="d-flex justify-content-center align-items-center"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            background: "white",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <span className="text-primary cursor-pointer">
+                            {reactIcons.delete}
+                          </span>
+                        </div>
                       </div>
-                      <div
-                        onClick={() => handleRemoveDoc(item.id)}
-                        className="d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          background: "white",
-                          borderRadius: "50%",
-                        }}
-                      >
-                        <span className="text-primary cursor-pointer">
-                          {reactIcons.delete}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  <span className="p-2 fw-semibold">{item.file}</span>
-                </div>
-              );
-            })}
+                    )}
+                    <span className="p-2 fw-semibold">{item.file}</span>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>

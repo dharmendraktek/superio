@@ -1,4 +1,4 @@
-import { BeatLoader } from "react-spinners";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const JobPostCommentsModal = ({
   commentsErr,
@@ -58,7 +58,7 @@ const JobPostCommentsModal = ({
               onClick={handleSubmit}
             >
               {isLoading ? (
-                <BeatLoader color={"#ffffff"} loading={isLoading} size={10} />
+                <BtnBeatLoader />
               ) : (
                 "Submit"
               )}

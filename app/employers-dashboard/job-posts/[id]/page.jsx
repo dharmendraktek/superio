@@ -15,6 +15,8 @@ import Documents from "./components/Documents";
 import JobSearchBoard from "./components/JobSearchBoard";
 import { getReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
+import Loader from "@/components/common/Loader";
+import moment from "moment";
 
 const Index = () => {
   const [open, setOpen] = useState(true);
@@ -45,7 +47,13 @@ const Index = () => {
     }
   }, [jobId]);
 
+  console.log("-------------jpb data ", jobData);
+
   return (
+    <>
+    {!jobData &&
+       <Loader />
+    }
     <div className="page-wrapper">
       <span className="header-span"></span>
       {/* <!-- Header Span for height --> */}
@@ -131,8 +139,8 @@ const Index = () => {
                               (item) => item.code == jobData?.currency
                             )?.symbol
                           }{" "}
-                          {jobData?.amount}/{jobData?.payment_frequency}/
-                          {jobData?.job_type}
+                          {jobData?.amount ? jobData?.amount : 'N.A' }/{jobData?.payment_frequency ? jobData?.payment_frequency : 'N.A'}/
+                          {jobData?.job_type ? jobData?.job_type : 'N.A'}
                         </strong>
                       </div>
                       <div>
@@ -143,8 +151,8 @@ const Index = () => {
                       <div>
                         <span>Created By & On</span>
                         <br />
-                        <strong>Name</strong>
-                        <strong>On 06/26/24</strong>
+                        <strong>Name is p</strong>
+                        <strong>On {moment(jobData?.created_at).format('DD/MM/YYYY  hh:mm A')}</strong>
                       </div>
                     </div>
                     <div>
@@ -216,6 +224,7 @@ const Index = () => {
       {/* <CopyrightFooter /> */}
       {/* <!-- End Copyright --> */}
     </div>
+    </>
     // End page-wrapper
   );
 };

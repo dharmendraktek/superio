@@ -1,12 +1,13 @@
 "use client";
 
-import { getReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
 import moment from "moment";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ManualCreation from "./ManualCreation";
 import Pagination from "@/components/common/Pagination";
+import Loader from "@/components/common/Loader";
 
 const ParseEmailJobTable = () => {
   const [jobData, setJobData] = useState([]);
@@ -14,16 +15,31 @@ const ParseEmailJobTable = () => {
   const [jobItem, setJobItem] = useState();
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGetParseJobByEmail = async () => {
     const response = await getReq(`/temp-jobs/?page=${page + 1}`);
-    console.log("----------respne ", response);
     setJobData(response.data.results);
     setDataCount(response.data.count);
   };
 
+  const handleGetJobsByEmail = async () => {
+    let data  = {
+      date: moment(new Date()).format('YYYY-MM-DD'),
+    }
+    setIsLoading(true);
+    const response = await postReq(`/process-emails/`, data );
+    setIsLoading(false);
+    if(response){
+      handleGetParseJobByEmail();
+    }
+  };
+
   useEffect(() => {
-    handleGetParseJobByEmail();
+    handleGetJobsByEmail();
+    if(page){
+      handleGetParseJobByEmail();
+    }
   }, [page]);
 
   const handleApproveJob = async (id) => {
@@ -38,17 +54,29 @@ const ParseEmailJobTable = () => {
     handleGetParseJobByEmail();
   }, []);
 
+  const handleInactiveJobPost = async(id) => {
+    const response = await deleteReq(`/temp-jobs/${id}/`)
+    if(response.status){
+      handleGetParseJobByEmail();
+     toast.success('Job post Inactivated successfully')
+    }
+}
+
   return (
     <>
+     {isLoading &&
+              <Loader />
+      }
       <div className="px-5 py-1">
         {open ? (
           <>
+         
             <h3 className="my-3">Parse Job Post By Email</h3>
             <div className="table_div custom-scroll-sm">
               <table className="default-table">
                 <thead className="">
                   <tr>
-                    <th style={{ width: "200px" }}>Job Title</th>
+                    <th style={{ width: "300px" }}>Job Title</th>
                     <th style={{ width: "150px" }}>Job Type</th>
                     <th style={{ width: "150px" }}>Client</th>
                     <th style={{ width: "200px" }}>Location</th>
@@ -65,7 +93,7 @@ const ParseEmailJobTable = () => {
                     return (
                       <>
                         <tr key={index} className="">
-                          <td style={{ width: "200px" }}>{item.title}</td>
+                          <td style={{ width: "300px" }}>{item.title}</td>
                           <td style={{ width: "150px" }}>
                             {item.job_type ? item.job_type : "-"}
                           </td>
@@ -160,6 +188,7 @@ const ParseEmailJobTable = () => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#clientDeleteModal"
                                     data-text="Declined"
+                                    onClick={() => handleInactiveJobPost(item.id)}
                                   >
                                     <span className="la la-trash"></span>
                                   </button>
