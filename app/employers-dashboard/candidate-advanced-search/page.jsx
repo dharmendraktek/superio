@@ -5,6 +5,8 @@ export const metadata = {
   description: "Superio - Job Borad React NextJS Template",
 };
 
+
+
 const index = () => {
   return (
     <>

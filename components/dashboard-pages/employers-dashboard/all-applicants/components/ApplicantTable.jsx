@@ -4,6 +4,7 @@ import Loader from "@/components/common/Loader";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
+import moment from "moment";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 
@@ -96,14 +97,16 @@ const ApplicantTable = () => {
                 <th style={{width:'250px'}}>Job Title</th>
                 <th style={{width:'300px'}}>Email Address</th>
                 <th style={{width:'300px'}}>Mobile Number</th>
-                <th style={{width:'300px'}}>Primary Skills</th>
-                <th style={{width:'200px'}}>Secondary Skills</th>
+                {/* <th style={{width:'300px'}}>Primary Skills</th>
+                <th style={{width:'200px'}}>Secondary Skills</th> */}
                 <th style={{width:'150px'}}>City</th>
                 <th style={{width:'200px'}}>Source</th>
                 <th style={{width:'200px'}}>State</th>
                 <th style={{width:'200px'}}>Applicant Status</th>
                 <th style={{width:'250px'}}>Ownership</th>
                 <th style={{width:'250px'}} className="">Work Authorization</th>
+                <th style={{width:'250px'}} >Created By</th>
+                <th style={{width:'200px'}} >Created On</th>
               </tr>
             </thead>
             <tbody>
@@ -116,7 +119,7 @@ const ApplicantTable = () => {
                     <td className="" style={{width:'150px'}}>{item.id}</td>
                     <td className="" style={{width:'200px'}}>
                     <Link
-                          href="/employers-dashboard/all-applicants/:[id]"
+                          href="/employers-dashboard/all-applicants/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
                     >
                       {item.firstname} {item.middlename} {item.lastname}
@@ -124,9 +127,9 @@ const ApplicantTable = () => {
                       </td>
                     <td className="" style={{width:'250px'}}>{item.job_title}</td>
                     <td className="" style={{width:'300px'}}>{item.email}</td>
-                    <td className="" style={{width:'200px'}}>{item.mobile}</td>
-                    <td style={{width:'300px'}}>primary</td>
-                    <td style={{width:'300px'}}>secondary</td>
+                    <td className="" style={{width:'300px'}}>{item.mobile}</td>
+                    {/* <td style={{width:'300px'}}>primary</td>
+                    <td style={{width:'300px'}}>secondary</td> */}
                     <td className="" style={{width:'150px'}}>{item.city}</td>
                     <td className="" style={{width:'200px'}}>{item.source}</td>
                     <td className="" style={{width:'200px'}}>{item.state}</td>
@@ -178,6 +181,8 @@ const ApplicantTable = () => {
                     </ul>
                   </div> */}
                     </td>
+                    <td style={{width:'250px'}}>{item.created_by}</td>
+                    <td style={{width:'200px'}}>{moment(item.created_at).format('DD-MM-YYYY  hh:mm A')}</td>
                   </tr>
                 );
               })}

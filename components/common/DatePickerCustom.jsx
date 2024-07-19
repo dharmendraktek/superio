@@ -18,9 +18,10 @@ const DatePickerCustom = ({
 }) => {
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
-      className="d-flex justify-content-between text-black  w-full pe-8"
+      className="d-flex justify-content-between text-black   pe-8"
       onClick={onClick}
       ref={ref}
+      style={{width: "100%"}}
     >
       {value}
     </button>

@@ -2,34 +2,34 @@ import { reactIcons } from "@/utils/icons";
 
 const { default: Paper } = require("@/components/common/Paper")
 
-const Profile = () => {
+const Profile = ({setTab, applicantData}) => {
     return(
         <Paper>
             <div className="d-flex text-black justify-content-between">
             <div>
                <div>
                <div className="d-flex gap-2">
-                <h5>Applicant Id</h5>
-                <h5>Applicant Name</h5>
+                <h5>{applicantData?.id}</h5>
+                <h5>{applicantData?.firstname + " " + applicantData?.lastname}</h5>
                </div>
-               <span>Senior Guidewire Consultant</span>
+               <span>{applicantData?.job_title}</span>
                </div>
                <div className="d-flex my-2">
                 <div className="d-flex align-items-center gap-1">
                 <span className="fs-5">{reactIcons.location}</span>
-                <p>Orange park, florida, United States, 23003 </p> | 
+                <p>{applicantData?.address ? applicantData?.address : "N/A"},{applicantData?.city ? applicantData?.city : ""}, {applicantData?.state ? applicantData?.state : ""} {applicantData?.country ? applicantData?.country: ""}, {applicantData?.zipcode} </p> | 
                 </div>
                 <div className="d-flex align-items-center gap-1">
                 <span className="fs-5">{reactIcons.phonecall}</span>
-                <p>+508 784 611</p> | 
+                <p>{applicantData?.mobile}</p> | 
                 </div>
                 <div className="d-flex align-items-center gap-1">
                 <span className="fs-5">{reactIcons.mail}</span>
-                <p>girishguidedeveloper@gmail.com</p>
+                <p>{applicantData?.email}</p>
                 </div>
                </div>
                <div className="d-flex gap-2">
-                <button className="theme-btn btn-style-four small">Edit Applicant</button>
+                <button onClick={() => setTab(1)} className="theme-btn btn-style-four small">Edit Applicant</button>
                 <button className="theme-btn btn-style-four small">View Resume</button>
                 <button className="theme-btn btn-style-four small">Create Resume Builder</button>
                 <button className="theme-btn btn-style-four small">More</button>

@@ -6,7 +6,9 @@ import { useEffect, useState } from "react";
 import { noticePeriodOption } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
-import { getReq, postApiReq } from "@/utils/apiHandlers";
+import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
+import axios from "axios";
+import { BASE_URL } from "@/utils/endpoints";
 
 
 const initialState = {
@@ -16,7 +18,7 @@ const initialState = {
   lastname: "",
   email: "",
   mobile: "",
-  dob: "",
+  dob: new Date(),
   state: "",
   city: "",
   address: "",
@@ -36,11 +38,11 @@ const initialState = {
   skype_id:'',
   linkedin:'',
   authorization:'',
-  authorization_expiry:'',
+  authorization_expiry:new Date(),
   is_clearance:'',
   clearance:'',
   relocation:'',
-  current_compay:'',
+  current_company:'',
   tax_terms:'',
   notice_period:'',
   experience:'',
@@ -53,14 +55,14 @@ const initialState = {
   expect_job_type:'',
   pancard:'',
   aadharcard:'',
-  lwd:'',
+  lwd:new Date(),
   current_currency:'',
   current_amount:'',
   current_payment_frequency:'',
   current_job_type:'',
 }
 
-const CandidateCreation = ({ tab, setTab }) => {
+const CandidateCreation = ({ tab, setTab, applicantData }) => {
   const [countryCode, setCountryCode] = useState("AF");
   const countryList = Country.getAllCountries();
   const stateList = State.getStatesOfCountry(countryCode);
@@ -77,6 +79,13 @@ const CandidateCreation = ({ tab, setTab }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    if (form.country) {
+      let country = countryList.find((item) => item.name == form.country);
+      setCountryCode(country?.isoCode);
+    }
+  }, [form.country]);
 
   const handleRemoveSkills = (_index) => {
     setForm((prev) => ({
@@ -100,6 +109,58 @@ const CandidateCreation = ({ tab, setTab }) => {
       handleGetUsersList();
   }, [])
 
+  useEffect(() => {
+    if(applicantData){
+      setOwnerList(applicantData.ownership_details)
+      setForm((prev) =>({
+        ...prev,
+        name_title: applicantData.name_title ? applicantData.name_title :"",
+        firstname: applicantData.firstname ? applicantData.firstname :"",
+        middlename:applicantData.middlename ? applicantData.middlename : "",
+        lastname: applicantData.lastname ? applicantData.lastname :"",
+        email: applicantData.email ? applicantData.email : "",
+        mobile: applicantData.mobile ? applicantData.mobile : "",
+        dob: applicantData.dob ? applicantData.dob : "",
+        country:applicantData.country ? applicantData.country: "",
+        state: applicantData.state ? applicantData.state :"",
+        city: applicantData.city ? applicantData.city : "" ,
+        address: applicantData.address ? applicantData.address :"",
+        zipcode:applicantData.zipcode ? applicantData.zipcode : "",
+        source: applicantData.source ? applicantData.source : "",
+        referred_by:applicantData.referred_by ? applicantData.referred_by:  "",
+        status: applicantData.status ? applicantData.status : "",
+        ownership:applicantData.ownership ? applicantData.ownership :  [],
+        job_title:applicantData.job_title ? applicantData.job_title: "",
+        relocation:applicantData.relocation ? applicantData.relocation : "",
+        primary_skills:applicantData.primary_skills ? applicantData.primary_skills : [],
+        secondary_skills:applicantData.secondary_skills ? applicantData.secondary_skills : [],
+        notice_period: applicantData.notice_period ? applicantData.notice_period : "",
+        skype_id:applicantData.skype_id ? applicantData.skype_id :"",
+        linkedin:applicantData.linkedin ? applicantData.linkedin : "",
+        authorization:applicantData.authorization ? applicantData.authorization :"",
+        authorization_expiry: applicantData.authorization_expiry ? applicantData.authorization_expiry :"",
+        is_clearance:applicantData.is_clearance ? applicantData.is_clearance :"",
+        clearance:applicantData.clearance ? applicantData.clearance :"",
+        current_company:applicantData.current_company ? applicantData.current_company : "" ,
+        tax_terms:applicantData.tax_terms ? applicantData.tax_terms : "",
+        experience:applicantData.experience ? applicantData.experience : "",
+        preferred_location:applicantData.preferred_location ? applicantData.preferred_location : "" ,
+        industry:applicantData.industry ? applicantData.industry : "",
+        expect_currency:applicantData.expect_currency ? applicantData.expect_currency : "",
+        expect_amount:applicantData.expect_amount ? applicantData.expect_amount : "",
+        expect_payment_frequency:applicantData.expect_payment_frequency ? applicantData.expect_payment_frequency : "",
+        expect_job_type:applicantData.expect_job_type ? applicantData.expect_job_type : "",
+        pancard:applicantData.pancard ? applicantData.pancard : "",
+        aadharcard:applicantData.aadharcard ? applicantData.aadharcard : "",
+        lwd:applicantData.lwd ? applicantData.lwd : "",
+        current_currency:applicantData.current_currency ? applicantData.current_currency : "",
+        current_amount:applicantData.current_amount ? applicantData.current_amount : "",
+        current_payment_frequency:applicantData.current_payment_frequency ? applicantData.current_payment_frequency : "",
+        current_job_type:applicantData.current_job_type ? applicantData.current_job_type : "",
+      }) )
+    }
+  }, [applicantData])
+  
   const handleGetUsersList = async () => {
     const response = await getReq(`/users/`);
     if (response.status) {
@@ -108,10 +169,12 @@ const CandidateCreation = ({ tab, setTab }) => {
   };
 
   const handleSubmit = async() => {
+    console.log("-----------thies wordking s", applicantData)
     try{
-        const response = await postApiReq('/applicants/', form)
+        const response = applicantData ? await axios.patch(BASE_URL + `/applicants/${applicantData.id}/`, form) : await postApiReq('/applicants/', form)
         if(response.status){
-          toast.success('Applicant created successfully')
+          let message = applicantData ? 'Applicant updated successfully' : "Applicant created successfully";
+          toast.success(message)
         }
         if(response.error){
           toast.error(response.error.detail);
@@ -122,7 +185,7 @@ const CandidateCreation = ({ tab, setTab }) => {
     }
   }
 
-  console.log("----------form ", form);
+  
   
 
   return (
@@ -154,9 +217,9 @@ const CandidateCreation = ({ tab, setTab }) => {
                 className="client-form-input"
               >
                 <option>Select</option>
-                <option>Mr</option>
-                <option>Mrs</option>
-                <option>Ms</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Ms">Ms</option>
               </select>
             </div>
             <div className="w-75">
@@ -428,22 +491,14 @@ const CandidateCreation = ({ tab, setTab }) => {
                 <span className=" float-end">{reactIcons.downarrow}</span>
               </div>
               {open && (
+                <>
+                  {/* <div className="position-fixed w-100">
+                    <input type="text" className=""/>
+                  </div> */}
                 <div
                   className="position-absolute bg-white border border-1 w-100 px-2 custom-scroll-sm"
-                  style={{ top: "33px", zIndex: 10000 }}
+                  style={{ top: "33px", zIndex: 10000, maxHeight:"250px", overflow:'auto' }}
                 >
-                  {/* <div>
-                    <button
-                      type="button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#languageModal"
-                      className="theme-btn btn-style-three small d-flex align-items-center"
-                      onClick={() => setOpen(false)}
-                      style={{ width: "100%" }}
-                    >
-                      <span>Add</span>
-                    </button>
-                  </div> */}
                   {usersList.map((item, index) => {
                     return (
                       <div key={index} className="">
@@ -479,6 +534,7 @@ const CandidateCreation = ({ tab, setTab }) => {
                     );
                   })}
                 </div>
+                </>
               )}
             </div>
           </div>
@@ -563,7 +619,7 @@ const CandidateCreation = ({ tab, setTab }) => {
         </div>
         <div className="col-4 my-1">
           <p>Current Company</p>
-          <input name="current_company" onChange={handleChange} value={form.current_compay} type="text" className="client-form-input" />
+          <input name="current_company" onChange={handleChange} value={form.current_company} type="text" className="client-form-input" />
         </div>
         <div className="col-4 my-2">
             <p>
