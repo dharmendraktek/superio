@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import moment from "moment";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
@@ -28,7 +28,7 @@ const ParseEmailJobTable = () => {
       date: moment(new Date()).format('YYYY-MM-DD'),
     }
     setIsLoading(true);
-    const response = await postReq(`/process-emails/`, data );
+    const response = await postApiReq(`/process-emails/`, data );
     setIsLoading(false);
     if(response){
       handleGetParseJobByEmail();
@@ -43,7 +43,7 @@ const ParseEmailJobTable = () => {
   }, [page]);
 
   const handleApproveJob = async (id) => {
-    const response = await postReq("/approve-job/", { job_id: id });
+    const response = await postApiReq("/approve-job/", { job_id: id });
     if (response.status) {
       toast.success("Job detials approved successfully");
       handleGetParseJobByEmail();

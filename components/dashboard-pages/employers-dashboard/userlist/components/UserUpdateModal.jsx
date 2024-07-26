@@ -1,6 +1,7 @@
 "use Client";
 
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import { getReq, patchReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -26,31 +27,31 @@ const UserUpdateModal = ({ item, getUserList }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getUsersList = async () => {
-    const response = await axios.get(BASE_URL + "/users/");
+    const response = await getReq("/users/");
     console.log("-----------respoen sdfsfs", response.data);
     setUserList(response.data);
   };
 
   const getTeamList = async () => {
-    const response = await axios.get(BASE_URL + "/team-list/");
+    const response = await getReq("/team-list/");
     if (response.status) {
       setTeamList(response.data);
     }
   };
   const getRoleList = async () => {
-    const response = await axios.get(BASE_URL + "/role-list/");
+    const response = await getReq("/role-list/");
     if (response.status) {
       setRoleList(response.data);
     }
   };
   const getDepartmentList = async () => {
-    const response = await axios.get(BASE_URL + "/department-list/");
+    const response = await getReq("/department-list/");
     if (response.status) {
       setDepartmentList(response.data);
     }
   };
   const getBranchList = async () => {
-    const response = await axios.get(BASE_URL + "/branch-list/");
+    const response = await getReq("/branch-list/");
     if (response.status) {
       setBranchList(response.data);
     }
@@ -94,8 +95,8 @@ const UserUpdateModal = ({ item, getUserList }) => {
   const handleUpdate = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.patch(
-        `${BASE_URL}/usersprofile/${item.id}/`,
+      const response = await patchReq(
+        `/usersprofile/${item.id}/`,
         data
       );
       if (response.status) {

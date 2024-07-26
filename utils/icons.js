@@ -42,58 +42,59 @@ import { IoMdArrowDropup } from "react-icons/io";
 import { MdLocationOn } from "react-icons/md";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { MdMail } from "react-icons/md";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { BsPersonLinesFill } from "react-icons/bs";
+import { HiDocumentAdd } from "react-icons/hi";
+import { MdCastForEducation } from "react-icons/md";
+import { PiCertificateFill } from "react-icons/pi";
+import { FaLanguage } from "react-icons/fa6";
+import { TbDetails } from "react-icons/tb";
+import { MdOutlineWorkHistory } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
 
 
 export const reactIcons = {
-    search:<LiaSearchengin />,
-    close:<IoMdCloseCircleOutline />,
-    list:<MdPlaylistAddCircle />,
-    upload:<FaCloudUploadAlt/>,
-    downarrow:<IoIosArrowDown />,
-    calendar:<MdCalendarMonth />,
     arrowleft:<MdKeyboardArrowLeft />,
     arrowright:<MdKeyboardArrowRight />,
-    info:<BsInfoCircleFill />,
-    backarrow:<IoIosArrowRoundBack />,
     addapplicant:<IoPersonAddOutline />,
-    multupload:<GrMultiple />,
-    fastBackward:<FaBackward />,
-    fastForward:<FaForward />,
-    filter:<TbFilterHeart />,
-    filtercircle:<RiColorFilterFill />,
-    addcircle:<MdOutlineAddCircle />,
-    cancel:<RiDeleteBack2Fill />,
-    delete: <MdDelete />,
-    copy:<MdCopyAll />,
-    emailRead:<MdOutlineMarkEmailRead />,
-    team:<RiTeamFill />,
-    dots:<HiDotsVertical />,
-    edit:<RiEdit2Fill />,
-    view:<IoMdEye />,
-    download:<FaDownload />,
-    settings:<RiUserSettingsFill />,
-    waiting: <CiNoWaitingSign />,
-    pending:<MdPending />,
-    checked:<IoCheckmarkCircleSharp />,
     arrowfillup:<IoMdArrowDropup />,
     arrowfilldown:<IoMdArrowDropdown />,
+    addcircle:<MdOutlineAddCircle />,
+    backarrow:<IoIosArrowRoundBack />,
+    calendar:<MdCalendarMonth />,
+    close:<IoMdCloseCircleOutline />,
+    checked:<IoCheckmarkCircleSharp />,
+    cancel:<RiDeleteBack2Fill />,
+    copy:<MdCopyAll />,
+    certificate:<PiCertificateFill />,
+    detail:<TbDetails/>,
+    delete: <MdDelete />,
+    dots:<HiDotsVertical />,
+    download:<FaDownload />,
+    downarrow:<IoIosArrowDown />,
+    document:<HiDocumentAdd />,
+    emailRead:<MdOutlineMarkEmailRead />,
+    edit:<RiEdit2Fill />,
+    education:<MdCastForEducation />,
+    file:<FaFileAlt />,
+    fastBackward:<FaBackward />,
+    fastForward:<FaForward />,
+    filtercircle:<RiColorFilterFill />,
+    filter:<TbFilterHeart />,
+    info:<BsInfoCircleFill />,
+    list:<MdPlaylistAddCircle />,
+    language:<FaLanguage />,
+    multupload:<GrMultiple />,
+    search:<LiaSearchengin />,
+    settings:<RiUserSettingsFill />,
+    team:<RiTeamFill />,
+    upload:<FaCloudUploadAlt/>,
+    view:<IoMdEye />,
+    waiting: <CiNoWaitingSign />,
+    pending:<MdPending />,
     location:<MdLocationOn />,
     phonecall:<BiSolidPhoneCall />,
     mail:<MdMail />,
+    personalDetails: <BsPersonLinesFill />,
+    workexp:<MdOutlineWorkHistory />,
 
 }

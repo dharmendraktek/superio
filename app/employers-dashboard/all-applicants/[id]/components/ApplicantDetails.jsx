@@ -19,20 +19,21 @@ const ApplicantDetails = ({ applicantData }) => {
               {applicantData?.ownership_details?.map((item) => {
                 return (
                   <span key={item.id}>
-                    {item.first_name + " " + item.last_name}
+                    {item.first_name + " " + item.last_name} 
                   </span>
                 );
               })}
+              {applicantData?.ownership_details?.length == 0 && "N/A"}
             </div>
           </div>
           <div className="my-2">
             <p>Applicant Status</p>
             <span>{applicantData?.status}</span>
           </div>
-          <div className="my-2">
+          {/* <div className="my-2">
             <p>Applicant Group</p>
             <span>-</span>
-          </div>
+          </div> */}
           <div className="my-2">
             <p>Source</p>
             <span>{applicantData?.source ? applicantData?.source : "N/A"}</span>
@@ -51,10 +52,10 @@ const ApplicantDetails = ({ applicantData }) => {
                 : "N/A"}
             </span>
           </div>
-          <div className="my-2">
+          {/* <div className="my-2">
             <p>Home Phone Number</p>
             <span>-</span>
-          </div>
+          </div> */}
           <div className="my-2">
             <p>Skype ID</p>
             <span>
@@ -67,7 +68,7 @@ const ApplicantDetails = ({ applicantData }) => {
               {applicantData?.primary_skills?.map((item) => {
                 return (
                   <span key={item.id}>
-                    {item.first_name + " " + item.last_name}
+                    {item.name}
                   </span>
                 );
               })}
@@ -90,38 +91,64 @@ const ApplicantDetails = ({ applicantData }) => {
               {applicantData?.expect_amount
                 ? applicantData?.expect_amount
                 : "N/A"}{" "}
-              / {applicantData?.expect_payment_frequency ? applicantData?.expect_payment_frequency : "N/A"} /{" "}
-              {applicantData?.expect_job_type ? applicantData?.expect_job_type : "N/A"}
+              /{" "}
+              {applicantData?.expect_payment_frequency
+                ? applicantData?.expect_payment_frequency
+                : "N/A"}{" "}
+              /{" "}
+              {applicantData?.expect_job_type
+                ? applicantData?.expect_job_type
+                : "N/A"}
             </span>
           </div>
           <div className="my-2">
             <p>Current CTC</p>
             <span>
-              {applicantData?.currency ?
-                currencyJson.find(
-                  (item) => item.code == applicantData?.current_currency
-                )?.symbol : "N/A"
-              }{" "}
-              {applicantData?.current_amount ? applicantData?.current_amount : "N/A"} /{" "}
-              {applicantData?.current_payment_frequency ? applicantData?.current_payment_frequency : "N/A"} /{" "}
-              {applicantData?.current_job_type ? applicantData?.current_job_type : "N/A"}
+              {applicantData?.currency
+                ? currencyJson.find(
+                    (item) => item.code == applicantData?.current_currency
+                  )?.symbol
+                : "N/A"}{" "}
+              {applicantData?.current_amount
+                ? applicantData?.current_amount
+                : "N/A"}{" "}
+              /{" "}
+              {applicantData?.current_payment_frequency
+                ? applicantData?.current_payment_frequency
+                : "N/A"}{" "}
+              /{" "}
+              {applicantData?.current_job_type
+                ? applicantData?.current_job_type
+                : "N/A"}
             </span>
           </div>
           <div className="my-2">
             <p>Notice Period</p>
-            <span>{applicantData?.notice_period ? applicantData?.notice_period : "N/A"}</span>
+            <span>
+              {applicantData?.notice_period
+                ? applicantData?.notice_period
+                : "N/A"}
+            </span>
           </div>
           <div className="my-2">
             <p>Date of Birth</p>
-            <span>{applicantData?.dob ? moment(applicantData?.dob).format("DD-MM-YYYY") : "N/A"}</span>
+            <span>
+              {applicantData?.dob
+                ? moment(applicantData?.dob).format("DD-MM-YYYY")
+                : "N/A"}
+            </span>
           </div>
           <div className="my-2">
             <p>Relocation</p>
-            <span>{applicantData?.relocation ? applicantData?.relocation : "N/A"}</span>
+            <span>
+              {applicantData?.relocation ? applicantData?.relocation : "N/A"}
+            </span>
           </div>
           <div className="my-2">
             <p>Tax Terms</p>
-            <span>{applicantData?.tax_terms ? applicantData?.tax_terms : "N/A" }</span>
+            <span>
+              {applicantData?.tax_terms ? applicantData?.tax_terms : "N/A"}
+            </span>
           </div>
           <hr></hr>
           <div>

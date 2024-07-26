@@ -47,7 +47,6 @@ const Index = () => {
     }
   }, [jobId]);
 
-  console.log("-------------jpb data ", jobData);
 
   return (
     <>

@@ -17,6 +17,10 @@ import { useParams } from 'next/navigation';
 import CandidateCreation from "@/components/dashboard-pages/employers-dashboard/addapplicant/components/CandidateCreation";
 import { useEffect, useState } from "react";
 import { getReq } from "@/utils/apiHandlers";
+import Loader from "@/components/common/Loader";
+import LoginPopup from "@/components/common/form/login/LoginPopup";
+import DashboardCandidatesHeader from "@/components/header/DashboardCandidatesHeader";
+import MobileMenu from "@/components/header/MobileMenu";
 
 
 const Index = () => {
@@ -24,12 +28,14 @@ const Index = () => {
     const [applicantData, setApplicantData] = useState([]);
     const param = useParams();
     const {id} = param;
+    const [isLoading, setIsLoading] = useState(false);
     
 
     const handleGetApplicantDetails = async() => {
+        setIsLoading(true);
         const response = await getReq(`/applicants/${id}/`)
+        setIsLoading(false);
         if(response.status){
-            console.log("---------------respnse of applicant ", response);
             setApplicantData(response.data);
         }
     }
@@ -39,7 +45,18 @@ const Index = () => {
 
     return(
         <>
-        <div className="py-5 px-4">
+        {isLoading &&
+          <Loader />
+        }
+        
+      <LoginPopup />
+      {/* End Login Popup Modal */}
+
+      <DashboardCandidatesHeader /> 
+      {/* End Header */}
+
+      <MobileMenu />
+        <div className="py-5 mt-5 px-4">
             {tab ?
              <CandidateCreation setTab={setTab} applicantData={applicantData} />
             :
@@ -49,10 +66,10 @@ const Index = () => {
             <Profile setTab={setTab} applicantData={applicantData} />
             </div>
             <div className="my-3">
-            <ApplicantNotes applicantData={applicantData} />
+            <ApplicantNotes applicantData={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
-            <Documents applicantData={applicantData} />
+            <Documents applicantDetails={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
             <Submissions applicantData={applicantData} />
@@ -67,18 +84,17 @@ const Index = () => {
                 <SubmissionsEforms  applicantData={applicantData}/>
             </div>
             <div className="my-3">
-                <TaskManager applicantData={applicantData} />
+                <TaskManager applicantData={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
-                <CallLogs />
+                <CallLogs applicantData={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
-                <MeetingSchedules />
+                <MeetingSchedules applicantData={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             </div>
             <div className="col-3">
                <ApplicantDetails applicantData={applicantData} /> 
-               
             </div>
             </div>
             }

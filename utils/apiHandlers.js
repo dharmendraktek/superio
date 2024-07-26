@@ -95,20 +95,20 @@ const handleApiError = (err) => {
   return responseFormatter(false, null, err.response.data);
 };
 
-export const postApiReq = async (endpoint, data) => {
+export const postApiReq = async (endpoint ,data) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .post(url, data)
+    .post(url, data, header)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      if (err.response.data.status == 401) {
+      if (err.response.status == 401) {
         // handleLogout();
         // removeAuthCookie();
         localStorage.removeItem('is_user_token');
-        // window.location = '/';
+        window.location = '/';
         return handleApiError(err);
       } else {
         return handleApiError(err);
@@ -125,11 +125,13 @@ export const postReq = async (endpoint, data) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      if (err.response.data.status == 401) {
+      console.log("-a------------oiser dsf erew errr", err);
+      if (err.response.status == 401) {
         // handleLogout();
         // removeAuthCookie();
         // localStorage.removeItem('is_user_token');
-        window.location = '/';
+        // window.location = '/';
+        return handleApiError(err);
       } else {
         return handleApiError(err);
       }
@@ -139,12 +141,12 @@ export const postReq = async (endpoint, data) => {
 export const patchReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
 
-  return await patchReq(url, data)
+  return await axios.patch(url,data, header)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      if (err.response.data.status == 401) {
+      if (err.response.status == 401) {
         // handleLogout();
         // removeAuthCookie();
         // localStorage.removeItem('is_user_token');
@@ -159,15 +161,16 @@ export const getReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .get(url)
+    .get(url, header)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      if (err.response.data.status == 401) {
+      if (err?.response?.status == 401) {
+        console.log("-------------reespeonr ", err);
         // handleLogout();
-        removeAuthCookie();
         localStorage.removeItem('is_user_token');
+        // removeAuthCookie();
         window.location = '/';
       } else {
         return handleApiError(err);
@@ -180,12 +183,12 @@ export const deleteReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
 
   return await axios
-    .delete(url)
+    .delete(url, header)
     .then((response) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      if (err.response.data.status == 401) {
+      if (err.response.status == 401) {
         // handleLogout();
         // removeAuthCookie();
         // localStorage.removeItem('is_user_token');

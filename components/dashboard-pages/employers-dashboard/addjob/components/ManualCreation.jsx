@@ -11,7 +11,7 @@ import Image from "next/image";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import LanguageModal from "./components/LanguageModal";
 import UsersModal from "./components/UsersModal";
-import { deleteReq, getReq, postApiReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
 import JobPostCommentsModal from "./components/JobPostCommentsModal";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
@@ -173,7 +173,6 @@ const ManualCreation = ({
 
   useEffect(() => {
     handleGetClientNames();
-    handleGetLobs();
     handleGetJobCode();
     handleGetDepartment();
     handleGetLanguageList();
@@ -187,6 +186,7 @@ const ManualCreation = ({
   useEffect(() => {
     if (form.client) {
       handleGetClientContactManagers();
+      // handleGetLobs();
     }
   }, [form.client]);
 
@@ -198,7 +198,7 @@ const ManualCreation = ({
   };
 
   const handleGetDepartment = async () => {
-    const response = await axios.get(BASE_URL + "/department-list/");
+    const response = await getReq("/department-list/");
     setDepartmentList(response.data);
   };
 
@@ -212,31 +212,31 @@ const ManualCreation = ({
   };
 
   const handleGetLobs = async () => {
-    const response = await axios.get(BASE_URL + "/lob/");
+    const response = await getReq(`/lob/${form.client}/`);
+    console.log('========== resposne ', response);
     if (response.status) {
-      setLobList(response.data);
+      setLobList(response.data ? response.data : []);
     }
   };
 
   const handleGetClientNames = async () => {
-    const response = await axios.get(BASE_URL + "/clients-dropdown/");
+    const response = await getReq("/clients-dropdown/");
     if (response.status) {
       setClientNameList(response.data);
     }
   };
 
   const handleGetClientContactManagers = async () => {
-    const response = await axios.get(
-      BASE_URL + `/client-details/${form.client}/`
+    const response = await getReq(`/client-details/${form.client}/`
     );
     if (response.status) {
       setClientManagerList(response.data.contact_manager);
+      setLobList(response.data.lob);
     }
   };
 
   const handleGetUsersList = async () => {
-    const response = await axios.get(
-      BASE_URL + `/users/${search ? `?search=${search}` : ""}`
+    const response = await getReq(`/users/${search ? `?search=${search}` : ""}`
     );
     if (response.status) {
       setUsersList(response.data);
@@ -254,9 +254,9 @@ const ManualCreation = ({
       setIsLoading(true);
       const response =
         jobData && jobType == "Email"
-          ? await axios.patch(BASE_URL + `/temp-jobs/${jobData.id}/`, form)
+          ? await patchReq(`/temp-jobs/${jobData.id}/`, form)
           : name == "update"
-          ? await axios.patch(BASE_URL + `/jobs/${jobData.id}/`, form)
+          ? await patchReq(`/jobs/${jobData.id}/`, form)
           : await postApiReq("/jobs/", form);
       setIsLoading(false);
       if (response.status) {
@@ -333,7 +333,7 @@ const ManualCreation = ({
       formData.append("files", file);
     });
     formData.append("job", jobId);
-    const response = await postReq(`/documents/`, formData);
+    const response = await postApiReq(`/documents/`, formData);
     if (response.status) {
       // toast.success("Documents added sucessfully");
       setDocuments([]);
@@ -359,8 +359,8 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
+  console.log("--------------lob list ", lobList);
 
-  console.log("---------manual creat job data", form);
 
 
   return (
@@ -540,6 +540,24 @@ const ManualCreation = ({
             />
           </div>
           <div className="col-4 my-2">
+            <p>Client</p>
+            <select
+              value={form.client}
+              className="client-form-input"
+              name="client"
+              onChange={handleChange}
+            >
+              <option>Select</option>
+              {clientNameList.map((item, index) => {
+                return (
+                  <option key={index} value={item.id}>
+                    {item.client_name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="col-4 my-2">
             <p>Names of LOB</p>
             <select
               value={form.lob}
@@ -549,9 +567,27 @@ const ManualCreation = ({
               // disabled={contactDetails}
             >
               <option>Select</option>
-              {lobList.map((item, index) => {
+              { lobList.map((item, index) => {
                 return (
                   <option key={index} value={item.id}>
+                    {item.name}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+          <div className="col-4 my-2">
+            <p>Contact Manager</p>
+            <select
+              value={form.contact_manager}
+              className="client-form-input"
+              name="contact_manager"
+              onChange={handleChange}
+            >
+              <option>Select</option>
+              {clientManagerList?.map((item) => {
+                return (
+                  <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
                 );
@@ -634,42 +670,6 @@ const ManualCreation = ({
               <option>Select</option>
               {jobTypes.map((item) => {
                 return <option value={item.name}>{item.name}</option>;
-              })}
-            </select>
-          </div>
-          <div className="col-4 my-2">
-            <p>Client</p>
-            <select
-              value={form.client}
-              className="client-form-input"
-              name="client"
-              onChange={handleChange}
-            >
-              <option>Select</option>
-              {clientNameList.map((item, index) => {
-                return (
-                  <option key={index} value={item.id}>
-                    {item.client_name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="col-4 my-2">
-            <p>Contact Manager</p>
-            <select
-              value={form.contact_manager}
-              className="client-form-input"
-              name="contact_manager"
-              onChange={handleChange}
-            >
-              <option>Select</option>
-              {clientManagerList?.map((item) => {
-                return (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                );
               })}
             </select>
           </div>

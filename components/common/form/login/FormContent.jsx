@@ -9,6 +9,7 @@ import { BASE_URL } from "@/utils/endpoints";
 import { useDispatch } from "react-redux";
 import { login } from "@/features/employer/employerSlice";
 import BtnBeatLoader from "../../BtnBeatLoader";
+import { postReq } from "@/utils/apiHandlers";
 
 const FormContent = () => {
   const [form, setForm] = useState({
@@ -39,16 +40,23 @@ const FormContent = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.post(BASE_URL + "/login/", form);
+      const response = await postReq("/login/", form);
+      setLoading(false);
       if (response.status) {
         localStorage.setItem("is_user_token", response.data.access);
         toast.success("You are logged in successfully");
-        setLoading(false);
-        window.location.href = "/employers-dashboard/dashboard";
         dispatch(login(response.data));
+        window.location.href = "/employers-dashboard/dashboard";
       }
+      if(response.error){
+        toast.error(
+          response.error.detail[0] || "Something went wrong"
+        );
+      }
+      console.log("------------respoenr ", response);
     } catch (err) {
       setLoading(false);
+      console.log("------------errr ", err);
       toast.error(
         err.response.data.non_field_errors[0] || "Something went wrong"
       );

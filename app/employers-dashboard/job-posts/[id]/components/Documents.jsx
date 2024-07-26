@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq, } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
@@ -28,7 +28,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
       formData.append("files", file);
     });
     formData.append("job", jobId);
-    const response = await postReq(`/documents/`, formData);
+    const response = await postApiReq(`/documents/`, formData);
     if (response.status) {
       toast.success("Documents added sucessfully");
       setDocuments([])

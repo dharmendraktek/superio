@@ -61,7 +61,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
         updated_at: new Date(),
       });
     }
-    const response = await axios.patch(BASE_URL + `/jobs/${jobId}/`, {
+    const response = await patchReq(`/jobs/${jobId}/`, {
       notes_write: updateNoteId ? data : updateData,
     });
     setIsLoading(false);
@@ -84,7 +84,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
     }else{
       data.push({ id: noteId, delete: true });
     }
-    const response = await axios.patch(BASE_URL + `/jobs/${jobId}/`, {
+    const response = await patchReq(`/jobs/${jobId}/`, {
       notes_write: data,
     });
     if (response.status) {

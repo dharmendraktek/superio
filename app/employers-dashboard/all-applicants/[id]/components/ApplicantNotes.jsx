@@ -2,7 +2,7 @@
 
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import HtmlEditor from "@/components/common/HtmlEditor";
-import { deleteReq, getReq, patchReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
@@ -16,7 +16,7 @@ const tabsName = [
   { id: 3, name: "Pipline", value: "pipline" },
 ];
 
-const ApplicantNotes = () => {
+const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
   const [tab, setTab] = useState("applicant");
   const [form, setForm] = useState({
     description: "<p></p>",
@@ -27,73 +27,34 @@ const ApplicantNotes = () => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [noteData, setNoteData] = useState([]);
+  
 
-  const handleCreateNotes = async () => {
-    let data;
-    let updateData;
+  const handleCreateNotes = async() => {
     setIsLoading(true);
-    if (updateNoteId) {
-      let temp = [...noteData];
-      temp.map((item) => {
-        delete item["user"];
-        item["user"] = 209;
-        return item;
-      });
-      data = temp.filter((item) => item.id !== updateNoteId);
-      data.push({
-        text: descriptionData,
-        type: tab,
-        user: 209,
-        id: updateNoteId,
-        created_at: new Date(),
-        updated_at: new Date(),
-      });
-    } else {
-      let temp = [...noteData];
-      updateData = temp.map((item) => {
-        delete item["user"];
-        item["user"] = 209;
-        return item;
-      });
-      updateData.push({
-        text: descriptionData,
-        type: tab,
-        user: 209,
-        created_at: new Date(),
-        updated_at: new Date(),
-      });
+    let data = {
+    text: descriptionData,
+    type:'applicant',
+    created_at:new Date(),
+    updated_at:new Date(),
+    applicant_ref:applicantData.id,
+    user:209,
+  }
+     const response =  updateNoteId ? await patchReq(`/applicant-notes/${updateNoteId}/`, data) :await postApiReq('/applicant-notes/', data);
+     setIsLoading(false);
+     if(response.status) {
+      handleGetApplicantDetails();
+      let message = updateNoteId ? 'Note updated successfully' : 'Note created successfully'; 
+      toast.success(message)
+     }
+  }   
+ 
+   const handleDeleteNotes = async(id) => {
+    const response = await deleteReq(`/applicant-notes/${id}/`)
+    if(response.status){
+      toast.success('Note deleted successfully');
+      handleGetApplicantDetails();
     }
-    const response = await axios.patch(BASE_URL + `/jobs/${jobId}/`, {
-      notes_write: updateNoteId ? data : updateData,
-    });
-    setIsLoading(false);
-    toast.success("Note Created Successfully");
-
-    setNoteData(response.data.notes);
-  };
-
-  const handleDeleteNotes = async (noteId) => {
-    let updateData;
-    let data= [];
-    let temp = [...noteData];
-    updateData = temp.map((item) => {
-      delete item["user"];
-      item["user"] = 209;
-      return item;
-    });
-    if(updateData.length > 1){
-     data = updateData.filter((item) => item.id !== noteId);
-    }else{
-      data.push({ id: noteId, delete: true });
-    }
-    const response = await axios.patch(BASE_URL + `/jobs/${jobId}/`, {
-      notes_write: data,
-    });
-    if (response.status) {
-      setNoteData(response.data.notes);
-      toast.success("Note Deleted Successfully");
-    }
-  };
+   }
 
 
   return (
@@ -336,9 +297,9 @@ const ApplicantNotes = () => {
               }}
             >
               <div className="py-2 px-3 rounded-1  ">
-                {noteData
-                  .filter((item) => item.type == tab)
-                  .map((item, index) => {
+                {applicantData?.applicant_note
+                  ?.filter((item) => item.type == tab)
+                  ?.map((item, index) => {
                     return (
                       <div
                         key={index}
@@ -417,7 +378,7 @@ const ApplicantNotes = () => {
                     );
                   })}
               </div>
-              {!(noteData.find((item) => item.type == tab)) && (
+              {!(applicantData?.applicant_note?.find((item) => item.type == tab)) && (
                 <div className="text-center w-100 py-3">No notes available</div>
               )}
             </div>
@@ -434,7 +395,7 @@ const ApplicantNotes = () => {
                 style={{ background: "var(--theme-color-first)" }}
               >
                 <h5 id="offcanvasRightLabel" className="text-white">
-                  Add Notes
+                  {updateNoteId ? 'Update Note' : "Add Note"}
                 </h5>
                 <button
                   type="button"

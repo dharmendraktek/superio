@@ -11,3 +11,15 @@ export const noticePeriodOption = [
     {name:'Any'},
     {name:'Immediate Joiner'},
 ]
+
+export const documentTypes = [
+
+    {name:'Driving License'},
+    {name:'EML File'},
+    {name:'Employment Authorization Document'},
+    {name:'H1B Copy'},
+    {name:'Passport'},
+    {name:'Resume'},
+    {name:'SSN'},
+    {name:'Transcripts'},
+]

@@ -8,9 +8,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "@/utils/endpoints";
 import Pagination from "@/components/common/Pagination";
-import { deleteReq, getReq, postReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
-import { SyncLoader } from "react-spinners";
 import Loader from "@/components/common/Loader";
 
 const tabsName = [
@@ -44,7 +43,12 @@ const UserTable = () => {
 
   
   useEffect(() => {
-    getUserList(search);
+    if(search){
+      setPage(0);
+      getUserList(search);
+    }else {
+      getUserList();
+    }
   }, [active, search, page]);
 
   const handleDeleteUser = async (id) => {
@@ -56,7 +60,7 @@ const UserTable = () => {
   };
 
   const handleActiveUser = async (id) => {
-    const response = await postReq(
+    const response = await postApiReq(
       `/usersprofile/${id}/activate=true/`
     );
     if (response.status) {

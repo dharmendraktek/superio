@@ -12,7 +12,7 @@ import { Country, State, City } from "country-state-city";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Pagination from "@/components/common/Pagination";
-import { getReq, patchReq, postReq } from "@/utils/apiHandlers";
+import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
@@ -131,7 +131,12 @@ const ClientTable = () => {
   }, []);
 
   useEffect(() => {
-    getClientList(search);
+    if(search){
+      setPage(0);
+      getClientList(search);
+    }else {
+      getClientList();
+    }
   }, [search, active, page]);
 
   const handleChange = (e) => {
@@ -142,7 +147,7 @@ const ClientTable = () => {
   const handleCreateClient = async () => {
     try {
       setLoading(true);
-      const response = await postReq("/create-client/", form);
+      const response = await postApiReq("/create-client/", form);
       if (response.status) {
         setLoading(false);
         setForm(initialState);
@@ -181,7 +186,7 @@ const ClientTable = () => {
 
   const handleActiveClient = async (id) => {
     // const response = await patchReq(`/activate-client/${id}/`);
-    const response = await axios.patch(BASE_URL + `/activate-client/${id}/`);
+    const response = await patchReq(`/activate-client/${id}/`);
 
     if (response.status) {
       toast.success("Client status updated successfully !");
@@ -191,7 +196,7 @@ const ClientTable = () => {
   const handleInactiveClient = async (id) => {
     console;
     // const response = await patchReq(`/delete-client/${id}/`);
-    const response = await axios.patch(BASE_URL + `/delete-client/${id}/`);
+    const response = await patchReq(`/delete-client/${id}/`);
 
     if (response.status) {
       toast.success("Client status updated successfully !");
@@ -214,7 +219,7 @@ const ClientTable = () => {
   const handleCreateClientContact = async () => {
     try {
       setContLoading(true);
-      const response = await postReq("/contact-manager/", contactData);
+      const response = await postApiReq("/contact-manager/", contactData);
       if (response.status) {
         setContLoading(false);
         toast.success("You have been created client contact successfully!");

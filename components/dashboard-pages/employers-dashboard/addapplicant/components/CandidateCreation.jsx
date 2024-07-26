@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import axios from "axios";
 import { BASE_URL } from "@/utils/endpoints";
-
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const initialState = {
   name_title: "",
@@ -35,34 +35,41 @@ const initialState = {
   secondary_skills: [],
   primary_skills: [],
   notice_period: "",
-  skype_id:'',
-  linkedin:'',
-  authorization:'',
-  authorization_expiry:new Date(),
-  is_clearance:'',
-  clearance:'',
-  relocation:'',
-  current_company:'',
-  tax_terms:'',
-  notice_period:'',
-  experience:'',
-  preferred_location:'',
-  tex_terms:'',
-  industry:'',
-  expect_currency:'',
-  expect_amount:'',
-  expect_payment_frequency:'',
-  expect_job_type:'',
-  pancard:'',
-  aadharcard:'',
-  lwd:new Date(),
-  current_currency:'',
-  current_amount:'',
-  current_payment_frequency:'',
-  current_job_type:'',
-}
+  skype_id: "",
+  linkedin: "",
+  authorization: "",
+  authorization_expiry: new Date(),
+  is_clearance: "",
+  clearance: "",
+  relocation: "",
+  current_company: "",
+  tax_terms: "",
+  notice_period: "",
+  experience: "",
+  preferred_location: "",
+  tex_terms: "",
+  industry: "",
+  expect_currency: "",
+  expect_amount: "",
+  expect_payment_frequency: "",
+  expect_job_type: "",
+  pancard: "",
+  aadharcard: "",
+  lwd: new Date(),
+  current_currency: "",
+  current_amount: "",
+  current_payment_frequency: "",
+  current_job_type: "",
+};
 
-const CandidateCreation = ({ tab, setTab, applicantData }) => {
+const CandidateCreation = ({
+  tab,
+  setTab,
+  applicantData,
+  applicantDetails,
+  setApplicantDetails,
+  setActiveForm,
+}) => {
   const [countryCode, setCountryCode] = useState("AF");
   const countryList = Country.getAllCountries();
   const stateList = State.getStatesOfCountry(countryCode);
@@ -74,6 +81,7 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
   const [usersList, setUsersList] = useState([]);
   const [ownerList, setOwnerList] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,61 +114,93 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
   };
 
   useEffect(() => {
-      handleGetUsersList();
-  }, [])
+    handleGetUsersList();
+  }, []);
 
   useEffect(() => {
-    if(applicantData){
-      setOwnerList(applicantData.ownership_details)
-      setForm((prev) =>({
+    if (applicantData) {
+      setOwnerList(applicantData.ownership_details);
+      setForm((prev) => ({
         ...prev,
-        name_title: applicantData.name_title ? applicantData.name_title :"",
-        firstname: applicantData.firstname ? applicantData.firstname :"",
-        middlename:applicantData.middlename ? applicantData.middlename : "",
-        lastname: applicantData.lastname ? applicantData.lastname :"",
+        name_title: applicantData.name_title ? applicantData.name_title : "",
+        firstname: applicantData.firstname ? applicantData.firstname : "",
+        middlename: applicantData.middlename ? applicantData.middlename : "",
+        lastname: applicantData.lastname ? applicantData.lastname : "",
         email: applicantData.email ? applicantData.email : "",
         mobile: applicantData.mobile ? applicantData.mobile : "",
         dob: applicantData.dob ? applicantData.dob : "",
-        country:applicantData.country ? applicantData.country: "",
-        state: applicantData.state ? applicantData.state :"",
-        city: applicantData.city ? applicantData.city : "" ,
-        address: applicantData.address ? applicantData.address :"",
-        zipcode:applicantData.zipcode ? applicantData.zipcode : "",
+        country: applicantData.country ? applicantData.country : "",
+        state: applicantData.state ? applicantData.state : "",
+        city: applicantData.city ? applicantData.city : "",
+        address: applicantData.address ? applicantData.address : "",
+        zipcode: applicantData.zipcode ? applicantData.zipcode : "",
         source: applicantData.source ? applicantData.source : "",
-        referred_by:applicantData.referred_by ? applicantData.referred_by:  "",
+        referred_by: applicantData.referred_by ? applicantData.referred_by : "",
         status: applicantData.status ? applicantData.status : "",
-        ownership:applicantData.ownership ? applicantData.ownership :  [],
-        job_title:applicantData.job_title ? applicantData.job_title: "",
-        relocation:applicantData.relocation ? applicantData.relocation : "",
-        primary_skills:applicantData.primary_skills ? applicantData.primary_skills : [],
-        secondary_skills:applicantData.secondary_skills ? applicantData.secondary_skills : [],
-        notice_period: applicantData.notice_period ? applicantData.notice_period : "",
-        skype_id:applicantData.skype_id ? applicantData.skype_id :"",
-        linkedin:applicantData.linkedin ? applicantData.linkedin : "",
-        authorization:applicantData.authorization ? applicantData.authorization :"",
-        authorization_expiry: applicantData.authorization_expiry ? applicantData.authorization_expiry :"",
-        is_clearance:applicantData.is_clearance ? applicantData.is_clearance :"",
-        clearance:applicantData.clearance ? applicantData.clearance :"",
-        current_company:applicantData.current_company ? applicantData.current_company : "" ,
-        tax_terms:applicantData.tax_terms ? applicantData.tax_terms : "",
-        experience:applicantData.experience ? applicantData.experience : "",
-        preferred_location:applicantData.preferred_location ? applicantData.preferred_location : "" ,
-        industry:applicantData.industry ? applicantData.industry : "",
-        expect_currency:applicantData.expect_currency ? applicantData.expect_currency : "",
-        expect_amount:applicantData.expect_amount ? applicantData.expect_amount : "",
-        expect_payment_frequency:applicantData.expect_payment_frequency ? applicantData.expect_payment_frequency : "",
-        expect_job_type:applicantData.expect_job_type ? applicantData.expect_job_type : "",
-        pancard:applicantData.pancard ? applicantData.pancard : "",
-        aadharcard:applicantData.aadharcard ? applicantData.aadharcard : "",
-        lwd:applicantData.lwd ? applicantData.lwd : "",
-        current_currency:applicantData.current_currency ? applicantData.current_currency : "",
-        current_amount:applicantData.current_amount ? applicantData.current_amount : "",
-        current_payment_frequency:applicantData.current_payment_frequency ? applicantData.current_payment_frequency : "",
-        current_job_type:applicantData.current_job_type ? applicantData.current_job_type : "",
-      }) )
+        ownership: applicantData.ownership ? applicantData.ownership : [],
+        job_title: applicantData.job_title ? applicantData.job_title : "",
+        relocation: applicantData.relocation ? applicantData.relocation : "",
+        primary_skills: applicantData.primary_skills
+          ? applicantData.primary_skills
+          : [],
+        secondary_skills: applicantData.secondary_skills
+          ? applicantData.secondary_skills
+          : [],
+        notice_period: applicantData.notice_period
+          ? applicantData.notice_period
+          : "",
+        skype_id: applicantData.skype_id ? applicantData.skype_id : "",
+        linkedin: applicantData.linkedin ? applicantData.linkedin : "",
+        authorization: applicantData.authorization
+          ? applicantData.authorization
+          : "",
+        authorization_expiry: applicantData.authorization_expiry
+          ? applicantData.authorization_expiry
+          : "",
+        is_clearance: applicantData.is_clearance
+          ? applicantData.is_clearance
+          : "",
+        clearance: applicantData.clearance ? applicantData.clearance : "",
+        current_company: applicantData.current_company
+          ? applicantData.current_company
+          : "",
+        tax_terms: applicantData.tax_terms ? applicantData.tax_terms : "",
+        experience: applicantData.experience ? applicantData.experience : "",
+        preferred_location: applicantData.preferred_location
+          ? applicantData.preferred_location
+          : "",
+        industry: applicantData.industry ? applicantData.industry : "",
+        expect_currency: applicantData.expect_currency
+          ? applicantData.expect_currency
+          : "",
+        expect_amount: applicantData.expect_amount
+          ? applicantData.expect_amount
+          : "",
+        expect_payment_frequency: applicantData.expect_payment_frequency
+          ? applicantData.expect_payment_frequency
+          : "",
+        expect_job_type: applicantData.expect_job_type
+          ? applicantData.expect_job_type
+          : "",
+        pancard: applicantData.pancard ? applicantData.pancard : "",
+        aadharcard: applicantData.aadharcard ? applicantData.aadharcard : "",
+        lwd: applicantData.lwd ? applicantData.lwd : "",
+        current_currency: applicantData.current_currency
+          ? applicantData.current_currency
+          : "",
+        current_amount: applicantData.current_amount
+          ? applicantData.current_amount
+          : "",
+        current_payment_frequency: applicantData.current_payment_frequency
+          ? applicantData.current_payment_frequency
+          : "",
+        current_job_type: applicantData.current_job_type
+          ? applicantData.current_job_type
+          : "",
+      }));
     }
-  }, [applicantData])
-  
+  }, [applicantData]);
+
   const handleGetUsersList = async () => {
     const response = await getReq(`/users/`);
     if (response.status) {
@@ -168,40 +208,49 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
     }
   };
 
-  const handleSubmit = async() => {
-    console.log("-----------thies wordking s", applicantData)
-    try{
-        const response = applicantData ? await axios.patch(BASE_URL + `/applicants/${applicantData.id}/`, form) : await postApiReq('/applicants/', form)
-        if(response.status){
-          let message = applicantData ? 'Applicant updated successfully' : "Applicant created successfully";
-          toast.success(message)
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const response = applicantData
+        ? await patchReq(`/applicants/${applicantData.id}/`, form)
+        : await postApiReq("/applicants/", form);
+      setIsLoading(false);
+      if (response.status) {
+        let message = applicantData
+          ? "Applicant updated successfully"
+          : "Applicant created successfully";
+        toast.success(message);
+        setApplicantDetails(response.data);
+        if(!applicantData){
+          setActiveForm(2);
         }
-        if(response.error){
-          toast.error(response.error.detail);
-        }
+      }
+      if (response.error) {
+        toast.error(response.error.detail);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      toast.error();
     }
-    catch(err){
-         toast.error()
-    }
-  }
-
-  
-  
+  };
 
   return (
-    <div className="shadow py-3 px-5">
+    <div className="shadow py-3 px-3">
       <div className="d-flex justify-content-between">
         <h4>Fill Applicant Details</h4>
         <div className="d-flex gap-2">
-          <button onClick={handleSubmit} className="theme-btn btn-style-one small">
-            Save & Continue
-          </button>
-          <button onClick={() => setForm(initialState)} className="theme-btn btn-style-four small">Reset</button>
           <button
-            onClick={() => setTab(null)}
+            onClick={handleSubmit}
+            className="theme-btn btn-style-one small"
+            disabled={isLoading}
+          >
+            {isLoading ? <BtnBeatLoader /> : "Save & Continue"}
+          </button>
+          <button
+            onClick={() => setForm(initialState)}
             className="theme-btn btn-style-four small"
           >
-            Cancel
+            Reset
           </button>
         </div>
       </div>
@@ -318,42 +367,42 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
         <div className="col-4 my-1">
           <p>Clearance</p>
           <div className="d-flex gap-2">
-          <div className="d-flex gap-2">
-            <input
-              name="is_clearance"
-              onChange={handleChange}
-              value="yes"
-              checked={form.is_clearance == "yes"}
-              type="radio"
-              // className="client-form-input"
-            />
-            <label>Yes</label>
-          </div>
-          <div className="d-flex gap-2">
-            <input
-              name="is_clearance"
-              onChange={handleChange}
-              value="no"
-              checked={form.is_clearance == "no"}
-              type="radio"
-              // className="client-form-input"
-            />
-            <label>No</label>
-          </div>
+            <div className="d-flex gap-2">
+              <input
+                name="is_clearance"
+                onChange={handleChange}
+                value="yes"
+                checked={form.is_clearance == "yes"}
+                type="radio"
+                // className="client-form-input"
+              />
+              <label>Yes</label>
+            </div>
+            <div className="d-flex gap-2">
+              <input
+                name="is_clearance"
+                onChange={handleChange}
+                value="no"
+                checked={form.is_clearance == "no"}
+                type="radio"
+                // className="client-form-input"
+              />
+              <label>No</label>
+            </div>
           </div>
         </div>
-        {form.is_clearance == 'yes' &&
-        <div className="col-4 my-1">
-          <p>Clearance</p>
-          <input
-            name="clearance"
-            onChange={handleChange}
-            value={form.clearance}
-            type="text"
-            className="client-form-input"
-          />
-        </div>
-        }
+        {form.is_clearance == "yes" && (
+          <div className="col-4 my-1">
+            <p>Clearance</p>
+            <input
+              name="clearance"
+              onChange={handleChange}
+              value={form.clearance}
+              type="text"
+              className="client-form-input"
+            />
+          </div>
+        )}
         <div className="col-4 my-1">
           <p>Address</p>
           <textarea
@@ -361,7 +410,7 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
             onChange={handleChange}
             value={form.address}
             type="text"
-            style={{height:'70px'}}
+            style={{ height: "70px" }}
             className="client-form-input"
           />
         </div>
@@ -435,13 +484,20 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
             type="text"
             className="client-form-input"
           >
+            <option>Select</option>
             <option>Dice</option>
             <option>Monester</option>
           </select>
         </div>
         <div className="col-4 my-1">
           <p>Experience</p>
-          <input type="text" name="experience" value={form.experience} onChange={handleChange} className="client-form-input" />
+          <input
+            type="text"
+            name="experience"
+            value={form.experience}
+            onChange={handleChange}
+            className="client-form-input"
+          />
         </div>
         <div className="col-4 my-1">
           <p>Referred By</p>
@@ -455,7 +511,13 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
         </div>
         <div className="col-4 my-1">
           <p>Applicant Status</p>
-          <select type="text" className="client-form-input" name="status" value={form.status} onChange={handleChange} >
+          <select
+            type="text"
+            className="client-form-input"
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+          >
             <option>Select</option>
             <option>Do NOT Call</option>
             <option>Do NOT Submit</option>
@@ -465,39 +527,50 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
             <option>Placed</option>
           </select>
         </div>
-      
+
         <div className="col-4 my-2">
-            <p>Ownership</p>
-            <div className="position-relative cursor-pointer">
-              <div
-                className="client-form-input d-flex justify-content-between custom-scroll-sm"
-                onClick={() => setOpen(!open)}
-                style={{ minHeight: "36px", maxHeight: "100px", overflow:'auto' }}
-              >
-                <div className="d-flex flex-wrap gap-2">
-                  {ownerList.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
-                        style={{ background: "var(--primary-2nd-color)" }}
-                      >
-                        <span>{item.first_name} {item.last_name}</span>
-                        {/* <span onClick={() => handleClose(item)} className="text-black fs-6 cursor-pointer">{reactIcons.close}</span> */}
-                      </div>
-                    );
-                  })}
-                </div>
-                <span className=" float-end">{reactIcons.downarrow}</span>
+          <p>Ownership</p>
+          <div className="position-relative cursor-pointer">
+            <div
+              className="client-form-input d-flex justify-content-between custom-scroll-sm"
+              onClick={() => setOpen(!open)}
+              style={{
+                minHeight: "36px",
+                maxHeight: "100px",
+                overflow: "auto",
+              }}
+            >
+              <div className="d-flex flex-wrap gap-2">
+                {ownerList.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
+                      style={{ background: "var(--primary-2nd-color)" }}
+                    >
+                      <span>
+                        {item.first_name} {item.last_name}
+                      </span>
+                      {/* <span onClick={() => handleClose(item)} className="text-black fs-6 cursor-pointer">{reactIcons.close}</span> */}
+                    </div>
+                  );
+                })}
               </div>
-              {open && (
-                <>
-                  {/* <div className="position-fixed w-100">
+              <span className=" float-end">{reactIcons.downarrow}</span>
+            </div>
+            {open && (
+              <>
+                {/* <div className="position-fixed w-100">
                     <input type="text" className=""/>
                   </div> */}
                 <div
                   className="position-absolute bg-white border border-1 w-100 px-2 custom-scroll-sm"
-                  style={{ top: "33px", zIndex: 10000, maxHeight:"250px", overflow:'auto' }}
+                  style={{
+                    top: "33px",
+                    zIndex: 10000,
+                    maxHeight: "250px",
+                    overflow: "auto",
+                  }}
                 >
                   {usersList.map((item, index) => {
                     return (
@@ -509,17 +582,16 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
                           )}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setOwnerList((prev) => [...prev, item])
+                              setOwnerList((prev) => [...prev, item]);
                               setForm((prev) => ({
                                 ...prev,
-                                ownership: [
-                                  ...prev.ownership,
-                                  item.id
-                                ],
+                                ownership: [...prev.ownership, item.id],
                               }));
                             } else {
-                              const updatedOwnerList = ownerList.filter((_item) => _item.id !== item.id)
-                               setOwnerList(updatedOwnerList);
+                              const updatedOwnerList = ownerList.filter(
+                                (_item) => _item.id !== item.id
+                              );
+                              setOwnerList(updatedOwnerList);
                               setForm((prev) => ({
                                 ...prev,
                                 ownership: prev.ownership.filter(
@@ -529,309 +601,371 @@ const CandidateCreation = ({ tab, setTab, applicantData }) => {
                             }
                           }}
                         />
-                        <span className="mx-2">{item.first_name} {item.last_name} {item.email}</span>
+                        <span className="mx-2">
+                          {item.first_name} {item.last_name} {item.email}
+                        </span>
                       </div>
                     );
                   })}
                 </div>
-                </>
-              )}
-            </div>
+              </>
+            )}
           </div>
+        </div>
         <div className="col-4 my-1">
           <p>Job Title</p>
-          <input name='job_title' value={form.job_title} onChange={handleChange} type="text" className="client-form-input" />
+          <input
+            name="job_title"
+            value={form.job_title}
+            onChange={handleChange}
+            type="text"
+            className="client-form-input"
+          />
         </div>
         <div className="col-4 my-2">
-            <p>Expected Pay</p>
-            <div className="d-flex gap-3">
-              <select
-                name="expect_currency"
-                value={form.expect_currency}
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                {currencyJson.map((item, index) => {
-                   return(
-                     <option value={item.code}> {item.code} ({item.name})</option>
-                   )
-                })
-                }
-              </select>
-              <input
-                name="expect_amount"
-                type="text"
-                value={form.expect_amount}
-                placeholder="Rate"
-                onChange={handleChange}
-                className="px-2 client-input-style form-mult-box form-mult-box"
-              />
-              <select
-                value={form.expect_payment_frequency}
-                name="expect_payment_frequency"
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                <option>Hourly</option>
-                <option>Monthly</option>
-                <option>Annually</option>
-              </select>
-              <select
-                value={form.expect_job_type}
-                name="expect_job_type"
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                <option>1099</option>
-                <option>C2H</option>
-                <option>Contract</option>
-                <option>Full Time</option>
-              </select>
-            </div>
+          <p>Expected Pay</p>
+          <div className="d-flex gap-2">
+            <select
+              name="expect_currency"
+              value={form.expect_currency}
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              {currencyJson.map((item, index) => {
+                return (
+                  <option value={item.code}>
+                    {" "}
+                    {item.code} ({item.name})
+                  </option>
+                );
+              })}
+            </select>
+            <input
+              name="expect_amount"
+              type="text"
+              value={form.expect_amount}
+              placeholder="Rate"
+              onChange={handleChange}
+              className="px-2 client-input-style form-mult-box form-mult-box"
+            />
+            <select
+              value={form.expect_payment_frequency}
+              name="expect_payment_frequency"
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              <option>Hourly</option>
+              <option>Monthly</option>
+              <option>Annually</option>
+            </select>
+            <select
+              value={form.expect_job_type}
+              name="expect_job_type"
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              <option>1099</option>
+              <option>C2H</option>
+              <option>Contract</option>
+              <option>Full Time</option>
+            </select>
           </div>
+        </div>
         <div className="col-4 my-1">
           <p>Relocation</p>
           <div className="d-flex gap-2">
-          <div className="d-flex gap-2">
-            <input
-              name="relocation"
-              onChange={handleChange}
-              value={form.relocation}
-              type="radio"
-              // className="client-form-input"
-            />
-            <label>Yes</label>
-          </div>
-          <div className="d-flex gap-2">
-            <input
-              name="relocation"
-              onChange={handleChange}
-              value={form.relocation}
-              type="radio"
-              // className="client-form-input"
-            />
-            <label>No</label>
-          </div>
+            <div className="d-flex gap-2">
+              <input
+                name="relocation"
+                onChange={handleChange}
+                value={form.relocation}
+                type="radio"
+                // className="client-form-input"
+              />
+              <label>Yes</label>
+            </div>
+            <div className="d-flex gap-2">
+              <input
+                name="relocation"
+                onChange={handleChange}
+                value={form.relocation}
+                type="radio"
+                // className="client-form-input"
+              />
+              <label>No</label>
+            </div>
           </div>
         </div>
         <div className="col-4 my-1">
           <p>Current Company</p>
-          <input name="current_company" onChange={handleChange} value={form.current_company} type="text" className="client-form-input" />
+          <input
+            name="current_company"
+            onChange={handleChange}
+            value={form.current_company}
+            type="text"
+            className="client-form-input"
+          />
         </div>
         <div className="col-4 my-2">
-            <p>
-              Primary Skills{" "}
-              <span
-                data-bs-toggle="tooltip"
-                data-bs-placement="top-right"
-                title="Please enter skills enter button as seprator"
-                className="text-primary"
-              >
-                {reactIcons.info}
-              </span>
-            </p>
-            <div  className="d-flex flex-wrap position-relative custom-scroll-sm  px-2" style={{minHeight:'36px',border:'1px solid black', borderRadius:'3px', maxHeight:'125px', overflowY:'auto'}}>
-                    <div className="d-flex  flex-wrap mt-1">
-                      {form.primary_skills.map((item, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="mx-1 my-1 px-1 gap-6 text-black fw-medium  rounded"
-                            style={{ background: "var(--primary-2nd-color)" }}
-                          >
-                            <span>{item.name ? item.name : item}</span>
-                            <span
-                              className="cursor-pointer text-black ms-2"
-                              onClick={() => handleRemoveSkills(index)}
-                            >
-                              {reactIcons.close}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-              <input
-                name="primary_skills"
-                value={skills}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setForm((prev) => ({
-                      ...prev,
-                      primary_skills: [
-                        ...prev.primary_skills,
-                        { name: skills },
-                      ],
-                    }));
-                    setSkills("");
-                  }
-                }}
-                onChange={(e) => {
-                  setSkills(e.target.value);
-                }}
-                
-                type="text"
-              />
+          <p>
+            Primary Skills{" "}
+            <span
+              data-bs-toggle="tooltip"
+              data-bs-placement="top-right"
+              title="Please enter skills enter button as seprator"
+              className="text-primary"
+            >
+              {reactIcons.info}
+            </span>
+          </p>
+          <div
+            className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
+            style={{
+              minHeight: "36px",
+              border: "1px solid black",
+              borderRadius: "3px",
+              maxHeight: "125px",
+              overflowY: "auto",
+            }}
+          >
+            <div className="d-flex  flex-wrap mt-1">
+              {form.primary_skills.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="mx-1 my-1 px-1 gap-6 text-black fw-medium  rounded"
+                    style={{ background: "var(--primary-2nd-color)" }}
+                  >
+                    <span>{item.name ? item.name : item}</span>
+                    <span
+                      className="cursor-pointer text-black ms-2"
+                      onClick={() => handleRemoveSkills(index)}
+                    >
+                      {reactIcons.close}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
+            <input
+              name="primary_skills"
+              value={skills}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  setForm((prev) => ({
+                    ...prev,
+                    primary_skills: [...prev.primary_skills, { name: skills }],
+                  }));
+                  setSkills("");
+                }
+              }}
+              onChange={(e) => {
+                setSkills(e.target.value);
+              }}
+              type="text"
+            />
           </div>
-          <div className="col-4 my-2">
-            <p>
-              Secondary Skills{" "}
-              <button
-                data-bs-toggle="tooltip"
-                data-bs-placement="top-right"
-                title="Please enter skills enter button as seprator"
-                className="text-primary"
-              >
-                <span>{reactIcons.info}</span>
-              </button>
-            </p>
-            <div className="d-flex flex-wrap position-relative custom-scroll-sm  px-2" style={{minHeight:'36px',border:'1px solid black', borderRadius:'3px', maxHeight:'125px', overflowY:'auto'}}>
-                    <div className="d-flex   flex-wrap mt-1">
-                      {form.secondary_skills.map((item, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="mx-1 px-1 my-1 gap-6 text-black fw-medium rounded"
-                            style={{ background: "var(--primary-2nd-color)" }}
-                          >
-                            <span>{item.name ? item.name : item}</span>
-                            <span
-                              className="cursor-pointer ms-2 text-black"
-                              onClick={() => handleRemoveSecondarySkills(index)}
-                            >
-                              {reactIcons.close}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-              <input
-                name="secondary_skills"
-                value={secondarySkills}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setForm((prev) => ({
-                      ...prev,
-                      secondary_skills: [
-                        ...prev.secondary_skills,
-                        { name: secondarySkills },
-                      ],
-                    }));
-                    setSecondarySkills("");
-                  }
-                }}
-                onChange={(e) => {
-                  setSecondarySkills(e.target.value);
-                }}
-                // className="client-form-input"
-                type="text"
-              />
+        </div>
+        <div className="col-4 my-2">
+          <p>
+            Secondary Skills{" "}
+            <button
+              data-bs-toggle="tooltip"
+              data-bs-placement="top-right"
+              title="Please enter skills enter button as seprator"
+              className="text-primary"
+            >
+              <span>{reactIcons.info}</span>
+            </button>
+          </p>
+          <div
+            className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
+            style={{
+              minHeight: "36px",
+              border: "1px solid black",
+              borderRadius: "3px",
+              maxHeight: "125px",
+              overflowY: "auto",
+            }}
+          >
+            <div className="d-flex   flex-wrap mt-1">
+              {form.secondary_skills.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="mx-1 px-1 my-1 gap-6 text-black fw-medium rounded"
+                    style={{ background: "var(--primary-2nd-color)" }}
+                  >
+                    <span>{item.name ? item.name : item}</span>
+                    <span
+                      className="cursor-pointer ms-2 text-black"
+                      onClick={() => handleRemoveSecondarySkills(index)}
+                    >
+                      {reactIcons.close}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
+            <input
+              name="secondary_skills"
+              value={secondarySkills}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  setForm((prev) => ({
+                    ...prev,
+                    secondary_skills: [
+                      ...prev.secondary_skills,
+                      { name: secondarySkills },
+                    ],
+                  }));
+                  setSecondarySkills("");
+                }
+              }}
+              onChange={(e) => {
+                setSecondarySkills(e.target.value);
+              }}
+              // className="client-form-input"
+              type="text"
+            />
           </div>
-          <div className="col-4 my-1">
+        </div>
+        <div className="col-4 my-1">
           <p>Work Authorization Expiry</p>
-           <DatePickerCustom  handleDate={(date) => setForm((prev) => ({ ...prev, authorization_expiry: date }))}
-            date={form.authorization_expiry} />
+          <DatePickerCustom
+            handleDate={(date) =>
+              setForm((prev) => ({ ...prev, authorization_expiry: date }))
+            }
+            date={form.authorization_expiry}
+          />
         </div>
         <div className="col-4 my-1">
           <p>Tax Terms</p>
-          <select name="tax_terms" value={form.tax_terms} onChange={handleChange} className="client-form-input" >
+          <select
+            name="tax_terms"
+            value={form.tax_terms}
+            onChange={handleChange}
+            className="client-form-input"
+          >
             <option>select</option>
             <option>Contract</option>
             <option>Full Time</option>
             <option>Part Time</option>
-            </select>
+          </select>
         </div>
-       
+
         <div className="col-4 my-1">
           <p>Notice Period</p>
-          <select value={form.notice_period} name="notice_period" onChange={handleChange} className="client-form-input" >
+          <select
+            value={form.notice_period}
+            name="notice_period"
+            onChange={handleChange}
+            className="client-form-input"
+          >
             <option>Select</option>
             {noticePeriodOption.map((item, index) => {
-              return(
-                <option key={index}>{item.name}</option>
-              )
-            })
-
-            }
-            </select>
-            {form.notice_period == 'Currently Serving Notice Period' &&
-              <div className="py-2">
-                <DatePickerCustom 
-                  handleDate={(date) => setForm((prev) => ({ ...prev, lwd: date }))}
-                  date={form.lwd}
-                />
-              </div>
-            }
+              return <option key={index}>{item.name}</option>;
+            })}
+          </select>
+          {form.notice_period == "Currently Serving Notice Period" && (
+            <div className="py-2">
+              <DatePickerCustom
+                handleDate={(date) =>
+                  setForm((prev) => ({ ...prev, lwd: date }))
+                }
+                date={form.lwd}
+              />
+            </div>
+          )}
         </div>
         <div className="col-4 my-1">
           <p>Industry</p>
-          <select type="text" onChange={handleChange} name="industry" value={form.industry} className="client-form-input" >
-             <option>Software</option>
-             <option>Hardware</option>
-            </select>
+          <select
+            type="text"
+            onChange={handleChange}
+            name="industry"
+            value={form.industry}
+            className="client-form-input"
+          >
+            <option>Software</option>
+            <option>Hardware</option>
+          </select>
         </div>
         <div className="col-4 my-1">
           <p>Current CTC</p>
-          <div className="d-flex gap-3">
-              <select
-                name="current_currency"
-                value={form.current_currency}
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                {currencyJson.map((item, index) => {
-                   return(
-                     <option value={item.code}> {item.code} ({item.name})</option>
-                   )
-                })
-                }
-              </select>
-              <input
-                name="current_amount"
-                type="text"
-                value={form.current_amount}
-                placeholder="Rate"
-                onChange={handleChange}
-                className="px-2 client-input-style form-mult-box form-mult-box"
-              />
-              <select
-                value={form.current_payment_frequency}
-                name="current_payment_frequency"
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                <option>Hourly</option>
-                <option>Monthly</option>
-                <option>Annually</option>
-              </select>
-              <select
-                value={form.current_job_type}
-                name="current_job_type"
-                onChange={handleChange}
-                className="client-input-style form-mult-box"
-              >
-                <option>Select</option>
-                <option>1099</option>
-                <option>C2H</option>
-                <option>Contract</option>
-                <option>Full Time</option>
-              </select>
-            </div>
+          <div className="d-flex gap-2">
+            <select
+              name="current_currency"
+              value={form.current_currency}
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              {currencyJson.map((item, index) => {
+                return (
+                  <option value={item.code}>
+                    {" "}
+                    {item.code} ({item.name})
+                  </option>
+                );
+              })}
+            </select>
+            <input
+              name="current_amount"
+              type="text"
+              value={form.current_amount}
+              placeholder="Rate"
+              onChange={handleChange}
+              className="px-2 client-input-style form-mult-box form-mult-box"
+            />
+            <select
+              value={form.current_payment_frequency}
+              name="current_payment_frequency"
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              <option>Hourly</option>
+              <option>Monthly</option>
+              <option>Annually</option>
+            </select>
+            <select
+              value={form.current_job_type}
+              name="current_job_type"
+              onChange={handleChange}
+              className="client-input-style form-mult-box"
+            >
+              <option>Select</option>
+              <option>1099</option>
+              <option>C2H</option>
+              <option>Contract</option>
+              <option>Full Time</option>
+            </select>
+          </div>
         </div>
-        
+
         <div className="col-4 my-1">
           <p>Pan Card Number</p>
-          <input type="text" onChange={handleChange} name="pancard" value={form.pancard} className="client-form-input" />
+          <input
+            type="text"
+            onChange={handleChange}
+            name="pancard"
+            value={form.pancard}
+            className="client-form-input"
+          />
         </div>
         <div className="col-4 my-1">
           <p>Aadhar Card Number</p>
-          <input type="text" onChange={handleChange} name="aadharcard" value={form.aadharcard} className="client-form-input" />
+          <input
+            type="text"
+            onChange={handleChange}
+            name="aadharcard"
+            value={form.aadharcard}
+            className="client-form-input"
+          />
         </div>
       </div>
     </div>
