@@ -150,8 +150,8 @@ const Index = () => {
                       <div>
                         <span>Created By & On</span>
                         <br />
-                        <strong>Name is p</strong>
-                        <strong>On {moment(jobData?.created_at).format('DD/MM/YYYY  hh:mm A')}</strong>
+                        <strong>{jobData?.created_by ? jobData?.created_by.first_name + " " + jobData?.created_by.last_name : 'N/A'}</strong>
+                        <strong> On {moment(jobData?.created_at).format('DD/MM/YYYY  hh:mm A')}</strong>
                       </div>
                     </div>
                     <div>

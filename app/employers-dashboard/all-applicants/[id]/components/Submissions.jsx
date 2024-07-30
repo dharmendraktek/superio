@@ -19,7 +19,7 @@ const Submissions = () => {
         <Paper>
             <div>
                 <div className="d-flex justify-content-between">
-                    <h5>Submissions</h5>
+                    <h4>Submissions</h4>
                     <div className="submissions d-flex gap-2">
             {tabsName.map((item, index) => {
               return (

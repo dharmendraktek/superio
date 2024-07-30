@@ -20,7 +20,7 @@ const MultiSearch = ({
         <div
           onClick={() => setOpenFields(!openFields)}
           style={{ width: "fit-content" }}
-          className="px-2 rounded-1 border-end border-primary bg-primary text-white fw-medium  cursor-pointer"
+          className="px-2 rounded-start-1 border-end border-primary bg-primary text-white fw-medium  cursor-pointer"
         >
           <span>{keys.find((item) => item.value == fieldName).name}</span>
           <span>{reactIcons.arrowfilldown}</span>
@@ -59,7 +59,11 @@ const MultiSearch = ({
           className="px-2"
           placeholder="Search..."
           style={{ width: "200px" }}
+          value={search}
         />
+         {search &&
+                <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
+        }
         {/* <button className="theme-btn btn-style-one small">Search</button> */}
       </div>
       {(fieldName == "created" || fieldName == "updated") && (

@@ -6,7 +6,7 @@ const EInterviews = () => {
         <Paper>
             <div>
                 <div className="d-flex">
-                     <h5>eInterviews</h5>
+                     <h4>eInterviews</h4>
                 </div>
             </div>
         </Paper>

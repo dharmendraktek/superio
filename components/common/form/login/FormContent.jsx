@@ -53,10 +53,8 @@ const FormContent = () => {
           response.error.detail[0] || "Something went wrong"
         );
       }
-      console.log("------------respoenr ", response);
     } catch (err) {
       setLoading(false);
-      console.log("------------errr ", err);
       toast.error(
         err.response.data.non_field_errors[0] || "Something went wrong"
       );

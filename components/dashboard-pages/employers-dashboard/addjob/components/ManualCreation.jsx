@@ -15,6 +15,7 @@ import { deleteReq, getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
 import JobPostCommentsModal from "./components/JobPostCommentsModal";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   job_code: "",
@@ -46,7 +47,7 @@ const initialState = {
   assign: [],
   tax_term: "",
   department: "",
-  description: "",
+  description: "<p></p>",
   post_on_portal: new Date(),
   is_active: 1,
   priority: "",
@@ -88,6 +89,27 @@ const ManualCreation = ({
   const [option, setOption] = useState(false);
   const [comments, setComments] = useState();
   const [commentsErr, setCommentsErr] = useState("");
+  const [error, setError] = useState({
+    jobCodeErr:'',
+    jobTitleErr:'',
+    clientErr:'',
+    lobErr:'',
+    contactManagerErr:'',
+    stateErr:'',
+    cityErr:'',
+    jobStatusErr:'',
+    jobType:'',
+    experienceErr:'',
+    primarySkillsErr:'',
+    positionErr:'',
+    taxTermErr:'',
+    deliveryManagerErr:'',
+    accountManagerErr:'',
+    assignToErr:'',
+    jobDescriptionErr:'',
+  });
+
+  const router = useRouter();
 
   // const cityList = City?.getAllCities('MP');
   // console.log("----------city list ", cityList);
@@ -213,7 +235,6 @@ const ManualCreation = ({
 
   const handleGetLobs = async () => {
     const response = await getReq(`/lob/${form.client}/`);
-    console.log('========== resposne ', response);
     if (response.status) {
       setLobList(response.data ? response.data : []);
     }
@@ -266,6 +287,10 @@ const ManualCreation = ({
           }
           toast.success("Job post updated successfully !");
           handleGetJobDetails();
+          let btnModal = document.getElementById('commentModalClose')
+          btnModal.click();
+          // setTab(null);
+          // router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
         } else {
           if (documents.length > 0) {
             handleSaveDocuments(response.data.id);
@@ -273,6 +298,7 @@ const ManualCreation = ({
           setIsLoading(false);
           setForm(initialState);
           toast.success("Job post created successfully !");
+          router.push('/employers-dashboard/job-posts');          
         }
       }
     } catch (err) {
@@ -359,7 +385,6 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
-  console.log("--------------lob list ", lobList);
 
 
 
@@ -429,7 +454,7 @@ const ManualCreation = ({
         <div className="row px-5">
           {!jobType && (
             <div className="col-4 my-2">
-              <p>Job Code</p>
+              <p>Job Code <strong className="text-danger">*</strong></p>
               <input
                 name="job_code"
                 value={form.job_code}
@@ -441,7 +466,7 @@ const ManualCreation = ({
             </div>
           )}
           <div className="col-4 my-2">
-            <p>Job Title</p>
+            <p>Job Title <strong className="text-danger">*</strong></p>
             <input
               name="title"
               value={form.title}
@@ -540,7 +565,7 @@ const ManualCreation = ({
             />
           </div>
           <div className="col-4 my-2">
-            <p>Client</p>
+            <p>Client <strong className="text-danger">*</strong></p>
             <select
               value={form.client}
               className="client-form-input"
@@ -558,7 +583,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>Names of LOB</p>
+            <p>Names of LOB <strong className="text-danger">*</strong></p>
             <select
               value={form.lob}
               className="client-form-input"
@@ -577,7 +602,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>Contact Manager</p>
+            <p>Contact Manager <strong className="text-danger">*</strong></p>
             <select
               value={form.contact_manager}
               className="client-form-input"
@@ -614,7 +639,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>State</p>
+            <p>State <strong className="text-danger">*</strong></p>
             <select
               className="client-form-input"
               name="state"
@@ -636,7 +661,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>City</p>
+            <p>City <strong className="text-danger">*</strong></p>
             <input
               name="city"
               value={form.city}
@@ -646,7 +671,7 @@ const ManualCreation = ({
             />
           </div>
           <div className="col-4 my-2">
-            <p>Job Status</p>
+            <p>Job Status <strong className="text-danger">*</strong></p>
             <select
               value={form.job_status}
               className="client-form-input"
@@ -660,7 +685,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>Job Type</p>
+            <p>Job Type <strong className="text-danger">*</strong></p>
             <select
               value={form.job_type}
               className="client-form-input"
@@ -714,7 +739,7 @@ const ManualCreation = ({
             <h4>Skills</h4>
           </div>
           <div className="col-4 my-2">
-            <p>Experience</p>
+            <p>Experience <strong className="text-danger">*</strong></p>
             <div className="d-flex gap-2">
               <input
                 placeholder="Experience"
@@ -731,7 +756,7 @@ const ManualCreation = ({
           </div>
           <div className="col-4 my-2">
             <p>
-              Primary Skills{" "}
+              Primary Skills <strong className="text-danger">*</strong> {" "}
               <span
                 data-bs-toggle="tooltip"
                 data-bs-placement="top-right"
@@ -938,7 +963,7 @@ const ManualCreation = ({
             <h4>Organizational Information</h4>
           </div>
           <div className="col-4 my-2">
-            <p>Number of positions</p>
+            <p>Number of positions <strong className="text-danger">*</strong></p>
             <input
               name="number_of_position"
               value={form.number_of_position}
@@ -958,7 +983,7 @@ const ManualCreation = ({
             />
           </div> */}
           <div className="col-4 my-2">
-            <p>Tax Terms</p>
+            <p>Tax Terms <strong className="text-danger">*</strong></p>
             <select className="client-form-input" name="tax_term">
               <option>Select</option>
 
@@ -1000,7 +1025,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>Delivery Manager</p>
+            <p>Delivery Manager <strong className="text-danger">*</strong></p>
             <select
               value={form.delivery_manager}
               onChange={handleChange}
@@ -1018,7 +1043,7 @@ const ManualCreation = ({
             </select>
           </div>
           <div className="col-4 my-2">
-            <p>Account Manager</p>
+            <p>Account Manager <strong className="text-danger">*</strong></p>
             <select
               value={form.account_manager}
               onChange={handleChange}
@@ -1037,7 +1062,7 @@ const ManualCreation = ({
           </div>
           {!jobType && (
             <div className="col-4 my-2">
-              <p>Assigned To</p>
+              <p>Assigned To <strong className="text-danger">*</strong></p>
               <div className="client-form-input d-flex justify-content-between">
                 <div className="d-flex flex-wrap gap-2">
                   {assignList.map((item) => {
@@ -1109,7 +1134,7 @@ const ManualCreation = ({
               />
             </div> */}
           <div className="col-12 my-1">
-            <p>Job Description</p>
+            <p>Job Description <strong className="text-danger">*</strong> </p>
             {(name == "update" || name == 'parse') && form.description && (
               <HtmlEditor
                 setDescriptionData={setDescriptionData}

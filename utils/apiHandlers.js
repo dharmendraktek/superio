@@ -125,7 +125,6 @@ export const postReq = async (endpoint, data) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      console.log("-a------------oiser dsf erew errr", err);
       if (err.response.status == 401) {
         // handleLogout();
         // removeAuthCookie();
@@ -167,7 +166,6 @@ export const getReq = async(endpoint) => {
     })
     .catch((err) => {
       if (err?.response?.status == 401) {
-        console.log("-------------reespeonr ", err);
         // handleLogout();
         localStorage.removeItem('is_user_token');
         // removeAuthCookie();

@@ -11,7 +11,8 @@ import EducationDetails from "./components/EducationDetails";
 import Certificate from "./components/Certificate";
 import Languages from "./components/Languages";
 import Experience from "./components/Experience";
-import { getReq } from "@/utils/apiHandlers";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
+import Loader from "@/components/common/Loader";
 
 const tabsName = [
   { id: 1, name: "Personal Details", icon: reactIcons.personalDetails },
@@ -29,6 +30,7 @@ const Index = () => {
   const [bulkResumeFiles, setBulkResumeFiles] = useState([]);
   const [activeForm, setActiveForm] = useState(1);
   const [applicantDetails, setApplicantDetails] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const button = document.getElementById("uploadResumeModal");
@@ -79,7 +81,36 @@ const Index = () => {
     return (bytes / Math.pow(k, 1)).toFixed(dm) + " " + sizes[1];
   }
 
+  const handleParseResume = async() => {
+      //  setIsLoading(true);
+      //  let formData = new FormData();
+      //  formData.append('resume_file', resume);
+      //  const response = await postApiReq('/resume-upload/', formData);
+      //  setIsLoading(false);
+      //  if(response){
+      //    console.log("------------response resume ", response);
+      //    setApplicantDetails(response.data);
+      //    let data ={email:response.data.email} 
+      //    const res  = await postApiReq('/duplicate-applicant-check/', data);
+      //    console.log("----------------response ", res);
+      //    if(res.data.duplicate){
+      //     const button = document.getElementById("setResumeModal");
+      //     button.click();
+      //    }else{
+      //     setTab(1);
+      //    }
+      //  }
+  }
+
+  const handleAddResume = async(key) =>{
+      const response = await postApiReq('//');
+  }
+
   return (
+    <>
+    {isLoading &&
+      <Loader />
+    }
     <div className="page-wrapper">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
@@ -98,6 +129,70 @@ const Index = () => {
 
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
+      <div
+          className="modal fade"
+          id="resumeSetModal"
+          tabindex="-1"
+          aria-labelledby="resumeSetModalLabel"
+          aria-hidden="true"
+        >
+          <button
+            type="button"
+            id="setResumeModal"
+            className="btn btn-primary d-none"
+            data-bs-toggle="modal"
+            data-bs-target="#resumeSetModal"
+          >
+            Launch demo modal
+          </button>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Resume Parsing
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="py-2">
+                  <h6>Please select an option below to parse duplicate resume.</h6>
+                </div>
+                <div className="d-flex flex-wrap my-2 w-100">
+                   <div className="w-50 p-2">
+                   <div  className="shadow hover:bg-primary hover:text-white cursor-pointer p-3">
+                     <h5>Add as default resume</h5>
+                     <span>This action will add the new resume as a default resume but won't reparse the information from the new resume</span>
+                   </div>
+                   </div>
+                   <div className="w-50 p-2">
+                   <div className="p-3 shadow cursor-pointer">
+                   <h5>Add just as a Resume</h5>
+                   <span>This action will add the new resume as "Just as a resume" In the recard and won't reparse the information from the new resume</span>
+                   </div>
+                   </div>
+                   <div className="w-50 p-2">
+                   <div className="p-3 shadow cursor-pointer">
+                   <h5>Overwrite Existing</h5>
+                   <span>This action will repase the new resume info the existing profile to overwite the old information with new information and will update the new information and will update the new resume as a default resume</span>
+                   </div>
+                   </div>
+                   <div className="w-50 p-2">
+                   <div className="p-3 shadow cursor-pointer">
+                   <h5>Do Nothing</h5>
+                   <span>System doesn't do anything if it finds a duplicate record</span>
+                   </div>
+                   </div>
+                </div>
+                {/* <h5>SET AS DEFAULT RESUME</h5> */}
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           className="modal fade"
           id="parseResumeModal"
@@ -132,7 +227,7 @@ const Index = () => {
               </div>
               <div className="d-flex justify-content-center gap-2 py-2">
                 <button
-                  onClick={() => setTab(1)}
+                  onClick={handleParseResume}
                   type="button"
                   className="btn btn-primary"
                   data-bs-dismiss="modal"
@@ -440,6 +535,7 @@ const Index = () => {
                     <div className="col-10">
                       {activeForm == 1 && (
                         <CandidateCreation
+                          applicantData={applicantDetails}
                           applicantDetails={applicantDetails}
                           setApplicantDetails={setApplicantDetails}
                           tab={tab}
@@ -500,6 +596,7 @@ const Index = () => {
 
       {/* <CopyrightFooter /> */}
     </div>
+    </>
   );
 };
 

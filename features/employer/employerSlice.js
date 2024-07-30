@@ -33,7 +33,6 @@ export const employerSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            console.log("---------------employeee action details ", action.payload);
             state.token=action.payload.access;
           },
         employeeDetail : (state, action) => {

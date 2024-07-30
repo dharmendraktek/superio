@@ -21,3 +21,5 @@ export const  candidateSearchKey = [
     {name:'Updated By', value:'updated_by'},
     {name:'Skills', value:'skills'},
 ]
+
+

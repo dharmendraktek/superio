@@ -191,7 +191,7 @@ const Documents = ({applicantDetails, setActiveForm, handleGetApplicantDetails})
                       <div>
                       <span>{reactIcons.file}</span>
                       <span>{item.type} - {item.document_name}</span>
-                      <p>Created By </p>
+                      <p>Created By - {item.updated_by ? item.updated_by.first_name + " " + item.updated_by.last_name : 'N/A'}</p>
                       <p>comment - {item.comment ? item.comment : 'N/A' }</p>
                       </div>
                       <div>

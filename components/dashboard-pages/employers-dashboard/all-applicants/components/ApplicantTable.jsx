@@ -36,6 +36,7 @@ const ApplicantTable = () => {
   const [fieldName, setFieldName] = useState("search-any");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [openAct, setOpenAct] = useState(false);
 
   useEffect(() => {
     let param;
@@ -65,6 +66,7 @@ const ApplicantTable = () => {
       setApplicantData(response.data.results);
     }
   };
+
 
   return (
     <div>
@@ -120,7 +122,29 @@ const ApplicantTable = () => {
             <thead className="position-sticky">
               <tr>
                 <th style={{ width: "100px" }}>
-                  <input type="checkbox" />
+                  <div className="d-flex gap-2">
+                  <input type="checkbox" className="rounded-1" onChange={(e) => {
+                       if(e.target.checked){
+                           setApplicantData((prev) => prev.map((item) => {
+                            return {...item,  selected:e.target.checked}
+                           }))
+                       }else{
+                        setApplicantData((prev) => prev.map((item) => {
+                          return {...item,  selected:e.target.checked}
+                         }))
+                       }
+                  }} />
+                  {applicantData.find((item) => item.selected == true) &&
+                    <div className="position-relative">
+                        <span onClick={() => setOpenAct(!openAct)}>Action</span>
+                    {openAct &&
+                       <div className="position-absolute">
+                            <div className="bg-white">option</div>
+                       </div>
+                    }
+                    </div>
+                  }
+                  </div>
                 </th>
                 <th className="" style={{ width: "150px" }}>
                   Applicant ID
@@ -129,8 +153,8 @@ const ApplicantTable = () => {
                 <th style={{ width: "250px" }}>Job Title</th>
                 <th style={{ width: "300px" }}>Email Address</th>
                 <th style={{ width: "300px" }}>Mobile Number</th>
-                {/* <th style={{width:'300px'}}>Primary Skills</th>
-                <th style={{width:'200px'}}>Secondary Skills</th> */}
+                <th style={{width:'300px'}}>Primary Skills</th>
+                <th style={{width:'300px'}}>Secondary Skills</th>
                 <th style={{ width: "150px" }}>City</th>
                 <th style={{ width: "200px" }}>Source</th>
                 <th style={{ width: "200px" }}>State</th>
@@ -140,8 +164,9 @@ const ApplicantTable = () => {
                   Work Authorization
                 </th>
                 <th style={{ width: "250px" }}>Created By</th>
+                <th style={{ width: "250px" }}>Updated By</th>
                 <th style={{ width: "200px" }}>Created On</th>
-                <th style={{ width: "200px" }}>Created On</th>
+                <th style={{ width: "200px" }}>Updated On</th>
               </tr>
             </thead>
             <tbody>
@@ -149,14 +174,22 @@ const ApplicantTable = () => {
                 return (
                   <tr key={index}>
                     <td style={{ width: "100px" }}>
-                      <input type="checkbox" />
+                      <input type="checkbox" checked={item?.selected} onChange={(e) => {
+                        let update = [...applicantData]
+                        if(e.target.checked){
+                          update[index]['selected']=e.target.checked
+                        }else{
+                          update[index]['selected']=e.target.checked
+                        }
+                        setApplicantData(update);
+                      }} />
                     </td>
                     <td className="" style={{ width: "150px" }}>
                     <Link
                         href="/employers-dashboard/all-applicants/[id]"
                         as={`/employers-dashboard/all-applicants/${item.id}`}
                       >
-                      {item.id}
+                      {item.applicant_code}
                       </Link>
                     </td>
                     <td className="" style={{ width: "200px" }}>
@@ -164,7 +197,7 @@ const ApplicantTable = () => {
                         href="/employers-dashboard/all-applicants/[id]"
                         as={`/employers-dashboard/all-applicants/${item.id}`}
                       >
-                        {item.firstname} {item.middlename} {item.lastname}
+                        {item?.firstname} {item?.middlename} {item?.lastname}
                       </Link>
                     </td>
                     <td className="" style={{ width: "250px" }}>
@@ -176,8 +209,22 @@ const ApplicantTable = () => {
                     <td className="" style={{ width: "300px" }}>
                       {item.mobile}
                     </td>
-                    {/* <td style={{width:'300px'}}>primary</td>
-                    <td style={{width:'300px'}}>secondary</td> */}
+                    <td style={{width:'300px'}}>
+                      <div className="d-flex flex-wrap gap-1">
+                      {item.primary_skills.slice(0,3).map((_item, index) => {
+                        return <span key={index}>{_item.name}{item.primary_skills.length -1 > index ? ',' :''}</span>
+                      })
+                      }
+                      </div>
+                   </td>
+                    <td style={{width:'300px'}}>
+                    <div className="d-flex flex-wrap gap-1">
+                      {item.secondary_skills.map((_item, index) => {
+                        return <span key={index}>{_item.name}{item.primary_skills.length-1 > index ? ',' :''}</span>
+                      })
+                      }
+                      </div>
+                    </td>
                     <td className="" style={{ width: "150px" }}>
                       {item.city}
                     </td>
@@ -190,7 +237,7 @@ const ApplicantTable = () => {
                     <td className="" style={{ width: "200px" }}>
                       {item.status}
                     </td>
-                    <td className="d-flex flex-wrap" style={{ width: "250px" }}>
+                    <td className="d-flex flex-wrap gap-2" style={{ width: "250px" }}>
                       {item.ownership_details.map((item) => {
                         return(
                           <span key={item.id}>{item.first_name} {item.last_name}</span>
@@ -244,7 +291,12 @@ const ApplicantTable = () => {
                     </ul>
                   </div> */}
                     </td>
-                    <td style={{ width: "250px" }}>{item.created_by}</td>
+                    <td style={{ width: "250px" }}>
+                    {item.created_by ? item?.created_by?.first_name + " " + item?.created_by?.last_name  : '-'}
+                    </td>
+                    <td style={{ width: "250px" }}>
+                    {item.updated_by ? item?.updated_by?.first_name + " " + item?.updated_by?.last_name  : '-'}
+                    </td>
                     <td style={{ width: "200px" }}>
                       {moment(item.created_at).format("DD-MM-YYYY  hh:mm A")}
                     </td>

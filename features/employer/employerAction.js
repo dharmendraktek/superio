@@ -35,7 +35,6 @@ export const handleGetUsersList = async() => {
 
 export const getUserDetails = async() => {
     const response = await getReq('/current-user/');
-    console.log("------------response ", response);
     if(response.status){
       return response.data
     }

@@ -10,6 +10,7 @@ import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import axios from "axios";
 import { BASE_URL } from "@/utils/endpoints";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import { useRouter } from "next/router";
 
 const initialState = {
   name_title: "",
@@ -82,6 +83,17 @@ const CandidateCreation = ({
   const [ownerList, setOwnerList] = useState([]);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState({
+    firstNameErr: "",
+    lastNameErr: "",
+    emailErr: "",
+    mobileErr: "",
+    workAuthErr: "",
+    sourceErr: "",
+    taxTermErr: "",
+  });
+
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,7 +131,9 @@ const CandidateCreation = ({
 
   useEffect(() => {
     if (applicantData) {
-      setOwnerList(applicantData.ownership_details);
+      setOwnerList(
+        applicantData.ownership_details ? applicantData.ownership_details : []
+      );
       setForm((prev) => ({
         ...prev,
         name_title: applicantData.name_title ? applicantData.name_title : "",
@@ -128,7 +142,7 @@ const CandidateCreation = ({
         lastname: applicantData.lastname ? applicantData.lastname : "",
         email: applicantData.email ? applicantData.email : "",
         mobile: applicantData.mobile ? applicantData.mobile : "",
-        dob: applicantData.dob ? applicantData.dob : "",
+        dob: applicantData.dob ? applicantData.dob : new Date(),
         country: applicantData.country ? applicantData.country : "",
         state: applicantData.state ? applicantData.state : "",
         city: applicantData.city ? applicantData.city : "",
@@ -142,6 +156,8 @@ const CandidateCreation = ({
         relocation: applicantData.relocation ? applicantData.relocation : "",
         primary_skills: applicantData.primary_skills
           ? applicantData.primary_skills
+          : applicantData.skills
+          ? applicantData.skills.split(",").map((item) => {return { name:item }})
           : [],
         secondary_skills: applicantData.secondary_skills
           ? applicantData.secondary_skills
@@ -156,7 +172,7 @@ const CandidateCreation = ({
           : "",
         authorization_expiry: applicantData.authorization_expiry
           ? applicantData.authorization_expiry
-          : "",
+          : new Date(),
         is_clearance: applicantData.is_clearance
           ? applicantData.is_clearance
           : "",
@@ -184,7 +200,7 @@ const CandidateCreation = ({
           : "",
         pancard: applicantData.pancard ? applicantData.pancard : "",
         aadharcard: applicantData.aadharcard ? applicantData.aadharcard : "",
-        lwd: applicantData.lwd ? applicantData.lwd : "",
+        lwd: applicantData.lwd ? applicantData.lwd : new Date(),
         current_currency: applicantData.current_currency
           ? applicantData.current_currency
           : "",
@@ -209,19 +225,49 @@ const CandidateCreation = ({
   };
 
   const handleSubmit = async () => {
+    // if(!form.firstname){
+    //   setError((prev) => ({...prev, firstNameErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.lastname){
+    //   setError((prev) => ({...prev, lastNameErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.email){
+    //   setError((prev) => ({...prev, emailErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.mobile){
+    //   setError((prev) => ({...prev, mobileErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.authorization){
+    //   setError((prev) => ({...prev, workAuthErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.source){
+    //   setError((prev) => ({...prev, sourceErr:'This Field is required'}))
+    //   // return;
+    // }
+    // if(!form.tax_terms){
+    //   setError((prev) => ({...prev, taxTermErr:'This Field is required'}))
+    //   return;
+    // }
+    // if(form.firstname && form.lastname && form.email && form.mobile && form.authorization && form.source && form.source && form.tax_terms){
     try {
       setIsLoading(true);
-      const response = applicantData
+      const response = applicantData.id
         ? await patchReq(`/applicants/${applicantData.id}/`, form)
         : await postApiReq("/applicants/", form);
       setIsLoading(false);
       if (response.status) {
-        let message = applicantData
+        let message = applicantData.id
           ? "Applicant updated successfully"
           : "Applicant created successfully";
+          router.push('//employers-dashboard/all-applicants')
         toast.success(message);
         setApplicantDetails(response.data);
-        if(!applicantData){
+        if (!applicantData) {
           setActiveForm(2);
         }
       }
@@ -232,7 +278,9 @@ const CandidateCreation = ({
       setIsLoading(false);
       toast.error();
     }
+    // }
   };
+
 
   return (
     <div className="shadow py-3 px-3">
@@ -256,7 +304,9 @@ const CandidateCreation = ({
       </div>
       <div className="row">
         <div className="col-4 my-1">
-          <p>First Name</p>
+          <p>
+            First Name <strong className="text-danger">*</strong>
+          </p>
           <div className="d-flex gap-2">
             <div className="w-25">
               <select
@@ -274,11 +324,15 @@ const CandidateCreation = ({
             <div className="w-75">
               <input
                 name="firstname"
-                onChange={handleChange}
+                onChange={(e) => {
+                  setError((prev) => ({ ...prev, firstNameErr: "" }));
+                  handleChange(e);
+                }}
                 value={form.firstname}
                 type="text"
                 className="client-form-input"
               />
+              <span className="text-danger">{error.firstNameErr}</span>
             </div>
           </div>
         </div>
@@ -293,34 +347,52 @@ const CandidateCreation = ({
           />
         </div>
         <div className="col-4 my-1">
-          <p>Last Name</p>
+          <p>
+            Last Name <strong className="text-danger">*</strong>
+          </p>
           <input
             name="lastname"
-            onChange={handleChange}
+            onChange={(e) => {
+              setError((prev) => ({ ...prev, lastNameErr: "" }));
+              handleChange(e);
+            }}
             value={form.lastname}
             type="text"
             className="client-form-input"
           />
+          <span className="text-danger">{error.lastNameErr}</span>
         </div>
         <div className="col-4 my-1">
-          <p>Email</p>
+          <p>
+            Email <strong className="text-danger">*</strong>
+          </p>
           <input
             name="email"
-            onChange={handleChange}
+            onChange={(e) => {
+              setError((prev) => ({ ...prev, emailErr: "" }));
+              handleChange(e);
+            }}
             value={form.email}
             type="text"
             className="client-form-input"
           />
+          <span className="text-danger">{error.emailErr}</span>
         </div>
         <div className="col-4 my-1">
-          <p>Mobile</p>
+          <p>
+            Mobile <strong className="text-danger">*</strong>
+          </p>
           <input
             name="mobile"
-            onChange={handleChange}
+            onChange={(e) => {
+              setError((prev) => ({ ...prev, emailErr: "" }));
+              handleChange(e);
+            }}
             value={form.mobile}
             type="text"
             className="client-form-input"
           />
+          <span className="text-danger">{error.mobileErr}</span>
         </div>
         <div className="col-4 my-1">
           <p>Date Of Birth</p>
@@ -351,10 +423,16 @@ const CandidateCreation = ({
           />
         </div>
         <div className="col-4 my-1">
-          <p>Work Authorization</p>
+          <p>
+            Work Authorization <strong className="text-danger">*</strong>
+          </p>
           <select
             name="authorization"
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (!(e.target.value == "Select"))
+                setError((prev) => ({ ...prev, workAuthErr: "" }));
+            }}
             value={form.authorization}
             type="text"
             className="client-form-input"
@@ -363,6 +441,7 @@ const CandidateCreation = ({
             <option>US Authorized</option>
             <option>US Citizen</option>
           </select>
+          <span className="text-danger">{error.workAuthErr}</span>
         </div>
         <div className="col-4 my-1">
           <p>Clearance</p>
@@ -476,10 +555,16 @@ const CandidateCreation = ({
           />
         </div>
         <div className="col-4 my-1">
-          <p>Source</p>
+          <p>
+            Source <strong className="text-danger">*</strong>
+          </p>
           <select
             name="source"
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (!(e.target.value == "Select"))
+                setError((prev) => ({ ...prev, sourceErr: "" }));
+            }}
             value={form.source}
             type="text"
             className="client-form-input"
@@ -488,6 +573,7 @@ const CandidateCreation = ({
             <option>Dice</option>
             <option>Monester</option>
           </select>
+          <span className="text-danger">{error.sourceErr}</span>
         </div>
         <div className="col-4 my-1">
           <p>Experience</p>
@@ -541,7 +627,7 @@ const CandidateCreation = ({
               }}
             >
               <div className="d-flex flex-wrap gap-2">
-                {ownerList.map((item, index) => {
+                {ownerList?.map((item, index) => {
                   return (
                     <div
                       key={index}
@@ -843,11 +929,17 @@ const CandidateCreation = ({
           />
         </div>
         <div className="col-4 my-1">
-          <p>Tax Terms</p>
+          <p>
+            Tax Terms <strong className="text-danger">*</strong>
+          </p>
           <select
             name="tax_terms"
             value={form.tax_terms}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (!(e.target.value == "Select"))
+                setError((prev) => ({ ...prev, taxTermErr: "" }));
+            }}
             className="client-form-input"
           >
             <option>select</option>
@@ -855,6 +947,7 @@ const CandidateCreation = ({
             <option>Full Time</option>
             <option>Part Time</option>
           </select>
+          <span className="text-danger">{error.taxTermErr}</span>
         </div>
 
         <div className="col-4 my-1">
@@ -968,6 +1061,21 @@ const CandidateCreation = ({
           />
         </div>
       </div>
+      {/* <div className="d-flex my-4 gap-2">
+          <button
+            onClick={handleSubmit}
+            className="theme-btn btn-style-one small"
+            disabled={isLoading}
+          >
+            {isLoading ? <BtnBeatLoader /> : "Save & Continue"}
+          </button>
+          <button
+            onClick={() => setForm(initialState)}
+            className="theme-btn btn-style-four small"
+          >
+            Reset
+          </button>
+        </div> */}
     </div>
   );
 };

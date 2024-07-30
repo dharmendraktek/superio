@@ -20,9 +20,7 @@ const JobParse = ({setTab, tab}) => {
       const response = await postApiReq('/copy-paste-parse/', {job_description:descriptionData})
       setIsLoading(false);
       let data = response.data.fields
-      console.log("-------------descripon", response)
       data['description'] = response.data.description;
-      console.log("--------------data ", data);
       setJobData(data);
     }catch(err){
       setIsLoading(false);

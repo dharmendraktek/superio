@@ -19,6 +19,7 @@ const MultiSelect = ({label, ownerList, setOwnerList, usersList, form, name, set
             }}
           >
             <div className="d-flex flex-wrap gap-2">
+              
               {ownerList?.map((item, index) => {
                 return (
                   <div
@@ -38,11 +39,8 @@ const MultiSelect = ({label, ownerList, setOwnerList, usersList, form, name, set
           </div>
           {openOwner && (
             <>
-              {/* <div className="position-fixed w-100">
-          <input type="text" className=""/>
-        </div> */}
               <div
-                className="position-absolute bg-white border border-1 w-100 px-2 custom-scroll-sm"
+                className="position-absolute bg-white border border-1 w-100  custom-scroll-sm"
                 style={{
                   top: "33px",
                   zIndex: 10000,
@@ -50,9 +48,12 @@ const MultiSelect = ({label, ownerList, setOwnerList, usersList, form, name, set
                   overflow: "auto",
                 }}
               >
+                <div className="position-fixed">
+            <input type="text" className="px-2" style={{width:'250px', height:'36px'}} placeholder="Search..." value=''/>
+          </div>
                 {usersList.map((item, index) => {
                   return (
-                    <div key={index} className="">
+                    <div key={index} className={`px-2 ${index == 0 ? 'mt-5':''}`}>
                       <input
                         type="checkbox"
                         checked={form[name]?.find(

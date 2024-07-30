@@ -67,6 +67,7 @@ const JobPostCommentsModal = ({
               type="button"
               className="theme-btn btn-style-one small"
               data-bs-dismiss="modal"
+              id="commentModalClose"
             >
               Close
             </button>

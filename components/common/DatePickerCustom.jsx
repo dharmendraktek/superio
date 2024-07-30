@@ -16,7 +16,7 @@ const DatePickerCustom = ({
 }) => {
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
-      className="text-black w-100"
+      className="text-black w-100 text-start"
       onClick={onClick}
       ref={ref}
       // style={{ width: "100%" }}
@@ -115,6 +115,7 @@ const DatePickerCustom = ({
               >
                 {reactIcons.arrowright}
               </button>
+              
             </div>
           )}
         />

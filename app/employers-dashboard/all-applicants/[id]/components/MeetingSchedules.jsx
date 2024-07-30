@@ -71,6 +71,7 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
   }, [meetingDetails]);
 
   const handleSubmit = async () => {
+    console.log('-----------udadae df', form);
     setIsLoading(true);
     form["applicant_ref"] = applicantData.id;
     const formData = new FormData();
@@ -80,15 +81,15 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
     formData.append("date", form.date);
     formData.append("time", form.time);
     formData.append("duration", form.duration);
-    formData.append("attendee", form.attendee);
-    formData.append("guest_attendee", JSON.stringify(form.guest_attendee));
+    formData.append("attendee", JSON.stringify(form.attendee));
+    formData.append("guest_attendee", (form.guest_attendee));
     formData.append("is_notify_on_email", form.is_notify_on_email);
     formData.append("document", form.document);
     formData.append("applicant_ref", form.applicant_ref);
     formData.append("link", form.link);
     formData.append("venue", form.venue);
     const response = meetingDetails
-      ? await patchReq(`/applicant-meeting/${meetingDetails.id}/`)
+      ? await patchReq(`/applicant-meeting/${meetingDetails.id}/`, formData)
       : await postApiReq("/applicant-meeting/", formData);
     setIsLoading(false);
     if (response.status) {
@@ -98,6 +99,7 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
       toast.success(message);
       handleGetApplicantDetails();
       setMeetingDetails("");
+      setForm(initialState);
     }
   };
 
@@ -120,11 +122,14 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
     setForm(initialState);
   };
 
+  console.log("-------------------meiidf s",applicantData && applicantData?.meeting)
+  
+
   return (
     <Paper>
       <div>
         <div className="d-flex justify-content-between">
-          <h5>Meeting Schedules</h5>
+          <h4>Meeting Schedules</h4>
           <button
             data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasMeeting"
@@ -162,7 +167,7 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
         </div>
         {applicantData?.meeting?.map((item, index) => {
           return (
-            <div className="d-flex px-2 justify-content-between">
+            <div className="d-flex px-2 my-2  py-2 justify-content-between">
               <div style={{ width: "200px" }}>
                 <p>{item.title}</p>
               </div>
@@ -172,26 +177,29 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
               <div className="d-flex flex-wrap" style={{ width: "150px" }}>
                 {item.attendee_details.map((item) => {
                   return (
-                    <p key={item.id}>
+                    <p style={{lineHeight:'10px'}} key={item.id}>
                       {item.first_name} {item.last_name}
                     </p>
                   );
                 })}
               </div>
-              <div className="d-flex flex-wrap" style={{ width: "150px" }}>
-                {item.guest_attendee.map((item) => {
-                  return <p key={item}>{item}</p>;
+              <div className="d-flex flex-wrap gap-2" style={{ width: "150px" }}>
+                {(item?.guest_attendee)?.split(',')?.map((item) => {
+                  return <p style={{lineHeight:'10px'}} key={item}>{item}</p>;
                 })}
               </div>
               <div style={{ width: "150px" }}>
                 <p>
-                  {item.date} - {item.tiem} / {item.duration}
+                  {item.date} - {item.time} {item.duration}
                 </p>
               </div>
               <div style={{ width: "150px" }}>
-                <p>pending</p>
+                <strong>{item.created_by ? item.created_by.first_name + ' ' + item.created_by.last_name : ''}</strong>
+                <p>{moment(item.updated_at).format('DD-MM-YYYY hh:mm A')}</p>
               </div>
-              <div style={{ width: "100px" }}>{/* <p>{item.}</p> */}</div>
+              <div style={{ width: "100px" }}>
+                <span className="fs-4">{reactIcons.view}</span>
+              </div>
               <div className="position-relative" style={{ width: "80px" }}>
                 <strong
                   className="cursor-pointer"
@@ -349,13 +357,11 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
               <div className="col-6 my-1">
                 <p>Meeting Time</p>
                 <DatePickerCustom
-                   date={form.time}
+                  //  date={form.time}
                   handleDate={(date) =>{
-
-                    console.log("-------date ", date);
                     setForm((prev) => ({
                       ...prev,
-                      time: date,
+                      time: moment(date).format('hh:mm:ss'),
                     }))
                   }
                   }
@@ -400,7 +406,7 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
                     height: "60px",
                   }}
                   name="guest_attendee"
-                  value={form.guest_attendee?.join(",")}
+                  value={form.guest_attendee}
                   onChange={(e) => {
                     setForm((prev) => ({
                       ...prev,

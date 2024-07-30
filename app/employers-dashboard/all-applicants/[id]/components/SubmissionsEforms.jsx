@@ -4,7 +4,7 @@ const SubmissionsEforms = () => {
     return(
         <Paper>
             <div>
-                <h5>Submissions eForms</h5>
+                <h4>Submissions eForms</h4>
             </div>
         </Paper>
     )

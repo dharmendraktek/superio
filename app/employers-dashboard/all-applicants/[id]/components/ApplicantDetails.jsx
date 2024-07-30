@@ -4,14 +4,15 @@ import moment from "moment";
 const { default: Paper } = require("@/components/common/Paper");
 
 const ApplicantDetails = ({ applicantData }) => {
+  console.log("----------applicante data app details ", applicantData);
   return (
     <Paper>
       <div>
-        <div className="px-2">
-          <h5 className="py-2">Applicant Details</h5>
-          <div className="my-2">
+        <div className="px-2 app-detail">
+          <h4 className="py-2  text-primary">Applicant Details</h4>
+          <div className="my-2 ">
             <p>Created By & On</p>
-            <span>Dharmendra patel On 07/15/24 05:59:24</span>
+            <span>{applicantData?.created_by?.first_name + " " + applicantData?.created_by?.last_name} On {moment(applicantData.created_at).format('DD-MM-YYYY hh:mm A')}</span>
           </div>
           <div className="my-2">
             <p>Ownership</p>
@@ -141,7 +142,7 @@ const ApplicantDetails = ({ applicantData }) => {
           <div className="my-2">
             <p>Relocation</p>
             <span>
-              {applicantData?.relocation ? applicantData?.relocation : "N/A"}
+              {applicantData?.relocation ? 'Yes' : "No"}
             </span>
           </div>
           <div className="my-2">
@@ -151,9 +152,9 @@ const ApplicantDetails = ({ applicantData }) => {
             </span>
           </div>
           <hr></hr>
-          <div>
+          {/* <div>
             <h3>User Defined Fields</h3>
-          </div>
+          </div> */}
         </div>
       </div>
     </Paper>

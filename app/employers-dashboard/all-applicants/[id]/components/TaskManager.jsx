@@ -122,7 +122,7 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
     <Paper>
       <div>
         <div className="d-flex justify-content-between">
-          <h5>Task Manager</h5>
+          <h4>Task Manager</h4>
           <div>
             <button
               data-bs-toggle="offcanvas"
@@ -404,7 +404,8 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
           return (
             <div className="d-flex px-2 justify-content-between">
               <div style={{ width: "200px" }}>
-                <p>pending</p>
+                <strong>{item.updated_by.first_name + " " +item.updated_by.last_name}</strong>
+                <p>{moment(item.updated_at).format('DD-MM-YYYY hh:mm A')}</p>
               </div>
               <div style={{ width: "150px" }}>
                 <p>{moment(item.due_date).format("DD-MM-YYYY hh:mm A")}</p>

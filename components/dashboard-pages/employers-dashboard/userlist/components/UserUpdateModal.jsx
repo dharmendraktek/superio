@@ -28,7 +28,6 @@ const UserUpdateModal = ({ item, getUserList }) => {
 
   const getUsersList = async () => {
     const response = await getReq("/users/");
-    console.log("-----------respoen sdfsfs", response.data);
     setUserList(response.data);
   };
 

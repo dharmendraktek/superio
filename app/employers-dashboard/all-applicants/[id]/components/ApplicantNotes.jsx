@@ -130,7 +130,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                       >
                         <div style={{ width: "350px" }}>
                           <strong>
-                            {item?.user?.first_name} {item?.user?.last_name}
+                            {item?.updated_by?.first_name} {item?.updated_by?.last_name}
                           </strong>
                           <p>
                             {moment(item.created_at).format(
@@ -307,7 +307,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                       >
                         <div style={{ width: "350px" }}>
                           <strong>
-                            {item?.user?.first_name} {item?.user?.last_name}
+                            {item?.updated_by?.first_name} {item?.updated_by?.last_name}
                           </strong>
                           <p>
                             {moment(item.created_at).format(

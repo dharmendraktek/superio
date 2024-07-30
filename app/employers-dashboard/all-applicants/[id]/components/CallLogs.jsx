@@ -76,7 +76,7 @@ const CallLogs = ({ applicantData, handleGetApplicantDetails }) => {
     <Paper>
       <div>
         <div className="d-flex justify-content-between">
-          <h5>Call Logs</h5>
+          <h4>Call Logs</h4>
           <button
             data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasCallLog"
@@ -131,7 +131,8 @@ const CallLogs = ({ applicantData, handleGetApplicantDetails }) => {
                 <p>pending</p>
               </div> */}
               <div style={{ width: "150px" }}>
-                <p>{item.created_by}</p>
+                <strong>{item.created_by ? item.created_by.first_name + " " +item.created_by.last_name : ''  }</strong>
+                <p>{moment(item.updated).format('DD-MM-YYYY hh:mm A')}</p>
               </div>
               <div className="position-relative" style={{ width: "80px" }}>
                 <strong
