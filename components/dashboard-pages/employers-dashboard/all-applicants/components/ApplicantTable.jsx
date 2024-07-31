@@ -67,6 +67,8 @@ const ApplicantTable = () => {
     }
   };
 
+  
+
 
   return (
     <div>

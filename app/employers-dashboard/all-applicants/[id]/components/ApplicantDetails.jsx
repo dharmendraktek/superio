@@ -29,7 +29,7 @@ const ApplicantDetails = ({ applicantData }) => {
           </div>
           <div className="my-2">
             <p>Applicant Status</p>
-            <span>{applicantData?.status}</span>
+            <span>{applicantData?.status ? applicantData?.status : 'N/A'}</span>
           </div>
           {/* <div className="my-2">
             <p>Applicant Group</p>
@@ -41,7 +41,7 @@ const ApplicantDetails = ({ applicantData }) => {
           </div>
           <div className="my-2">
             <p>Work Authorization</p>
-            <span>{applicantData?.authorization}</span>
+            <span>{applicantData?.authorization ? applicantData?.authorization : 'N/A' }</span>
           </div>
           <div className="my-2">
             <p>Work Authorization Expiry</p>

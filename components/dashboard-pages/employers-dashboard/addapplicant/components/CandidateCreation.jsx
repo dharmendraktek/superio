@@ -10,7 +10,8 @@ import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import axios from "axios";
 import { BASE_URL } from "@/utils/endpoints";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { sourceData } from "@/utils/constant";
 
 const initialState = {
   name_title: "",
@@ -142,7 +143,7 @@ const CandidateCreation = ({
         lastname: applicantData.lastname ? applicantData.lastname : "",
         email: applicantData.email ? applicantData.email : "",
         mobile: applicantData.mobile ? applicantData.mobile : "",
-        dob: applicantData.dob ? applicantData.dob : new Date(),
+        dob: applicantData.dob ? new Date(applicantData.dob) : new Date(),
         country: applicantData.country ? applicantData.country : "",
         state: applicantData.state ? applicantData.state : "",
         city: applicantData.city ? applicantData.city : "",
@@ -264,11 +265,13 @@ const CandidateCreation = ({
         let message = applicantData.id
           ? "Applicant updated successfully"
           : "Applicant created successfully";
-          router.push('//employers-dashboard/all-applicants')
+         
         toast.success(message);
         setApplicantDetails(response.data);
-        if (!applicantData) {
+        if (!applicantData.id) {
           setActiveForm(2);
+        }else if(applicantData.id){
+          // router.push('/employers-dashboard/all-applicants/{}')
         }
       }
       if (response.error) {
@@ -570,8 +573,12 @@ const CandidateCreation = ({
             className="client-form-input"
           >
             <option>Select</option>
-            <option>Dice</option>
-            <option>Monester</option>
+            {sourceData.map((item, index) => {
+              return(
+                <option key={index} value={item.value}>{item.name}</option>
+              )
+            })
+            }
           </select>
           <span className="text-danger">{error.sourceErr}</span>
         </div>

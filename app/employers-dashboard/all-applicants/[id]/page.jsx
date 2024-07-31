@@ -43,6 +43,10 @@ const Index = () => {
         handleGetApplicantDetails()
     }, [id])
 
+
+
+
+
     return(
         <>
         {isLoading &&
@@ -63,13 +67,13 @@ const Index = () => {
             <div className="row">
             <div className="col-9">
             <div className="mb-3">
-            <Profile setTab={setTab} applicantData={applicantData} />
+            <Profile setTab={setTab} applicantData={applicantData} setApplicantData={setApplicantData} />
             </div>
             <div className="my-3">
             <ApplicantNotes applicantData={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
-            <Documents applicantDetails={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
+            <Documents  applicantDetails={applicantData} handleGetApplicantDetails={handleGetApplicantDetails} />
             </div>
             <div className="my-3">
             <Submissions applicantData={applicantData} />

@@ -23,3 +23,7 @@ export const  candidateSearchKey = [
 ]
 
 
+export const  sourceData = [
+    {name:'Dice', value:'Dice'},
+    {name:'Monester', value:'Monester'},
+]

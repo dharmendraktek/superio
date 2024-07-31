@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const { default: Paper } = require("@/components/common/Paper");
 
-const Profile = ({ setTab, applicantData }) => {
+const Profile = ({ setTab, applicantData, setApplicantData }) => {
   return (
     <Paper>
       <div className="d-flex text-black justify-content-between">
@@ -17,7 +17,7 @@ const Profile = ({ setTab, applicantData }) => {
             <div>
               <div>
                 <div className="d-flex gap-2">
-                  <h5>{applicantData?.id}</h5>
+                  <h5>{applicantData?.applicant_code  }</h5>
                   <h5>
                     {applicantData?.firstname + " " + applicantData?.lastname}
                   </h5>
@@ -54,9 +54,10 @@ const Profile = ({ setTab, applicantData }) => {
                 </button>
                 <button
                   data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasQuickView  "
+                  data-bs-target="#offcanvasQuickView"
                   aria-controls="offcanvasQuickView"
                   className="theme-btn btn-style-four small"
+                  onClick={() => setApplicantData((prev) => ({...prev, view_resume:true}))}
                 >
                   View Resume
                 </button>

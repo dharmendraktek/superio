@@ -1,11 +1,12 @@
 'use client'
+
+import { getLocalStorage } from "./utils/localstorage"
+
 export const isUserAuthenticated = () => {
-  
+   if(getLocalStorage('is_user_token')){
   return true;
-// if(localStorage.getItem('is_user_token')){
-//    return false;
-// }else {
-//   return true;
-// }
+ }else{
+  return false;
+ }
 
 }
