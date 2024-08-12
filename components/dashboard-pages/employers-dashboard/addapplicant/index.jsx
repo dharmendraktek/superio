@@ -4,7 +4,7 @@ import LoginPopup from "@/components/common/form/login/LoginPopup";
 import DashboardCandidatesHeader from "@/components/header/DashboardCandidatesHeader";
 import MobileMenu from "@/components/header/MobileMenu";
 import { reactIcons } from "@/utils/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CandidateCreation from "./components/CandidateCreation";
 import Documents from "@/app/employers-dashboard/all-applicants/[id]/components/Documents";
 import EducationDetails from "./components/EducationDetails";
@@ -16,6 +16,62 @@ import Loader from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { sourceData } from "@/utils/constant";
+import { includes } from "@/data/blogs";
+import { toast } from "react-toastify";
+import { previousMonday } from "date-fns";
+import { BarLoader, PropagateLoader } from "react-spinners";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+
+const initialState = {
+  name_title: "",
+  firstname: "",
+  middlename: "",
+  lastname: "",
+  email: "",
+  mobile: "",
+  dob: new Date(),
+  state: "",
+  city: "",
+  address: "",
+  city: "",
+  country: "",
+  state: "",
+  zipcode: "",
+  source: "",
+  referred_by: "",
+  status: "",
+  ownership: [],
+  job_title: "",
+  relocation: "",
+  secondary_skills: [],
+  primary_skills: [],
+  notice_period: "",
+  skype_id: "",
+  linkedin: "",
+  authorization: "",
+  authorization_expiry: new Date(),
+  is_clearance: "",
+  clearance: "",
+  relocation: "",
+  current_company: "",
+  tax_terms: "",
+  notice_period: "",
+  experience: "",
+  preferred_location: "",
+  tex_terms: "",
+  industry: "",
+  expect_currency: "",
+  expect_amount: "",
+  expect_payment_frequency: "",
+  expect_job_type: "",
+  pancard: "",
+  aadharcard: "",
+  lwd: new Date(),
+  current_currency: "",
+  current_amount: "",
+  current_payment_frequency: "",
+  current_job_type: "",
+};
 
 const tabsName = [
   { id: 1, name: "Personal Details", icon: reactIcons.personalDetails },
@@ -28,11 +84,11 @@ const tabsName = [
 ];
 
 const resumeDefaultOption = [
-  {name:'Overwrite Existing', value:'overwrite_existing'},
-  {name:'Add as a default resume', value:'add_as_default_resume'},
-  {name:'Add just as resume', value:'add_just_as_resume'},
-  {name:'Do Nothing', value:'do_nothing'},
-]
+  { name: "Overwrite Existing", value: "overwrite_existing" },
+  { name: "Add as a default resume", value: "add_as_default_resume" },
+  { name: "Add just as resume", value: "add_just_as_resume" },
+  { name: "Do Nothing", value: "do_nothing" },
+];
 
 const Index = () => {
   const [tab, setTab] = useState(null);
@@ -43,6 +99,21 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [applicantId, setApplicantId] = useState();
   const router = useRouter();
+  const [form, setForm] = useState({
+    source: "Select",
+    sourceErr: "",
+  });
+  const [bulkApplicantDetails, setBulkApplicantDetails] = useState([]);
+  const [bulkApplicantValidationData, setBulkApplicationValidationData] =
+    useState([]);
+  const [applicantData, setApplicantData] = useState([]);
+  const [addDocuments, setAddDocuments] = useState([]);
+  const [bulkApplicantData, setBulkApplicantData] = useState([]);
+  const [actionName, setActionName] = useState("Select");
+  const [actionNameErr, setActionNameErr] = useState("");
+  const [generalActivity, setGeneralActivity] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [singleParseLoading, setSingleParseLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const button = document.getElementById("uploadResumeModal");
@@ -50,20 +121,27 @@ const Index = () => {
     button.click();
   };
 
-
   const handleBulkUploadFile = (e) => {
     const button = document.getElementById("uploadBulkResumeModal");
     setBulkResumeFiles(Object.values(e.target.files));
     button.click();
   };
 
+  const handleAddMoreUploadFile = (e) => {
+    Object.values(e.target.files).forEach((item) => {
+      setBulkResumeFiles((prev) => [...prev, item]);
+    });
+  };
+
   const handleDeleteFile = (index) => {
+    setGeneralActivity(true);
     let updated = [...bulkResumeFiles];
     let filteredData = updated.filter((item, _index) => _index !== index);
     setBulkResumeFiles(filteredData);
   };
 
   const handleSelectAll = (checked) => {
+    setGeneralActivity(true);
     const data = [...bulkResumeFiles];
     const updatedFileArray = data.map((file) => {
       file["isSelect"] = checked;
@@ -71,10 +149,12 @@ const Index = () => {
     });
     setBulkResumeFiles(updatedFileArray);
   };
+
   const handleSelectOne = (index, value) => {
-    // const data = [...bulkResumeFiles];
-    // const updatedFileArray = data[index]['isSelect'] = value;
-    // setBulkResumeFiles(updatedFileArray);
+    setGeneralActivity(true);
+    const data = [...bulkResumeFiles];
+    data[index]["isSelect"] = value;
+    setBulkResumeFiles(data);
   };
 
   const handleGetApplicantDetails = async () => {
@@ -94,56 +174,246 @@ const Index = () => {
     return (bytes / Math.pow(k, 1)).toFixed(dm) + " " + sizes[1];
   }
 
-  const handleParseResume = async () => {
-    // setIsLoading(true);
-    // let formData = new FormData();
-    // resume.forEach((item) => {
-    //     formData.append("resume_files", item); 
-    // })
-    // const response = await postApiReq("/parse-resumes/", formData);
-    // setIsLoading(false);
-    // if (response){
-    //   setApplicantDetails(response.data[0].data);
-    //   let data = { email: response.data[0].data.email, mobile:response.data[0].data.mobile };
-    //   const res = await postApiReq("/duplicate-applicant-check/", data);
-    //   if (res.data.duplicate) {
-    //     const button = document.getElementById("setResumeModal");
-    //     setApplicantId(res.data.id);
-    //     button.click();
-    //   } else {
-    //     setTab(1);
-    //   }
+  useEffect(() => {
+    if (bulkResumeFiles.length > 0 && !generalActivity) {
+      handleParseResume();
+    }
+  }, [bulkResumeFiles]);
+
+  // this function is checked applicant duplicat data
+
+  const handleCheckDuplicatProfile = async (data, parseResumeData) => {
+    const res = await postApiReq("/duplicate-applicant-check/", data);
+    const mergedProfiles = parseResumeData.map((profile, index) => {
+      return {
+        ...profile,
+        duplicate_info: res.data[index],
+      };
+    });
+    setGeneralActivity(true);
+    const updateData = [...bulkResumeFiles];
+    const updatedFileArray = updateData.map((file, index) => {
+      file["duplicate_info"] = res.data[index];
+      return file;
+    });
+    setBulkResumeFiles(updatedFileArray);
+    setApplicantData(res.data);
+    setBulkApplicantDetails(mergedProfiles);
+    setBulkApplicationValidationData(res.data);
+    if (resume.length == 1 && res.data[0].duplicate) {
+      const button = document.getElementById("setResumeModal");
+      setApplicantId(res.data[0].id);
+      button.click();
+    } else if (resume.length == 1) {
+      setTab(1);
+    }
+    // else if(bulkResumeFiles.length){
+    //       handleCreateBulkCandidate();
     // }
   };
 
-  const handleAddResume = async (key) => {
-//    let closeBtn = document.getElementById('btnClose');
-
-//     if (key == "do_nothing") {
-//       closeBtn.click();
-//       router.push(`/employers-dashboard/all-applicants/${applicantId}`);
-//       return;
-//     }
-//     const formData = new FormData();
-//     formData.append("applicant_id", applicantId);
-//     formData.append("action", key);
-//     resume.forEach((item) => {
-//         formData.append("file", item);
-//     })
-//     formData.append("applicant", applicantId);
-//     formData.append("title", key);
-//     formData.append("type", "Resume");
-//     formData.append("comment", '');
-//     const response = await postApiReq("/handle-duplicate-resume/", formData);
-//     if (response.status) {
-//       closeBtn.click();
-//       router.push(`/employers-dashboard/all-applicants/${applicantId}`);
-//     }
+  //parsing the resume data
+  const handleParseResume = async () => {
+    setIsLoading(true);
+    let formData = new FormData();
+    if (bulkResumeFiles.length) {
+      bulkResumeFiles.forEach((item) => {
+        if (
+          item?.name?.split(".")[1] == "pdf" ||
+          item?.name?.split(".")[1] == "docx"
+        ) {
+          formData.append("resume_files", item);
+        }
+      });
+    } else {
+      setSingleParseLoading(true);
+      resume.forEach((item) => {
+        formData.append("resume_files", item);
+      });
+    }
+    const response = await postApiReq("/parse-resumes/", formData);
+    setIsLoading(false);
+    setSingleParseLoading(false);
+    if (response) {
+      setApplicantDetails(response.data[0].data);
+      let filterData = [];
+      for (let item of response.data) {
+        if (!item.data.email || item.data.email == "null") {
+          toast.error(
+            `Applicant ${
+              item.data.firstname + " " + item.data.lastname
+            } email is not found `
+          );
+        } else {
+          filterData.push({ email: item.data.email, mobile: item.data.mobile });
+        }
+      }
+      let data = { applicants: filterData };
+      if (filterData.length > 0) {
+        handleCheckDuplicatProfile(data, response.data);
+      } else {
+        let cancelBtn = document.getElementById("cancelBtn");
+        cancelBtn.click();
+        router.push(`/employers-dashboard/all-applicants`);
+      }
+    }
   };
+
+  useEffect(() => {
+    let temp = [];
+    if (
+      bulkApplicantDetails.length > 0 &&
+      bulkApplicantValidationData.length > 0
+    ) {
+      bulkApplicantDetails.forEach((item) => {
+        const mergedData = { ...initialState }; // Create a copy of initialState
+        for (const key in initialState) {
+          if (key == "primary_skills" || key == "secondary_skills") {
+            mergedData[key] = item.data[key]
+              ? item.data[key]?.split(",").map((item) => {
+                  return { name: item };
+                })
+              : [];
+          } else if (key == "source") {
+            mergedData[key] = form.source;
+          } else if (item.data.hasOwnProperty(key)) {
+            mergedData[key] =
+              !item.data[key] || item.data[key] == "null" ? "" : item.data[key];
+          }
+        }
+        temp.push(mergedData);
+      });
+    }
+    if (temp.length) {
+      setBulkApplicantData(temp);
+    }
+  }, [bulkApplicantDetails, bulkApplicantValidationData, form]);
+
+  const handleApplyAll = () => {
+    setGeneralActivity(true);
+    let update = [...bulkResumeFiles];
+    const updatedFileArray = update.map((file) => {
+      file["value"] = form.source;
+      return file;
+    });
+    setBulkResumeFiles(updatedFileArray);
+  };
+
+  const handleAddResume = async (key) => {
+    let closeBtn = document.getElementById("btnClose");
+    if (key == "do_nothing") {
+      closeBtn.click();
+      router.push(`/employers-dashboard/all-applicants/${applicantId}`);
+      return;
+    }
+    let actions = [];
+    const formData = new FormData();
+    actions.push({
+      applicant_id: applicantId,
+      action: key,
+      document: {
+        applicant: applicantId,
+        title: `Resume 1`,
+        file_field: `file1`,
+        type: "Resume",
+        comment: "",
+      },
+    });
+    formData.append("actions", JSON.stringify(actions));
+    formData.append("file1", resume[0]);
+    const response = await postApiReq("/handle-duplicate-resume/", formData);
+    if (response.status) {
+      let closeBtn = document.getElementById("btnClose");
+      closeBtn.click();
+      router.push(`/employers-dashboard/all-applicants`);
+    }
+  };
+
+  let handleCreateBulkCandidate = async () => {
+    if (actionName == "Select") {
+      setActionNameErr("This field is required");
+      return;
+    } else if (form.source == "Select") {
+      setForm((prev) => ({ ...prev, sourceErr: "This Field is required" }));
+      return;
+    }
+    let update = [];
+    bulkApplicantValidationData.map((item) => {
+      let valid = bulkApplicantData.find(
+        (_item) => _item.email == item.applicant_data.email
+      );
+      if (!item.duplicate && valid) {
+        update.push(valid);
+      } else if (
+        bulkApplicantDetails.find(
+          (item_) => item_.data.email == item.applicant_data.email
+        )
+      ) {
+        let temp = bulkApplicantDetails.find(
+          (item_) => item_.data.email == item.applicant_data.email
+        );
+        let newTemp = bulkResumeFiles.find(
+          (item) => item.file == temp.file_name
+        );
+        setAddDocuments((prev) => [...prev, { applicant_Id: item.id, action_name:actionName }]);
+      }
+    });
+    if (update.length > 0) {
+      const response = await postApiReq("/applicants/bulk_create/", update);
+      if (response.status) {
+        response.data.map((_item) => {
+          setAddDocuments((prev) => [...prev, { applicant_Id: _item.id, action_name:'add_as_default_resume' }]);
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const formData = new FormData();
+    let actions = [];
+    if (addDocuments.length) {
+      addDocuments.map((item, index) => {
+        actions.push({
+          applicant_id: item.applicant_Id,
+          action: item.action_name,
+          document: {
+            applicant: item.applicant_Id,
+            title: `Resume ${index + 1}`,
+            file_field: `file${index + 1}`,
+            type: "Resume",
+            comment: "",
+          },
+        });
+      });
+      formData.append("actions", JSON.stringify(actions));
+    }
+
+    if (actions.length) {
+      bulkResumeFiles.map((item, index) => {
+        formData.append(`file${index + 1}`, item);
+      });
+    }
+    if (actions.length > 0) {
+      handleAddMultiResume(formData);
+    }
+  }, [addDocuments]);
+
+  const handleAddMultiResume = async (formData) => {
+    setLoading(true);
+    const response = await postApiReq("/handle-duplicate-resume/", formData);
+    setLoading(false);
+    if (response.status) {
+      let cancelBtn = document.getElementById("cancelBtn");
+      cancelBtn.click();
+      router.push(`/employers-dashboard/all-applicants`);
+    }
+  };
+
+  // const handleAddDefaultResume
 
   return (
     <>
-      {isLoading && <Loader />}
+      {loading || (singleParseLoading && <Loader />)}
       <div className="page-wrapper">
         <span className="header-span"></span>
         {/* <!-- Header Span for hight --> */}
@@ -167,6 +437,7 @@ const Index = () => {
             id="resumeSetModal"
             tabindex="-1"
             aria-labelledby="resumeSetModalLabel"
+            data-backdrop="static"
             aria-hidden="true"
           >
             <button
@@ -187,7 +458,7 @@ const Index = () => {
                   <button
                     type="button"
                     className="btn-close"
-                    id='btnClose'
+                    id="btnClose"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
@@ -201,9 +472,7 @@ const Index = () => {
                   <div className="d-flex flex-wrap my-2 w-100">
                     <div className="w-50 p-2">
                       <div
-                        onClick={() =>
-                          handleAddResume("add_as_default_resume")
-                        }
+                        onClick={() => handleAddResume("add_as_default_resume")}
                         className="shadow hover:bg-primary hover:text-white cursor-pointer p-3"
                       >
                         <h5>Add as default resume</h5>
@@ -262,6 +531,7 @@ const Index = () => {
           </div>
           <div
             className="modal fade"
+            data-backdrop="static"
             id="parseResumeModal"
             tabindex="-1"
             aria-labelledby="parseResumeModalLabel"
@@ -317,6 +587,7 @@ const Index = () => {
             id="parseBulkResumeModal"
             tabindex="-1"
             aria-labelledby="parseBulkResumeModalLabel"
+            data-backdrop="static"
             aria-hidden="true"
           >
             <button
@@ -343,27 +614,46 @@ const Index = () => {
                 </div>
                 <div className="modal-body">
                   <div className="px-2 gap-2 d-flex">
-                    <button
-                      htmlFor="upload"
-                      // type="button"
-                      className="theme-btn btn-style-one small fs-6"
-                      data-bs-dismiss="modal"
-                    >
-                      <span className="fs-4 me-2">{reactIcons.addcircle}</span>
-                      Add More
-                    </button>
-                    <button
+                    <div>
+                      <label htmlFor="addMoreResume">
+                        <div className="theme-btn btn-style-one small fs-6">
+                          <span className="fs-4 me-2">
+                            {reactIcons.addcircle}
+                          </span>
+                          Add More
+                        </div>
+                      </label>
+                      <input
+                        type="file"
+                        id="addMoreResume"
+                        className="d-none"
+                        onChange={(e) => {
+                          setGeneralActivity(false);
+                          handleAddMoreUploadFile(e);
+                        }}
+                        multiple
+                      />
+                    </div>
+                    {/* <button
                       type="button"
                       className="theme-btn btn-style-two small fs-6"
                       data-bs-dismiss="modal"
                     >
                       <span className="fs-4 me-2">{reactIcons.cancel}</span>
                       Cancel
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       className="theme-btn btn-style-nine small fs-6"
-                      data-bs-dismiss="modal"
+                      onClick={() => {
+                        let data = [...bulkResumeFiles];
+                        const filteredFiles = data.filter((file) => {
+                          if (!file.isSelect) {
+                            return file;
+                          }
+                        });
+                        setBulkResumeFiles(filteredFiles);
+                      }}
                     >
                       <span className="fs-4 me-2">{reactIcons.delete}</span>
                       Delete
@@ -374,6 +664,7 @@ const Index = () => {
                       <input
                         type="checkbox"
                         onChange={(e) => handleSelectAll(e.target.checked)}
+                        // checked={bulkResumeFiles.length == 0 ? false : ''}
                       />
                       <label>Select All</label>
                     </div>
@@ -382,40 +673,67 @@ const Index = () => {
                         <label>
                           Default option when system finds duplicate resume:
                         </label>
-                        <select
-                          className="client-form-input"
-                          style={{ width: "130px" }}
-                        >
-                          <option>Select</option>
-                          {resumeDefaultOption.map((item, index) => {
-                            return(
-                              <option value={item.value} key={index} >{item.name}</option>
-                            )
-                          })
-                          }
-                        </select>
+                        <div>
+                          <select
+                            className="client-form-input"
+                            style={{ width: "130px" }}
+                            onChange={(e) => {
+                              setActionName(e.target.value);
+                              setActionNameErr("");
+                            }}
+                            value={actionName}
+                          >
+                            <option>Select</option>
+                            {resumeDefaultOption.map((item, index) => {
+                              return (
+                                <option value={item.value} key={index}>
+                                  {item.name}
+                                </option>
+                              );
+                            })}
+                          </select>
+                          <p className="text-danger">{actionNameErr}</p>
+                        </div>
                       </div>
                       <div className="d-flex gap-2">
                         <label>Source:</label>
-                        <select
-                          className="client-form-input"
-                          style={{ width: "130px" }}
-                        >
-                          <option>Select</option>
-                          {sourceData.map((item, index) => {
-                            return(
-                              <option key={index} value={item.value}>{item.name}</option>
-                            )
-                          })
-                          }
-                        </select>
+                        <div>
+                          <select
+                            className="client-form-input"
+                            style={{ width: "130px" }}
+                            onChange={(e) => {
+                              setForm((prev) => ({
+                                ...prev,
+                                source: e.target.value,
+                                sourceErr: "",
+                              }));
+                            }}
+                          >
+                            <option>Select</option>
+                            {sourceData.map((item, index) => {
+                              return (
+                                <option key={index} value={item.value}>
+                                  {item.name}
+                                </option>
+                              );
+                            })}
+                          </select>
+                          <p className="text-danger">{form.sourceErr}</p>
+                        </div>
                       </div>
-                      <button className="theme-btn btn-style-one small">
+                      <button
+                        onClick={handleApplyAll}
+                        className="theme-btn btn-style-one small"
+                        style={{ height: "36px" }}
+                      >
                         Apply All
                       </button>
                     </div>
                   </div>
-                  <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+                  <div
+                    style={{ maxHeight: "300px", overflowY: "auto" }}
+                    className="custom-scroll-sm"
+                  >
                     <table
                       className=""
                       style={{ width: "100%", border: "1px solid lightgray" }}
@@ -426,37 +744,75 @@ const Index = () => {
                             <td className="px-2">
                               <input
                                 type="checkbox"
-                                checked={item.isSelect}
+                                checked={item.isSelect ? item.isSelect : false}
                                 onChange={(e) =>
                                   handleSelectOne(index, e.target.checked)
                                 }
                               />
                             </td>
-                            <td style={{ width: "700px" }}>
+                            <td style={{ width: "500px" }}>
                               <span>{item.name}</span>
                               {!(
-                                item.name.split(".")[1] == "pdf" ||
-                                item.name.split(".")[1] == "docx"
+                                item?.name?.split(".")[1] == "pdf" ||
+                                item?.name?.split(".")[1] == "docx"
                               ) && (
                                 <p className="text-danger">
                                   This file format is not supported
                                 </p>
                               )}
+                              {/* { item.duplicate_info.duplicate && 
+                                <p className="text-danger">
+                                  This profile is already exist
+                                </p>
+                              } */}
                             </td>
                             <td>
-                              {item.size && (
-                                <span>{formatFileSize(item?.size, 2)}</span>
-                              )}
-                              <div
+                              {isLoading ? (
+                                <div
+                                  className="rounded-2 my-2  py-3"
+                                  style={{ width: "100px" }}
+                                >
+                                  <BarLoader
+                                    size={10}
+                                    color="#6be739"
+                                    loading={isLoading}
+                                  />
+                                </div>
+                              ) : (
+                                <div className="my-2">
+                                  {item.size && (
+                                    <span className="fw-medium text-black fs-6">
+                                      {formatFileSize(item?.size, 2)}
+                                    </span>
+                                  )}
+                                  <p>Size</p>
+                                  {/* <div
                                 className="rounded-2 my-2 border border-primary"
                                 style={{
                                   width: "100px",
                                   height: "15px",
-                                  background: "green",
+                                  background: "#35aff0",
                                 }}
-                              ></div>
+                              ></div> */}
+                                </div>
+                              )}
                             </td>
                             <td>
+                              <select
+                                value={item.value}
+                                className="client-form-input"
+                              >
+                                <option>Select</option>
+                                {sourceData.map((item, index) => {
+                                  return (
+                                    <option key={index} value={item.name}>
+                                      {item.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </td>
+                            <td className="text-end px-2">
                               <button
                                 onClick={() => handleDeleteFile(index)}
                                 className="theme-btn btn-style-four small"
@@ -470,23 +826,26 @@ const Index = () => {
                     </table>
                   </div>
                 </div>
-                <div className="modal-footer py-2">
-                  <button
-                    onClick={() => handleParseResume()}
-                    type="button"
-                    className="theme-btn btn-style-one small"
-                    data-bs-dismiss="modal"
-                  >
-                    Start Parsing
-                  </button>
-                  <button
-                    type="button"
-                    className="theme-btn btn-style-four small"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {!isLoading && (
+                  <div className="modal-footer py-2">
+                    <button
+                      onClick={() => handleCreateBulkCandidate()}
+                      type="button"
+                      className="theme-btn btn-style-one small"
+                      // data-bs-dismiss="modal"
+                    >
+                      {loading ? <BtnBeatLoader /> : "Start Parsing"}
+                    </button>
+                    <button
+                      type="button"
+                      className="theme-btn btn-style-four small"
+                      data-bs-dismiss="modal"
+                      id="cancelBtn"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -524,6 +883,7 @@ const Index = () => {
                             <div
                               className=" text-center rounded-1 py-3"
                               style={{ background: "#ea88b9" }}
+                              onClick={() => setResume([])}
                             >
                               <span className="text-white fs-2">
                                 {reactIcons.upload}
@@ -549,6 +909,10 @@ const Index = () => {
                             <div
                               className=" text-center rounded-1 py-3"
                               style={{ background: "#1fa0e4" }}
+                              onClick={() => {
+                                setGeneralActivity(false);
+                                setBulkResumeFiles([]);
+                              }}
                             >
                               <span className="text-white fs-2">
                                 {reactIcons.multupload}
@@ -575,14 +939,14 @@ const Index = () => {
                 {tab == 1 && (
                   <>
                     <div className="d-flex gap-2 mb-2 justify-content-end">
-                      <Link href='/employers-dashboard/all-applicants'>
-                      <button
-                        // onClick={() => setTab(null)}
-                        className="theme-btn btn-style-one small"
-                      >
-                        Save All
-                      </button>
-                      </Link>
+                      {/* <Link href="/employers-dashboard/all-applicants">
+                        <button
+                          // onClick={() => setTab(null)}
+                          className="theme-btn btn-style-one small"
+                        >
+                          Save All
+                        </button>
+                      </Link> */}
                       <button
                         onClick={() => setTab(null)}
                         className="theme-btn btn-style-four small"
@@ -597,9 +961,9 @@ const Index = () => {
                             return (
                               <div
                                 onClick={() => {
-                                  if (applicantDetails?.id) {
-                                    setActiveForm(item.id);
-                                  }
+                                  // if (applicantDetails?.id) {
+                                  setActiveForm(item.id);
+                                  // }
                                 }}
                                 className={`d-flex gap-3 px-3 mb-2 align-items-center rounded-1  ${
                                   activeForm == item.id
@@ -643,6 +1007,7 @@ const Index = () => {
                             setApplicantDetails={setApplicantDetails}
                             setActiveForm={setActiveForm}
                             resume={resume[0]}
+                            setResume={setResume}
                             handleGetApplicantDetails={
                               handleGetApplicantDetails
                             }

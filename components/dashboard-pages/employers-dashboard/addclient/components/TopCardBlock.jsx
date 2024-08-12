@@ -1,34 +1,5 @@
-const TopCardBlock = () => {
-  const cardContent = [
-    {
-      id: 1,
-      icon: "flaticon-briefcase",
-      countNumber: "22",
-      metaName: "Applied Jobs",
-      uiClass: "ui-blue",
-    },
-    {
-      id: 2,
-      icon: "la-file-invoice",
-      countNumber: "9382",
-      metaName: "Job Alerts",
-      uiClass: "ui-red",
-    },
-    {
-      id: 3,
-      icon: "la-comment-o",
-      countNumber: "74",
-      metaName: "Messages",
-      uiClass: "ui-yellow",
-    },
-    {
-      id: 4,
-      icon: "la-bookmark-o",
-      countNumber: "32",
-      metaName: "Shortlist",
-      uiClass: "ui-green",
-    },
-  ];
+const TopCardBlock = ({cardContent}) => {
+
 
   return (
     <>

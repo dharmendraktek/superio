@@ -134,7 +134,7 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
                 >
                   {reactIcons.dots}
                 </strong>
-                {item.id == openOption && (
+                {item.id && item.id == openOption && (
                   <div
                     className="position-absolute bg-white shadow px-2 py-1 rounded-1"
                     style={{

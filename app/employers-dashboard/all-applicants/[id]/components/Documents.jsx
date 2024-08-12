@@ -2,7 +2,7 @@ import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import Paper from "@/components/common/Paper";
 import UploadSingleDocument from "@/components/common/UploadSingleDocument";
 import { documentTypes } from "@/components/dashboard-pages/employers-dashboard/addapplicant/components/constant";
-import { deleteReq, postApiReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const initialState = {
   title: "",
-  type: "",
+  type: "Select",
   comment: "",
   applicant: "",
   is_default:'true',
@@ -21,6 +21,7 @@ const Documents = ({
   setActiveForm,
   handleGetApplicantDetails,
   resume,
+  setResume,
   resumeUrl,
 }) => {
   const [form, setForm] = useState(initialState);
@@ -72,13 +73,19 @@ const Documents = ({
     const response = await postApiReq(`/applicant-documents/`, formData);
     setIsLoading(false);
     if (response.status) {
+      console.log("------si working ");
       handleGetApplicantDetails();
-      setOpen(!open);
-      setForm(initialState);
-      setDocument("");
+      setOpen(false);
+      handleClear()
       toast.success("Document uploaded successfully");
     }
   };
+  
+  const handleClear = () => {
+    setResume([])
+      setForm(initialState);
+      setDocument("");
+  }
 
   const handleRemoveDoc = async (id) => {
     const response = await deleteReq(`/applicant-documents/${id}/`);
@@ -90,6 +97,17 @@ const Documents = ({
     }
   };
 
+  const handleDownloadDoc = async(id) => {
+    window.open(BASE_URL + `/applicant-documents/${id}/download/`);
+
+      // const response = await getReq(`/applicant-documents/${id}/download/`);
+      // if(response.status){
+      // // let url =  window.URL.createObjectURL(response.blob)
+      //   console.log("-----------reseponse ", response.data);
+      
+      //   toast.success('Document downloaded successfully');
+      // }
+  }
 
   return (
     <Paper>
@@ -98,7 +116,10 @@ const Documents = ({
           <h4>Documents</h4>
           <div>
             <button
-              onClick={() => setOpen(!open)}
+              onClick={() =>{
+                setOpen(!open)
+                handleClear();   
+              }}
               className="theme-btn btn-style-one small"
             >
               {" "}
@@ -126,7 +147,7 @@ const Documents = ({
                     className="client-form-input"
                     value={form.type}
                   >
-                    <option>Select</option>
+                    <option value='Select'>Select</option>
                     {documentTypes.map((item, index) => {
                       return (
                         <option key={index} value={item.name}>
@@ -203,6 +224,7 @@ const Documents = ({
                 <button
                   onClick={() => setOpen(false)}
                   className="theme-btn btn-style-four small"
+                  id='btnCancel'
                 >
                   Cancel
                 </button>
@@ -245,7 +267,7 @@ const Documents = ({
                             background: "white",
                             borderRadius: "50%",
                           }}
-                          //   onClick={() => handleDownloadDoc(item.id)}
+                            onClick={() => handleDownloadDoc(item.id)}
                         >
                           <span className="text-primary cursor-pointer">
                             {reactIcons.download}
@@ -345,7 +367,7 @@ const Documents = ({
         </div>
         <div className="offcanvas-body">
           <iframe
-            src={BASE_URL + file}
+            src={file}
             style={{ width: "100%", height: "100%" }}
             frameborder="0"
           ></iframe>

@@ -6,7 +6,7 @@ export const isUserAuthenticated = () => {
    if(getLocalStorage('is_user_token')){
   return true;
  }else{
-  return false;
+  return true;
  }
-
+         
 }

@@ -213,16 +213,16 @@ const ApplicantTable = () => {
                     </td>
                     <td style={{width:'300px'}}>
                       <div className="d-flex flex-wrap gap-1">
-                      {item.primary_skills.slice(0,3).map((_item, index) => {
-                        return <span key={index}>{_item.name}{item.primary_skills.length -1 > index ? ',' :''}</span>
+                      {item.primary_skills?.slice(0,3).map((_item, index) => {
+                        return <span key={index}>{_item.name}{item.primary_skills.length - 1 > index ? ',' :''}</span>
                       })
                       }
                       </div>
                    </td>
                     <td style={{width:'300px'}}>
                     <div className="d-flex flex-wrap gap-1">
-                      {item.secondary_skills.map((_item, index) => {
-                        return <span key={index}>{_item.name}{item.primary_skills.length-1 > index ? ',' :''}</span>
+                      {item.secondary_skills?.slice(0,3).map((_item, index) => {
+                        return <span key={index}>{_item.name}{item.secondary_skills.length - 1 > index ? ',' :''}</span>
                       })
                       }
                       </div>

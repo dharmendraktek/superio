@@ -9,10 +9,15 @@ import Notification from "./components/Notification";
 import Applicants from "./components/Applicants";
 import CopyrightFooter from "../../CopyrightFooter";
 import MenuToggler from "../../MenuToggler";
+import PersonalInfo from "./components/PersonalInfo";
+import JobInfo from "./components/JobInfo";
+import AttendanceCalender from "./components/AttendanceCalender";
+import HolidayCalender from "./components/HolidayCalender";
+import LeaveManagement from "./components/LeaveManagement";
 
 const Index = () => {
   return (
-    <div className="page-wrapper dashboard">
+    <div className="page-wrapper ">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 
@@ -25,35 +30,45 @@ const Index = () => {
       <MobileMenu />
       {/* End MobileMenu */}
 
-      <DashboardEmployerSidebar />
+      {/* <DashboardEmployerSidebar /> */}
       {/* <!-- End User Sidebar Menu --> */}
 
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
         <div className="dashboard-outer">
-          <BreadCrumb title="Dashboard Home!" />
+          {/* <BreadCrumb title="Dashboard Home!" /> */}
           {/* breadCrumb */}
-
-          <MenuToggler />
+          <div className="py-2 px-3">
+          <PersonalInfo />
+          </div>
+          {/* <div className="px-3">
+             <AttendanceCalender />
+          </div> */}
+          {/* <div className="px-3">
+             <HolidayCalender />
+          </div> */}
+          {/* <div className="px-3">
+            <LeaveManagement />
+          </div> */}
+          <div className="py-2 px-3">
+          <JobInfo />
+          </div>
+          {/* <MenuToggler /> */}
           {/* Collapsible sidebar button */}
 
-          <div className="row">
-            <TopCardBlock />
-          </div>
+          {/* <div className="row"> */}
+            {/* <TopCardBlock /> */}
+          {/* </div> */}
           {/* End .row top card block */}
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col-xl-7 col-lg-12">
-              {/* <!-- Graph widget --> */}
               <div className="graph-widget ls-widget">
                 <ProfileChart />
               </div>
-              {/* End profile chart */}
             </div>
-            {/* End .col */}
 
             <div className="col-xl-5 col-lg-12">
-              {/* <!-- Notification Widget --> */}
               <div className="notification-widget ls-widget">
                 <div className="widget-title">
                   <h4>Notifications</h4>
@@ -63,28 +78,22 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            {/* End .col */}
 
             <div className="col-lg-12">
-              {/* <!-- applicants Widget --> */}
               <div className="applicants-widget ls-widget">
                 <div className="widget-title">
                   <h4>Recent Applicants</h4>
                 </div>
                 <div className="widget-content">
                   <div className="row">
-                    {/* <!-- Candidate block three --> */}
 
                     <Applicants />
                   </div>
                 </div>
               </div>
             </div>
-            {/* End .col */}
-          </div>
-          {/* End .row profile and notificatins */}
+          </div> */}
         </div>
-        {/* End dashboard-outer */}
       </section>
       {/* <!-- End Dashboard --> */}
 

@@ -19,9 +19,8 @@ const DatePickerCustom = ({
       className="text-black w-100 text-start"
       onClick={onClick}
       ref={ref}
-      // style={{ width: "100%" }}
     >
-      {value}
+      {value || 'Select Date'}
     </button>
   ));
 
@@ -37,14 +36,11 @@ const DatePickerCustom = ({
           onChange={(date) => {
             handleDate(date);
           }}
-          selected={date || new Date()}
+          selected={date}
           dateFormat={dateFormat}
           showPopperArrow={false}
           showYearDropdown
           showMonthDropdown
-          // showTimeSelect
-            // timeFormat="HH:mm"
-          // showTimeSelect={showTime}
           showTimeInput={showTime}
           showTimeSelectOnly={showTime}
           popperModifiers={[
@@ -115,7 +111,6 @@ const DatePickerCustom = ({
               >
                 {reactIcons.arrowright}
               </button>
-              
             </div>
           )}
         />

@@ -52,6 +52,24 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
     }
   }, [form.country]);
 
+  useEffect(() => {
+    console.log("---------------applicant details ". applicantDetails);
+       if(typeof applicantDetails?.education == 'object'){
+        setOpen(true);
+         setForm((prev) => ({
+          ...prev,
+          institute_name: applicantDetails?.education?.institute_name ? applicantDetails?.education?.institute_name : '',
+          degree: applicantDetails?.education?.degree ? applicantDetails?.education?.degree : '' ,
+          completed_year: applicantDetails?.education?.completed_year ? new Date(applicantDetails?.education?.completed_year) : new Date(),
+          cgpa: applicantDetails?.education?.cgpa ? applicantDetails?.education?.cgpa : '' ,
+          country: applicantDetails?.education?.country ? applicantDetails?.education?.country : '',
+          state: applicantDetails?.education?.state ? applicantDetails?.education?.state : '',
+          city: applicantDetails?.education?.city ? applicantDetails?.education?.city : '' ,
+         }))
+       }
+  }, [applicantDetails?.education])
+
+
   const handleDeleteEduDetails = async(id) => {
     const response = await deleteReq(`/applicant-educations/${id}/`)
     if(response.status){
@@ -198,7 +216,7 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
           </>
           :
           <div>
-          {applicantDetails?.education?.map((item) => {
+          {applicantDetails.education.length > 0 && applicantDetails?.education?.map((item) => {
             return(
               <div key={item.id} className="my-2 px-2 py-2 d-flex justify-content-between border" >
                 <div>

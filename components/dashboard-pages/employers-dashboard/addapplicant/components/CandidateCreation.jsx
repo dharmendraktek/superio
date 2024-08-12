@@ -20,7 +20,7 @@ const initialState = {
   lastname: "",
   email: "",
   mobile: "",
-  dob: new Date(),
+  dob: null,
   state: "",
   city: "",
   address: "",
@@ -40,7 +40,7 @@ const initialState = {
   skype_id: "",
   linkedin: "",
   authorization: "",
-  authorization_expiry: new Date(),
+  authorization_expiry:null,
   is_clearance: "",
   clearance: "",
   relocation: "",
@@ -57,7 +57,7 @@ const initialState = {
   expect_job_type: "",
   pancard: "",
   aadharcard: "",
-  lwd: new Date(),
+  lwd: null,
   current_currency: "",
   current_amount: "",
   current_payment_frequency: "",
@@ -138,16 +138,16 @@ const CandidateCreation = ({
       setForm((prev) => ({
         ...prev,
         name_title: applicantData.name_title ? applicantData.name_title : "",
-        firstname: applicantData.firstname ? applicantData.firstname : "",
-        middlename: applicantData.middlename ? applicantData.middlename : "",
-        lastname: applicantData.lastname ? applicantData.lastname : "",
-        email: applicantData.email ? applicantData.email : "",
-        mobile: applicantData.mobile ? applicantData.mobile : "",
-        dob: applicantData.dob ? new Date(applicantData.dob) : new Date(),
-        country: applicantData.country ? applicantData.country : "",
-        state: applicantData.state ? applicantData.state : "",
-        city: applicantData.city ? applicantData.city : "",
-        address: applicantData.address ? applicantData.address : "",
+        firstname: applicantData.firstname == 'null' || !applicantData.firstname ?  "" : applicantData.firstname,
+        middlename: applicantData.middlename =='null' || !applicantData.middlename ? "" : applicantData.middlename ,
+        lastname: applicantData.lastname == 'null' || !applicantData.lastname ? "" : applicantData.lastname ,
+        email: applicantData.email == 'null' || !applicantData.email ? '' : applicantData.email,
+        mobile: applicantData.mobile == 'null' || !applicantData.mobile ? '' : applicantData.mobile,
+        dob: applicantData.dob == "null" || !applicantData.dob ? null : new Date(applicantData.dob) ,
+        country: applicantData.country =='null' || !applicantData.country?  "": applicantData.country ,
+        state: applicantData.state == 'null'|| !applicantData.state ? '' : applicantData.state ,
+        city: applicantData.city == 'null' || !applicantData.city ? '' : applicantData.city,
+        address: applicantData.address == 'null' || !applicantData.address ? '' : applicantData.address,
         zipcode: applicantData.zipcode ? applicantData.zipcode : "",
         source: applicantData.source ? applicantData.source : "",
         referred_by: applicantData.referred_by ? applicantData.referred_by : "",
@@ -155,13 +155,15 @@ const CandidateCreation = ({
         ownership: applicantData.ownership ? applicantData.ownership : [],
         job_title: applicantData.job_title ? applicantData.job_title : "",
         relocation: applicantData.relocation ? applicantData.relocation : "",
-        primary_skills: applicantData.primary_skills
+        primary_skills: typeof applicantData.primary_skills == 'object'
           ? applicantData.primary_skills
-          : applicantData.skills
-          ? applicantData.skills.split(",").map((item) => {return { name:item }})
+          : applicantData.primary_skills
+          ? applicantData.primary_skills.split(",").map((item) => {return { name:item }})
           : [],
-        secondary_skills: applicantData.secondary_skills
+          secondary_skills: typeof applicantData.secondary_skills == 'object'
           ? applicantData.secondary_skills
+          : applicantData.secondary_skills
+          ? applicantData.secondary_skills.split(",").map((item) => {return { name:item }})
           : [],
         notice_period: applicantData.notice_period
           ? applicantData.notice_period
@@ -171,16 +173,15 @@ const CandidateCreation = ({
         authorization: applicantData.authorization
           ? applicantData.authorization
           : "",
-        authorization_expiry: applicantData.authorization_expiry
-          ? applicantData.authorization_expiry
-          : new Date(),
+        // authorization_expiry: applicantData.authorization_expiry == 'null'
+        //   ? new Date() : applicantData.authorization_expiry,
         is_clearance: applicantData.is_clearance
           ? applicantData.is_clearance
           : "",
         clearance: applicantData.clearance ? applicantData.clearance : "",
-        current_company: applicantData.current_company
-          ? applicantData.current_company
-          : "",
+        current_company: applicantData.current_company == 'null' || !applicantData.current_company
+          ? '' : applicantData.current_company
+          ,
         tax_terms: applicantData.tax_terms ? applicantData.tax_terms : "",
         experience: applicantData.experience ? applicantData.experience : "",
         preferred_location: applicantData.preferred_location
@@ -201,7 +202,7 @@ const CandidateCreation = ({
           : "",
         pancard: applicantData.pancard ? applicantData.pancard : "",
         aadharcard: applicantData.aadharcard ? applicantData.aadharcard : "",
-        lwd: applicantData.lwd ? applicantData.lwd : new Date(),
+        // lwd: applicantData.lwd == 'null' ? new Date() : applicantData.lwd ,
         current_currency: applicantData.current_currency
           ? applicantData.current_currency
           : "",
@@ -224,6 +225,7 @@ const CandidateCreation = ({
       setUsersList(response.data);
     }
   };
+
 
   const handleSubmit = async () => {
     // if(!form.firstname){
@@ -255,10 +257,10 @@ const CandidateCreation = ({
     //   return;
     // }
     // if(form.firstname && form.lastname && form.email && form.mobile && form.authorization && form.source && form.source && form.tax_terms){
-    try {
-      setIsLoading(true);
-      const response = applicantData.id
-        ? await patchReq(`/applicants/${applicantData.id}/`, form)
+      try {
+        setIsLoading(true);
+      const response = applicantData?.id
+        ? await patchReq(`/applicants/${applicantData?.id}/`, form)
         : await postApiReq("/applicants/", form);
       setIsLoading(false);
       if (response.status) {
@@ -302,6 +304,12 @@ const CandidateCreation = ({
             className="theme-btn btn-style-four small"
           >
             Reset
+          </button>
+          <button
+            onClick={() =>setTab(null)}
+            className="theme-btn btn-style-four small"
+          >
+            Cancel
           </button>
         </div>
       </div>
@@ -774,8 +782,9 @@ const CandidateCreation = ({
               <input
                 name="relocation"
                 onChange={handleChange}
-                value={form.relocation}
+                value={true}
                 type="radio"
+                checked={form.relocation ? true : false}
                 // className="client-form-input"
               />
               <label>Yes</label>
@@ -784,8 +793,9 @@ const CandidateCreation = ({
               <input
                 name="relocation"
                 onChange={handleChange}
-                value={form.relocation}
+                value={false}
                 type="radio"
+                checked={form.relocation ? false : true}
                 // className="client-form-input"
               />
               <label>No</label>
@@ -825,7 +835,7 @@ const CandidateCreation = ({
             }}
           >
             <div className="d-flex  flex-wrap mt-1">
-              {form.primary_skills.map((item, index) => {
+              {form.primary_skills?.map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -885,7 +895,7 @@ const CandidateCreation = ({
             }}
           >
             <div className="d-flex   flex-wrap mt-1">
-              {form.secondary_skills.map((item, index) => {
+              {form.secondary_skills?.map((item, index) => {
                 return (
                   <div
                     key={index}

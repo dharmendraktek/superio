@@ -10,13 +10,13 @@ const ViewDocumentModal = ({img}) => {
               <h5 className="modal-title" id="viewDocModalLabel">Document Preview</h5>
               <button type="button" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div className="modal-body">
+            <div className="modal-body w-100" >
               {/* <Image 
                src={img}
                width={200}
                height={100}
               /> */}
-              <img src={img} />
+              <iframe src={img} style={{width:'100%', height:'600px'}} />
             </div>
           </div>
         </div>
