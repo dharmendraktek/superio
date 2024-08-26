@@ -1,12 +1,6 @@
 "use client";
-// import UserUpdateModal from "./UserUpdateModal";
-// import UserDeleteModal from "./components/UserDeleteModal";
-
 import { useEffect, useState } from "react";
-
-import { clientData, clientTableField } from "./constant";
-import axios from "axios";
-import { BASE_URL } from "@/utils/endpoints";
+import {  clientTableField } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { Country, State, City } from "country-state-city";
 import { toast } from "react-toastify";
@@ -149,6 +143,8 @@ const ClientTable = () => {
       setLoading(true);
       const response = await postApiReq("/create-client/", form);
       if (response.status) {
+        const closeBtn = document.getElementById('closeBtnClient');
+        closeBtn.click();
         setLoading(false);
         setForm(initialState);
         toast.success("You have been created client successfully!");
@@ -165,6 +161,8 @@ const ClientTable = () => {
       setLoading(true);
       const response = await patchReq(`/update-client/${client.id}/`, form);
       if (response.status) {
+        const closeBtn = document.getElementById('closeBtnClient');
+        closeBtn.click();
         setLoading(false);
         toast.success("You have been updated client successfylly!");
         getClientList();
@@ -221,6 +219,8 @@ const ClientTable = () => {
       setContLoading(true);
       const response = await postApiReq("/contact-manager/", contactData);
       if (response.status) {
+        const closeBtn = document.getElementById('closeBtnContact');
+        closeBtn.click();
         setContLoading(false);
         toast.success("You have been created client contact successfully!");
         getClientList();
@@ -242,7 +242,10 @@ const ClientTable = () => {
         `/contact-manager/${contactData.client_ref}/`,
         contactData
       );
+      setContLoading(false);
       if (response.status) {
+        const closeBtn = document.getElementById('closeBtnContact');
+        closeBtn.click();
         setContLoading(false);
         toast.success("You have been updated client contact successfylly!");
         getClientList();
@@ -372,6 +375,7 @@ const ClientTable = () => {
               className="btn-close text-reset"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
+              id="closeBtnContact"
               onClick={() => {
                 setContactDetails("");
                 setContactData(initialStateContact);
@@ -535,6 +539,7 @@ const ClientTable = () => {
             className="btn-close text-reset"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
+            id="closeBtnClient"
             onClick={() => setForm(initialState)}
           ></button>
         </div>

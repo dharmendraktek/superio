@@ -55,7 +55,9 @@ const HtmlEditor = ({ setDescriptionData, form, wrapperStyle }) => {
         wrapperStyle={wrapperStyle}
         // initialContentState={'<p>hiii this is job description</p>'}
         editorStyle={{
-          padding:'0px 10px'
+          padding:'0px 10px',
+          background:'white',
+          height:'100%'
         }}
         toolbar={toolbarOptions}
         editorState={editorState}

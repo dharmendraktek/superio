@@ -1,6 +1,7 @@
 'use client'
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
+import Paper from "@/components/common/Paper";
 import { deleteReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
@@ -48,7 +49,7 @@ const Certificate = ({applicantDetails,handleGetApplicantDetails}) => {
   }
 
     return(
-        <div className="shadow">
+      <Paper>
            <div className="py-3 px-3">
             <div className="d-flex justify-content-between">
              <h4>Add Certification</h4>
@@ -166,7 +167,7 @@ const Certificate = ({applicantDetails,handleGetApplicantDetails}) => {
               </div>
             }
            </div>
-           </div>
+      </Paper>
     )
 }
 

@@ -124,6 +124,7 @@ const UserTable = () => {
               </div>
             </div>
       <div className="table_div  custom-scroll-sm">
+        <div className="table-wrapper">
       <table className="default-table ">
         <thead>
           <tr>
@@ -222,6 +223,7 @@ const UserTable = () => {
           )}
         </tbody>
       </table>
+        </div>
       </div>
       <div>
       </div>

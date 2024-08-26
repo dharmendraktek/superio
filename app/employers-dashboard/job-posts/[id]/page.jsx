@@ -17,6 +17,18 @@ import { getReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
 import Loader from "@/components/common/Loader";
 import moment from "moment";
+import Paper from "@/components/common/Paper";
+
+const applicantTabList = [
+  {id:1, name:'Snapshot'},
+  {id:2, name:'Personal Details'},
+  {id:3, name:'Profession Details'},
+  {id:4, name:'Employer Details'},
+  // {name:'Snapshot'},
+  // {name:'Snapshot'},
+  // {name:'Snapshot'},
+]
+
 
 const Index = () => {
   const [open, setOpen] = useState(true);
@@ -26,6 +38,9 @@ const Index = () => {
   const [viewMore, setViewMore] = useState(false);
   const [noteData, setNoteData] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const [submitOpt, setSubmitOpt] = useState(false);
+    const [settingOpt, setSettingOpt] = useState(false);
+    const [tab, setTab] = useState();
 
   const handleSearchString = async () => {
     const response = await getReq(`/job-boolean-string/${jobId}/`);
@@ -69,19 +84,75 @@ const Index = () => {
       {/* <!-- End User Sidebar Menu --> */}
 
       {/* <!-- Dashboard --> */}
-      <section className="user-dashboard">
+      <section className="user-dashboard theme-background">
         <div className="dashboard-outer">
           {/* <BreadCrumb title="Manage jobs!" /> */}
           {/* breadCrumb */}
 
           <MenuToggler />
           {/* Collapsible sidebar button */}
+          <div className="d-flex justify-content-between    mt-2 px-4 gap-3">
+        <div className="d-flex  gap-3">
+              {applicantTabList.map((item) => {
+                 return(
+                    <div className={`cursor-pointer px-3 rounded-1 bg-secondary ${tab == item.id ? 'border-2 text-primary border-bottom border-primary' : ''}`} onClick={() => setTab(item.id)} key={item.id}>
+                        <span className="fw-medium">{item.name}</span>
+                    </div>
+                 )
+              })
+              }
+            </div>
+            <div className="">
+                <div className="d-flex bg-secondary">
+                    <div className="border position-relative border-secondary px-2">
+                        <div className="">
+                        <span>{reactIcons.setting}</span>
+                        <span>{reactIcons.downarrow}</span>
+                        </div>
+                        {settingOpt  &&
+                            <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                                <p className="cursor-pointer">Tag to job</p>
+                                <p className="cursor-pointer">Quick Submit</p>
+                            </div>
 
+                        }
+                    </div>
+                    <div className="border border-secondary px-2 cursor-pointer">
+                        <span>{reactIcons.share}</span>
+                    </div>
+                    <div className="border border-secondary px-2 cursor-pointer">
+                        <span>{reactIcons.mail}</span>
+                    </div>
+                    <div className="border border-secondary position-relative px-2">
+                        <div className="cursor-pointer" onClick={() => setSubmitOpt(!submitOpt)}>
+                        <strong>Submit</strong>
+                        <span>{reactIcons.downarrow}</span>
+                        </div>
+                        {submitOpt &&
+                            <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                                 <Link href={`/employers-dashboard/all-applicants/submit_jobs/${jobId}`}>
+                                <p className="cursor-pointer">Submit to job</p>
+                                </Link>
+                                <p className="cursor-pointer">Tag to job</p>
+                                <p className="cursor-pointer">Quick Submit</p>
+                            </div>
+
+                        }
+                    </div>
+                    <div onClick={() => {
+                            window.open(BASE_URL + `/applicant-documents/${id}/download/`);
+                    }} className="border border-secondary cursor-pointer px-2">
+                        <span>{reactIcons.download}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
           <div className="row mx-3">
             <div className={`${open ? "col-lg-9" : "col-12"}`}>
               {open ? (
                 <>
-                  <div className="shadow  my-3 px-4 py-4">
+                  <Paper>
+                  <div className="px-4">
                     <div className="d-flex gap-2 align-items-center">
                       <Link href="/employers-dashboard/job-posts">
                         <span className="fs-2">{reactIcons.backarrow}</span>
@@ -177,6 +248,7 @@ const Index = () => {
                       )}
                     </div>
                   </div>
+                  </Paper>
                   <div className="my-2">
                     <Submissions />
                   </div>

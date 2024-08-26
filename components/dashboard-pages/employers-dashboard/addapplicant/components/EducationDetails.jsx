@@ -1,6 +1,7 @@
 "use client";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
+import Paper from "@/components/common/Paper";
 import { deleteReq, postApiReq } from "@/utils/apiHandlers";
 import { courses } from "@/utils/courses";
 import { reactIcons } from "@/utils/icons";
@@ -53,7 +54,6 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
   }, [form.country]);
 
   useEffect(() => {
-    console.log("---------------applicant details ". applicantDetails);
        if(typeof applicantDetails?.education == 'object'){
         setOpen(true);
          setForm((prev) => ({
@@ -79,8 +79,8 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
   }
 
   return (
-    <div className="shadow">
-      <div className="py-3 px-3">
+<Paper>
+<div className="py-3 px-3">
         <div className="d-flex justify-content-between">
           <h4>Add Education Details</h4>
           <button
@@ -108,21 +108,21 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
           </div>
           <div className="col-4 my-1">
             <p>Degree</p>
-            <select
+            <input
               name="degree"
               onChange={handleChange}
               value={form.degree}
               type="text"
               className="client-form-input"
-            >
-              <option>Select</option>
+            />
+              {/* <option>Select</option>
               {courses.map((item, index) =>{
                 return(
                   <option key={index} value={item.degree}>{item.degree}</option>
                 )
               } )
               }
-            </select>
+            </input> */}
           </div>
           <div className="col-4 my-1">
             <p>Year Completed</p>
@@ -216,7 +216,7 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
           </>
           :
           <div>
-          {applicantDetails.education.length > 0 && applicantDetails?.education?.map((item) => {
+          {applicantDetails?.education?.length > 0 && applicantDetails?.education?.map((item) => {
             return(
               <div key={item.id} className="my-2 px-2 py-2 d-flex justify-content-between border" >
                 <div>
@@ -281,7 +281,7 @@ const EducationDetails = ({ applicantDetails, handleGetApplicantDetails }) => {
           </div>
         }
       </div>
-    </div>
+</Paper>
   );
 };
 

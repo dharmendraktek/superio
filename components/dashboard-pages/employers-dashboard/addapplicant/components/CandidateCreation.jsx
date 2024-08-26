@@ -228,35 +228,35 @@ const CandidateCreation = ({
 
 
   const handleSubmit = async () => {
-    // if(!form.firstname){
-    //   setError((prev) => ({...prev, firstNameErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.lastname){
-    //   setError((prev) => ({...prev, lastNameErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.email){
-    //   setError((prev) => ({...prev, emailErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.mobile){
-    //   setError((prev) => ({...prev, mobileErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.authorization){
-    //   setError((prev) => ({...prev, workAuthErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.source){
-    //   setError((prev) => ({...prev, sourceErr:'This Field is required'}))
-    //   // return;
-    // }
-    // if(!form.tax_terms){
-    //   setError((prev) => ({...prev, taxTermErr:'This Field is required'}))
-    //   return;
-    // }
-    // if(form.firstname && form.lastname && form.email && form.mobile && form.authorization && form.source && form.source && form.tax_terms){
+    if(!form.firstname){
+      setError((prev) => ({...prev, firstNameErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.lastname){
+      setError((prev) => ({...prev, lastNameErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.email){
+      setError((prev) => ({...prev, emailErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.mobile){
+      setError((prev) => ({...prev, mobileErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.authorization){
+      setError((prev) => ({...prev, workAuthErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.source){
+      setError((prev) => ({...prev, sourceErr:'This Field is required'}))
+      // return;
+    }
+    if(!form.tax_terms){
+      setError((prev) => ({...prev, taxTermErr:'This Field is required'}))
+      return;
+    }
+    if(form.firstname && form.lastname && form.email && form.mobile && form.authorization && form.source && form.source && form.tax_terms){
       try {
         setIsLoading(true);
       const response = applicantData?.id
@@ -283,14 +283,14 @@ const CandidateCreation = ({
       setIsLoading(false);
       toast.error();
     }
-    // }
+    }
   };
 
 
   return (
-    <div className="shadow py-3 px-3">
+    <div className="shadow py-3 px-3 bg-white">
       <div className="d-flex justify-content-between">
-        <h4>Fill Applicant Details</h4>
+        <h4>{tab ? 'Applicant Details' :'Applicant Details'}</h4>
         <div className="d-flex gap-2">
           <button
             onClick={handleSubmit}
@@ -305,15 +305,15 @@ const CandidateCreation = ({
           >
             Reset
           </button>
-          <button
+          {/* <button
             onClick={() =>setTab(null)}
             className="theme-btn btn-style-four small"
           >
             Cancel
-          </button>
+          </button> */}
         </div>
       </div>
-      <div className="row">
+      <div className="row manual-form">
         <div className="col-4 my-1">
           <p>
             First Name <strong className="text-danger">*</strong>
@@ -777,7 +777,7 @@ const CandidateCreation = ({
         </div>
         <div className="col-4 my-1">
           <p>Relocation</p>
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 mt-3">
             <div className="d-flex gap-2">
               <input
                 name="relocation"
@@ -819,16 +819,20 @@ const CandidateCreation = ({
               data-bs-toggle="tooltip"
               data-bs-placement="top-right"
               title="Please enter skills enter button as seprator"
-              className="text-primary"
+              className="text-primary custom-tooltip"
             >
               {reactIcons.info}
-            </span>
+              </span>
+            {/* <button type="button" className="btn custom-tooltip " data-toggle="tooltip" data-placement="top" title="Please enter skills enter button as seprator">
+              {reactIcons.info}
+</button>
+           */}
           </p>
           <div
             className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
             style={{
               minHeight: "36px",
-              border: "1px solid black",
+              borderBottom: "1px solid black",
               borderRadius: "3px",
               maxHeight: "125px",
               overflowY: "auto",
@@ -839,8 +843,8 @@ const CandidateCreation = ({
                 return (
                   <div
                     key={index}
-                    className="mx-1 my-1 px-1 gap-6 text-black fw-medium  rounded"
-                    style={{ background: "var(--primary-2nd-color)" }}
+                    className="mx-1 my-1 px-1 gap-6 text-black fw-medium border rounded-1 border-primary"
+                    // style={{ background: "var(--primary-2nd-color)" }}
                   >
                     <span>{item.name ? item.name : item}</span>
                     <span
@@ -888,7 +892,7 @@ const CandidateCreation = ({
             className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
             style={{
               minHeight: "36px",
-              border: "1px solid black",
+              borderBottom: "1px solid black",
               borderRadius: "3px",
               maxHeight: "125px",
               overflowY: "auto",
@@ -899,8 +903,8 @@ const CandidateCreation = ({
                 return (
                   <div
                     key={index}
-                    className="mx-1 px-1 my-1 gap-6 text-black fw-medium rounded"
-                    style={{ background: "var(--primary-2nd-color)" }}
+                    className="mx-1 px-1 my-1 gap-6 text-black  fw-medium border border-primary rounded-1"
+                    // style={{ background: "var(--primary-2nd-color)" }}
                   >
                     <span>{item.name ? item.name : item}</span>
                     <span
@@ -1029,7 +1033,7 @@ const CandidateCreation = ({
               value={form.current_amount}
               placeholder="Rate"
               onChange={handleChange}
-              className="px-2 client-input-style form-mult-box form-mult-box"
+              className="px-2 client-input-style  form-mult-box"
             />
             <select
               value={form.current_payment_frequency}
@@ -1078,7 +1082,7 @@ const CandidateCreation = ({
           />
         </div>
       </div>
-      {/* <div className="d-flex my-4 gap-2">
+      <div className="d-flex my-4 gap-2">
           <button
             onClick={handleSubmit}
             className="theme-btn btn-style-one small"
@@ -1092,7 +1096,7 @@ const CandidateCreation = ({
           >
             Reset
           </button>
-        </div> */}
+        </div>
     </div>
   );
 };

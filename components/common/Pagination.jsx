@@ -26,7 +26,7 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
         pageCount={Math.ceil(dataCount/ 25)}
         previousLabel={<span className='fs-6'>{reactIcons.fastBackward}</span>}
         renderOnZeroPageCount={null}
-        containerClassName="d-flex justify-content-center text-black gap-2 align-items-center pagination-container"
+        containerClassName="d-flex justify-content-center text-black gap-2 align-items-center pagination-container bg-white"
         pageClassName="pagination-item-style"
         activeClassName="bg-primary text-white"
         previousClassName="pagination-item-style"

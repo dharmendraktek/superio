@@ -71,7 +71,7 @@ const ApplicantTable = () => {
 
 
   return (
-    <div>
+    <div className="theme-background">
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
         {/* <div className="position-relative">
@@ -141,7 +141,9 @@ const ApplicantTable = () => {
                         <span onClick={() => setOpenAct(!openAct)}>Action</span>
                     {openAct &&
                        <div className="position-absolute">
-                            <div className="bg-white">option</div>
+                            <div className="bg-white">
+                              <p>Delete</p>
+                            </div>
                        </div>
                     }
                     </div>
@@ -214,7 +216,11 @@ const ApplicantTable = () => {
                     <td style={{width:'300px'}}>
                       <div className="d-flex flex-wrap gap-1">
                       {item.primary_skills?.slice(0,3).map((_item, index) => {
-                        return <span key={index}>{_item.name}{item.primary_skills.length - 1 > index ? ',' :''}</span>
+                        return <div key={index} className="border rounded-1 bg-white border-primary px-2">
+                          <span className="fw-medium" style={{fontSize:'14px'}}>
+                          {_item.name}{item.primary_skills.length - 1 > index ? '' :''}
+                          </span>
+                          </div>
                       })
                       }
                       </div>
@@ -222,7 +228,11 @@ const ApplicantTable = () => {
                     <td style={{width:'300px'}}>
                     <div className="d-flex flex-wrap gap-1">
                       {item.secondary_skills?.slice(0,3).map((_item, index) => {
-                        return <span key={index}>{_item.name}{item.secondary_skills.length - 1 > index ? ',' :''}</span>
+                        return <div key={index}  className="border rounded-1 bg-white border-primary px-2">
+                          <span className="fw-medium" style={{fontSize:'14px'}}>
+                          {_item.name}{item.secondary_skills.length - 1 > index ? '' :''}
+                          </span>
+                          </div>
                       })
                       }
                       </div>

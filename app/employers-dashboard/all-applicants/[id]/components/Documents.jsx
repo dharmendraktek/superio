@@ -33,6 +33,7 @@ const Documents = ({
 
   const handleFileUpload = (e) => {
     let file = e.target.files[0];
+    console.log("-----------filess ----", e.target.files[0]);
     setDocument(file);
   };
 
@@ -53,7 +54,7 @@ const Documents = ({
       let resume = applicantDetails?.documents?.find(
         (item) => item.is_default == true
       );
-      if (resume) setFile(resume.file);
+      if (resume) setFile(resume.file_url);
     }
   }, [applicantDetails]);
 
@@ -284,7 +285,7 @@ const Documents = ({
                             background: "white",
                             borderRadius: "50%",
                           }}
-                          onClick={() => setFile(item.file)}
+                          onClick={() => setFile(item.file_url)}
                         >
                           <span className="text-primary cursor-pointer">
                             {reactIcons.view}

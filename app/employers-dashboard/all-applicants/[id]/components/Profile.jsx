@@ -24,30 +24,30 @@ const Profile = ({ setTab, applicantData, setApplicantData }) => {
                 </div>
                 <span>{applicantData?.job_title}</span>
               </div>
-              <div className="d-flex my-2">
+              <div className="d-flex my-2 gap-2">
                 <div className="d-flex align-items-center gap-1">
                   <span className="fs-5">{reactIcons.location}</span>
                   <p>
-                    {applicantData?.address ? applicantData?.address : "N/A"},
-                    {applicantData?.city ? applicantData?.city : ""},{" "}
+                    {applicantData?.address ? applicantData?.address : "N/A"}
+                    {/* {applicantData?.city ? applicantData?.city : ""},{" "}
                     {applicantData?.state ? applicantData?.state : ""}{" "}
-                    {applicantData?.country ? applicantData?.country : ""},{" "}
+                    {applicantData?.country ? applicantData?.country : ""},{" "} */}
                     {applicantData?.zipcode}{" "}
                   </p>{" "}
-                  |
+                  | 
                 </div>
-                <div className="d-flex align-items-center gap-1">
+                <div className="d-flex gap-2 align-items-center">
                   <span className="fs-5">{reactIcons.phonecall}</span>
-                  <p>{applicantData?.mobile}</p> |
+                  <p>{applicantData?.mobile}</p>   |  
                 </div>
-                <div className="d-flex align-items-center gap-1">
+                <div className="d-flex align-items-center gap-2">
                   <span className="fs-5">{reactIcons.mail}</span>
                   <p>{applicantData?.email}</p>
                 </div>
               </div>
               <div className="d-flex gap-2">
                 <button
-                  onClick={() => setTab(1)}
+                  onClick={() => setTab(2)}
                   className="theme-btn btn-style-four small"
                 >
                   Edit Applicant

@@ -2,12 +2,15 @@
 import Aos from "aos";
 import "aos/dist/aos.css";
 import "../styles/index.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ScrollToTop from "../components/common/ScrollTop";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Loader from "@/components/common/Loader";
+import Router from 'next/router';
+
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -20,6 +23,26 @@ export default function RootLayout({ children }) {
       once: true,
     });
   }, []);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleStart = () => setLoading(true);
+    const handleComplete = () => setLoading(false);
+
+    Router.events.on('routeChangeStart', handleStart);
+    Router.events.on('routeChangeComplete', handleComplete);
+    Router.events.on('routeChangeError', handleComplete);
+
+    // Cleanup on unmount
+    return () => {
+      Router.events.off('routeChangeStart', handleStart);
+      Router.events.off('routeChangeComplete', handleComplete);
+      Router.events.off('routeChangeError', handleComplete);
+    };
+  }, []);
+
+
   return (
     <html lang="en">
       <head>
@@ -44,6 +67,8 @@ export default function RootLayout({ children }) {
       <body>
         <Provider store={store}>
           <div className="page-wrapper">
+          {loading && <Loader />} {/* Show loader when loading is true */}
+
             {children}
 
             {/* Toastify */}

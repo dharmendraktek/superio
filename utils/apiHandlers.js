@@ -3,6 +3,7 @@ import axios from 'axios';
 // import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { BASE_URL } from './endpoints';
+import Cookies from 'js-cookie';
 
 // const { logout } = useAuth(); // eslint-disable-line
 // const isDevelopment = NODE_ENV !== 'production';
@@ -23,13 +24,13 @@ import { BASE_URL } from './endpoints';
 //     removeAuthCookie();
 //     localStorage.removeItem('is_user_token');
 //     window.location = '/';
-//     return true;
+//     return true;ssss
 //   }
 // };
 
 let header =  {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('is_user_token')}`,
+        Authorization: `Bearer ${Cookies.get('is_user_token')}`,
       },
     }
  

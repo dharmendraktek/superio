@@ -58,7 +58,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
 
 
   return (
-    <div className="shadow">
+    <div className="shadow bg-white">
       <div className="d-flex justify-content-between py-4 px-4">
         <div className="d-flex gap-3">
           <h4>Notes</h4>

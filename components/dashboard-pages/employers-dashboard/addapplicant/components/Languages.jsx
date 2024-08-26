@@ -1,5 +1,6 @@
 "use client"
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import Paper from "@/components/common/Paper";
 import { deleteReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import { useState } from "react";
@@ -42,7 +43,7 @@ const Languages = ({applicantDetails, handleGetApplicantDetails}) => {
     }
 
     return(
-        <div className="shadow">
+      <Paper>
         <div className="py-3 px-3">
           <div className="d-flex justify-content-between">
           <h4>Add Language Details</h4>
@@ -204,7 +205,7 @@ const Languages = ({applicantDetails, handleGetApplicantDetails}) => {
             </div>
           }
         </div>
-        </div>
+      </Paper>
     )
 }
 

@@ -174,7 +174,7 @@ const JobPostsTable = () => {
                   <tr key={index} className="">
                     {true && (
                       <td className="d-flex">
-                        <input type="checkbox" />
+                        {/* <input type="checkbox" /> */}
                         {/* <div
                           onClick={() => {
                             if (expand) {

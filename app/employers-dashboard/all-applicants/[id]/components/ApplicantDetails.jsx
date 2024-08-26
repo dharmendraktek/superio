@@ -68,9 +68,9 @@ const ApplicantDetails = ({ applicantData }) => {
             <div className="d-flex flex-wrap gap-2">
               {applicantData?.primary_skills?.map((item) => {
                 return (
-                  <span key={item.id}>
-                    {item.name}
-                  </span>
+                  <div key={item.id} className="border rounded-1 px-2 border-primary">
+                   <span className="fw-medium">{item.name}</span> 
+                  </div>
                 );
               })}
             </div>

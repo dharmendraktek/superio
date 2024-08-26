@@ -13,6 +13,7 @@ const LoginPopup = () => {
               type="button"
               className="closed-modal"
               data-bs-dismiss="modal"
+              id="loginModal"
             ></button>
             {/* End close modal btn */}
 

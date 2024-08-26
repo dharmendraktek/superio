@@ -414,7 +414,7 @@ const Index = () => {
   return (
     <>
       {loading || (singleParseLoading && <Loader />)}
-      <div className="page-wrapper">
+      <div className="page-wrapper theme-background">
         <span className="header-span"></span>
         {/* <!-- Header Span for hight --> */}
 
@@ -955,7 +955,7 @@ const Index = () => {
                       </button>
                     </div>
                     <div className="row">
-                      <div className="col-2">
+                      <div className="col-2 bg-white">
                         <div className="gap-1 h-100 ">
                           {tabsName.map((item, index) => {
                             return (

@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/features/employer/employerSlice";
 import BtnBeatLoader from "../../BtnBeatLoader";
 import { postReq } from "@/utils/apiHandlers";
+import Cookies from "js-cookie";
 
 const FormContent = () => {
   const [form, setForm] = useState({
@@ -38,14 +39,19 @@ const FormContent = () => {
       setError((prev) => ({ ...prev, passErr: "This field is required." }));
       return;
     }
-    try {
+    try { 
       setLoading(true);
       const response = await postReq("/login/", form);
       setLoading(false);
       if (response.status) {
-        localStorage.setItem("is_user_token", response.data.access);
+        Cookies.set('is_user_token',  response.data.access, { expires: 1 }); // expires in 1 day
+        // localStorage.setItem("is_user_token", response.data.access);
+        // localStorage.setItem("is_user_rfesh_token", response.data.refresh);
+        let closeBtn = document.getElementById('loginModal');
+        closeBtn.click();
         toast.success("You are logged in successfully");
         dispatch(login(response.data));
+        // router.push('/employers-dashboard/dashboard');
         window.location.href = "/employers-dashboard/dashboard";
       }
       if(response.error){

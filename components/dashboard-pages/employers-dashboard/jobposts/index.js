@@ -15,7 +15,7 @@ import Link from "next/link";
 
 const Index = () => {
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper theme-background">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 

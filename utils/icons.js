@@ -50,6 +50,11 @@ import { FaLanguage } from "react-icons/fa6";
 import { TbDetails } from "react-icons/tb";
 import { MdOutlineWorkHistory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
+import { MdOutlineShare } from "react-icons/md";
+import { MdOutlineSettingsSuggest } from "react-icons/md";
+
+
+
 
 
 export const reactIcons = {
@@ -96,5 +101,7 @@ export const reactIcons = {
     mail:<MdMail />,
     personalDetails: <BsPersonLinesFill />,
     workexp:<MdOutlineWorkHistory />,
+    share:<MdOutlineShare />,
+    setting:<MdOutlineSettingsSuggest />
 
 }

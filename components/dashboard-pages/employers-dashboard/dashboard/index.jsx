@@ -1,3 +1,4 @@
+'use client'
 import MobileMenu from "../../../header/MobileMenu";
 import DashboardHeader from "../../../header/DashboardHeader";
 import LoginPopup from "../../../common/form/login/LoginPopup";
@@ -14,10 +15,16 @@ import JobInfo from "./components/JobInfo";
 import AttendanceCalender from "./components/AttendanceCalender";
 import HolidayCalender from "./components/HolidayCalender";
 import LeaveManagement from "./components/LeaveManagement";
+import EmployeeInfo from "./components/EmployeeInfo";
+import { useState } from "react";
+import EmployeeProfile from "./components/EmployeeProfile";
+import WorkFromHome from "./components/WorkFromHome";
+import HelpDesk from "./components/HelpDesk";
 
 const Index = () => {
+  const [menuItem, setMenuItem] = useState('employee-detial')
   return (
-    <div className="page-wrapper ">
+    <div className="page-wrapper theme-background ">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 
@@ -39,20 +46,36 @@ const Index = () => {
           {/* <BreadCrumb title="Dashboard Home!" /> */}
           {/* breadCrumb */}
           <div className="py-2 px-3">
-          <PersonalInfo />
+          <PersonalInfo menuItem={menuItem} setMenuItem={setMenuItem} />
+          <div className="my-2">
+          {menuItem == 'employee-detial' &&
+          <EmployeeProfile />
+          }
+          {menuItem == 'attendance' &&
+          <AttendanceCalender />
+          }
+          {menuItem == 'holiday' &&
+          <HolidayCalender />
+          }
+          {menuItem == 'leave-management' &&
+          <LeaveManagement />
+          }
+          {menuItem == 'work-from-home' &&
+          <WorkFromHome />
+          }
+          {menuItem == 'helpdesk-ticket' &&
+          <HelpDesk />
+          }
+          </div>
           </div>
           {/* <div className="px-3">
-             <AttendanceCalender />
-          </div> */}
-          {/* <div className="px-3">
-             <HolidayCalender />
-          </div> */}
-          {/* <div className="px-3">
-            <LeaveManagement />
-          </div> */}
+          <EmployeeInfo />
+          </div>
           <div className="py-2 px-3">
           <JobInfo />
-          </div>
+          </div> */}
+          {/* <div className="py-2 px-3">
+          </div> */}
           {/* <MenuToggler /> */}
           {/* Collapsible sidebar button */}
 

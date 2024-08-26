@@ -2,6 +2,11 @@
 default table
 ===========================*/
 
+.table-wrapper {
+  display: block;
+  width: 100%;
+}
+
 .table-outer {
   overflow-y: hidden;
   overflow-x: auto;

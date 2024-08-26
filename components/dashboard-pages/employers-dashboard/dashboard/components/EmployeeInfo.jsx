@@ -7,64 +7,58 @@ const cardContent = [
       id: 1,
       icon: "fa-solid fa-user",
       countNumber: "1972",
-      metaName: "Employee Code",
+      metaName: "Employee",
       uiClass: "ui-blue",
-      value:'employee-detial'
     },
     {
       id: 2,
       icon: "fa-solid fa-wallet",
       countNumber: "2.45",
-      metaName: "Leave Balance",
+      metaName: "Leave Management System",
       uiClass: "ui-red",
-      value:'leave-management'
     },
     {
       id: 3,
       icon: "fa-clipboard-user",
       countNumber: "74",
-      metaName: "Your Attendance",
+      metaName: "Policy",
       uiClass: "ui-yellow",
-      value:'attendance'
     },
     {
       id: 4,
       icon: "fa-solid fa-house-user",
       countNumber: "APPLY FOR WFH",
-      metaName: "Apply for work from home",
+      metaName: "WFH Management",
       uiClass: "ui-blue",
-      value:'work-from-home'
     },
     {
         id: 5,
         icon: "fa-solid fa-person-circle-question",
-        countNumber: "HELPDESK TICKET",
-        metaName: "Ticket System",
+        countNumber: "Helpdesk Ticket",
+        metaName: "Ticket Management System",
         uiClass: "ui-red",
-        value:'helpdesk-ticket'
       },
       {
         id: 6,
         icon: "fa-solid fa-calendar-day",
-        countNumber: "CALENDAR",
-        metaName: "Holiday",
+        countNumber: "Calender",
+        metaName: "Holiday Management System",
         uiClass: "ui-yellow",
-        value:'holiday'
       },
   ];
 
 
-const PersonalInfo  = ({menuItem, setMenuItem}) => {
+const EmployeeInfo  = () => {
     return(
         <Paper>
             <div className="row">
              <div>
-                <h4 className="pb-2">Personal Information</h4>
+                <h4 className="pb-2">Employee Information</h4>
              </div>
-             <TopCardBlock cardContent={cardContent} setMenuItem={setMenuItem} menuItem={menuItem}/>
+             <TopCardBlock cardContent={cardContent} />
             </div>
         </Paper>
     )
 }
 
-export default PersonalInfo;
+export default EmployeeInfo;

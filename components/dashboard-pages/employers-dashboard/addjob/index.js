@@ -23,7 +23,7 @@ const Index = () => {
   const [tab, setTab] = useState(null);
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper theme-background">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 

@@ -272,3 +272,49 @@ li {
 nextjs-portal {
   display: none;
 }
+
+
+/* Custom tooltip styling */
+.custom-tooltip .tooltip-inner {
+  background-color: #343a40; /* Dark background color */
+  color: #f8f9fa; /* Light text color */
+  border-radius: 0.25rem; /* Rounded corners */
+  font-size: 0.875rem; /* Font size */
+  padding: 0.5rem 1rem; /* Padding around text */
+}
+
+.custom-tooltip .tooltip-arrow {
+  border-top-color: #343a40; /* Arrow color matching the background */
+}
+
+/* Optional: Add some custom box-shadow */
+.custom-tooltip .tooltip-inner {
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+
+.theme-background {
+  background-color: #f0f8ff7d;
+  min-height: 100vh;
+  max-height: 100%;
+}
+
+
+.rating-container {
+  display: flex;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 2rem;
+  color: lightgray;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.star:hover {
+  color: darkorange;
+}

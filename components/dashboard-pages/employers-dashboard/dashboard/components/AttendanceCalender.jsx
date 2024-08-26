@@ -167,12 +167,11 @@ const AttendanceCalendar = () => {
 
   return (
     <Paper>
-      <div className='d-flex justify-content-end mb-2'>
+      {/* <div className='d-flex justify-content-end mb-2'>
            <button className='theme-btn btn-style-four small'>
             Close
-            {/* <span>{reactIcons.close}</span> */}
             </button>
-      </div>
+      </div> */}
       <div style={{ height: '800px' }}>
         <Calendar
           localizer={localizer}

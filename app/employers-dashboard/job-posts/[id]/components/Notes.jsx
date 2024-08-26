@@ -3,11 +3,9 @@
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import HtmlEditor from "@/components/common/HtmlEditor";
 import { deleteReq, getReq, patchReq } from "@/utils/apiHandlers";
-import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
-import axios from "axios";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const tabsName = [
@@ -19,6 +17,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   const [tab, setTab] = useState("job");
   const [form, setForm] = useState({
     description: "<p></p>",
+    error:''
   });
   const [descriptionData, setDescriptionData] = useState();
   const [openOption, setOpenOption] = useState();
@@ -26,7 +25,18 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if(!(form.description == '<p></p>')){
+       setForm((prev) => ({...prev, error:''}))
+    }
+  }, [form.description])
+
   const handleCreateNotes = async () => {
+     console.log("------------form ", descriptionData);
+    if(descriptionData == '<p></p>'){
+      setForm((prev) => ({...prev, error:'This field is required'}))
+      return;
+    }
     let data;
     let updateData;
     setIsLoading(true);
@@ -65,6 +75,8 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
       notes_write: updateNoteId ? data : updateData,
     });
     setIsLoading(false);
+    const closeBtn = document.getElementById('closeNote');
+    closeBtn.click();
     toast.success("Note Created Successfully");
 
     setNoteData(response.data.notes);
@@ -261,14 +273,16 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                   className="btn-close text-reset"
                   data-bs-dismiss="offcanvas"
                   aria-label="Close"
+                  id="closeNote"
                   onClick={() => {
                     setOpen(!open);
-                    setForm((prev) => ({ ...prev, description: "<p></p>" }));
+                    setForm((prev) => ({ ...prev, description: "<p></p>", error:'' }));
                     setUpdateNoteId(null);
                   }}
                 ></button>
               </div>
               <div className="offcanvas-body">
+                <span className="text-danger">{form.error}</span>
                 <div>
                   {open && (
                     <HtmlEditor

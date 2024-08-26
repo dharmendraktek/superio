@@ -16,6 +16,7 @@ import { currencyJson } from "@/utils/currency";
 import JobPostCommentsModal from "./components/JobPostCommentsModal";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { useRouter } from "next/navigation";
+import Paper from "@/components/common/Paper";
 
 const initialState = {
   job_code: "",
@@ -444,12 +445,13 @@ const ManualCreation = ({
           </button>
         </div>
       </div>
+      <Paper>
       <div
-        className="shadow px-3 py-3 mt-2 border-5 manual-form"
+        className="px-3 py-3 mt-2 border-5 manual-form"
         style={{ borderTopColor: "var(--theme-color-first)" }}
       >
         <div className="my-2 px-5">
-          <h4 className="fs-2 fw-semibold text-black">Job Details</h4>
+          <h6 className="fs-3 fw-medium text-black">Job Details</h6>
         </div>
         <div className="row px-5">
           {!jobType && (
@@ -770,7 +772,7 @@ const ManualCreation = ({
               className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
               style={{
                 minHeight: "36px",
-                border: "1px solid black",
+                borderBottom: "1px solid black",
                 borderRadius: "3px",
                 maxHeight: "125px",
                 overflowY: "auto",
@@ -781,8 +783,8 @@ const ManualCreation = ({
                   return (
                     <div
                       key={index}
-                      className="mx-1 my-1 px-1 gap-6 text-black fw-medium  rounded"
-                      style={{ background: "var(--primary-2nd-color)" }}
+                      className="mx-1 my-1 px-1 gap-6 text-black fw-medium border border-primary rounded-1"
+                      // style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
                       <span
@@ -834,7 +836,7 @@ const ManualCreation = ({
               className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
               style={{
                 minHeight: "36px",
-                border: "1px solid black",
+                borderBottom: "1px solid black",
                 borderRadius: "3px",
                 maxHeight: "125px",
                 overflowY: "auto",
@@ -845,7 +847,7 @@ const ManualCreation = ({
                   return (
                     <div
                       key={index}
-                      className="mx-1 px-1 my-1 gap-6 text-black fw-medium rounded"
+                      className="mx-1 px-1 my-1 gap-6 text-black fw-medium border border-primary rounded-1"
                       style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
@@ -1290,6 +1292,7 @@ const ManualCreation = ({
           </div>
         </div>
       </div>
+      </Paper>
     </div>
   );
 };
