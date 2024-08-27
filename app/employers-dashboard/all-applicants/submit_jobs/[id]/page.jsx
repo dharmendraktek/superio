@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getReq } from "@/utils/apiHandlers";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import LoginPopup from "@/components/common/form/login/LoginPopup";
 import DashboardCandidatesHeader from "@/components/header/DashboardCandidatesHeader";
@@ -16,27 +16,30 @@ import Link from "next/link";
 import moment from "moment";
 import { reactIcons } from "@/utils/icons";
 import ApplicantSubmissionDetails from "../../../../../components/common/ApplicantSubmissionDetails";
+import { toast } from "react-toastify";
 
 const initialState = {
+  job:'',
+  applicants:'',
   skills: [{ name: "", experience: "" }],
   references: [],
-  availability: "Immediate",
-  pay_rate_currency: "USD",
-  pay_rate_amount: 2000.0,
-  pay_rate_type: "Hourly",
-  pay_rate_contract_type: "Full Time",
-  bill_rate_currency: "USD",
-  bill_rate_amount: 2500.0,
-  bill_rate_type: "Hourly",
-  bill_rate_contract_type: "Full Time",
+  availability: '',
+  pay_rate_currency: '',
+  pay_rate_amount:'',
+  pay_rate_type: '',
+  pay_rate_contract_type: "",
+  bill_rate_currency: "",
+  bill_rate_amount: '',
+  bill_rate_type: '',
+  bill_rate_contract_type: '',
   relocation: true,
-  video_link: "https://example.com",
-  eforms: "Form123",
-  recipients: [1, 108],
-  additional_notifiers: [110],
-  interviewer: ["amangour@gmail.com", "dharmendrapatel"],
-  other_email: ["test@example.com"],
-  comment: "This is a test comment.",
+  video_link: '',
+  eforms: '',
+  recipients: [],
+  additional_notifiers: [],
+  interviewer: [],
+  other_email: [],
+  comment: "",
   current_status: 1,
   applicant_rating: {
     technical: 0,
@@ -110,18 +113,37 @@ const Index = () => {
     setJobPostList(updatedItems);
   };
 
-  const handleAddMultiForm = () => {
-    setMultiSubmissionForm((prev) => [...prev, initialState]);
+  const handleAddMultiForm = (jobId) => {
+    console.log("---------jbo id ", jobId);
+    let applicant = []
+    applicant.push(applicantData.id);
+    initialState['job'] = jobId;
+    initialState['applicants'] = applicant;
+    console.log("--------------inital state ----", initialState);
+    let update = [...multiSubmissionForm];
+    update.push(initialState);
+    console.log("------------update -----", update);
+    // setMultiSubmissionForm(update);
   };
 
   const submitToJobs = () => {
     let filtredJobs = jobPostList.filter((item) => item.isSelected == true);
     filtredJobs.forEach((item) => {
-      handleAddMultiForm();
+      console.log("--------itme id ", item.id)
+      handleAddMultiForm(item.id);
     });
     setSelectedJobs(filtredJobs);
     setOpen(true);
   };
+
+  const handleSubmitApplicant = async() => {
+    console.log("--------------------final payload -------", multiSubmissionForm);
+     const response = await postApiReq('/submission/', multiSubmissionForm)
+     if(response.status){
+        toast.success('Applicant submitted to job successfully');
+        console.log("-----------------respoenr ", response.data);
+     }
+  }
 
   return (
     <>
@@ -142,14 +164,16 @@ const Index = () => {
             </Link>
             <h5>{applicantData?.firstname + " " + applicantData?.lastname}</h5>
           </div>
+          { open &&
           <div className="d-flex gap-2">
-            <button className="theme-btn btn-style-one small">Submit</button>
-            <button className="theme-btn btn-style-four small">Cancel</button>
+            <button onClick={handleSubmitApplicant} className="theme-btn btn-style-one small">Submit</button>
+            <button onClick={() => setOpen(false)} className="theme-btn btn-style-four small">Cancel</button>
           </div>
+          }
         </div>
         <div className="d-flex gap-2">
           <div className="w-75">
-            {open ? (
+            {open  ? (
               selectedJobs?.map((item, index) => {
                 return (
                   <div className="mb-3">

@@ -74,7 +74,6 @@ const Documents = ({
     const response = await postApiReq(`/applicant-documents/`, formData);
     setIsLoading(false);
     if (response.status) {
-      console.log("------si working ");
       handleGetApplicantDetails();
       setOpen(false);
       handleClear()
@@ -185,7 +184,6 @@ const Documents = ({
                             ...prev,
                             is_default: e.target.value,
                           }));
-                          console.log("------is working ", e.target.value);
                         }}
                       />
                       <p>Add and Make Default</p>
