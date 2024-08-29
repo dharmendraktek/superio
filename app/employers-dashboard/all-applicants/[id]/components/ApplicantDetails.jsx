@@ -4,7 +4,6 @@ import moment from "moment";
 const { default: Paper } = require("@/components/common/Paper");
 
 const ApplicantDetails = ({ applicantData }) => {
-  console.log("----------applicante data app details ", applicantData);
   return (
     <Paper>
       <div>

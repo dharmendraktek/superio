@@ -33,7 +33,6 @@ const Documents = ({
 
   const handleFileUpload = (e) => {
     let file = e.target.files[0];
-    console.log("-----------filess ----", e.target.files[0]);
     setDocument(file);
   };
 

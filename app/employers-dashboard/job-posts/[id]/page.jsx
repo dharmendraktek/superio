@@ -7,7 +7,7 @@ import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Submissions from "./components/Submissions";
 import Notes from "./components/Notes";
@@ -33,8 +33,8 @@ const applicantTabList = [
 const Index = () => {
   const [open, setOpen] = useState(true);
   const [jobData, setJobData] = useState();
-  const searchParams = useSearchParams();
-  const jobId = searchParams.get("jobId");
+  const param = useParams();
+  const {id} = param;
   const [viewMore, setViewMore] = useState(false);
   const [noteData, setNoteData] = useState([]);
   const [searchString, setSearchString] = useState("");
@@ -43,24 +43,24 @@ const Index = () => {
     const [tab, setTab] = useState();
 
   const handleSearchString = async () => {
-    const response = await getReq(`/job-boolean-string/${jobId}/`);
+    const response = await getReq(`/job-boolean-string/${id}/`);
     if (response.status) {
       setSearchString(response.data.boolean_string);
     }
   };
 
   const handleGetJobDetails = async () => {
-    const response = await getReq(`/jobs/${jobId}/`);
+    const response = await getReq(`/jobs/${id}/`);
     setJobData(response.data);
     setNoteData(response.data.notes);
   };
 
   useEffect(() => {
-    if (jobId) {
+    if (id) {
       handleGetJobDetails();
       handleSearchString();
     }
-  }, [jobId]);
+  }, [id]);
 
 
   return (
@@ -110,7 +110,7 @@ const Index = () => {
                         <span>{reactIcons.downarrow}</span>
                         </div>
                         {settingOpt  &&
-                            <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                            <div className="position-absolute  border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
                                 <p className="cursor-pointer">Tag to job</p>
                                 <p className="cursor-pointer">Quick Submit</p>
                             </div>
@@ -130,11 +130,10 @@ const Index = () => {
                         </div>
                         {submitOpt &&
                             <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
-                                 <Link href={`/employers-dashboard/all-applicants/submit_jobs/${jobId}`}>
-                                <p className="cursor-pointer">Submit to job</p>
+                                 <Link href={`/employers-dashboard/job-posts/submit-applicants/${id}`}>
+                                <p className="cursor-pointer">Submit Applicant</p>
                                 </Link>
-                                <p className="cursor-pointer">Tag to job</p>
-                                <p className="cursor-pointer">Quick Submit</p>
+                                <p className="cursor-pointer">Add & Submit Applicant</p>
                             </div>
 
                         }
@@ -225,8 +224,8 @@ const Index = () => {
                         <strong> On {moment(jobData?.created_at).format('DD/MM/YYYY  hh:mm A')}</strong>
                       </div>
                     </div>
-                    <div>
-                      <h4>Job Description</h4>
+                    <div className="my-2">
+                      <h5>Job Description</h5>
                       <div
                         className="mt-2"
                         dangerouslySetInnerHTML={{
@@ -254,14 +253,14 @@ const Index = () => {
                   </div>
                   <div className="my-2">
                     <Notes
-                      jobId={jobId}
+                      jobId={id}
                       noteData={noteData}
                       setNoteData={setNoteData}
                     />
                   </div>
                   <div className="my-2">
                     <Documents
-                      jobId={jobId}
+                      jobId={id}
                       jobData={jobData}
                       handleGetJobDetails={handleGetJobDetails}
                     />
@@ -278,7 +277,7 @@ const Index = () => {
               )}
             </div>
             {open && (
-              <div className="col-3 my-3">
+              <div className="col-3">
                 <JobSearchBoard
                   searchString={searchString}
                   setSearchString={setSearchString}

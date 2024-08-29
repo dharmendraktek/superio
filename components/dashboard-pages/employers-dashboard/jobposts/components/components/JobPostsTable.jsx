@@ -73,14 +73,13 @@ const JobPostsTable = () => {
     }
   };
 
-
-  const handleDeleteJobPost = async(id) => {
+  const handleDeleteJobPost = async (id) => {
     const response = await deleteReq(`/jobs/${id}/?permanent_delete=true`);
-    if(response.status){
+    if (response.status) {
       toast.success("Job post deleted successfully");
       getJobpostsList();
     }
-  }
+  };
 
   return (
     <>
@@ -154,7 +153,7 @@ const JobPostsTable = () => {
                 return (
                   <>
                     {item.title == "input" ? (
-                      <th style={{ width: "50px" }}>
+                      <th style={{ width: "200px" }}>
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : (
@@ -172,40 +171,94 @@ const JobPostsTable = () => {
               return (
                 <>
                   <tr key={index} className="">
-                    {true && (
-                      <td className="d-flex">
-                        {/* <input type="checkbox" /> */}
-                        {/* <div
-                          onClick={() => {
-                            if (expand) {
-                              setExpand(null);
-                            } else {
-                              setExpand(item.client_id);
-                            }
-                          }}
-                          className="mx-2 px-2 text-primary fw-bold fs-6"
-                        >
-                          <span className="">
-                            {item.client_id == expand ? "-" : "+"}
-                          </span>
-                        </div> */}
-                        {/* <div
-                          className="bg-primary text-white mt-1 px-2 ml-2"
-                          style={{
-                            width: "24px",
-                            height: "24px",
-                            fontSize: "12px",
-                            borderRadius: "3px",
-                          }}
-                        >
-                          3
-                        </div> */}
+                    {/* {true && (
+                      <td className="">
+                        <div className="d-flex">
+                          <input type="checkbox" />
+                          {item.submissions.length > 0 && (
+                            <div className="d-flex">
+                              <div
+                                onClick={() => {
+                                  if (expand) {
+                                    setExpand(null);
+                                  } else {
+                                    setExpand(item.id);
+                                  }
+                                }}
+                                className="mx-2 px-2 text-primary fw-bold fs-6"
+                              >
+                                <span className="">
+                                  {item.id == expand ? "-" : "+"}
+                                </span>
+                              </div>
+                              <div
+                                className="bg-primary text-white mt-1 px-2 ml-2"
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  fontSize: "12px",
+                                  borderRadius: "3px",
+                                }}
+                              >
+                                {item.submissions.length > 0}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </td>
-                    )}
+                    )} */}
+                    <td className="d-flex align-items-center justify-content-between" style={{width:"130px"}}>
+                        <input type="checkbox" />
+                        {item.submissions.length > 0 && (
+                          <>
+                            <div
+                              onClick={() => {
+                                if (expand == item.id) {
+                                  setExpand(null);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = false;
+                                  //   return update;
+                                  // });
+                                } else {
+                                  setExpand(item.id);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = true;
+                                  //   return update;
+                                  // });
+                                }
+                              }}
+                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
+                              style={{background:'var(--primary-2nd-color)'}}
+                            >
+                            <div
+                              className="text-white "
+                              style={{
+                                width: "24px",
+                                height: "24px",
+                                fontSize: "12px",
+                                borderRadius: "3px",
+                                background:'var(--primary-2nd-color)'
+                              }}
+                            >
+                              <p className="text-white fw-medium" style={{fontSize:'15px'}}>
+
+                              {item.submissions.length}
+                              </p>
+
+                            </div>
+                            <span className="cursor-pointer text-white fs-4">
+                                {item.id == expand ? reactIcons.arrowfillup : reactIcons.arrowfilldown}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </td>
                     <td>
                       <Link
                         href="/employers-dashboard/job-posts/[id]"
-                        as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}
+                        as={`/employers-dashboard/job-posts/${item.id}`}
                       >
                         {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
                         {item.job_code}
@@ -298,9 +351,9 @@ const JobPostsTable = () => {
                             <button
                               // data-bs-toggle="modal"
                               // data-bs-target="#clientDeleteModal"
-                              data-text='Delete Job Post'
+                              data-text="Delete Job Post"
                               onClick={() => {
-                               handleDeleteJobPost(item.id)
+                                handleDeleteJobPost(item.id);
                               }}
                             >
                               <span className="la la-trash"></span>
@@ -310,40 +363,90 @@ const JobPostsTable = () => {
                       </div>
                     </td>
                   </tr>
-                  {/* {item.client_id == expand && (
-                    <tr style={{ background: "white" }}>
+                  {item.id == expand && (
+                    <tr >
                       <td colSpan={15}>
-                        <div className="mx-5" style={{ width: "500px" }}>
+                        <div className="mx-5 my-3 border rounded-1  inner-table shadow" >
+                          {/* <div className="mx-3 my-1">
+                            this the filter table and search bard
+                          </div> */}
                           <table>
-                            <thead>
-                              <th>Name</th>
-                              <th>Email</th>
-                              <th>Office number</th>
-                              <th>Designation</th>
+                            <thead className="table-inner-thead">
+                              <th>Submission ID</th>
+                              <th>Applicant Name</th>
+                              <th>Work Authorization</th>
                               <th>Mobile Number</th>
                               <th>Location</th>
-                              <th>OwnerShip</th>
-                              <th>Status</th>
-                              <th>Created By</th>
+                              <th>Country</th>
+                              <th>Experience</th>
+                              <th>Source</th>
+                              <th>Revision Status</th>
+                              <th>Application Status</th>
+                              {/* <th>Outlook MSG</th> */}
+                              <th style={{width:'250px'}}>Bill Rate</th>
+                              <th  style={{width:'250px'}}>Pay Rate</th>
+                              <th>Employer Name</th>
+                              <th>Availability</th>
+                              <th>Submitted By</th>
+                              {/* <th>PW Submission Type</th> */}
+                              <th>Notice Period</th>
+                              <th>Current CTC</th>
+                              <th>Submitted On</th>
+                              <th>Additional Details</th>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td>Fleck</td>
-                                <td>fleckjoy@gmail.com</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>Alaska</td>
-                                <td>Dharmendra</td>
-                                <td>-</td>
-                                <td>-</td>
-                              </tr>
+                              {item.submissions.map((_item, _index) => {
+                                let {
+                                  availability,
+                                  pay_rate_currency,
+                                  pay_rate_amount,
+                                  pay_rate_type,
+                                  pay_rate_contract_type,
+                                  bill_rate_currency,
+                                  bill_rate_amount,
+                                  bill_rate_type,
+                                  bill_rate_contract_type,
+                                } = _item;
+                                let { firstname, middlename, lastname } =
+                                  _item.applicant_details[0];
+                                return (
+                                  <tr>
+                                    <td>{_item.id}</td>
+                                    <td>
+                                      {firstname +
+                                        " " +
+                                        middlename +
+                                        " " +
+                                        lastname}
+                                    </td>
+                                    <td>Work Authorization</td>
+                                    <td>mobile number</td>
+                                    <td>Location</td>
+                                    <td>Country</td>
+                                    <td>Experience</td>
+                                    <td>Source</td>
+                                    <td>Revision Status</td>
+                                    <td>Application Status</td>
+                                    {/* <th>Outlook MSG</th> */}
+                                    <td  style={{width:'250px'}}>{bill_rate_currency}/{bill_rate_amount}/{bill_rate_type}/{bill_rate_contract_type}</td>
+                                    <td  style={{width:'250px'}}>{pay_rate_currency}/{pay_rate_amount}/{pay_rate_type}/{pay_rate_contract_type}</td>
+                                    <td>Employer Name</td>
+                                    <td>{availability}</td>
+                                    <td>Submitted By</td>
+                                    {/* <th>PW Submission Type</th> */}
+                                    <td>Notice Period</td>
+                                    <td>Current CTC</td>
+                                    <td>Submitted On</td>
+                                    <td>Additional Details</td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         </div>
                       </td>
                     </tr>
-                  )} */}
+                  )}
                 </>
               );
             })}

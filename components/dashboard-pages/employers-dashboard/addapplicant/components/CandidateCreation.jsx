@@ -3,7 +3,7 @@ import DatePickerCustom from "@/components/common/DatePickerCustom";
 import { currencyJson } from "@/utils/currency";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
-import { noticePeriodOption } from "./constant";
+import { noticePeriodOption, sourceTypes, workAuthorization } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
@@ -12,6 +12,7 @@ import { BASE_URL } from "@/utils/endpoints";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { useRouter } from "next/navigation";
 import { sourceData } from "@/utils/constant";
+import { TaxTerms } from "../../addjob/components/constant";
 
 const initialState = {
   name_title: "",
@@ -449,8 +450,13 @@ const CandidateCreation = ({
             className="client-form-input"
           >
             <option>Select</option>
-            <option>US Authorized</option>
-            <option>US Citizen</option>
+            {workAuthorization.map((item) => {
+              return(
+                <option key={item.name} value={item.name}>{item.name}</option>
+              )
+            })
+
+            }
           </select>
           <span className="text-danger">{error.workAuthErr}</span>
         </div>
@@ -581,7 +587,7 @@ const CandidateCreation = ({
             className="client-form-input"
           >
             <option>Select</option>
-            {sourceData.map((item, index) => {
+            {sourceTypes.map((item, index) => {
               return(
                 <option key={index} value={item.value}>{item.name}</option>
               )
@@ -964,9 +970,12 @@ const CandidateCreation = ({
             className="client-form-input"
           >
             <option>select</option>
-            <option>Contract</option>
-            <option>Full Time</option>
-            <option>Part Time</option>
+           {TaxTerms.map((item) => {
+            return(
+              <option key={item.name}>{item.name}</option>
+            )
+           })
+           }
           </select>
           <span className="text-danger">{error.taxTermErr}</span>
         </div>

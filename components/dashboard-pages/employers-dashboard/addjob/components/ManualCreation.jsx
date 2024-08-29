@@ -3,7 +3,7 @@ import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
 import { City, Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
-import { jobStatus, jobTypes, priorityTypes } from "./constant";
+import { jobStatus, jobTypes, priorityTypes, TaxTerms } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import HtmlEditor from "@/components/common/HtmlEditor";
@@ -988,9 +988,12 @@ const ManualCreation = ({
             <p>Tax Terms <strong className="text-danger">*</strong></p>
             <select className="client-form-input" name="tax_term">
               <option>Select</option>
-
-              <option value="active">Fulltime</option>
-              <option value="inactive">Part Time</option>
+              {TaxTerms.map((item, index) => {
+                return(
+                  <option key={index} value={item.name}>{item.name}</option>
+                )
+              })
+              }
             </select>
           </div>
           <div className="col-4 my-2">

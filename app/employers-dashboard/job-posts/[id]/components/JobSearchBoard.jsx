@@ -1,3 +1,4 @@
+import Paper from "@/components/common/Paper";
 import Link from "next/link";
 
 
@@ -5,7 +6,8 @@ const JobSearchBoard = ({searchString}) => {
 
 
     return(
-        <div className="shadow p-3"> 
+        <Paper>
+        <div className=""> 
           <div className="mb-3">
             <h5>Search Criteria</h5>
           </div>
@@ -74,6 +76,7 @@ const JobSearchBoard = ({searchString}) => {
              </div>
           </div>
         </div>
+        </Paper>
     )
 }
 

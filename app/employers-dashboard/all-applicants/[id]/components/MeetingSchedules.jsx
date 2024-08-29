@@ -71,7 +71,6 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
   }, [meetingDetails]);
 
   const handleSubmit = async () => {
-    console.log('-----------udadae df', form);
     setIsLoading(true);
     form["applicant_ref"] = applicantData.id;
     const formData = new FormData();
@@ -122,7 +121,6 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
     setForm(initialState);
   };
 
-  console.log("-------------------meiidf s",applicantData && applicantData?.meeting)
   
 
   return (

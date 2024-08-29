@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Stepper from "./Stepper";
+import Paper from "@/components/common/Paper";
 
 const tabsName = [
     { id: 1, name: "Pipline" },
@@ -18,7 +19,9 @@ const Submissions = () => {
     const [tab, setTab] = useState(1);
 
     return(
-        <div className="shadow">
+      <Paper>
+
+        <div className="">
         <div className="d-flex justify-content-between py-4 px-4">
           <h4>Submissions</h4>
           <div className="submissions d-flex gap-2">
@@ -98,6 +101,7 @@ const Submissions = () => {
              </div>
           }
         </div>
+      </Paper>
     )
 }
 

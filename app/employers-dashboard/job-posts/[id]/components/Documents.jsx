@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import ViewDocumentModal from "./ViewDocumentModal";
+import Paper from "@/components/common/Paper";
 
 const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,8 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
   }
 
   return (
-    <div className="shadow h-50 py-2">
+    <Paper>
+    <div className="h-50 py-2">
       <ViewDocumentModal img={img}/>
       <div className="d-flex justify-content-between px-4 py-4">
         <h4>Documents</h4>
@@ -223,6 +225,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
         </div>
       )}
     </div>
+    </Paper>
   );
 };
 

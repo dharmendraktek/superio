@@ -875,10 +875,10 @@ const ClientTable = () => {
                   {item.id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={7}>
-                        <div className="mx-5" style={{ width: "1500px" }}>
+                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll"  style={{ width: "1500px", height:'400px', overflow:'auto' }}>
                           <div></div>
                           <table>
-                            <thead>
+                            <thead className="table-inner-thead">
                               <th>Name</th>
                               <th>Email</th>
                               <th>Office number</th>
@@ -889,7 +889,7 @@ const ClientTable = () => {
                               <th>Status</th>
                               {/* <th>Created By</th> */}
                             </thead>
-                            <tbody>
+                            <tbody style={{height:'400px !important', overflow:'auto'}}>
                               {/* <tr>
                                 <td
                                   className="cursor-pointer"

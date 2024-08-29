@@ -137,3 +137,19 @@ tbody tr:nth-child(even) {
 .w-30 {
   width: 300px;
 }
+
+
+.table-inner-thead th {
+  position: relative !important;
+    padding: 3px 5px !important;
+    font-size: 16px !important;
+    color: white !important;
+    font-weight: 500;
+    background-color: #ebbe36 !important;
+}
+
+.inner-table{
+   background-color: #f0f8ff7d !important;
+  //  border: 1px solid black;
+
+}

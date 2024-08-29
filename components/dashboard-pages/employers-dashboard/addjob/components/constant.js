@@ -2,6 +2,10 @@ export const jobTypes = [
     {name:'Full Time'},
     {name:'Part Time'},
     {name:'Contract'},
+    {name:'Contract to hire'},
+    {name:'Perdiem'},
+    {name:'Internship'},
+    {name:'Dual-FTE/FTC'}
 ]
 
 export const priorityTypes = [
@@ -24,4 +28,11 @@ export const jobStatus = [
     {name:'Hold'},
     {name:'Closed'},
     {name:'Slow'},
+]
+
+export const TaxTerms = [
+    {name:'W2'},
+    {name:'C2C'},
+    {name:"1099"},
+    {name:"Dual-W2/C2C"}
 ]

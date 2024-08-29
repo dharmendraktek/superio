@@ -5,7 +5,6 @@ import { useState } from "react";
 
 const MultiSelect = ({label, ownerList, setOwnerList, usersList, form, name, setForm, email}) => {
     const [openOwner, setOpenOwner] = useState(false);
-    console.log("------------user lis t", usersList);
     return(
         <div className="">
         <p>{label}</p>
