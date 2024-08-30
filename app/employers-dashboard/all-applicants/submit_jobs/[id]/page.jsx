@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 const initialState = {
   job: "",
   applicants: "",
-  skills: [{ name: "", experience: "" }],
+  skills: [],
   references: [],
   availability: "",
   pay_rate_currency: "",
@@ -252,6 +252,7 @@ const Index = () => {
                         </span>
                       )}
                     </div>
+                    {jobPostList.find((item) => item.isSelected == true) &&
                     <div>
                       <button
                         className="theme-btn btn-style-one small"
@@ -260,6 +261,7 @@ const Index = () => {
                         Submit to Jobs
                       </button>
                     </div>
+                    }
                   </div>
                   <div className="table_div custom-scroll-sm">
                     <table className="default-table ">

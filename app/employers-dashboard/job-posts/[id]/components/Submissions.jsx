@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Stepper from "./Stepper";
 import Paper from "@/components/common/Paper";
+import { getReq } from "@/utils/apiHandlers";
 
 const tabsName = [
     { id: 1, name: "Pipline" },
@@ -15,7 +16,7 @@ const tabsName = [
   ];
 
 
-const Submissions = () => {
+const Submissions = ({jobData}) => {
     const [tab, setTab] = useState(1);
 
     return(
@@ -44,10 +45,10 @@ const Submissions = () => {
         {/* <hr className="border border-secondary"></hr> */}
              <div className="px-4 py-3">
                 <div className="border py-1 px-3 rounded-1 d-flex justify-content-between border-top-black border-end-black">
-                  <div>
+                  <div className="w-20">
                   <p>NAME</p>
                   </div>
-                  <div>
+                  <div className="">
                   <p>SUBMITTED BY/ON</p>
                   </div>
                   <div>
@@ -59,7 +60,7 @@ const Submissions = () => {
                   <div>
                   <p>PAY RATE/WORK AUTH</p>
                   </div>
-                  <div>
+                  <div className="w-20">
                   <p>STATUS</p>
                   </div>
                   <div>
@@ -69,9 +70,14 @@ const Submissions = () => {
                   <p></p>
                   </div>
                 </div>
-                <div className="py-2  rounded-1 d-flex justify-content-between ">
-                  <Stepper />
+                {jobData && jobData.submissions.map((item) => {
+                  return(
+                <div className="py-2">
+                  <Stepper submissionDetails={item} />
                 </div>
+                  )
+                })
+                }
              </div>
           </>
           }

@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 const initialState = {
   job: "",
   applicants: "",
-  skills: [{ name: "", experience: "" }],
+  skills: [],
   references: [],
   availability: "",
   pay_rate_currency: "",
@@ -83,12 +83,13 @@ const Index = () => {
   //     getJobpostsList();
   //   }, []);
 
-  const handleGetApplicantList = async (param) => {
+  const handleGetApplicantList = async () => {
     setIsLoading(true);
-    const response = await getReq(`/applicants/?page=${page + 1}&size=25`);
+    const response = await getReq(`/applicants/?page=${page + 1}&size=25${search?`${`&search-any=${search}` }` : ''}`);
     setIsLoading(false);
     if (response.status) {
       setDataCount(response.data.count);
+      console.log("------------response ", search , response.data.results);
       setApplicantData(response.data.results);
     }
   };
@@ -97,7 +98,7 @@ const Index = () => {
     if (search) {
       setPage(0);
     }
-    handleGetApplicantList(search);
+    handleGetApplicantList();
   }, [search, page, active]);
 
   const handleAddIsSelected = (index, e) => {
@@ -132,7 +133,7 @@ const Index = () => {
       {
         job: jobData.id,
         applicants: applicant,
-        skills: [{ name: "", experience: "" }],
+        skills: [],
         references: [],
         availability: "",
         pay_rate_currency: "",
@@ -267,6 +268,7 @@ const Index = () => {
                         </span>
                       )}
                     </div>
+                    {applicantData?.find((item) => item.isSelected == true) &&
                     <div>
                       <button
                         className="theme-btn btn-style-one small"
@@ -275,6 +277,7 @@ const Index = () => {
                         Submit Profile
                       </button>
                     </div>
+                    }
                   </div>
                   <div className="table_div custom-scroll-sm">
                     <table className="default-table ">

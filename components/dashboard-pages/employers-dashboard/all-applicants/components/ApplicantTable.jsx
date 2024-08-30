@@ -420,7 +420,7 @@ const ApplicantTable = () => {
                             {/* <div className="mx-3 my-1">
                             this the filter table and search bard
                           </div> */}
-                            <table>
+                            <table className="custom-scroll-2nd">
                               <thead className="table-inner-thead">
                                 <th>Job Code</th>
                                 <th>Job Title</th>

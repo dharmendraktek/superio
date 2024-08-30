@@ -875,7 +875,7 @@ const ClientTable = () => {
                   {item.id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={7}>
-                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll"  style={{ width: "1500px", height:'400px', overflow:'auto' }}>
+                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"  style={{ width: "1500px", height:'400px', overflow:'auto' }}>
                           <div></div>
                           <table>
                             <thead className="table-inner-thead">

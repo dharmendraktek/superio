@@ -91,7 +91,8 @@ const Index = () => {
 
           <MenuToggler />
           {/* Collapsible sidebar button */}
-          <div className="d-flex justify-content-between    mt-2 px-4 gap-3">
+            {open &&
+          <div className="d-flex justify-content-between mt-2 px-4 gap-3">
         <div className="d-flex  gap-3">
               {applicantTabList.map((item) => {
                  return(
@@ -103,9 +104,9 @@ const Index = () => {
               }
             </div>
             <div className="">
-                <div className="d-flex bg-secondary">
-                    <div className="border position-relative border-secondary px-2">
-                        <div className="">
+                <div className="d-flex">
+                    <div className="border position-relative rounded-start-1 border-secondary px-2">
+                        <div className=""  onClick={() => setSettingOpt(true)}>
                         <span>{reactIcons.setting}</span>
                         <span>{reactIcons.downarrow}</span>
                         </div>
@@ -124,28 +125,33 @@ const Index = () => {
                         <span>{reactIcons.mail}</span>
                     </div>
                     <div className="border border-secondary position-relative px-2">
-                        <div className="cursor-pointer" onClick={() => setSubmitOpt(!submitOpt)}>
-                        <strong>Submit</strong>
+                        <div className="d-flex gap-1  cursor-pointer" onClick={() => setSubmitOpt(!submitOpt)}>
+                        <span className="fw-medium">Submit</span>
                         <span>{reactIcons.downarrow}</span>
                         </div>
                         {submitOpt &&
-                            <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                            <div className="position-absolute bg-white  border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                                 <div>
                                  <Link href={`/employers-dashboard/job-posts/submit-applicants/${id}`}>
                                 <p className="cursor-pointer">Submit Applicant</p>
                                 </Link>
+                                 </div>
+                                 <div>  
                                 <p className="cursor-pointer">Add & Submit Applicant</p>
+                                 </div>
                             </div>
 
                         }
                     </div>
-                    <div onClick={() => {
+                    <div  onClick={() => {
                             window.open(BASE_URL + `/applicant-documents/${id}/download/`);
-                    }} className="border border-secondary cursor-pointer px-2">
+                    }} className="border border-secondary rounded-end-1 cursor-pointer px-2">
                         <span>{reactIcons.download}</span>
                     </div>
                 </div>
             </div>
         </div>
+            }
           <div className="row mx-3">
             <div className={`${open ? "col-lg-9" : "col-12"}`}>
               {open ? (
@@ -249,7 +255,7 @@ const Index = () => {
                   </div>
                   </Paper>
                   <div className="my-2">
-                    <Submissions />
+                    <Submissions jobData={jobData} />
                   </div>
                   <div className="my-2">
                     <Notes

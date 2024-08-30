@@ -102,11 +102,11 @@ const Index = () => {
               }
             </div>
             <div className="">
-                <div className="d-flex bg-secondary">
-                    <div className="border position-relative border-secondary px-2">
-                        <div className="">
-                        <span>{reactIcons.setting}</span>
-                        <span>{reactIcons.downarrow}</span>
+                <div className="d-flex ">
+                    <div className="border border-secondary rounded-start-1 position-relative px-2">
+                        <div className="d-flex gap-1">
+                        <span className="fs-5">{reactIcons.setting}</span>
+                        <span className="fs-6">{reactIcons.downarrow}</span>
                         </div>
                         {settingOpt  &&
                             <div className="position-absolute bg-secondary border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
@@ -123,7 +123,7 @@ const Index = () => {
                         <span>{reactIcons.mail}</span>
                     </div>
                     <div className="border border-secondary position-relative px-2">
-                        <div className="cursor-pointer" onClick={() => setSubmitOpt(!submitOpt)}>
+                        <div className="cursor-pointer d-flex gap-1" onClick={() => setSubmitOpt(!submitOpt)}>
                         <strong>Submit</strong>
                         <span>{reactIcons.downarrow}</span>
                         </div>
@@ -140,7 +140,7 @@ const Index = () => {
                     </div>
                     <div onClick={() => {
                             window.open(BASE_URL + `/applicant-documents/${id}/download/`);
-                    }} className="border border-secondary cursor-pointer px-2">
+                    }} className="border border-secondary rounded-end-1 cursor-pointer px-2">
                         <span>{reactIcons.download}</span>
                     </div>
                 </div>

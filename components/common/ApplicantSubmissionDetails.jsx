@@ -70,8 +70,9 @@ const ApplicantSubmissionDetails = ({
   const [openNotifer, setOpenNotifer] = useState(false);
   const [updateRef, setUpdateRef] = useState(null);
   const [documents, setDocuments] = useState([]);
-  const [isDefault, setIsDefault] = useState(false);
+  const [isDefault, setIsDefault] = useState(true);
   const [newResumeDoc, setNewResumeDoc] = useState([]);
+  const [openForm, setOpenForm] = useState(0);
 
   // this function handle the skills
 
@@ -180,7 +181,6 @@ const ApplicantSubmissionDetails = ({
     setOpenSkill(true);
   };
 
-
   const handleRatingChange = (formIndex, field, value) => {
     setMultiSubmissionForm((prev) =>
       prev.map((form, index) =>
@@ -229,7 +229,13 @@ const ApplicantSubmissionDetails = ({
     }
 
     let { name, company, reference_type, years_acquainted } = refrenceDetails;
-    if (name && company && reference_type && years_acquainted && type == 'save') {
+    if (
+      name &&
+      company &&
+      reference_type &&
+      years_acquainted &&
+      type == "save"
+    ) {
       setMultiSubmissionForm((prev) =>
         prev.map((form, index) =>
           index === formIndex
@@ -242,21 +248,25 @@ const ApplicantSubmissionDetails = ({
       );
       setOpenRef(false);
       setRefrenceDetails(initialState);
-    }else if(name && company && reference_type && years_acquainted && type== 'update'){
+    } else if (
+      name &&
+      company &&
+      reference_type &&
+      years_acquainted &&
+      type == "update"
+    ) {
       setMultiSubmissionForm((prev) =>
         prev.map((form, index) =>
           index === formIndex
             ? {
                 ...form,
                 references: form.references.map((ref, refIndex) =>
-                  refIndex === updateRef
-                    ? refrenceDetails
-                    : ref
+                  refIndex === updateRef ? refrenceDetails : ref
                 ),
               }
             : form
         )
-      );      
+      );
       setOpenRef(false);
       setRefrenceDetails(initialState);
       setUpdateRef(null);
@@ -265,10 +275,10 @@ const ApplicantSubmissionDetails = ({
 
   const handleEditReference = (formIndex, refIndex) => {
     setOpenRef(true);
-    let update = [...multiSubmissionForm]
-    setRefrenceDetails(update[formIndex].references[refIndex])
+    let update = [...multiSubmissionForm];
+    setRefrenceDetails(update[formIndex].references[refIndex]);
     setUpdateRef(refIndex);
-  }
+  };
 
   const handleRemoveReference = (formIndex, refIndex) => {
     setMultiSubmissionForm((prev) =>
@@ -276,12 +286,14 @@ const ApplicantSubmissionDetails = ({
         index === formIndex
           ? {
               ...form,
-              references: form.references.filter((item, rIndex) =>  rIndex != refIndex ),
+              references: form.references.filter(
+                (item, rIndex) => rIndex != refIndex
+              ),
             }
           : form
       )
     );
-  }
+  };
 
   const handleSubmissionChange = (e, formIndex) => {
     const { name, value } = e.target;
@@ -380,89 +392,84 @@ const ApplicantSubmissionDetails = ({
     });
   };
 
-
   const handleRemoveDoc = (dIndex) => {
     let updated = [...documents];
     let filteredData = updated.filter((item, _index) => _index !== dIndex);
     setDocuments(filteredData);
-  }
+  };
 
-  let applicantDetails = applicantData?.length > 0 ? applicantData[index] : applicantData
+  let applicantDetails =
+    applicantData?.length > 0 ? applicantData[index] : applicantData;
   const handleUploadDoc = async (formIndex) => {
     const formData = new FormData();
     documents.forEach((file, index) => {
-    formData.append("files", file);
+      formData.append("files", file);
     });
-    formData.append("title", 'document');
-    formData.append("type", 'Additional document');
-    formData.append("comment", 'submission');
+    formData.append("title", "document");
+    formData.append("type", "Additional document");
+    formData.append("comment", "submission");
     formData.append("applicant", applicantDetails.id);
-   
-    console.log("------------applicant details ", applicantDetails);
-  //  if(documents.length > 0){
-  //    const response = await postApiReq(`/applicant-documents/`, formData);
-  //    if (response.status) {
-  //    }
-  //  }
+
+    //  if(documents.length > 0){
+    //    const response = await postApiReq(`/applicant-documents/`, formData);
+    //    if (response.status) {
+    //    }
+    //  }
   };
-  console.log("------------applicant data ", multiSubmissionForm[index].skills);
-  let applicantDocument = applicantData?.length > 0 ? applicantData[index]?.documents : applicantData?.documents
+  let applicantDocument =
+    applicantData?.length > 0
+      ? applicantData[index]?.documents
+      : applicantData?.documents;
 
   const handleUploadNewResume = (e) => {
     let file = e.target.files;
     Object.values(file).forEach((item) => {
       setNewResumeDoc((prev) => [...prev, item]);
     });
-   
-  }
+  };
 
-  const handleSaveNewResume = async() => {
+  const handleSaveNewResume = async () => {
     const formData = new FormData();
-    if(newResumeDoc.length > 0){
+    if (newResumeDoc.length > 0) {
       newResumeDoc.forEach((file, index) => {
         formData.append("files", file);
-        });
-        formData.append("title", 'document');
-        formData.append("type", 'Additional document');
-        formData.append("comment", 'submission');
-        formData.append("applicant", applicantDetails.id);
-        if(isDefault){
-          formData.append("is_default", isDefault);
-        }
-           const response = await postApiReq(`/applicant-documents/`, formData);
-           if (response.status) {
-           }
+      });
+      formData.append("title", "document");
+      formData.append("type", "Additional document");
+      formData.append("comment", "submission");
+      formData.append("applicant", applicantDetails.id);
+      if (isDefault) {
+        formData.append("is_default", isDefault);
+      }
+      const response = await postApiReq(`/applicant-documents/`, formData);
+      if (response.status) {
+      }
     }
-  }
+  };
 
   return (
     <Paper>
-      <div
-        className="d-flex justify-content-between bg-secondary px-2 py-1 rounded-1 mb-3"
-        // style={{ background: "var(--theme-color-first)" }}
-      >
-        {applicantData?.length > 0 ? (
-          <h5>
-            {applicantData[index]?.firstname +
-              " " +
-              applicantData[index]?.middlename +
-              " " +
-              applicantData[index]?.lastname}
-          </h5>
-        ) : (
-          <h5>
-            {applicantData?.firstname +
-              " " +
-              applicantData?.middlename +
-              " " +
-              applicantData?.lastname}
-          </h5>
-        )}
-        <span>{reactIcons.downarrow}</span>
+      <div className="d-flex justify-content-between px-2 py-1 text-white rounded-1 mb-3" style={{backgroundColor:'var(--primary-2nd-color)'}}>
+        <h4 className="fw-medium">
+          {applicantDetails?.firstname +
+            " " +
+            applicantDetails?.middlename +
+            " " +
+            applicantDetails?.lastname}
+        </h4>
+        <span onClick={() =>{
+           if(openForm == index){
+              setOpenForm(null);
+           }else{
+             setOpenForm(index)
+           }
+           }} className="fs-3 cursor-pointer">{openForm == index ? reactIcons.arrowfillup :  reactIcons.arrowfilldown }</span>
       </div>
+      {openForm == index &&
+        <div>
       <div className="my-3 px-2">
-        <div className="d-flex justify-content-between bg-secondary">
-          <h5>Skills</h5>
+        <div className="d-flex justify-content-between py-1 px-2 rounded-1" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Skills</h5>
           <button
             onClick={() => {
               setOpenSkill(false);
@@ -473,27 +480,27 @@ const ApplicantSubmissionDetails = ({
             type="button"
             className="theme-btn btn-style-one small"
           >
-            {multiSubmissionForm[index].skills.length == 0 ? "Add" : "Edit"}
+            {multiSubmissionForm[index]?.skills?.length == 0 ? "Add" : "Edit"}
           </button>
         </div>
-        <div>
+        <div className="my-2">
           {openSkill ? (
             <div
-              className="d-flex gap-2 align-items-center my-1"
+              className="d-flex gap-2 px-2 align-items-center my-1"
               style={{ width: "100%" }}
             >
-              <table className="w-100">
-                <thead className="border">
-                  <th>Skills</th>
-                  <th>Experience</th>
+              <table className="w-100 border">
+                <thead className="bg-secondary py-2">
+                  <th className="px-2">Skills</th>
+                  <th className="px-2">Experience</th>
                 </thead>
                 <tbody>
                   {multiSubmissionForm[index]?.skills?.map(
                     (item, skillIndex) => {
                       return (
                         <tr>
-                          <td>{item.name}</td>
-                          <td>{item.experience}</td>
+                          <td className="px-2">{item.name}</td>
+                          <td className="px-2">{item.experience}</td>
                         </tr>
                       );
                     }
@@ -502,11 +509,11 @@ const ApplicantSubmissionDetails = ({
               </table>
             </div>
           ) : (
-            <div>
+            <div className="w-50">
               {skillsField?.map((item, skillIndex) => {
                 return (
-                  <div className="d-flex gap-2 align-items-center my-1">
-                    <div>
+                  <div className="d-flex gap-2 align-items-center my-1 w-100">
+                    <div className="w-50">
                       <p>Skills</p>
                       <input
                         type="text"
@@ -519,9 +526,11 @@ const ApplicantSubmissionDetails = ({
                         className="client-form-input"
                         placeholder="skills"
                       />
-                      <span className="text-danger">{item.nameErr}</span>
+                      <div>
+                        <span className="text-danger">{item.nameErr}</span>
+                      </div>
                     </div>
-                    <div>
+                    <div className="w-50">
                       <p>Experience</p>
                       <input
                         type="number"
@@ -534,7 +543,11 @@ const ApplicantSubmissionDetails = ({
                         className="client-form-input"
                         placeholder="no of years"
                       />
-                      <span className="text-danger">{item.experienceErr}</span>
+                      <div>
+                        <span className="text-danger">
+                          {item.experienceErr}
+                        </span>
+                      </div>
                     </div>
                     <div>
                       <span
@@ -576,13 +589,13 @@ const ApplicantSubmissionDetails = ({
         </div>
       </div>
       <div className="my-2 px-2 ">
-        <div className="d-flex justify-content-between bg-secondary">
-          <h5>Applicant Rating</h5>
+        <div className="d-flex justify-content-between px-2 py-1" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Applicant Rating</h5>
           {/* <button type="button" className="theme-btn btn-style-one small">
             Add
           </button> */}
         </div>
-        <div className="my-3">
+        <div className="my-3 px-2">
           <div className="d-flex gap-2">
             <div className="w-25">
               <p>Technical Skills</p>
@@ -638,8 +651,8 @@ const ApplicantSubmissionDetails = ({
         </div>
       </div>
       <div className="my-2 px-2 ">
-        <div className="d-flex bg-secondary justify-content-between">
-          <h5>Reference Details</h5>
+        <div className="d-flex  justify-content-between px-2 py-1" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Reference Details</h5>
           <button
             onClick={() => setOpenRef(true)}
             type="button"
@@ -650,7 +663,7 @@ const ApplicantSubmissionDetails = ({
         </div>
         <div>
           {openRef ? (
-            <div>
+            <div className="px-2">
               <div className="row my-2">
                 <div className="col-4 my-1">
                   <p>
@@ -774,16 +787,16 @@ const ApplicantSubmissionDetails = ({
               </div>
               <div className="d-flex gap-2 my-2">
                 <button
-                  onClick={() =>{
-                    if(updateRef == null){
-                      handleAddReference(index, 'save')
-                    }else{
-                      handleAddReference(index, 'update')
-                    }}
-                  }
+                  onClick={() => {
+                    if (updateRef == null) {
+                      handleAddReference(index, "save");
+                    } else {
+                      handleAddReference(index, "update");
+                    }
+                  }}
                   className="theme-btn btn-style-one small"
                 >
-                  {updateRef ?'Update' :'Save'}
+                  {updateRef ? "Update" : "Save"}
                 </button>
                 <button
                   onClick={() => setOpenRef(false)}
@@ -794,10 +807,10 @@ const ApplicantSubmissionDetails = ({
               </div>
             </div>
           ) : (
-            <div className="my-3">
-              <table className="w-100">
+            <div className="my-3 px-2 ">
+              <table className="w-100 border">
                 <thead className="bg-secondary py-2">
-                  <th>SELECT</th>
+                  <th className="px-2">SELECT</th>
                   <th>REFRENCE NAME</th>
                   <th>COMPANY NAME</th>
                   <th>EMAIL</th>
@@ -806,28 +819,42 @@ const ApplicantSubmissionDetails = ({
                   <th>ACTION</th>
                 </thead>
                 <tbody>
-                  {multiSubmissionForm[index]?.references.map((item, refIndex) => {
-                    return (
-                      <tr key={refIndex}>
-                        <td>
-                          <input type="checkbox" />
-                        </td>
-                        <td>{item.name}</td>
-                        <td>{item.company}</td>
-                        <td>{item.email}</td>
-                        <td>{item.reference_type}</td>
-                        <td>{item.contact}</td>
-                        <td>
-                          <div className="d-flex gap-2">
-                            <span className="cursor-pointer text-primary" onClick={() => handleEditReference(index, refIndex)}>
-                              {reactIcons.edit}
-                            </span>
-                            <span className="text-danger cursor-pointer" onClick={() => handleRemoveReference(index, refIndex)}>{reactIcons.delete}</span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {multiSubmissionForm[index]?.references.map(
+                    (item, refIndex) => {
+                      return (
+                        <tr key={refIndex}>
+                          <td className="px-2">
+                            <input type="checkbox" />
+                          </td>
+                          <td>{item.name}</td>
+                          <td>{item.company}</td>
+                          <td>{item.email}</td>
+                          <td>{item.reference_type}</td>
+                          <td>{item.contact}</td>
+                          <td>
+                            <div className="d-flex gap-2">
+                              <span
+                                className="cursor-pointer text-primary"
+                                onClick={() =>
+                                  handleEditReference(index, refIndex)
+                                }
+                              >
+                                {reactIcons.edit}
+                              </span>
+                              <span
+                                className="text-danger cursor-pointer"
+                                onClick={() =>
+                                  handleRemoveReference(index, refIndex)
+                                }
+                              >
+                                {reactIcons.delete}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
                 </tbody>
               </table>
             </div>
@@ -835,8 +862,8 @@ const ApplicantSubmissionDetails = ({
         </div>
       </div>
       <div className="my-2 px-2 ">
-        <div className="d-flex bg-secondary justify-content-between">
-          <h5>Employer Details</h5>
+        <div className="d-flex px-2 py-1 justify-content-between" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Employer Details</h5>
           <button
             onClick={() => setOpenEmpDetl(true)}
             type="button"
@@ -855,7 +882,9 @@ const ApplicantSubmissionDetails = ({
                     onChange={handleChange}
                     value={true}
                     type="radio"
-                    // checked={form.relocation ? true : false}
+                    checked={
+                      multiSubmissionForm[index].relocation ? true : false
+                    }
                     // className="client-form-input"
                   />
                   <label>Add New</label>
@@ -866,7 +895,9 @@ const ApplicantSubmissionDetails = ({
                     onChange={handleChange}
                     value={false}
                     type="radio"
-                    // checked={form.relocation ? false : true}
+                    checked={
+                      multiSubmissionForm[index].relocation ? false : true
+                    }
                     // className="client-form-input"
                   />
                   <label>Add from existing vendor contact records</label>
@@ -923,16 +954,16 @@ const ApplicantSubmissionDetails = ({
         )}
       </div>
       <div className="my-2 px-2 ">
-        <div className="d-flex justify-content-between bg-secondary">
-          <h5>Available Documents</h5>
+        <div className="d-flex justify-content-between px-2 py-1" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Available Documents</h5>
           <button type="button" className="theme-btn btn-style-one small">
             Add
           </button>
         </div>
         <div className="my-3">
-          <table className="w-100">
-            <thead className="bg-secondary">
-              <th>Title</th>
+          <table className="w-100 border">
+            <thead className="bg-secondary py-2">
+              <th className="px-2">Title</th>
               <th>Type</th>
               <th>Uploaded By</th>
               <th>Uploaded On</th>
@@ -945,11 +976,16 @@ const ApplicantSubmissionDetails = ({
               )?.documents?.map((item, index) => {
                 return (
                   <tr>
-                    <td>{item.document_name}</td>
+                    <td   className="px-2">{item.document_name}</td>
                     <td>{item.type}</td>
                     <td>-</td>
                     <td>
                       {moment(item.uploaded_at).format("DD-MM-YYYY hh:mm A")}
+                    </td>
+                    <td>
+                      <div>
+                        <span className="text-primary">{reactIcons.download}</span>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -959,8 +995,8 @@ const ApplicantSubmissionDetails = ({
         </div>
       </div>
       <div className="my-2 px-2">
-        <div className="d-flex justify-content-between bg-secondary">
-          <h5>Submission Details</h5>
+        <div className="d-flex justify-content-between px-2 py-1" style={{backgroundColor:'rgb(240 248 255 / 98%)'}}>
+          <h5 className="fw-medium">Submission Details</h5>
           {/* <button type="button" className="theme-btn btn-style-one small">
             Add
           </button> */}
@@ -1141,26 +1177,35 @@ const ApplicantSubmissionDetails = ({
                 >
                   <option>Select</option>
                   <option>Upload new Resume</option>
-                  {applicantDocument?.find((item) => item.is_default == true) &&
-                  <option>{applicantDocument?.find((item) => item.is_default == true).document_name}</option>
-                  }
+                  {applicantDocument?.find(
+                    (item) => item.is_default == true
+                  ) && (
+                    <option>
+                      {
+                        applicantDocument?.find(
+                          (item) => item.is_default == true
+                        ).document_name
+                      }
+                    </option>
+                  )}
                 </select>
                 <span className="text-danger">
                   {submissionDetailsErr.resumeErr}
                 </span>
               </div>
-              { multiSubmissionForm[index].resume == 'Upload new Resume' &&
-                 <div className="col-6 my-2">
-                 <p>
-                   New Resume 
-                 </p>
-                 <input type="file" onChange={handleUploadNewResume} />
-                 <div>
-                  <input type="checkbox"  onChange={(e) => setIsDefault(e.target.checked)} />
-                  <span>Set As Default Resume</span>
-                 </div>
-               </div>
-              }
+              {multiSubmissionForm[index].resume == "Upload new Resume" && (
+                <div className="col-6 my-2">
+                  <p>New Resume</p>
+                  <input type="file" onChange={handleUploadNewResume} />
+                  {/* <div>
+                    <input
+                      type="checkbox"
+                      onChange={(e) => setIsDefault(e.target.checked)}
+                    />
+                    <span>Set As Default Resume</span>
+                  </div> */}
+                </div>
+              )}
               <div className="col-6 my-2">
                 <p>Video Link</p>
                 <input
@@ -1176,14 +1221,18 @@ const ApplicantSubmissionDetails = ({
                 <UploadSingleDocument handleFileUpload={handleFileUpload} />
                 <div className="my-2">
                   {documents.map((item, index) => {
-                    return(
-                        <div key={index} className="d-flex my-1 bg-secondary justify-content-between px-2 border border-secondary rounded-1">
-                           <span>{item.name}</span>
-                           <span onClick={() => handleRemoveDoc(index)}>{reactIcons.close}</span>
-                        </div>
-                    )
-                  })
-                  }
+                    return (
+                      <div
+                        key={index}
+                        className="d-flex my-1 bg-secondary justify-content-between px-2 border border-secondary rounded-1"
+                      >
+                        <span>{item.name}</span>
+                        <span onClick={() => handleRemoveDoc(index)}>
+                          {reactIcons.close}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="col-6 my-2">
@@ -1223,8 +1272,13 @@ const ApplicantSubmissionDetails = ({
                   </div>
                   {openRecp && (
                     <div
-                      className="position-absolute bg-white border border-1 w-100 px-2"
-                      style={{ top: "33px", zIndex: 10000 }}
+                      className="position-absolute bg-white border border-1 w-100 px-2 "
+                      style={{
+                        top: "33px",
+                        zIndex: 10000,
+                        height: "200px",
+                        overflow: "auto",
+                      }}
                     >
                       {usersList.map((item, index) => {
                         return (
@@ -1301,7 +1355,12 @@ const ApplicantSubmissionDetails = ({
                   {openNotifer && (
                     <div
                       className="position-absolute bg-white border border-1 w-100 px-2"
-                      style={{ top: "33px", zIndex: 10000 }}
+                      style={{
+                        top: "33px",
+                        zIndex: 10000,
+                        height: "200px",
+                        overflow: "auto",
+                      }}
                     >
                       {usersList.map((item, index) => {
                         return (
@@ -1416,7 +1475,7 @@ const ApplicantSubmissionDetails = ({
             <div className="d-flex gap-2 my-2">
               <button
                 onClick={() => {
-                  handleSaveSubDetails(index)
+                  handleSaveSubDetails(index);
                   handleUploadDoc(index);
                   handleSaveNewResume();
                 }}
@@ -1527,6 +1586,8 @@ const ApplicantSubmissionDetails = ({
           </div>
         )}
       </div>
+        </div>
+      }
     </Paper>
   );
 };

@@ -390,7 +390,7 @@ const ManualCreation = ({
 
 
   return (
-    <div className="px-5 py-2">
+    <div className="py-2">
       <LanguageModal />
       <JobPostCommentsModal
         comments={comments}
@@ -415,7 +415,7 @@ const ManualCreation = ({
         handleClose={handleClose}
       />
       <div className="d-flex justify-content-between">
-        <h4>{name == "update"  ? "Update Job Posting" : "New Job Posting"}</h4>
+        <h4 className="fw-medium text-primary">{name == "update"  ? "Update Job Posting" : "New Job Posting"}</h4>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"

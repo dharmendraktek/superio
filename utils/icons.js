@@ -52,6 +52,11 @@ import { MdOutlineWorkHistory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { MdOutlineShare } from "react-icons/md";
 import { MdOutlineSettingsSuggest } from "react-icons/md";
+import { FaCheck } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+
+
+
 
 
 
@@ -70,6 +75,7 @@ export const reactIcons = {
     checked:<IoCheckmarkCircleSharp />,
     cancel:<RiDeleteBack2Fill />,
     copy:<MdCopyAll />,
+    checkmark:<FaCheck />,
     certificate:<PiCertificateFill />,
     detail:<TbDetails/>,
     delete: <MdDelete />,
@@ -78,7 +84,7 @@ export const reactIcons = {
     downarrow:<IoIosArrowDown />,
     document:<HiDocumentAdd />,
     emailRead:<MdOutlineMarkEmailRead />,
-    edit:<RiEdit2Fill />,
+    edit:<FaEdit />,
     education:<MdCastForEducation />,
     file:<FaFileAlt />,
     fastBackward:<FaBackward />,
@@ -102,6 +108,8 @@ export const reactIcons = {
     personalDetails: <BsPersonLinesFill />,
     workexp:<MdOutlineWorkHistory />,
     share:<MdOutlineShare />,
-    setting:<MdOutlineSettingsSuggest />
+    setting:<MdOutlineSettingsSuggest />,
+    
+    
 
 }

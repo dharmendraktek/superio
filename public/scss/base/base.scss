@@ -236,6 +236,28 @@ li {
   height: 10px;
 }
 
+
+
+.custom-scroll-2nd::-webkit-scrollbar {
+  background-color: var(--primary-2nd-color);
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
+}
+.custom-scroll-2nd::-webkit-scrollbar-track {
+  background-color:lightgray;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+}
+.custom-scroll-2nd::-webkit-scrollbar-thumb {
+  background-color:var(--primary-2nd-color);
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+}
+
+
 .modal-header{
   background-color: var(--theme-color-first);
   color: white;
