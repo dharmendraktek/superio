@@ -848,7 +848,7 @@ const ManualCreation = ({
                     <div
                       key={index}
                       className="mx-1 px-1 my-1 gap-6 text-black fw-medium border border-primary rounded-1"
-                      style={{ background: "var(--primary-2nd-color)" }}
+                      // style={{ background: "var(--primary-2nd-color)" }}
                     >
                       <span>{item.name ? item.name : item}</span>
                       <span

@@ -27,3 +27,54 @@ export const  sourceData = [
     {name:'Dice', value:'Dice'},
     {name:'Monester', value:'Monester'},
 ]
+
+export const LinkendInConnection = [
+    {name:'500 +', value:'5'},
+    {name:'300 To 499', value:'4'},
+    {name:'200 To 299', value:'3'},
+    {name:'100 To 199', value:'2'},
+    {name:'Below 100', value:'1'},
+]
+
+export const LinkendInCreaction = [
+    {name:'Above 10 yr Exp', value:'5'},
+    {name:'7 To 10', value:'4'},
+    {name:'5 To 7', value:'3'},
+    {name:'3 To 5', value:'2'},
+    {name:'Below 3', value:'1'},
+]
+
+export const VendorCopanyStrength = [
+    {name:'Above 100', value:'5'},
+    {name:'50 To 100', value:'4'},
+    {name:'20 To 50', value:'3'},
+    // {name:'1 To 3K', value:'2'},
+    {name:'Below 20', value:'1'},
+]
+
+export const VendorCopanyLinkedInFollower = [
+    {name:'Above 10K Follower', value:'5'},
+    {name:'5 To 10K', value:'4'},
+    {name:'3 To 5K', value:'3'},
+    {name:'1 To 3K', value:'2'},
+    {name:'Below 1K', value:'1'},
+]
+
+
+export const processOptions = [
+    {name:'Add Note', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Send Email', dataToggle:'', dataTarget:'', ariaControls:'' },
+    {name:'Add Confirmation', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Disqualify', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Remove', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Update Status', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Share Job', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Submit To Client', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Add To Group', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Schedule Interview', dataToggle:'offcanvas', dataTarget:'#interviewSchedule', ariaControls:'offcanvasRight' },
+    {name:'Submit To Other Job', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Add Task', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Export', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Request More Details', dataToggle:'', dataTarget:'', ariaControls:''},
+]
+

@@ -67,11 +67,11 @@ const ParseEmailJobTable = () => {
      {isLoading &&
               <Loader />
       }
-      <div className="px-5 py-1">
+      <div className="py-1">
         {open ? (
           <>
          
-            <h3 className="my-3">Parse Job Post By Email</h3>
+            <h4 className="my-3">Parse Job Post By Email</h4>
             <div className="table_div custom-scroll-sm">
               <table className="default-table">
                 <thead className="">

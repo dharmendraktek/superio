@@ -34,11 +34,11 @@ const JobParse = ({setTab, tab}) => {
     {jobData ?
      <ManualCreation name='parse' setTab={setTab} tab={tab} jobData={jobData} />
     :
-    <div className="px-5 py-2">
+    <div className="py-2">
       <div className="shadow rounded-1" style={{height:'700px'}}>
         <div className="w-100">
           <div className="d-flex justify-content-between p-2 rounded-top-1" style={{background:'var(--theme-color-first)'}}>
-            <h3 className="text-white">Parse Job Details</h3>
+            <h4 className="text-white">Parse Job Details</h4>
             <div>
             <button onClick={handleStartParse} className="theme-btn small btn-style-two fw-medium fs-6 text-black mx-2">
               {isLoading ? 

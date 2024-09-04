@@ -12,9 +12,10 @@ import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import Pagination from "@/components/common/Pagination";
-import { removeSpecialChar } from "@/utils/constant";
+import { processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
+import InterviewScheduleModal from "./InterviewScheduleModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -207,31 +208,34 @@ const JobPostsTable = () => {
                         </div>
                       </td>
                     )} */}
-                    <td className="d-flex align-items-center justify-content-between" style={{width:"130px"}}>
-                        <input type="checkbox" />
-                        {item.submissions.length > 0 && (
-                          <>
-                            <div
-                              onClick={() => {
-                                if (expand == item.id) {
-                                  setExpand(null);
-                                  // setClientData((prev) => {
-                                  //   const update = [...prev];
-                                  //   update[index]["open"] = false;
-                                  //   return update;
-                                  // });
-                                } else {
-                                  setExpand(item.id);
-                                  // setClientData((prev) => {
-                                  //   const update = [...prev];
-                                  //   update[index]["open"] = true;
-                                  //   return update;
-                                  // });
-                                }
-                              }}
-                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                              style={{background:'var(--primary-2nd-color)'}}
-                            >
+                    <td
+                      className="d-flex align-items-center justify-content-between"
+                      style={{ width: "130px" }}
+                    >
+                      <input type="checkbox" />
+                      {item.submissions.length > 0 && (
+                        <>
+                          <div
+                            onClick={() => {
+                              if (expand == item.id) {
+                                setExpand(null);
+                                // setClientData((prev) => {
+                                //   const update = [...prev];
+                                //   update[index]["open"] = false;
+                                //   return update;
+                                // });
+                              } else {
+                                setExpand(item.id);
+                                // setClientData((prev) => {
+                                //   const update = [...prev];
+                                //   update[index]["open"] = true;
+                                //   return update;
+                                // });
+                              }
+                            }}
+                            className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
+                            style={{ background: "var(--primary-2nd-color)" }}
+                          >
                             <div
                               className="text-white "
                               style={{
@@ -239,22 +243,25 @@ const JobPostsTable = () => {
                                 height: "24px",
                                 fontSize: "12px",
                                 borderRadius: "3px",
-                                background:'var(--primary-2nd-color)'
+                                background: "var(--primary-2nd-color)",
                               }}
                             >
-                              <p className="text-white fw-medium" style={{fontSize:'15px'}}>
-
-                              {item.submissions.length}
+                              <p
+                                className="text-white fw-medium"
+                                style={{ fontSize: "15px" }}
+                              >
+                                {item.submissions.length}
                               </p>
-
                             </div>
                             <span className="cursor-pointer text-white fs-4">
-                                {item.id == expand ? reactIcons.arrowfillup : reactIcons.arrowfilldown}
-                              </span>
-                            </div>
-                          </>
-                        )}
-                      </td>
+                              {item.id == expand
+                                ? reactIcons.arrowfillup
+                                : reactIcons.arrowfilldown}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </td>
                     <td>
                       <Link
                         href="/employers-dashboard/job-posts/[id]"
@@ -364,14 +371,35 @@ const JobPostsTable = () => {
                     </td>
                   </tr>
                   {item.id == expand && (
-                    <tr >
-                      <td colSpan={15}>
-                        <div className="mx-5 my-3 border rounded-1  inner-table shadow" >
-                          {/* <div className="mx-3 my-1">
-                            this the filter table and search bard
-                          </div> */}
+                    <tr>
+                      <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                        <InterviewScheduleModal />
+                        <div className="mx-3 my-2">
+                          <div className="d-flex gap-2">
+                            {processOptions.map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="border px-2 rounded-1"
+                                  data-bs-toggle={item.dataToggle}
+                                  data-bs-target={item.dataTarget}
+                                  aria-controls={item.ariaControls}
+                                >
+                                  <span className="text-primary cursor-pointer">
+                                    {item.name}
+                                  </span>
+                                  {/* <span>|</span> */}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <td colSpan={15}>
                           <table>
                             <thead className="table-inner-thead">
+                              <th className="px-2">
+                                <input type="checkbox" />
+                              </th>
                               <th>Submission ID</th>
                               <th>Applicant Name</th>
                               <th>Work Authorization</th>
@@ -383,8 +411,8 @@ const JobPostsTable = () => {
                               <th>Revision Status</th>
                               <th>Application Status</th>
                               {/* <th>Outlook MSG</th> */}
-                              <th style={{width:'250px'}}>Bill Rate</th>
-                              <th  style={{width:'250px'}}>Pay Rate</th>
+                              <th style={{ width: "250px" }}>Bill Rate</th>
+                              <th style={{ width: "250px" }}>Pay Rate</th>
                               <th>Employer Name</th>
                               <th>Availability</th>
                               <th>Submitted By</th>
@@ -411,6 +439,9 @@ const JobPostsTable = () => {
                                   _item.applicant_details[0];
                                 return (
                                   <tr>
+                                    <td>
+                                      <input type="checkbox" />
+                                    </td>
                                     <td>{_item.id}</td>
                                     <td>
                                       {firstname +
@@ -428,8 +459,14 @@ const JobPostsTable = () => {
                                     <td>Revision Status</td>
                                     <td>Application Status</td>
                                     {/* <th>Outlook MSG</th> */}
-                                    <td  style={{width:'250px'}}>{bill_rate_currency}/{bill_rate_amount}/{bill_rate_type}/{bill_rate_contract_type}</td>
-                                    <td  style={{width:'250px'}}>{pay_rate_currency}/{pay_rate_amount}/{pay_rate_type}/{pay_rate_contract_type}</td>
+                                    <td style={{ width: "250px" }}>
+                                      {bill_rate_currency}/{bill_rate_amount}/
+                                      {bill_rate_type}/{bill_rate_contract_type}
+                                    </td>
+                                    <td style={{ width: "250px" }}>
+                                      {pay_rate_currency}/{pay_rate_amount}/
+                                      {pay_rate_type}/{pay_rate_contract_type}
+                                    </td>
                                     <td>Employer Name</td>
                                     <td>{availability}</td>
                                     <td>Submitted By</td>
@@ -443,13 +480,18 @@ const JobPostsTable = () => {
                               })}
                             </tbody>
                           </table>
-                        </div>
-                      </td>
+                        </td>
+                      </div>
                     </tr>
                   )}
                 </>
               );
             })}
+            {!isLoading && jobPostList.length == 0 &&
+              <tr className="">
+                <td>No Data Found</td>
+              </tr>
+            }
             {/* End tr */}
           </tbody>
         </table>

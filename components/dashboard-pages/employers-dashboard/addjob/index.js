@@ -53,7 +53,7 @@ const Index = () => {
              </div>
              </Link>
            </div> */}
-          <div className="row">
+          <div className="row px-4">
             {tab == null &&
             <div className="col-xl-12 col-lg-12 px-5 mt-5">
                <div className="d-flex justify-content-center">
