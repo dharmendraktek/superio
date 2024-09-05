@@ -78,3 +78,18 @@ export const processOptions = [
     {name:'Request More Details', dataToggle:'', dataTarget:'', ariaControls:''},
 ]
 
+
+export const interviewModes = [
+    {name:'Google Hangout'},
+    {name:'In-person'},
+    {name:'Microsoft Teams'},
+    {name:'Skype'},
+    {name:'Telephonic'},
+    {name:'Webex'},
+]
+
+export const interviewRounds = [
+    {name:'Client Interview'},
+    {name:'L1 Interview'},
+    {name:'L2 Interview'},
+]

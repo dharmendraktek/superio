@@ -5,6 +5,7 @@ import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
 import { candidateSearchKey } from "@/utils/constant";
+import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import Link from "next/link";
@@ -192,61 +193,61 @@ const ApplicantTable = () => {
                 return (
                   <>
                     <tr key={index}>
-                      <td
-                        style={{ width: "160px" }}
-                      >
-                        <div  className="d-flex align-items-center justify-content-between">
-                        <input
-                          type="checkbox"
-                          checked={item?.selected}
-                          onChange={(e) => {
-                            let update = [...applicantData];
-                            if (e.target.checked) {
-                              update[index]["selected"] = e.target.checked;
-                            } else {
-                              update[index]["selected"] = e.target.checked;
-                            }
-                            setApplicantData(update);
-                          }}
-                        />
-                        {item.jobs_associated.length > 0 && (
-                          <>
-                            <div
-                              onClick={() => {
-                                if (expand == item.id) {
-                                  setExpand(null);
-                                } else {
-                                  setExpand(item.id);
-                                }
-                              }}
-                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                              style={{ background: "var(--primary-2nd-color)" }}
-                            >
+                      <td style={{ width: "160px" }}>
+                        <div className="d-flex align-items-center justify-content-between">
+                          <input
+                            type="checkbox"
+                            checked={item?.selected}
+                            onChange={(e) => {
+                              let update = [...applicantData];
+                              if (e.target.checked) {
+                                update[index]["selected"] = e.target.checked;
+                              } else {
+                                update[index]["selected"] = e.target.checked;
+                              }
+                              setApplicantData(update);
+                            }}
+                          />
+                          {item.jobs_associated.length > 0 && (
+                            <>
                               <div
-                                className="text-white "
+                                onClick={() => {
+                                  if (expand == item.id) {
+                                    setExpand(null);
+                                  } else {
+                                    setExpand(item.id);
+                                  }
+                                }}
+                                className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
                                 style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  fontSize: "12px",
-                                  borderRadius: "3px",
                                   background: "var(--primary-2nd-color)",
                                 }}
                               >
-                                <p
-                                  className="text-white fw-medium"
-                                  style={{ fontSize: "15px" }}
+                                <div
+                                  className="text-white "
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    fontSize: "12px",
+                                    borderRadius: "3px",
+                                    background: "var(--primary-2nd-color)",
+                                  }}
                                 >
-                                  {item.jobs_associated.length}
-                                </p>
+                                  <p
+                                    className="text-white fw-medium"
+                                    style={{ fontSize: "15px" }}
+                                  >
+                                    {item.jobs_associated.length}
+                                  </p>
+                                </div>
+                                <span className="cursor-pointer text-white fs-4">
+                                  {item.id == expand
+                                    ? reactIcons.arrowfillup
+                                    : reactIcons.arrowfilldown}
+                                </span>
                               </div>
-                              <span className="cursor-pointer text-white fs-4">
-                                {item.id == expand
-                                  ? reactIcons.arrowfillup
-                                  : reactIcons.arrowfilldown}
-                              </span>
-                            </div>
-                          </>
-                        )}
+                            </>
+                          )}
                         </div>
                       </td>
                       <td className="" style={{ width: "150px" }}>
@@ -422,6 +423,9 @@ const ApplicantTable = () => {
                           </div> */}
                             <table className="custom-scroll-2nd">
                               <thead className="table-inner-thead">
+                                <th style={{width:'60px'}}>
+                                  <input type="checkbox" className="mx-1" />
+                                </th>
                                 <th>Job Code</th>
                                 <th>Job Title</th>
                                 <th>Submission Record</th>
@@ -432,16 +436,17 @@ const ApplicantTable = () => {
                                 <th>Submission Rating</th>
                                 <th>Client</th>
                                 <th>Source</th>
-                                <th>client Bill Rate/Salary</th>
+                                <th>Client Bill Rate/Salary</th>
                                 <th style={{ width: "250px" }}>Bill Rate</th>
                                 <th style={{ width: "250px" }}>Pay Rate</th>
                                 <th>Employer Name</th>
                                 <th>Submitted By</th>
                                 <th>Submitted On</th>
-                                <th>Additional Details</th>
+                                {/* <th>Additional Details</th> */}
                               </thead>
                               <tbody>
                                 {item.jobs_associated.map((_item, _index) => {
+                                  console.log("--------------_uten   ", item);
                                   let {
                                     pay_rate_currency,
                                     pay_rate_amount,
@@ -451,22 +456,58 @@ const ApplicantTable = () => {
                                     bill_rate_amount,
                                     bill_rate_type,
                                     bill_rate_contract_type,
+                                    current_status_details,
+                                    applicant_rating,
+                                    applicant_details,
+                                    job_detail,
+                                    submitted_by_details,
+                                    submission_on    
                                   } = _item;
-                                  let { job_code, title, client } =
-                                    _item.job_detail;
+
+                                  let { job_code, title, client_name, delivery_manager, amount, currency, payment_frequency } =
+                                    job_detail;
+                                  let {first_name, last_name} = delivery_manager;
+                                  let deliverManagerName = (first_name || '') + (last_name || '')
+                                  let clientRate = (currency || 'N.A') + '/' + (amount || 'N.A') + '/' + (payment_frequency || 'N.A')
+                                  let {source} = applicant_details[0];
+
+                                  let applicantResume = item.documents.find((doc) => doc.is_default == true);
+                                  let {communication, overall, profesionalism, technical} = applicant_rating;
+                                  
+
+                                  let overallRating = (communication + overall + profesionalism + technical)/4
+
+ 
+                                  
                                   return (
                                     <tr>
-                                      <td>{job_code ? job_code : 'N/A'}</td>
-                                      <td>{title ? title : 'N/A'}</td>
-                                      <td>Submission Record</td>
-                                      <td>Delivery Manager</td>
-                                      <td>Resume</td>
-                                      <td>Profile Status</td>
+                                      <td style={{width:'60px'}}>
+                                        <input type="checkbox" />
+                                      </td>
+                                      <td>{job_code ? job_code : "N/A"}</td>
+                                      <td>{title ? title : "N/A"}</td>
+                                      <td className="cursor-pointer">
+                                        <Link
+                                          href="/employers-dashboard/all-applicants/[id]"
+                                          as={`/employers-dashboard/all-applicants/${item.id}`}
+                                        >
+                                          <span className="text-primary">
+                                            Click Here
+                                          </span>
+                                        </Link>
+                                      </td>
+                                      <td>{deliverManagerName}</td>
+                                      <td>
+                                        <span  onClick={() => {
+                                              window.open(BASE_URL + `/applicant-documents/${applicantResume?.id}/download/`);
+                                        }} className="fs-5 text-primary cursor-pointer">{reactIcons.document}</span>
+                                      </td>
+                                      <td>{current_status_details?.display_name}</td>
                                       {/* <th>Outlook MSG</th> */}
-                                      <td>Submission Rating</td>
-                                      <td>{client ? client : "N/A"}</td>
-                                      <td>Source</td>
-                                      <td>client Bill Rate/Salary</td>
+                                      <td>{overallRating}</td>
+                                      <td>{client_name || "N/A"}</td>
+                                      <td>{source}</td>
+                                      <td>{clientRate}</td>
                                       <td style={{ width: "250px" }}>
                                         {bill_rate_currency}/{bill_rate_amount}/
                                         {bill_rate_type}/
@@ -477,9 +518,9 @@ const ApplicantTable = () => {
                                         {pay_rate_type}/{pay_rate_contract_type}
                                       </td>
                                       <td>Employer Name</td>
-                                      <td>Submitted By</td>
-                                      <td>Submitted On</td>
-                                      <td>Additional Details</td>
+                                      <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
+                                      <td>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
+                                      {/* <td>Additional Details</td> */}
                                     </tr>
                                   );
                                 })}

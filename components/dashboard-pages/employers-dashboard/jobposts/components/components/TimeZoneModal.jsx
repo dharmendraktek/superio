@@ -2,10 +2,11 @@
 'use Client'
 
 import { postApiReq } from "@/utils/apiHandlers"
+import { countriesWithTimeZone } from "@/utils/countrieswithtimzone"
 import { useState } from "react"
 import { toast } from "react-toastify"
 
-const LanguageModal = ({handleGetLanguageList}) => {
+const TimeZoneModal = ({}) => {
     const [name, setName] = useState('');
     const  handleAddLang = async() => {
         let btnClose = document.getElementById('closeBtn');
@@ -18,17 +19,24 @@ const LanguageModal = ({handleGetLanguageList}) => {
         }
     }
     return(
-        <div className="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel" aria-hidden="true">
+        <div className="modal fade" id="timeZoneModal" tabindex="-1" aria-labelledby="timeZoneModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="languageModalLabel">Add Language</h5>
+              <h5 className="modal-title" id="timeZoneModalLabel">Add Language</h5>
               <button type="button" id="closeBtn" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="d-flex gap-2 px-3">
                 <label>Language</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="client-form-input" />
+                <select onChange={(e) => setName(e.target.value)}>
+                    {countriesWithTimeZone.map((item) => {
+                      return(
+                        <option value={item.name} >{item.name}</option>
+                      )
+                    })
+                    }
+                </select>
               </div>
             </div>
             <div className="modal-footer">
@@ -41,4 +49,4 @@ const LanguageModal = ({handleGetLanguageList}) => {
     )
 }
 
-export default LanguageModal;
+export default TimeZoneModal;

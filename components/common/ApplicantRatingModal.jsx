@@ -1,101 +1,9 @@
 import { reactIcons } from "@/utils/icons";
 
-const ratings = {
-  dob: {
-    type: "DL DOB is not matching with I94 DOB",
-    flag: "Red",
-  },
-  visa: {
-    type: "Visa expiry date is less than 6 month",
-    flag: "Red",
-  },
-  relocation: {
-    text: "candidate is not ready for relocation to Boston MA location and current location is . ",
-    flag: "Red",
-  },
-  nationality: {
-    text: "candidate nationality is MADG.",
-  },
-  linkedin_profile_picture: {
-    text: "candidate linkedin profile picture is matched",
-    flag: "Green",
-  },
-  applicant_linkedin_connections: {
-    text: "candidate linkedin connections are above 500",
-    flag: "Green",
-  },
-  vendor_linkedin_connections: {
-    text: "Vendor linkedin followers are between 3k to 5K",
-    flag: "Yellow",
-  },
-  vendor_employees_strength: {
-    text: "Vendor employees are between 20 to 50",
-    flag: "Yellow",
-  },
-  linkedin_age: {
-    text: "candidate linkedIn age is between 7 to 10 years",
-    flag: "Green",
-  },
-  Vendor_glassdor_review: {
-    text: "Vendor Glassdor review is positive",
-    flag: "Green",
-  },
-  skill_matrix: {
-    text: "Skill matrixx mentioned",
-    flag: "Green",
-  },
-  offer_letter: {
-    text: "Candidate don't have any offer letter",
-    flag: "Green",
-  },
-  technical_questionaire: {
-    text: "Technical Questionaire validation done",
-    flag: "Green",
-  },
-  Linkedin_matched_with_resume: {
-    text: "Linkedin full profile matched with resume",
-    flag: "Green",
-  },
-  reference: {
-    text: "Reference check is validated",
-    flag: "Green",
-  },
-  rating_count: 60,
-};
-
 const ApplicantRatingModal = ({ aiCheckResult }) => {
-  console.log("---------ai check reuslt ", aiCheckResult);
 
-  const ratingsArray = Object.entries(ratings);
-
-  const processedRatings = ratingsArray.map(([key, value]) => {
-    return {
-      key: key,
-      type: value?.type || value.text || null,
-      flag: value.flag || null,
-    };
-  });
-
-  console.log("---------rating ", processedRatings);
-  const {
-    dob,
-    visa,
-    relocation,
-    nationality,
-    linkedin_profile_picture,
-    applicant_linkedin_connections,
-    vendor_linkedin_connections,
-    vendor_employees_strength,
-    linkedin_age,
-    Vendor_glassdor_review,
-    skill_matrix,
-    offer_letter,
-    technical_questionaire,
-    Linkedin_matched_with_resume,
-    reference,
-    rating_count,
-  } = aiCheckResult;
-
+  console.log("-----------aic check ruesl ", aiCheckResult)
+ 
   return (
     <div
       className="modal fade"
@@ -119,134 +27,155 @@ const ApplicantRatingModal = ({ aiCheckResult }) => {
           </div>
           <div className="modal-body">
             <div>
-              {/* {processedRatings.map((item, index) => {
-                      return(
-                        <div>
-                            {item?.type &&
-                                // <li key={index} className={`p-2 my-2 border border-secondary text-capitalize rounded-1 fw-medium fs-6 ${item.flag ? 'text-white' :''}`} style={{backgroundColor:`${item.flag == 'Red' ? 'red'  : item.flag == 'Green'? 'green' : ''}`}}>{item?.type}</li>  
-                             <li key={index} className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
-                                <span>{item?.type}</span>
-                                <span className="fs-4 text-success">{reactIcons.checked}</span>
-                                </li>
-                            }
-                        </div>
-                    )
-                 })
-                 } */}
-
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{dob?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{visa?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{relocation?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{nationality?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{linkedin_profile_picture?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{applicant_linkedin_connections?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{vendor_linkedin_connections?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{vendor_employees_strength?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{linkedin_age?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{Vendor_glassdor_review?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{skill_matrix?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{offer_letter?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{technical_questionaire?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{Linkedin_matched_with_resume?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{reference?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
-              <li
-                key={index}
-                className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2"
-              >
-                <span>{rating_count?.type}</span>
-                <span className="fs-4 text-success">{reactIcons.checked}</span>
-              </li>
+              <div className="my-2 d-flex gap-2">
+                <h5 className="fw-medium">Total Rating : {aiCheckResult?.rating_count}</h5>
+                {/* <span></span> */}
+              </div>
+              <div>
+            {Object.values(aiCheckResult).slice(0, Object.values(aiCheckResult).length - 1).map((item, index) => {
+                 return(
+                  <li className={`border px-2 py-1 rounded-1 border-secondary ${item.flag == 'Red' ? 'border-danger text-danger' : item.flag == 'Green' ? 'border-success text-success' : ''} text-capitalize fw-medium d-flex justify-content-between my-2`}>
+                  <span>{item.text}</span>
+                  <span className={`fs-4 ${item.flag == 'Red' ? 'text-danger' : item.flag == 'Green' ? 'text-success' : ''}`}>
+                    {item.flag == 'Red' ? reactIcons.close : item.flag == 'Green' ? reactIcons.checked : ''} 
+                  </span>
+                </li>
+                 )
+              })
+            }
+              </div>
             </div>
+            {/* <div>
+              {dob && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{dob?.text}</span>
+                  <span className={`fs-4 ${dob.flag == 'Red' ? 'text-danger' : dob.flag == 'Green' ? 'text-success' : ''}`}>
+                    {dob.flag == 'Red' ? reactIcons.close : dob.flag == 'Green' ? reactIcons.checked : ''} 
+                  </span>
+                </li>
+              )}
+              {visa && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{visa?.text}</span>
+                  <span className="fs-4 text-success">
+                  {visa.flag == 'Red' ? reactIcons.close : visa.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {relocation && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{relocation?.text}</span>
+                  <span className="fs-4 text-success">
+                  {relocation.flag == 'Red' ? reactIcons.close : relocation.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {nationality && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{nationality?.text}</span>
+                  <span className="fs-4 text-success">
+                  {nationality.flag == 'Red' ? reactIcons.close : nationality.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {linkedin_profile_picture && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{linkedin_profile_picture?.text}</span>
+                  <span className="fs-4 text-success">
+                  {linkedin_profile_picture.flag == 'Red' ? reactIcons.close : linkedin_profile_picture.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {applicant_linkedin_connections && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{applicant_linkedin_connections?.text}</span>
+                  <span className="fs-4 text-success">
+                  {applicant_linkedin_connections.flag == 'Red' ? reactIcons.close : applicant_linkedin_connections.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+
+              {vendor_linkedin_connections && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{vendor_linkedin_connections?.text}</span>
+                  <span className="fs-4 text-success">
+                  {vendor_linkedin_connections.flag == 'Red' ? reactIcons.close : vendor_linkedin_connections.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {vendor_employees_strength && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{vendor_employees_strength?.text}</span>
+                  <span className="fs-4 text-success">
+                  {vendor_employees_strength.flag == 'Red' ? reactIcons.close : vendor_employees_strength.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {linkedin_age && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{linkedin_age?.text}</span>
+                  <span className="fs-4 text-success">
+                  {linkedin_age.flag == 'Red' ? reactIcons.close : linkedin_age.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {vendor_glassdor_review && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{vendor_glassdor_review?.text}</span>
+                  <span className="fs-4 text-success">
+                  {vendor_glassdor_review.flag == 'Red' ? reactIcons.close : vendor_glassdor_review.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {skill_matrix && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{skill_matrix?.text}</span>
+                  <span className="fs-4 text-success">
+                  {skill_matrix.flag == 'Red' ? reactIcons.close : skill_matrix.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {offer_letter && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{offer_letter?.text}</span>
+                  <span className="fs-4 text-success">
+                  {offer_letter.flag == 'Red' ? reactIcons.close : offer_letter.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {technical_questionaire && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{technical_questionaire?.text}</span>
+                  <span className="fs-4 text-success">
+                  {technical_questionaire.flag == 'Red' ? reactIcons.close : technical_questionaire.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {linkedin_matched_with_resume && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{linkedin_matched_with_resume?.text}</span>
+                  <span className="fs-4 text-success">
+                  {linkedin_matched_with_resume.flag == 'Red' ? reactIcons.close : linkedin_matched_with_resume.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {reference && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{reference?.text}</span>
+                  <span className="fs-4 text-success">
+                  {reference.flag == 'Red' ? reactIcons.close : reference.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+              {rating_count && (
+                <li className="border p-2 border-secondary text-capitalize fw-medium d-flex justify-content-between my-2">
+                  <span>{rating_count?.text}</span>
+                  <span className="fs-4 text-success">
+                  {rating_count.flag == 'Red' ? reactIcons.close : rating_count.flag == 'Green' ? reactIcons.checked : ''}
+                  </span>
+                </li>
+              )}
+            </div> */}
             <div className="modal-footer">
               {/* <button  type="button" className="theme-btn btn-style-one small" data-bs-dismiss="modal" onClick={handleUpdateStatus} >Send</button>
               <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Cancel</button> */}

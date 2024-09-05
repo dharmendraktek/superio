@@ -391,7 +391,7 @@ const ManualCreation = ({
 
   return (
     <div className="py-2">
-      <LanguageModal />
+      <LanguageModal      handleGetLanguageList={handleGetLanguageList}/>
       <JobPostCommentsModal
         comments={comments}
         setComments={setComments}
@@ -478,7 +478,7 @@ const ManualCreation = ({
             />
           </div>
           <div className="col-4 my-2">
-            <p>Current Bill/Rate</p>
+            <p>Client Bill/Rate</p>
             <div className="d-flex gap-3">
               <select
                 name="currency"

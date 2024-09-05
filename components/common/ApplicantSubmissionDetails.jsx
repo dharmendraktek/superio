@@ -4,7 +4,7 @@ import { reactIcons } from "@/utils/icons";
 import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import moment from "moment";
-import { getReq, postApiReq } from "@/utils/apiHandlers";
+import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import Documents from "@/app/employers-dashboard/all-applicants/[id]/components/Documents";
 import { toast } from "react-toastify";
 import UploadSingleDocument from "./UploadSingleDocument";
@@ -72,7 +72,7 @@ const ApplicantSubmissionDetails = ({
     otherEmailIds: [],
   });
   const [skillsField, setSkillField] = useState([
-    // {name:'', experience:'', nameErr:'', experienceErr:''}
+    // {name:'', years_of_experience:'', nameErr:'', experienceErr:''}
   ]);
 
   const [openRecp, setOpenRecp] = useState(false);
@@ -108,7 +108,8 @@ const ApplicantSubmissionDetails = ({
     is_default: "true",
   });
   const [loadingAiCheck, setLoadingAiCheck] = useState(false);
-  const [aiCheckResult, setAiCheckResult] = useState();
+  const [aiCheckResult, setAiCheckResult] = useState({});
+  const [openManualRating, setOpenManualRating] = useState(true);
 
   // this function handle the skills
 
@@ -126,7 +127,7 @@ const ApplicantSubmissionDetails = ({
     if (skillsField.length == 0) {
       setSkillField([
         ...skillsField,
-        { name: "", experience: "", nameErr: "", experienceErr: "" },
+        { name: "", years_of_experience: "", nameErr: "", experienceErr: "" },
       ]);
       return;
     }
@@ -142,7 +143,7 @@ const ApplicantSubmissionDetails = ({
       lastSkill.nameErr = "Skill name is required.";
     }
 
-    if (lastSkill.experience.trim() === "") {
+    if (lastSkill.years_of_experience.trim() === "") {
       lastSkill.experienceErr = "Experience is required.";
     }
 
@@ -155,7 +156,7 @@ const ApplicantSubmissionDetails = ({
     // If both fields are filled, add a new skill object
     setSkillField([
       ...skillsField,
-      { name: "", experience: "", nameErr: "", experienceErr: "" },
+      { name: "", years_of_experience: "", nameErr: "", experienceErr: "" },
     ]);
   };
 
@@ -179,7 +180,7 @@ const ApplicantSubmissionDetails = ({
       lastSkill.nameErr = "Skill name is required.";
     }
 
-    if (lastSkill.experience.trim() === "") {
+    if (lastSkill.years_of_experience.trim() === "") {
       lastSkill.experienceErr = "Experience is required.";
     }
 
@@ -491,7 +492,6 @@ const ApplicantSubmissionDetails = ({
 
   const handleApplicantChangeCheck = (e) => {
     const { name, value } = e.target;
-    console.log("------------name value ", name, value);
     setApplicantCheck((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -513,7 +513,7 @@ const ApplicantSubmissionDetails = ({
     setApplicantCheckErr(newErrors);
   };
 
-  const handleAICheck = async () => {
+  const handleSubmitManualRating = async () => {
     validateApplicantCheck();
     console.log("--------------------validate applicant", applicantCheckErr);
     if (
@@ -534,7 +534,8 @@ const ApplicantSubmissionDetails = ({
         applicantCheck
       );
       if (response.status) {
-        console.log("--------------------------response ---------", response);
+        setOpenManualRating(false);
+        toast.success('Next Proccess to click AI Checking Button')
       }
     }
   };
@@ -549,16 +550,12 @@ const ApplicantSubmissionDetails = ({
   }, [applicantDetails]);
 
   const handleAIChecking = async () => {
-
-    let btnRating = document.getElementById('ratingBtn');
-      btnRating.click();
     let data = {
       applicant_id: applicantData?.id,
     };
     setLoadingAiCheck(true);
     const response = await postApiReq("/candidate-ai-check/", data);
     setLoadingAiCheck(false);
-    console.log("------------response ------", response);
     if (response.status) {
       setAiCheckResult(response.data.ratings)
       let btnRating = document.getElementById('ratingBtn');
@@ -566,7 +563,18 @@ const ApplicantSubmissionDetails = ({
     }
   };
 
-  console.log("------------applicant details ----", applicantDetails.middlename ? applicantDetails.middlename : 'this' );
+  const handleDeleteDoc = async (id) => {
+   console.log("---------is working randomly");
+    const response = await deleteReq(`/applicant-documents/${id}/`);
+    if (response.status) {
+      toast.success("Document deleted successfully");
+      handleGetApplicantDetails();
+    }else if(response.error){
+      toast.error(response.error.error);
+    }
+  };
+
+  console.log("------------applicant details ----", multiSubmissionForm[index] );
 
   return (
     <Paper>
@@ -638,7 +646,7 @@ const ApplicantSubmissionDetails = ({
                           return (
                             <tr>
                               <td className="px-2">{item.name}</td>
-                              <td className="px-2">{item.experience}</td>
+                              <td className="px-2">{item.years_of_experience}</td>
                             </tr>
                           );
                         }
@@ -672,12 +680,12 @@ const ApplicantSubmissionDetails = ({
                           <p>Experience</p>
                           <input
                             type="number"
-                            name="experience"
+                            name="years_of_experience"
                             onChange={(e) => {
                               let { name, value } = e.target;
                               handleSkillChange(skillIndex, name, value);
                             }}
-                            value={item.experience}
+                            value={item.years_of_experience}
                             className="client-form-input"
                             placeholder="no of years"
                           />
@@ -1028,12 +1036,12 @@ const ApplicantSubmissionDetails = ({
                   <div className="d-flex gap-4 mt-3">
                     <div className="d-flex gap-2">
                       <input
-                        name="relocation"
+                        name="form"
                         onChange={handleChange}
                         value={true}
                         type="radio"
                         checked={
-                          multiSubmissionForm[index].relocation ? true : false
+                          multiSubmissionForm[index].relocation == 'true' ? true : false
                         }
                         // className="client-form-input"
                       />
@@ -1041,12 +1049,12 @@ const ApplicantSubmissionDetails = ({
                     </div>
                     <div className="d-flex gap-2">
                       <input
-                        name="relocation"
+                        name="form"
                         onChange={handleChange}
                         value={false}
                         type="radio"
                         checked={
-                          multiSubmissionForm[index].relocation ? false : true
+                          multiSubmissionForm[index].relocation == 'false' ? true : false
                         }
                         // className="client-form-input"
                       />
@@ -1222,7 +1230,7 @@ const ApplicantSubmissionDetails = ({
                         {isLoading ? <BtnBeatLoader /> : "Save"}
                       </button>
                       <button
-                        //  onClick={() => setOpen(false)}
+                         onClick={() => setAddDoc(false)}
                         className="theme-btn btn-style-four small"
                         id="btnCancel"
                       >
@@ -1258,9 +1266,12 @@ const ApplicantSubmissionDetails = ({
                             )}
                           </td>
                           <td>
-                            <div>
+                            <div className="d-flex gap-2">
                               <span className="text-primary cursor-pointer">
                                 {reactIcons.download}
+                              </span>
+                              <span onClick={() => handleDeleteDoc(item.id)} className="text-danger cursor-pointer">
+                                {reactIcons.delete}
                               </span>
                             </div>
                           </td>
@@ -1278,14 +1289,29 @@ const ApplicantSubmissionDetails = ({
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
             >
               <h5 className="fw-medium">Manual Rating</h5>
+              {openManualRating &&
               <button
+                type="button"
+                className="theme-btn btn-style-one small"
+                onClick={() => handleAIChecking(applicantData.id)}
+                disabled={!openManualRating}
+              >
+                {loadingAiCheck ?
+                 <BtnBeatLoader />
+                 :
+                 'AI Checking'
+                }
+              </button>
+              }
+              {/* <button
                 onClick={() => setAddDoc(true)}
                 type="button"
                 className="theme-btn btn-style-one small"
               >
                 Add
-              </button>
+              </button> */}
             </div>
+            {openManualRating &&
             <div className="my-2">
               <div className="row">
                 <div className="col-4 my-1">
@@ -1679,7 +1705,7 @@ const ApplicantSubmissionDetails = ({
               <div className="d-flex justify-content-end gap-2">
                 <button
                   onClick={() => {
-                    handleAICheck();
+                    handleSubmitManualRating();
                   }}
                   className="theme-btn btn-style-one small"
                 >
@@ -1690,6 +1716,7 @@ const ApplicantSubmissionDetails = ({
                 </button>
               </div>
             </div>
+            }
           </div>
           <div className="my-2 px-2">
             <ApplicantRatingModal aiCheckResult={aiCheckResult} />
@@ -1698,7 +1725,7 @@ const ApplicantSubmissionDetails = ({
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
             >
               <h5 className="fw-medium">Submission Details</h5>
-              <button
+              {/* <button
                 type="button"
                 className="theme-btn btn-style-one small"
                 onClick={() => handleAIChecking(applicantData.id)}
@@ -1708,7 +1735,7 @@ const ApplicantSubmissionDetails = ({
                  :
                  'AI Checking'
                 }
-              </button>
+              </button> */}
               <button
                 type="button"
                 className="theme-btn d-none btn-style-one small"
@@ -1866,7 +1893,7 @@ const ApplicantSubmissionDetails = ({
                           value={true}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation ? true : false
+                            multiSubmissionForm[index].relocation =='true' ? true : false
                           }
                           // className="client-form-input"
                         />
@@ -1879,7 +1906,7 @@ const ApplicantSubmissionDetails = ({
                           value={false}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation ? false : true
+                            multiSubmissionForm[index].relocation == 'false' ? true : false
                           }
                           // className="client-form-input"
                         />

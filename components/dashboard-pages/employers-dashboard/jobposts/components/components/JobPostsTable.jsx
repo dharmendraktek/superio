@@ -77,10 +77,12 @@ const JobPostsTable = () => {
   const handleDeleteJobPost = async (id) => {
     const response = await deleteReq(`/jobs/${id}/?permanent_delete=true`);
     if (response.status) {
-      toast.success("Job post deleted successfully");
+      toast.success("Job post has been deleted successfully");
       getJobpostsList();
     }
   };
+
+  console.log("--------------job post list ", jobPostList);
 
   return (
     <>
@@ -397,8 +399,8 @@ const JobPostsTable = () => {
                         <td colSpan={15}>
                           <table>
                             <thead className="table-inner-thead">
-                              <th className="px-2">
-                                <input type="checkbox" />
+                              <th  style={{width:'60px'}}>
+                                <input className="mx-1" type="checkbox" />
                               </th>
                               <th>Submission ID</th>
                               <th>Applicant Name</th>
@@ -418,9 +420,9 @@ const JobPostsTable = () => {
                               <th>Submitted By</th>
                               {/* <th>PW Submission Type</th> */}
                               <th>Notice Period</th>
-                              <th>Current CTC</th>
-                              <th>Submitted On</th>
-                              <th>Additional Details</th>
+                              <th style={{width:'200px'}}>Current CTC</th>
+                              <th style={{width:'200px'}}>Submitted On</th>
+                              {/* <th>Additional Details</th> */}
                             </thead>
                             <tbody>
                               {item.submissions.map((_item, _index) => {
@@ -434,28 +436,43 @@ const JobPostsTable = () => {
                                   bill_rate_amount,
                                   bill_rate_type,
                                   bill_rate_contract_type,
+                                  submitted_by_details,
                                 } = _item;
-                                let { firstname, middlename, lastname } =
+                                let { firstname, middlename, lastname, authorization, mobile, address,country, experience, source , notice_period, current_amount,  current_currency, current_job_type, current_payment_frequency, submission_on} =
                                   _item.applicant_details[0];
+
+                                  let current_ctc = `${(current_currency || 'N.A') + '/' + (current_amount || 'N.A') + '/' + (current_payment_frequency || 'N.A') + '/' + (current_job_type || 'N.A')}`
+
                                 return (
                                   <tr>
-                                    <td>
-                                      <input type="checkbox" />
+                                    <td style={{width:'60px'}}>
+                                      <input type="checkbox" 
+                                        onChange={(e) => {
+                                          let update = [...jobPostList];
+                                          if (e.target.checked) {
+                                            update[index]["submissions"][_index]['selected'] = e.target.checked;
+                                          } else {
+                                            update[index]["submissions"][_index]['selected'] = e.target.checked;
+                                          }
+                                          setJobPostList(update);
+                                        }}
+                                        checked={_item?.selected}
+                                      />
                                     </td>
                                     <td>{_item.id}</td>
                                     <td>
-                                      {firstname +
+                                      {firstname || '' +
                                         " " +
-                                        middlename +
+                                        middlename || '' +
                                         " " +
-                                        lastname}
+                                        lastname || ''}
                                     </td>
-                                    <td>Work Authorization</td>
-                                    <td>mobile number</td>
-                                    <td>Location</td>
-                                    <td>Country</td>
-                                    <td>Experience</td>
-                                    <td>Source</td>
+                                    <td>{authorization}</td>
+                                    <td>{mobile}</td>
+                                    <td>{address || 'N.A'}</td>
+                                    <td>{country}</td>
+                                    <td>{experience}</td>
+                                    <td>{source}</td>
                                     <td>Revision Status</td>
                                     <td>Application Status</td>
                                     {/* <th>Outlook MSG</th> */}
@@ -469,12 +486,12 @@ const JobPostsTable = () => {
                                     </td>
                                     <td>Employer Name</td>
                                     <td>{availability}</td>
-                                    <td>Submitted By</td>
+                                    <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
                                     {/* <th>PW Submission Type</th> */}
-                                    <td>Notice Period</td>
-                                    <td>Current CTC</td>
-                                    <td>Submitted On</td>
-                                    <td>Additional Details</td>
+                                    <td>{notice_period}</td>
+                                    <td style={{width:'200px'}}>{current_ctc}</td>
+                                    <td style={{width:'200px'}}>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
+                                    {/* <td>Additional Details</td> */}
                                   </tr>
                                 );
                               })}

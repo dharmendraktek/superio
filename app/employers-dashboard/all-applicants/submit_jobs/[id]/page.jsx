@@ -367,7 +367,7 @@ const Index = () => {
                   </div>
                   <div className="my-2">
                     <p>Address</p>
-                    <span>{applicantData?.adress}</span>
+                    <span>{applicantData?.address}</span>
                   </div>
                 </div>
               </div>
