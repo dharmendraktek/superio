@@ -54,6 +54,8 @@ import { MdOutlineShare } from "react-icons/md";
 import { MdOutlineSettingsSuggest } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
+import { IoPersonCircle } from "react-icons/io5";
+import { IoMdTime } from "react-icons/io";
 
 
 
@@ -109,7 +111,6 @@ export const reactIcons = {
     workexp:<MdOutlineWorkHistory />,
     share:<MdOutlineShare />,
     setting:<MdOutlineSettingsSuggest />,
-    
-    
-
+    user:<IoPersonCircle />,
+    time:<IoMdTime />,
 }

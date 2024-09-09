@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import moment from "moment";
 import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
-import Documents from "@/app/employers-dashboard/all-applicants/[id]/components/Documents";
 import { toast } from "react-toastify";
 import UploadSingleDocument from "./UploadSingleDocument";
 import BtnBeatLoader from "./BtnBeatLoader";
@@ -515,7 +514,6 @@ const ApplicantSubmissionDetails = ({
 
   const handleSubmitManualRating = async () => {
     validateApplicantCheck();
-    console.log("--------------------validate applicant", applicantCheckErr);
     if (
       applicantCheck.app_active_offer &&
       applicantCheck.app_connections &&
@@ -540,6 +538,7 @@ const ApplicantSubmissionDetails = ({
     }
   };
 
+
   useEffect(() => {
     if (applicantDetails) {
       setApplicantCheck((prev) => ({
@@ -552,6 +551,7 @@ const ApplicantSubmissionDetails = ({
   const handleAIChecking = async () => {
     let data = {
       applicant_id: applicantData?.id,
+      job_id:multiSubmissionForm[index].job,
     };
     setLoadingAiCheck(true);
     const response = await postApiReq("/candidate-ai-check/", data);
@@ -564,7 +564,6 @@ const ApplicantSubmissionDetails = ({
   };
 
   const handleDeleteDoc = async (id) => {
-   console.log("---------is working randomly");
     const response = await deleteReq(`/applicant-documents/${id}/`);
     if (response.status) {
       toast.success("Document deleted successfully");
@@ -574,7 +573,6 @@ const ApplicantSubmissionDetails = ({
     }
   };
 
-  console.log("------------applicant details ----", multiSubmissionForm[index] );
 
   return (
     <Paper>
@@ -1289,12 +1287,12 @@ const ApplicantSubmissionDetails = ({
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
             >
               <h5 className="fw-medium">Manual Rating</h5>
-              {openManualRating &&
+              {!openManualRating &&
               <button
                 type="button"
                 className="theme-btn btn-style-one small"
                 onClick={() => handleAIChecking(applicantData.id)}
-                disabled={!openManualRating}
+                disabled={openManualRating}
               >
                 {loadingAiCheck ?
                  <BtnBeatLoader />

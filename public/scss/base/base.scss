@@ -340,3 +340,18 @@ nextjs-portal {
 .star:hover {
   color: darkorange;
 }
+
+
+
+.modal.fade.show {
+  z-index: 1055; /* Boost z-index of the modal */
+}
+
+.modal-backdrop.show {
+  // z-index: 1050; /* Adjust the backdrop z-index */
+  opacity: 0 !important;
+}
+
+.modal-backdrop{
+  z-index: 0 !important;
+}

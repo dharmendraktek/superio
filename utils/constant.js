@@ -93,3 +93,20 @@ export const interviewRounds = [
     {name:'L1 Interview'},
     {name:'L2 Interview'},
 ]
+
+export const timeType = [
+    {name:'Minutes', value:'minutes'},
+    {name:'Days', value:'days'},
+]
+
+export const minutesType = [
+    {name:'15'},
+    {name:'30'},
+    {name:'45'},
+    {name:'60'},
+    {name:'75'},
+    {name:'90'},
+    {name:'105'},
+    {name:'120'},
+    {name:'180'},
+]

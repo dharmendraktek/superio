@@ -82,8 +82,6 @@ const JobPostsTable = () => {
     }
   };
 
-  console.log("--------------job post list ", jobPostList);
-
   return (
     <>
       {isLoading && <Loader />}
@@ -375,7 +373,7 @@ const JobPostsTable = () => {
                   {item.id == expand && (
                     <tr>
                       <div className="mx-5 my-3 border rounded-1  inner-table shadow">
-                        <InterviewScheduleModal />
+                        <InterviewScheduleModal  jobPostList={jobPostList}  />
                         <div className="mx-3 my-2">
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {

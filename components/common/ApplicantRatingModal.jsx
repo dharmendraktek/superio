@@ -1,9 +1,8 @@
 import { reactIcons } from "@/utils/icons";
 
 const ApplicantRatingModal = ({ aiCheckResult }) => {
+  console.log("-----------aic check ruesl ", aiCheckResult);
 
-  console.log("-----------aic check ruesl ", aiCheckResult)
- 
   return (
     <div
       className="modal fade"
@@ -28,21 +27,48 @@ const ApplicantRatingModal = ({ aiCheckResult }) => {
           <div className="modal-body">
             <div>
               <div className="my-2 d-flex gap-2">
-                <h5 className="fw-medium">Total Rating : {aiCheckResult?.rating_count}</h5>
+                <h5 className="fw-medium">
+                  Total Rating : {aiCheckResult?.rating_count}
+                </h5>
                 {/* <span></span> */}
               </div>
               <div>
-            {Object.values(aiCheckResult).slice(0, Object.values(aiCheckResult).length - 1).map((item, index) => {
-                 return(
-                  <li className={`border px-2 py-1 rounded-1 border-secondary ${item.flag == 'Red' ? 'border-danger text-danger' : item.flag == 'Green' ? 'border-success text-success' : ''} text-capitalize fw-medium d-flex justify-content-between my-2`}>
-                  <span>{item.text}</span>
-                  <span className={`fs-4 ${item.flag == 'Red' ? 'text-danger' : item.flag == 'Green' ? 'text-success' : ''}`}>
-                    {item.flag == 'Red' ? reactIcons.close : item.flag == 'Green' ? reactIcons.checked : ''} 
-                  </span>
-                </li>
-                 )
-              })
-            }
+                {Object.values(aiCheckResult)
+                  ?.slice(0, Object.values(aiCheckResult).length - 1)
+                  .map((item, index) => {
+                    return (
+                      <div>
+                      {item.text &&
+                      <li
+                        className={`border px-2 py-1 rounded-1 border-secondary ${
+                          item.flag == "Red"
+                            ? "border-danger text-danger"
+                            : item.flag == "Green"
+                            ? "border-success text-success"
+                            : ""
+                        } text-capitalize fw-medium d-flex justify-content-between my-2`}
+                      >
+                        <span>{item.text}</span>
+                        <span
+                          className={`fs-4 ${
+                            item.flag == "Red"
+                              ? "text-danger"
+                              : item.flag == "Green"
+                              ? "text-success"
+                              : ""
+                          }`}
+                        >
+                          {item.flag == "Red"
+                            ? reactIcons.close
+                            : item.flag == "Green"
+                            ? reactIcons.checked
+                            : ""}
+                        </span>
+                      </li>
+                      }
+                      </div>
+                    );
+                  })}
               </div>
             </div>
             {/* <div>

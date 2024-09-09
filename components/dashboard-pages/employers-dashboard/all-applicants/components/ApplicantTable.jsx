@@ -4,12 +4,13 @@ import Loader from "@/components/common/Loader";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
-import { candidateSearchKey } from "@/utils/constant";
+import { candidateSearchKey, processOptions } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
+import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 
 // export const applicantData = [
 //   {
@@ -416,8 +417,30 @@ const ApplicantTable = () => {
                     </tr>
                     {item.id == expand && (
                       <tr>
+                        <div className="my-3 px-5 border rounded-1  inner-table ">
+                      <InterviewScheduleModal   jobPostList={[]}  />  
+                        <div className="mx-3 my-2">
+                          <div className="d-flex gap-2">
+                            {processOptions.map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="border px-2 rounded-1"
+                                  data-bs-toggle={item.dataToggle}
+                                  data-bs-target={item.dataTarget}
+                                  aria-controls={item.ariaControls}
+                                >
+                                  <span className="text-primary cursor-pointer">
+                                    {item.name}
+                                  </span>
+                                  {/* <span>|</span> */}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
                         <td colSpan={15}>
-                          <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                          <div className="mx-2 border rounded-1  inner-table shadow">
                             {/* <div className="mx-3 my-1">
                             this the filter table and search bard
                           </div> */}
@@ -446,7 +469,6 @@ const ApplicantTable = () => {
                               </thead>
                               <tbody>
                                 {item.jobs_associated.map((_item, _index) => {
-                                  console.log("--------------_uten   ", item);
                                   let {
                                     pay_rate_currency,
                                     pay_rate_amount,
@@ -528,6 +550,7 @@ const ApplicantTable = () => {
                             </table>
                           </div>
                         </td>
+                      </div>
                       </tr>
                     )}
                   </>
