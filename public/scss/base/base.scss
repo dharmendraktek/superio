@@ -347,11 +347,15 @@ nextjs-portal {
   z-index: 1055; /* Boost z-index of the modal */
 }
 
-.modal-backdrop.show {
+.modal-backdrop.show.time-zone {
   // z-index: 1050; /* Adjust the backdrop z-index */
   opacity: 0 !important;
 }
 
-.modal-backdrop{
+.modal-backdrop.time-zone{
   z-index: 0 !important;
+}
+
+.hover-bg-change:hover {
+  background-color: #77a6f7; /* Light gray */
 }

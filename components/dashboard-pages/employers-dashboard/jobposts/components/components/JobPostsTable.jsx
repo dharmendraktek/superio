@@ -16,6 +16,8 @@ import { processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
 import InterviewScheduleModal from "./InterviewScheduleModal";
+import ClientSubmissionModal from "./ClientSubmissionModal";
+import { useCallback } from "react";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -30,6 +32,8 @@ const JobPostsTable = () => {
   const [dataCount, setDataCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [active, setActive] = useState(true);
+  const [submissionDetails, setSubmissionDetails] = useState();
+  const [isSelected, setIsSelected] = useState([]);
 
   useEffect(() => {
     getJobpostsList();
@@ -48,6 +52,7 @@ const JobPostsTable = () => {
       setDataCount(response?.data.count);
     }
   };
+
 
   useEffect(() => {
     if (search) {
@@ -81,6 +86,18 @@ const JobPostsTable = () => {
       getJobpostsList();
     }
   };
+
+
+  useEffect(() => {
+    if (jobPostList.length > 0) {
+      const filteredData = jobPostList.filter((item) =>
+        item.submissions.some((submission) => submission.selected === true)
+      );
+      setIsSelected(filteredData);
+    console.log("---------filtered data ---------", filteredData);
+      // setJobData(filteredData);
+    }
+  }, [jobPostList]); 
 
   return (
     <>
@@ -373,8 +390,10 @@ const JobPostsTable = () => {
                   {item.id == expand && (
                     <tr>
                       <div className="mx-5 my-3 border rounded-1  inner-table shadow">
-                        <InterviewScheduleModal  jobPostList={jobPostList}  />
+                        <InterviewScheduleModal  jobPostList={jobPostList}  applicantData={[]} />
+                        <ClientSubmissionModal submissionDetails={jobPostList} />
                         <div className="mx-3 my-2">
+                          {isSelected.length > 0 &&
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {
                               return (
@@ -383,7 +402,10 @@ const JobPostsTable = () => {
                                   className="border px-2 rounded-1"
                                   data-bs-toggle={item.dataToggle}
                                   data-bs-target={item.dataTarget}
-                                  aria-controls={item.ariaControls}
+                                  // data-bs-toggle='modal'
+                                  // data-bs-target='#clientSubmissionModal'
+
+                                  // aria-controls={item.ariaControls}
                                 >
                                   <span className="text-primary cursor-pointer">
                                     {item.name}
@@ -393,6 +415,7 @@ const JobPostsTable = () => {
                               );
                             })}
                           </div>
+                          }
                         </div>
                         <td colSpan={15}>
                           <table>

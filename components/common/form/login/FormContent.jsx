@@ -44,7 +44,8 @@ const FormContent = () => {
       const response = await postReq("/login/", form);
       setLoading(false);
       if (response.status) {
-        Cookies.set('is_user_token',  response.data.access, { expires: 1 }); // expires in 1 day
+        Cookies.set('is_user_token',  response.data.access, { expires: 1 });
+        Cookies.set('is_user_refresh',  response.data.refresh, { expires: 1 }); // expires in 1 day
         // localStorage.setItem("is_user_token", response.data.access);
         // localStorage.setItem("is_user_rfesh_token", response.data.refresh);
         let closeBtn = document.getElementById('loginModal');

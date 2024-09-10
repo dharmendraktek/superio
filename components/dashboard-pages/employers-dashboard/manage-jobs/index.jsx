@@ -6,10 +6,12 @@ import BreadCrumb from "../../BreadCrumb";
 import CopyrightFooter from "../../CopyrightFooter";
 import JobListingsTable from "./components/JobListingsTable";
 import MenuToggler from "../../MenuToggler";
+import ApplicantTable from "../all-applicants/components/ApplicantTable";
+import InterviewScheduleTable from "./components/InterviewScheduleTable";
 
 const index = () => {
   return (
-    <div className="page-wrapper dashboard">
+<div className="page-wrapper theme-background">
       <span className="header-span"></span>
       {/* <!-- Header Span for hight --> */}
 
@@ -22,24 +24,22 @@ const index = () => {
       <MobileMenu />
       {/* End MobileMenu */}
 
-      <DashboardEmployerSidebar />
+      {/* <DashboardEmployerSidebar /> */}
       {/* <!-- End User Sidebar Menu --> */}
 
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
         <div className="dashboard-outer">
-          <BreadCrumb title="Manage jobs!" />
+          {/* <BreadCrumb title="All Applicants!" /> */}
           {/* breadCrumb */}
 
           <MenuToggler />
           {/* Collapsible sidebar button */}
 
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-lg-12 px-5 mt-4">
               {/* <!-- Ls widget --> */}
-              <div className="ls-widget">
-                <JobListingsTable />
-              </div>
+                    <InterviewScheduleTable />
             </div>
           </div>
           {/* End .row */}
@@ -51,7 +51,6 @@ const index = () => {
       <CopyrightFooter />
       {/* <!-- End Copyright --> */}
     </div>
-    // End page-wrapper
   );
 };
 

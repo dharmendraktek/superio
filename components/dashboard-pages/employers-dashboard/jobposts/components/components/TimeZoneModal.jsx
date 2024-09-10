@@ -21,7 +21,7 @@ const TimeZoneModal = ({form, setForm}) => {
 
   
     return(
-        <div className="modal fade" id="timeZoneModal" tabindex="-1" aria-labelledby="timeZoneModalLabel" aria-hidden="true" >
+        <div className="modal fade time-zone" id="timeZoneModal" tabindex="-1" aria-labelledby="timeZoneModalLabel" aria-hidden="true" >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

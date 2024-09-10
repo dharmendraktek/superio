@@ -9,6 +9,7 @@ import { isActiveLink } from "../../utils/linkActiveChecker";
 import { useDispatch, useSelector } from "react-redux";
 import { menuToggle } from "../../features/toggle/toggleSlice";
 import { usePathname } from "next/navigation";
+import { postApiReq } from "@/utils/apiHandlers";
 
 const DashboardCandidatesSidebar = () => {
   const { menu } = useSelector((state) => state.toggle);
@@ -20,6 +21,10 @@ const DashboardCandidatesSidebar = () => {
   const menuToggleHandler = () => {
     dispatch(menuToggle());
   };
+
+  
+
+ 
 
   return (
     <div className={`user-sidebar ${menu ? "sidebar_open" : ""}`}>
@@ -33,19 +38,26 @@ const DashboardCandidatesSidebar = () => {
 
       <div className="sidebar-inner">
         <ul className="navigation">
-          {candidatesuData.map((item) => (
+         <li>
+          Logoutss
+         </li>
+          {/* {candidatesuData.map((item) => (
             <li
               className={`${
                 isActiveLink(item.routePath, usePathname()) ? "active" : ""
               } mb-1`}
               key={item.id}
-              onClick={menuToggleHandler}
+              onClick={() => {
+                handleLogout();
+                // menuToggleHandler();
+              }
+            }
             >
               <Link href={item.routePath}>
                 <i className={`la ${item.icon}`}></i> {item.name}
               </Link>
             </li>
-          ))}
+          ))} */}
         </ul>
         {/* End navigation */}
 

@@ -2,13 +2,13 @@ import { reactIcons } from "@/utils/icons";
 import StatusModal from "./StatusModal";
 
 const stepsData = [
-  { id: 1, name: "Tagged" },
-  { id: 2, name: "Submission" },
-  { id: 3, name: "Client Submission" },
-  { id: 4, name: "Interview" },
-  { id: 5, name: "Confirmation" },
-  { id: 6, name: "Placement" },
-  { id: 7, name: "Not Joined" },
+  { id: 0, name: "Tagged" },
+  { id: 1, name: "Submission" },
+  { id: 2, name: "Client Submission" },
+  { id: 3, name: "Interview" },
+  { id: 4, name: "Confirmation" },
+  { id: 5, name: "Placement" },
+  { id: 6, name: "Not Joined" },
   // {id:8, name:'Tagged'},
 ];
 
@@ -24,43 +24,55 @@ const Stepper = ({ submissionDetails }) => {
     pay_rate_contract_type,
   } = submissionDetails.applicant_details[0];
 
+  console.log(
+    "-----------submission details ",
+    submissionDetails.current_status,
+    submissionDetails.current_substatus_details
+  );
+
   return (
     <>
-        <StatusModal
-         submissionId={submissionDetails.id}
-         currentStatus = {submissionDetails?.current_status}
-         subStatus={submissionDetails?.current_substatus}
-        />
+      <StatusModal
+        submissionId={submissionDetails.id}
+        currentStatus={submissionDetails?.current_status}
+        subStatus={submissionDetails?.current_substatus}
+      />
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
         <div className="w-20">
-          <p>{firstname + " " + middlename + " " + lastname}</p>
+          <p>
+            {(firstname || "") +
+              " " +
+              (middlename || "") +
+              " " +
+              (lastname || "")}
+          </p>
         </div>
-        <div className="" >
+        <div className="">
           <p>SUBMITTED BY/ON</p>
         </div>
-        <div  style={{width:''}}>
+        <div style={{ width: "" }}>
           <p>{mobile}</p>
         </div>
-        <div style={{width:"150px"}}>
+        <div style={{ width: "150px" }}>
           <p></p>
         </div>
         <div>
           <strong>
-            {pay_rate_currency ?pay_rate_currency : 'N.A'  }
-              /
-             {pay_rate_amount ? pay_rate_amount : 'N.A' }/
-              {
-              pay_rate_type ? pay_rate_type : 'N.A' 
-              }
-              /
-              {pay_rate_contract_type ? pay_rate_contract_type : 'N.A'}
+            {pay_rate_currency ? pay_rate_currency : "N.A"}/
+            {pay_rate_amount ? pay_rate_amount : "N.A"}/
+            {pay_rate_type ? pay_rate_type : "N.A"}/
+            {pay_rate_contract_type ? pay_rate_contract_type : "N.A"}
           </strong>
         </div>
         <div className="w-20 text-center">
-          <p>{submissionDetails?.current_substatus}</p>
-          <span 
-                data-bs-toggle="modal"
-                data-bs-target="#statusModal" className="text-primary cursor-pointer">{reactIcons.edit}</span>
+          <p className="text-primary">{submissionDetails?.current_substatus_details?.display_name || ''}</p>
+          <span
+            data-bs-toggle="modal"
+            data-bs-target="#statusModal"
+            className="text-primary cursor-pointer"
+          >
+            {reactIcons.edit}
+          </span>
         </div>
         <div>
           <p></p>
@@ -122,7 +134,15 @@ const Stepper = ({ submissionDetails }) => {
                   {/* <p>Taged</p> */}
                 </div>
                 <div
-                  style={{ width: "69px", height: "3px", background: "gray" }}
+                  style={{
+                    width: "69px",
+                    height: "3px",
+                    background: `${
+                      submissionDetails.current_status >  item.id
+                        ? "#2bbc26"
+                        : "gray"
+                    }`,
+                  }}
                 ></div>
               </div>
             </div>

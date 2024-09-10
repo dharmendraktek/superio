@@ -1,36 +1,54 @@
 'use client'
 
+import MyCKEditor from "@/components/common/MyCkEditor";
 import { getReq, patchReq } from "@/utils/apiHandlers"
-import { reactIcons } from "@/utils/icons";
-import axios from "axios";
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 
-const StatusModal = ({currentStatus, subStatus, submissionId}) => {
+const ClientSubmissionModal = ({submissionDetails}) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
-    // new_status:'',
-    new_substatus:''
+    new_status:'',
+    // new_substatus:''
   });
+  const [submissionId, setSubmissionId] = useState();
 
 
+  useEffect(() => {
+    if (submissionDetails.length > 0) {
+      const filteredData = submissionDetails.filter((item) =>
+        item.submissions.some((submission) => submission.selected === true)
+      );
+      setSubmissionId(filteredData.id);
+    console.log("---------filtered data ---------", filteredData);
+      // setJobData(filteredData);
+    }
+  }, [submissionDetails]);
+
+
+  console.log("--------submisssion detail ", submissionDetails);
   useEffect(() =>{
-    handleGetStatus();
-  }, [])
+    if(submissionDetails?.length > 0){
+        handleGetStatus();
+        setSubmissionId(submissionDetails[0].id)
+    }
+  }, [submissionDetails])
+
 
 
   const handleGetStatus = async() => {
     const response = await getReq(`/status-choices/`);
 
     if(response.status){
-        let nextStatus = currentStatus;
-        let subStatusData = response.data.find((item) => item.id == nextStatus);
-      setStatusList(subStatusData.substatus);
+        // let nextStatus = currentStatus;
+        // let subStatusData = response.data.find((item) => item.id == nextStatus);
+      setStatusList(response.data);
     }
   }
 
   const handleUpdateStatus = async() => {
+    console.log("-------------sumbission detaills ", submissionId);
     try{
        const response = await patchReq(`/submissions/${submissionId}/update-status/`, form)
        if(response.status){
@@ -45,17 +63,17 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
 
 
     return(
-        <div className="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div className="modal fade" id="clientSubmissionModal" tabindex="-1" aria-labelledby="clientSubmissionModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header border border-bottom-primary">
-              <h5 className="modal-title" id="statusModalLabel">Applicant Status</h5>
+              <h5 className="modal-title" id="clientSubmissionModalLabel">Change Status</h5>
               <button type="button" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
                <div>
                <p>Status</p>
-               <select className="client-form-input" onChange={(e) => setForm((prev) => ({...prev, new_substatus:e.target.value}))}>
+               <select className="client-form-input" onChange={(e) => setForm((prev) => ({...prev, new_status:e.target.value}))}>
                  <option>Select</option>
                 {statusList.map((item, index) => {
                     return(
@@ -82,4 +100,4 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
     )
 }
 
-export default StatusModal;
+export default ClientSubmissionModal;
