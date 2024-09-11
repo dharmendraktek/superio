@@ -69,7 +69,7 @@ export const processOptions = [
     {name:'Remove', dataToggle:'', dataTarget:'', ariaControls:''},
     {name:'Update Status', dataToggle:'', dataTarget:'', ariaControls:''},
     {name:'Share Job', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Submit To Client', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Submit To Client', dataToggle:'modal', dataTarget:'#clientSubmissionModal', ariaControls:'clientsubmission'},
     {name:'Add To Group', dataToggle:'', dataTarget:'', ariaControls:''},
     {name:'Schedule Interview', dataToggle:'offcanvas', dataTarget:'#interviewSchedule', ariaControls:'offcanvasRight' },
     {name:'Submit To Other Job', dataToggle:'', dataTarget:'', ariaControls:''},

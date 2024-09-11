@@ -355,15 +355,30 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
               <div className="col-6 my-1">
                 <p>Meeting Time</p>
                 <DatePickerCustom
-                  //  date={form.time}
-                  handleDate={(date) =>{
-                    setForm((prev) => ({
-                      ...prev,
-                      time: moment(date).format('hh:mm:ss'),
-                    }))
+                  // //  date={form.time}
+                  // handleDate={(date) =>{
+                  //   setForm((prev) => ({
+                  //     ...prev,
+                  //     time: moment(date).format('hh:mm:ss'),
+                  //   }))
+                  // }
+                  // }
+                  // showTime={true}
+                  date={
+                    form.time
+                      ? moment(form.time, "HH:mm:ss").toDate()
+                      : null
                   }
-                  }
-                  showTime={true}
+                  handleDate={(date) => {
+                    if (moment(date).isValid()) {
+                      let newTime = moment(date).format("HH:mm:ss");
+                      setForm((prev) => ({
+                        ...prev,
+                        time: newTime,
+                      }));
+                    }
+                  }}
+                  showTime={true} // For time picker
                 />
               </div>
               <div className="col-6 my-1">

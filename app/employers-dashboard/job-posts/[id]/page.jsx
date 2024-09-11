@@ -130,15 +130,15 @@ const Index = () => {
                         <span>{reactIcons.downarrow}</span>
                         </div>
                         {submitOpt &&
-                            <div className="position-absolute bg-white  border border-secondary rounded-1 px-2" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
-                                 <div>
+                            <div className="position-absolute bg-white  border border-secondary rounded-1" style={{width:'200px', height:'80px', top:'30px', zIndex:'1000', right:0}}>
+                                 <div className="hover-bg-change px-2 my-1">
                                  <Link href={`/employers-dashboard/job-posts/submit-applicants/${id}`}>
-                                <p className="cursor-pointer">Submit Applicant</p>
+                                <p className="cursor-pointer ">Submit Applicant</p>
                                 </Link>
                                  </div>
-                                 <div>  
+                                 {/* <div>  
                                 <p className="cursor-pointer">Add & Submit Applicant</p>
-                                 </div>
+                                 </div> */}
                             </div>
 
                         }

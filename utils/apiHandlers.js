@@ -18,21 +18,27 @@ import Cookies from 'js-cookie';
 // const authorize = () => {
 //   return `Bearer ${localStorage.getItem('is_user_token')}`;
 // };
-// const handleLogout = async () => {
-//   const response = await postReq('/auth/logout');
-//   if (response.status) {
-//     removeAuthCookie();
-//     localStorage.removeItem('is_user_token');
-//     window.location = '/';
-//     return true;ssss
-//   }
-// };
 
 let header =  {
-      headers: {
-        Authorization: `Bearer ${Cookies.get('is_user_token')}`,
-      },
-    }
+  headers: {
+    Authorization: `Bearer ${Cookies.get('is_user_token')}`,
+  },
+}
+
+let refreshToken = Cookies.get('is_user_refresh')
+
+let  refreshTokenData = {
+  refresh:refreshToken
+}
+
+
+const handleGenerateToken = async () => {
+  const response = await postReq('/api/token/refresh/', refreshTokenData);
+  if (response.status) {
+    Cookies.set('is_user_token', response.data.access);
+    window.location.reload();
+  }
+};
  
 
 // export const setAuthCookie = () => {
@@ -127,10 +133,7 @@ export const postReq = async (endpoint, data) => {
     })
     .catch((err) => {
       if (err.response.status == 401) {
-        // handleLogout();
-        // removeAuthCookie();
-        // localStorage.removeItem('is_user_token');
-        // window.location = '/';
+        handleGenerateToken();
         return handleApiError(err);
       } else {
         return handleApiError(err);
@@ -147,9 +150,7 @@ export const patchReq = async (endpoint, data) => {
     })
     .catch((err) => {
       if (err.response.status == 401) {
-        // handleLogout();
-        // removeAuthCookie();
-        // localStorage.removeItem('is_user_token');
+        handleGenerateToken();
         window.location = '/';
       } else {
         return handleApiError(err);
@@ -167,10 +168,7 @@ export const getReq = async(endpoint) => {
     })
     .catch((err) => {
       if (err?.response?.status == 401) {
-        // handleLogout();
-        localStorage.removeItem('is_user_token');
-        // removeAuthCookie();
-        window.location = '/';
+        handleGenerateToken();
       } else {
         return handleApiError(err);
       }
@@ -188,10 +186,7 @@ export const deleteReq = async(endpoint) => {
     })
     .catch((err) => {
       if (err.response.status == 401) {
-        // handleLogout();
-        // removeAuthCookie();
-        // localStorage.removeItem('is_user_token');
-        window.location = '/';
+        handleGenerateToken();
       } else {
         return handleApiError(err);
       }

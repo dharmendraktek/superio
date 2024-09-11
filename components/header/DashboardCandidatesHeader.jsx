@@ -8,6 +8,9 @@ import HeaderNavContent from "./HeaderNavContent";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { postApiReq } from "@/utils/apiHandlers";
+import { toast } from "react-toastify";
 const DashboardCandidatesHeader = () => {
     const [navbar, setNavbar] = useState(false);
 
@@ -24,6 +27,23 @@ const DashboardCandidatesHeader = () => {
     useEffect(() => {
         window.addEventListener("scroll", changeBackground);
     }, []);
+   
+    let token = Cookies.get('is_user_refresh')
+
+    let data = {
+        refresh:token
+    }
+  
+    const handleLogout = async() => {
+       const response  = await postApiReq('/logout/', data);
+       if(response.status){
+           toast.success('Logout sucessfully')
+           Cookies.remove('is_user_token');
+           Cookies.remove('is_user_refresh');
+           window.location.href = '/'
+       }
+    }
+
 
     return (
         // <!-- Main Header-->
@@ -51,7 +71,6 @@ const DashboardCandidatesHeader = () => {
                             </div>
                         </div>
                         {/* End .logo-box */}
-
                         <HeaderNavContent />
                         {/* <!-- Main Menu End--> */}
                     </div>
@@ -99,6 +118,7 @@ const DashboardCandidatesHeader = () => {
                                                 : ""
                                         } mb-1`}
                                         key={item.id}
+                                        onClick={handleLogout}
                                     >
                                         <Link href={item.routePath}>
                                             <i
@@ -108,6 +128,7 @@ const DashboardCandidatesHeader = () => {
                                         </Link>
                                     </li>
                                 ))}
+                                
                             </ul>
                         </div>
                         {/* End dropdown */}

@@ -12,7 +12,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 
-// export const applicantData = [
+// export const interviewData = [
 //   {
 //     id: 672652,
 //     name: "Anil Patel",
@@ -28,11 +28,11 @@ import InterviewScheduleModal from "../../jobposts/components/components/Intervi
 //   },
 // ];
 
-const ApplicantTable = () => {
+const InterviewScheduleTable = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-  const [applicantData, setApplicantData] = useState([]);
+  const [interviewData, setInterviewData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
   const [fieldName, setFieldName] = useState("search-any");
@@ -62,19 +62,21 @@ const ApplicantTable = () => {
       param = `&${fieldName}=${search}`;
     }
     // setTimeout(() => {
-    handleGetApplicantList(param);
+    handleGetInterviewsList(param);
     // }, 700)
   }, [search, startDate, endDate, page]);
 
-  const handleGetApplicantList = async (param) => {
+  const handleGetInterviewsList = async (param) => {
     setIsLoading(true);
-    const response = await getReq(
-      `/applicants/?page=${page + 1}&size=25${param ? param : ""}`
+    const response = await getReq('/interviews/'
+    //   `/interviews/}`
     );
+    // ?page=${page + 1}&size=25${param ? param : ""
     setIsLoading(false);
+    console.log("-------------responsen interview list ", response);
     if (response.status) {
       setDataCount(response.data.count);
-      setApplicantData(response.data.results);
+      setInterviewData(response.data.results || response.data);
     }
   };
 
@@ -138,13 +140,13 @@ const ApplicantTable = () => {
                       className="rounded-1"
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setApplicantData((prev) =>
+                          setInterviewData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
                           );
                         } else {
-                          setApplicantData((prev) =>
+                          setInterviewData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
@@ -152,7 +154,7 @@ const ApplicantTable = () => {
                         }
                       }}
                     />
-                    {applicantData.find((item) => item.selected == true) && (
+                    {interviewData?.find((item) => item.selected == true) && (
                       <div className="position-relative">
                         <span onClick={() => setOpenAct(!openAct)}>Action</span>
                         {openAct && (
@@ -167,30 +169,43 @@ const ApplicantTable = () => {
                   </div>
                 </th>
                 <th className="" style={{ width: "150px" }}>
-                  Applicant ID
+                  Interview On
                 </th>
-                <th style={{ width: "200px" }}>Applicant Name</th>
-                <th style={{ width: "250px" }}>Job Title</th>
-                <th style={{ width: "300px" }}>Email Address</th>
-                <th style={{ width: "300px" }}>Mobile Number</th>
-                <th style={{ width: "300px" }}>Primary Skills</th>
-                <th style={{ width: "300px" }}>Secondary Skills</th>
-                <th style={{ width: "150px" }}>City</th>
-                <th style={{ width: "200px" }}>Source</th>
-                <th style={{ width: "200px" }}>State</th>
-                <th style={{ width: "200px" }}>Applicant Status</th>
-                <th style={{ width: "250px" }}>Ownership</th>
+                <th style={{ width: "100px" }}>Start Time</th>
+                <th style={{ width: "100px" }}>End Time</th>
+                <th style={{ width: "250px" }}>Applicant Name</th>
+                <th style={{ width: "300px" }}>Job Title</th>
+                <th style={{ width: "200px" }}>Inerview Round</th>
+                <th style={{ width: "150px" }}>Interview Mode</th>
+                <th style={{ width: "160px" }}>Interview Outcome</th>
+                <th style={{ width: "200px" }}>Client</th>
+                <th style={{ width: "200px" }}>End Client</th>
+                <th style={{ width: "200px" }}>Interviers</th>
+                <th style={{ width: "250px" }}>Scheduled By</th>
                 <th style={{ width: "250px" }} className="">
-                  Work Authorization
+                  Scheduled On
                 </th>
-                <th style={{ width: "250px" }}>Created By</th>
-                <th style={{ width: "250px" }}>Updated By</th>
-                <th style={{ width: "200px" }}>Created On</th>
-                <th style={{ width: "200px" }}>Updated On</th>
+                <th style={{ width: "250px" }}>Applicant Mobile Number</th>
+                <th style={{ width: "250px" }}>Applicant Email</th>
+                <th style={{ width: "200px" }}>Cancellation Reason</th>
+                <th style={{ width: "200px" }}>Reschedule Reason</th>
+                <th style={{ width: "200px" }}>Recruiter Name</th>
+                <th style={{ width: "200px" }}>Ownership</th>
+                <th style={{ width: "200px" }}>Job Status</th>
+                <th style={{ width: "200px" }}>Scheduled By Email ID</th>
+                <th style={{ width: "220px" }}>Scheduled By Employee ID</th>
+                <th style={{ width: "100px" }}>Gender</th>
+                <th style={{ width: "200px" }}>Work Authoriztion</th>
+                <th style={{ width: "150px" }}>Action</th>
               </tr>
             </thead>
             <tbody>
-              {applicantData.map((item, index) => {
+              {interviewData?.map((item, index) => {
+                 
+                 let {firstname, middlename, lastname, mobile, email, authorization} = item.applicant_details;
+                 let {title, client_name}  = item.job_details;
+                 let {starttime, endtime, startdate, endclient, mode, round, reason} = item;
+                
                 return (
                   <>
                     <tr key={index}>
@@ -200,16 +215,16 @@ const ApplicantTable = () => {
                             type="checkbox"
                             checked={item?.selected}
                             onChange={(e) => {
-                              let update = [...applicantData];
+                              let update = [...interviewData];
                               if (e.target.checked) {
                                 update[index]["selected"] = e.target.checked;
                               } else {
                                 update[index]["selected"] = e.target.checked;
                               }
-                              setApplicantData(update);
+                              setInterviewData(update);
                             }}
                           />
-                          {item.jobs_associated.length > 0 && (
+                          {/* {item.jobs_associated.length > 0 && (
                             <>
                               <div
                                 onClick={() => {
@@ -248,177 +263,107 @@ const ApplicantTable = () => {
                                 </span>
                               </div>
                             </>
-                          )}
+                          )} */}
                         </div>
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        <Link
-                          href="/employers-dashboard/all-applicants/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                        >
-                          {item.applicant_code}
-                        </Link>
+                        
+                          {startdate}
+                        
                       </td>
-                      <td className="" style={{ width: "200px" }}>
-                        <Link
-                          href="/employers-dashboard/all-applicants/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                        >
-                          {item?.firstname} {item?.middlename} {item?.lastname}
-                        </Link>
+                      <td className="" style={{ width: "100px" }}>
+                      {starttime}
+                      </td>
+                      <td className="" style={{ width: "100px" }}>
+                        {endtime}
                       </td>
                       <td className="" style={{ width: "250px" }}>
-                        {item.job_title}
+                        {(firstname || '') + ' '+ (middlename || '') + ' ' + (lastname || '') }
                       </td>
                       <td className="" style={{ width: "300px" }}>
-                        {item.email}
+                        {title}
                       </td>
-                      <td className="" style={{ width: "300px" }}>
-                        {item.mobile}
+                      <td style={{ width: "200px" }}>
+                      {round}
                       </td>
-                      <td style={{ width: "300px" }}>
-                        <div className="d-flex flex-wrap gap-1">
-                          {item.primary_skills
-                            ?.slice(0, 3)
-                            .map((_item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="border rounded-1 bg-white border-primary px-2"
-                                >
-                                  <span
-                                    className="fw-medium"
-                                    style={{ fontSize: "14px" }}
-                                  >
-                                    {_item.name}
-                                    {item.primary_skills.length - 1 > index
-                                      ? ""
-                                      : ""}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                        </div>
+                      <td style={{ width: "150px" }}>
+                        {mode}
                       </td>
-                      <td style={{ width: "300px" }}>
-                        <div className="d-flex flex-wrap gap-1">
-                          {item.secondary_skills
-                            ?.slice(0, 3)
-                            .map((_item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="border rounded-1 bg-white border-primary px-2"
-                                >
-                                  <span
-                                    className="fw-medium"
-                                    style={{ fontSize: "14px" }}
-                                  >
-                                    {_item.name}
-                                    {item.secondary_skills.length - 1 > index
-                                      ? ""
-                                      : ""}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                        </div>
-                      </td>
-                      <td className="" style={{ width: "150px" }}>
-                        {item.city}
+                      <td className="" style={{ width: "160px" }}>
+                        {'-'}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.source}
+                        {client_name}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.state}
+                        {'end client'}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.status}
-                      </td>
-                      <td
-                        className="d-flex flex-wrap gap-2"
-                        style={{ width: "250px" }}
-                      >
-                        {item.ownership_details.map((item) => {
+                         {/* {item.ownership_details.map((item) => {
                           return (
                             <span key={item.id}>
                               {item.first_name} {item.last_name}
                             </span>
                           );
-                        })}
+                        })} */}
+                       { 'interviews'}
                       </td>
-                      <td className="" style={{ width: "250px" }}>
-                        {item.authorization}
-                        {/* <div className="option-box text-center">
-                    <ul className="option-list">
-                      <li>
-                        <button
-                          onClick={() => setItem(item)}
-                          data-bs-toggle="modal"
-                          data-bs-target="#userUpdateModal"
-                          data-text="Edit User"
-                        >
-                          
-                          <span className="las la-edit"></span>
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={
-                            () => {
-                              if (active == 1) {
-                                handleDeleteUser(item.id);
-                              } else {
-                                handleActiveUser(item.id);
-                              }
-                            }
-                            // setUserId(item.id)
-                          }
-                          // data-bs-toggle="modal"
-                          //     data-bs-target="#userDeleteModal"
-
-                          data-text={`${
-                            active == 1 ? "Inactive User" : "Active User"
-                          }`}
-                        >
-                          <span
-                            className={`${
-                              active == 1
-                                ? "las la-times-circle"
-                                : "las la-check-square"
-                            }`}
-                          ></span>
-                        </button>
-                      </li>
-                    </ul>
-                  </div> */}
-                      </td>
-                      <td style={{ width: "250px" }}>
-                        {item.created_by
+                      <td
+                        className="d-flex flex-wrap gap-2"
+                        style={{ width: "250px" }}
+                      >
+                       {'scheduled by'}
+                       {/* {item.created_by
                           ? item?.created_by?.first_name +
                             " " +
                             item?.created_by?.last_name
-                          : "-"}
+                          : "-"} */}
+                      </td>
+                      <td className="" style={{ width: "250px" }}>
+                        {'scheduled on'}
+                        {/* {moment(item.created_at).format("DD-MM-YYYY  hh:mm A")} */}
                       </td>
                       <td style={{ width: "250px" }}>
-                        {item.updated_by
-                          ? item?.updated_by?.first_name +
-                            " " +
-                            item?.updated_by?.last_name
-                          : "-"}
+                         {mobile}
+                      </td>
+                      <td style={{ width: "250px" }}>
+                         {email}
                       </td>
                       <td style={{ width: "200px" }}>
-                        {moment(item.created_at).format("DD-MM-YYYY  hh:mm A")}
+                        'N/A'
                       </td>
                       <td style={{ width: "200px" }}>
-                        {moment(item.updated_at).format("DD-MM-YYYY  hh:mm A")}
+                        {reason}
+                      </td>
+                      <td style={{ width: "200px" }}>
+                        'Recruiter name'
+                      </td>
+                      <td style={{ width: "200px" }}>
+                        'owner ship'
+                      </td>
+                      <td style={{ width: "200px" }}>
+                        'job status'
+                      </td>
+                      <td style={{ width: "200px" }}>
+                        'scheduled by email id '
+                      </td>
+                      <td style={{ width: "220px" }}>
+                        'scheduled by emplyoee id'
+                      </td>
+                      <td style={{ width: "100px" }}>
+                    N/A    
+                      </td>
+                      <td style={{ width: "200px" }}>
+                        {authorization}    
+                      </td>
+                      <td style={{ width: "150px" }}>
+                        'Action'    
                       </td>
                     </tr>
-                    {item.id == expand && (
+                    {/* {item.id == expand && (
                       <tr>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  applicantData={applicantData} />  
+                      <InterviewScheduleModal   jobPostList={[]}  interviewData={interviewData} />  
                         <div className="mx-3 my-2">
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {
@@ -433,7 +378,6 @@ const ApplicantTable = () => {
                                   <span className="text-primary cursor-pointer">
                                     {item.name}
                                   </span>
-                                  {/* <span>|</span> */}
                                 </div>
                               );
                             })}
@@ -441,9 +385,7 @@ const ApplicantTable = () => {
                         </div>
                         <td colSpan={15}>
                           <div className="mx-2 border rounded-1  inner-table shadow">
-                            {/* <div className="mx-3 my-1">
-                            this the filter table and search bard
-                          </div> */}
+                           
                             <table className="custom-scroll-2nd">
                               <thead className="table-inner-thead">
                                 <th style={{width:'60px'}}>
@@ -455,7 +397,6 @@ const ApplicantTable = () => {
                                 <th>Delivery Manager</th>
                                 <th>Resume</th>
                                 <th>Profile Status</th>
-                                {/* <th>Outlook MSG</th> */}
                                 <th>Submission Rating</th>
                                 <th>Client</th>
                                 <th>Source</th>
@@ -465,7 +406,6 @@ const ApplicantTable = () => {
                                 <th>Employer Name</th>
                                 <th>Submitted By</th>
                                 <th>Submitted On</th>
-                                {/* <th>Additional Details</th> */}
                               </thead>
                               <tbody>
                                 {item.jobs_associated.map((_item, _index) => {
@@ -506,13 +446,13 @@ const ApplicantTable = () => {
                                       <td style={{width:'60px'}}>
                                         <input type="checkbox"
                                          onChange={(e) => {
-                                          let update = [...applicantData];
+                                          let update = [...interviewData];
                                           if (e.target.checked) {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           } else {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           }
-                                          setApplicantData(update);
+                                          setInterviewData(update);
                                         }}
                                         checked={_item?.selected}
 
@@ -537,7 +477,6 @@ const ApplicantTable = () => {
                                         }} className="fs-5 text-primary cursor-pointer">{reactIcons.document}</span>
                                       </td>
                                       <td>{current_status_details?.display_name}</td>
-                                      {/* <th>Outlook MSG</th> */}
                                       <td>{overallRating}</td>
                                       <td>{client_name || "N/A"}</td>
                                       <td>{source}</td>
@@ -554,7 +493,6 @@ const ApplicantTable = () => {
                                       <td>Employer Name</td>
                                       <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
                                       <td>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
-                                      {/* <td>Additional Details</td> */}
                                     </tr>
                                   );
                                 })}
@@ -564,12 +502,12 @@ const ApplicantTable = () => {
                         </td>
                       </div>
                       </tr>
-                    )}
+                    )} */}
                   </>
                 );
               })}
               {/* End tr */}
-              {applicantData.length == 0 && (
+              {interviewData?.length == 0 && (
                 <tr className="mt-5 ">
                   <td colSpan={6} className="text-center">
                     No data found
@@ -587,4 +525,4 @@ const ApplicantTable = () => {
   );
 };
 
-export default ApplicantTable;
+export default InterviewScheduleTable;
