@@ -13,8 +13,15 @@ import Hero1 from "../hero/hero-1";
 import JobCategorie1 from "../job-categories/JobCategorie1";
 import JobFeatured1 from "../job-featured/JobFeatured1";
 import Testimonial from "../testimonial/Testimonial";
+import Cookies from "js-cookie";
 
 const index = () => {
+
+  let token = Cookies.get('is_user_token')
+  if(token){
+    window.location.href = '/employers-dashboard/dashboard';
+  }
+
   return (
     <>
       <LoginPopup />

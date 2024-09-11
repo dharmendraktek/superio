@@ -60,6 +60,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const [reminder, setReminder] = useState(remInitialState);
   const [reminderUsersIds, setReminderUsersIds] = useState([]);
   const [clientContactList, setClientContactList] = useState([]);
+  const [roundList, setRoundList] = useState([]);
 
   useEffect(() => {
     if (jobPostList.length > 0) {
@@ -67,6 +68,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
         item.submissions.some((submission) => submission.selected === true)
       );
       setJobData(filteredData);
+      handleGetInterviewRoundList();
     }
   }, [jobPostList]);
 
@@ -115,6 +117,14 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       toast.error(err || "Something went wrong");
     }
   };
+
+  const handleGetInterviewRoundList = async() => {
+    const response = await getReq('/interview-round-choice/');
+    console.log("-------------response -------", response);
+    if(response.status){
+        setRoundList(response.data);
+    }
+  }
 
   const handleFileUpload = (e, type) => {
     let file = e.target.files[0];
@@ -367,9 +377,9 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                   className="client-form-input"
                 >
                   <option>Select</option>
-                  {interviewRounds.map((item, index) => {
+                  {roundList.map((item, index) => {
                     return (
-                      <option key={index} value={1}>
+                      <option key={index} value={item.value}>
                         {item.name}
                       </option>
                     );
