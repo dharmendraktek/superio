@@ -11,7 +11,7 @@ const nextConfig = {
     basePath: '/images',  // Assuming your app is located under `/superio`
 
     // Serve static assets (CSS, JS) from a custom path
-    assetPrefix: 'https://katalixai.com',  // <-- Missing comma here
+    assetPrefix: '.next/static',  // <-- Missing comma here
 
     // Optional: Enforce trailing slashes for URLs and assets
     trailingSlash: true,
