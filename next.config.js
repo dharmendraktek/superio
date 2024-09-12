@@ -8,10 +8,10 @@ const nextConfig = {
     },
 
     // Base path for the entire app
-    basePath: '/superio',  // Assuming your app is located under `/superio`
+    basePath: '/images',  // Assuming your app is located under `/superio`
 
     // Serve static assets (CSS, JS) from a custom path
-   assetPrefix: 'https://katalixai.com/superio/'
+   assetPrefix: 'https://katalixai.com'
 
     // Optional: Enforce trailing slashes for URLs and assets
     trailingSlash: true,
