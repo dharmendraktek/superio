@@ -7,11 +7,8 @@ const nextConfig = {
         CLIENT_URL: process.env.CLIENT_URL,
     },
 
-    // Set the basePath to match your deployment subfolder
-    basePath: '/superio',
-
-    // Optional: Serve static assets from the custom path
-    assetPrefix: '/superio/',  // This ensures that assets are prefixed with /superio
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL || '',
+  basePath: '/_next', // Or modify as per your directory structure
 
     trailingSlash: true,
 
