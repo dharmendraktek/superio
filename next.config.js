@@ -13,7 +13,7 @@ const nextConfig = {
      basePath: '/superio',  // Assuming your app is located under `/superio`
 
     // Serve static assets (CSS, JS) from a custom path
-    assetPrefix: '/superio/_next/',
+    assetPrefix: '/superio/.next/',
 
     // Optional: Enforce trailing slashes for URLs and assets
     trailingSlash: true,
