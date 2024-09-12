@@ -1,24 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
-        PORT: process.env.PORT,                // Server port
-        APP_ENV: process.env.APP_ENV,          // Application environment (test, production, etc.)
-        NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,  // API URL
-        CLIENT_URL: process.env.CLIENT_URL,    // Client URL
+        PORT: process.env.PORT,
+        APP_ENV: process.env.APP_ENV,
+        NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+        CLIENT_URL: process.env.CLIENT_URL,
     },
 
-    // Base path for the entire app
-    basePath: '',  // Assuming your app is located under `/superio`
+    // Set the basePath to match your deployment subfolder
+    basePath: '/superio',
 
-    // Serve static assets (CSS, JS) from a custom path
-    assetPrefix: '',  // <-- Missing comma here
+    // Optional: Serve static assets from the custom path
+    assetPrefix: '/superio/',  // This ensures that assets are prefixed with /superio
 
-    // Optional: Enforce trailing slashes for URLs and assets
     trailingSlash: true,
 
-    // Optional: Webpack configuration to handle custom behaviors
     webpack: (config, { isServer }) => {
-        // Custom Webpack rules here, if needed
         return config;
     },
 }
