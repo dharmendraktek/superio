@@ -8,7 +8,7 @@ const nextConfig = {
     },
 
     // Base path for the entire app
-    basePath: '/images',  // Assuming your app is located under `/superio`
+    basePath: '',  // Assuming your app is located under `/superio`
 
     // Serve static assets (CSS, JS) from a custom path
     assetPrefix: '',  // <-- Missing comma here
