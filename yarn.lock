@@ -5985,22 +5985,15 @@ uncontrollable@^7.2.1:
     invariant "^2.2.4"
     react-lifecycles-compat "^3.0.4"
 
-<<<<<<< HEAD
-update-browserslist-db@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.1.0.tgz"
-  integrity sha512-EdRAaAyk2cUE1wOf2DkEhzxqOQvFOoRJFNS6NeyJ01Gp2beMRpBAINjM2iDXE3KCuKhwnvHIQCJm6ThL2Z+HzQ==
-=======
 undici-types@~6.19.2:
   version "6.19.8"
   resolved "https://registry.npmjs.org/undici-types/-/undici-types-6.19.8.tgz"
   integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
 
-update-browserslist-db@^1.0.16:
-  version "1.0.16"
-  resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.0.16.tgz"
-  integrity sha512-KVbTxlBYlckhF5wgfyZXTWnMn7MMZjMu9XG8bPlliUOP9ThaF4QnhP8qrjrH7DRzHfSk0oQv1wToW+iA5GajEQ==
->>>>>>> 3940b2309c14787593afac8744b138cd0a65281c
+update-browserslist-db@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.1.0.tgz"
+  integrity sha512-EdRAaAyk2cUE1wOf2DkEhzxqOQvFOoRJFNS6NeyJ01Gp2beMRpBAINjM2iDXE3KCuKhwnvHIQCJm6ThL2Z+HzQ==
   dependencies:
     escalade "^3.1.2"
     picocolors "^1.0.1"
