@@ -75,7 +75,7 @@ const FormContent = () => {
       {/* <!--Login Form--> */}
       {/* <form > */}
       <div className="form-group">
-        <label>Email</label>
+        <label>Emails</label>
         <input
           type="text"
           name="email"
