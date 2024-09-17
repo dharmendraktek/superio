@@ -17,7 +17,7 @@ import {
   isActiveParentChaild,
 } from "../../utils/linkActiveChecker";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserDetails } from "@/features/employer/employerAction";
 import { reactIcons } from "@/utils/icons";
 import Cookies from "js-cookie";
@@ -53,10 +53,11 @@ const HeaderNavContent = () => {
     {token &&
       <nav className="nav main-menu" style={{ height: "80px" }}>
         <ul className="navigation" id="navbar">
-          {menuList.map((item) => {
+          {menuList.map((item, index) => {
             return (
-              <>
+              <React.Fragment key={index}>
                 <li
+                  key={index}
                   className="position-relative d-flex align-items-center  gap-3"
                   onClick={() => {
                     if (item.name == "REPORTS") {
@@ -95,7 +96,7 @@ const HeaderNavContent = () => {
                     </ul>
                   </div>
                 )}
-              </>
+              </React.Fragment>
             );
           })}
         </ul>

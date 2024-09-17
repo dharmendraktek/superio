@@ -188,7 +188,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       <div className="form-group">
                         <label>Role</label>
                         <select
-                          class="form-select"
+                          className="form-select"
                           aria-label="Default select example"
                           name="user_role"
                           onChange={handleChange}
@@ -196,7 +196,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                         >
                           {roleList.map((item) => {
                             return (
-                              <option key={item.id} value={item.id} selected>
+                              <option key={item.id} value={item.id} >
                                 {item.role_name}
                               </option>
                             );
@@ -208,15 +208,15 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       <div className="form-group">
                         <label>Team</label>
                         <select
-                          class="form-select"
+                          className="form-select"
                           aria-label="Default select example"
                           name="user_team"
                           onChange={handleChange}
                           value={userData.user_team}
                         >
-                          {teamList.map((item) => {
+                          {teamList.map((item, index) => {
                             return (
-                              <option key={item.id} value={item.id} selected>
+                              <option key={index} value={item.id} >
                                 {item.team_name}
                               </option>
                             );
@@ -228,7 +228,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       <div className="form-group">
                         <label>Branch</label>
                         <select
-                          class="form-select"
+                          className="form-select"
                           aria-label="Default select example"
                           name="user_branch"
                           onChange={handleChange}
@@ -240,7 +240,6 @@ const UserUpdateModal = ({ item, getUserList }) => {
                                 className="capitalize"
                                 key={item.id}
                                 value={item.id}
-                                selected
                               >
                                 {item.branch_name}
                               </option>
@@ -253,7 +252,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       <div className="form-group">
                         <label>Department</label>
                         <select
-                          class="form-select"
+                          className="form-select"
                           aria-label="Default select example"
                           name="user_dept"
                           onChange={handleChange}
@@ -261,7 +260,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                         >
                           {departmentList.map((item) => {
                             return (
-                              <option key={item.id} value={item.id} selected>
+                              <option key={item.id} value={item.id} >
                                 {item.dept_name}
                               </option>
                             );
@@ -274,7 +273,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
                       <div className="form-group">
                         <label>Reporting Manager</label>
                         <select
-                          class="form-select"
+                          className="form-select"
                           aria-label="Default select example"
                           name="user_reportingmanager"
                           onChange={handleChange}
@@ -283,8 +282,8 @@ const UserUpdateModal = ({ item, getUserList }) => {
                           {userList.map((item) => {
                             return (
                               <option
+                                key={item.id}
                                 value={item.id}
-                                selected
                               >
                                 {item.first_name} {item.last_name} ({item.email})
                               </option>

@@ -9,7 +9,7 @@ const JobSearchBoard = ({searchString}) => {
         <Paper>
         <div className=""> 
           <div className="mb-3">
-            <h5>Search Criteria</h5>
+            <h4 className="text-primary">Search Criteria</h4>
           </div>
           <div className="">
              <textarea type='text' value={searchString} className="border px-2 rounded-1 border-secondary"   style={{height:'90px', width:'100%'}}/>

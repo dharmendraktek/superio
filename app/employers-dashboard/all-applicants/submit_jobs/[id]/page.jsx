@@ -355,19 +355,19 @@ const Index = () => {
                   </div>
                   <div className="my-2">
                     <p>Email Address</p>
-                    <span>{applicantData?.email}</span>
+                    <span>{applicantData?.email || 'N/A'}</span>
                   </div>
                   <div className="my-2">
                     <p>Mobile Number</p>
-                    <span>{applicantData?.mobile}</span>
+                    <span>{applicantData?.mobile || 'N/A'}</span>
                   </div>
                   <div className="my-2">
                     <p>City</p>
-                    <span>{applicantData?.city}</span>
+                    <span>{applicantData?.city || 'N/A'}</span>
                   </div>
                   <div className="my-2">
                     <p>Address</p>
-                    <span>{applicantData?.address}</span>
+                    <span>{applicantData?.address || 'N/A'}</span>
                   </div>
                 </div>
               </div>

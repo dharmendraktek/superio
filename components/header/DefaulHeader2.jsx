@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 import HeaderNavContent from "./HeaderNavContent";
 import Image from "next/image";
 
+const OuterMenuList = [
+  {name:'Home'},
+  {name:'About'},
+  // {name:'Home' },
+]
+
 const DefaulHeader2 = () => {
   const [navbar, setNavbar] = useState(false);
 
@@ -53,11 +59,11 @@ const DefaulHeader2 = () => {
 
         <div className="outer-box">
           {/* <!-- Add Listing --> */}
-          <Link href="/candidates-dashboard/cv-manager" className="upload-cv">
+          {/* <Link href="/candidates-dashboard/cv-manager" className="upload-cv">
             Upload your CV
-          </Link>
+          </Link> */}
           {/* <!-- Login/Register --> */}
-          <div className="btn-box">
+          {/* <div className="btn-box">
             <a
               href="#"
               className="theme-btn btn-style-three call-modal"
@@ -72,7 +78,20 @@ const DefaulHeader2 = () => {
             >
               Job Post
             </Link>
+          </div> */}
+          {/* <div className="d-flex gap-3">
+           {OuterMenuList.map((item, index) => {
+              return(
+                <li key={index}>
+                  <span>{item.name}</span>
+                </li>
+              )
+           })
+           }
           </div>
+          <div>
+
+          </div> */}
         </div>
       </div>
     </header>

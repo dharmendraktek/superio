@@ -78,7 +78,7 @@ const Profile = ({ setTab, applicantData, setApplicantData }) => {
                 <button className="theme-btn btn-style-one small">+ Add Tag</button>
                </div> */}
         </div>
-        <div className="my-2 px-2">
+        {/* <div className="my-2 px-2">
           <div className="d-flex justify-content-between gap-2">
             <div className="">
               <p>Technical Skills</p>
@@ -103,7 +103,7 @@ const Profile = ({ setTab, applicantData, setApplicantData }) => {
             </div>
             <StarRating initialRating={2} />
           </div>
-        </div>
+        </div> */}
       </div>
     </Paper>
   );

@@ -265,6 +265,29 @@ const ManualCreation = ({
   };
 
   const handleValidation = () => {
+    setError((prev) => ({
+      ...prev, 
+      jobCodeErr: "",
+      jobTitleErr: "",
+      clientErr: "",
+      lobErr: "",
+      contactManagerErr: "",
+      stateErr: "",
+      cityErr: "",
+      jobStatusErr: "",
+      jobTypeErr: "",
+      experienceErr: "",
+      primarySkillsErr: "",
+      positionErr: "",
+      taxTermErr: "",
+      deliveryManagerErr: "",
+      accountManagerErr: "",
+      assignToErr: "",
+      jobDescriptionErr: "",
+    }))
+  
+    console.log("-----------form sdfsd", form);
+
     if (!form.job_code) {
       setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
     }
@@ -301,7 +324,7 @@ const ManualCreation = ({
         experienceErr: "This field is required",
       }));
     }
-    if (!form.primary_skills) {
+    if (form.primary_skills.length == 0) {
       setError((prev) => ({
         ...prev,
         primarySkillsErr: "This field is required",
@@ -313,13 +336,13 @@ const ManualCreation = ({
     if (!form.tax_term) {
       setError((prev) => ({ ...prev, taxTermErr: "This field is required" }));
     }
-    if (!form.delivery_manager) {
+    if (!form.delivery_manager && !form.delivery_manager == 'Select') {
       setError((prev) => ({
         ...prev,
         deliveryManagerErr: "This field is required",
       }));
     }
-    if (!form.account_manager) {
+    if (!form.account_manager && !form.account_manager == 'Select') {
       setError((prev) => ({
         ...prev,
         accountManagerErr: "This field is required",
@@ -328,7 +351,7 @@ const ManualCreation = ({
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
-    if (form.description) {
+    if (!(form.description == '<p></p>')) {
       setError((prev) => ({
         ...prev,
         jobDescriptionErr: "This field is required",
@@ -354,7 +377,7 @@ const ManualCreation = ({
       assign,
       description,
     } = form;
-
+    console.log
     if (
       job_code &&
       title &&
@@ -375,54 +398,58 @@ const ManualCreation = ({
       description
     ) {
       return true;
-    }else {
+    } else {
       return false;
     }
   };
 
   const handleSubmit = async () => {
-  if(handleValidation()){
-    if (name == "update" && !comments && !jobType == "Email") {
-      setCommentsErr("This field is required");
-      return;
-    } else if (!jobType == "Email") {
-      form["comment"] = comments;
-    }
-    try {
-      setIsLoading(true);
-      const response =
-        jobData && jobType == "Email"
-          ? await patchReq(`/temp-jobs/${jobData.id}/`, form)
-          : name == "update"
-          ? await patchReq(`/jobs/${jobData.id}/`, form)
-          : await postApiReq("/jobs/", form);
-      setIsLoading(false);
-      if (response.status) {
-        if (jobData) {
-          if (documents.length > 0) {
-            handleSaveDocuments(jobData.id);
-          }
-          toast.success("Job post updated successfully !");
-          handleGetJobDetails();
-          let btnModal = document.getElementById("commentModalClose");
-          btnModal.click();
-          // setTab(null);
-          // router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
-        } else {
-          if (documents.length > 0) {
-            handleSaveDocuments(response.data.id);
-          }
-          setIsLoading(false);
-          setForm(initialState);
-          toast.success("Job post created successfully !");
-          router.push("/employers-dashboard/job-posts");
-        }
+    console.log("---------hanvle validationg ", handleValidation());
+    if (handleValidation()) {
+      if (name == "update" && !comments && !jobType == "Email") {
+        setCommentsErr("This field is required");
+        return;
+      } else if (!jobType == "Email") {
+        form["comment"] = comments;
       }
-    } catch (err) {
-      setIsLoading(true);
-      toast.error(err.response || "Something went wrong");
+      try {
+        setIsLoading(true);
+        const response =
+          jobData && jobType == "Email"
+            ? await patchReq(`/temp-jobs/${jobData.id}/`, form)
+            : name == "update"
+            ? await patchReq(`/jobs/${jobData.id}/`, form)
+            : await postApiReq("/jobs/", form);
+        setIsLoading(false);
+        if (response.status) {
+          if (jobData) {
+            if (documents.length > 0) {
+              handleSaveDocuments(jobData.id);
+            }
+            toast.success("Job post updated successfully !");
+            handleGetJobDetails();
+            let btnModal = document.getElementById("commentModalClose");
+            btnModal.click();
+            // setTab(null);
+            // router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
+          } else {
+            if (documents.length > 0) {
+              handleSaveDocuments(response.data.id);
+            }
+            setIsLoading(false);
+            setForm(initialState);
+            toast.success("Job post created successfully !");
+            router.push("/employers-dashboard/job-posts");
+          }
+        }
+      } catch (err) {
+        setIsLoading(true);
+        toast.error(err.response || "Something went wrong");
+      }
+    }else{
+      let closeBtn = document.getElementById('jobCommentModal')
+      closeBtn.click();
     }
-  }
   };
 
   useEffect(() => {
@@ -528,17 +555,32 @@ const ManualCreation = ({
         setSearch={setSearch}
         handleClose={handleClose}
       />
-      <div className="d-flex justify-content-between">
-        <h4 className="fw-medium text-primary">
-          {name == "update" ? "Update Job Posting" : "New Job Posting"}
-        </h4>
+      <div className="d-flex justify-content-between cursor-pointer">
+        <div
+          onClick={() => {
+            if (tab) {
+              setTab(null);
+            } else {
+              setOpen(true);
+            }
+          }}
+          className="d-flex gap-2 align-items-center"
+        >
+          <span className="text-primary cursor-pointer fs-3">
+            {reactIcons.backarrow}
+          </span>
+          <span className="text-primary">Back</span>
+          <h4 className="fw-medium text-primary">
+            {name == "update" ? "Update Job Posting" : "New Job Posting"}
+          </h4>
+        </div>
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
             onClick={name == "create" || jobType == "Email" ? handleSubmit : ""}
             data-bs-toggle="modal"
             data-bs-target={
-              name == "update" && !(jobType == "Email") ? "#commentsModal" : ""
+              name == "update" && !(jobType == "Email")  ? "#commentsModal" : ""
             }
           >
             {isLoading ? (
@@ -903,7 +945,7 @@ const ManualCreation = ({
                 />
                 <span>Years</span>
               </div>
-                <span className="text-danger">{error.experienceErr}</span>
+              <span className="text-danger">{error.experienceErr}</span>
             </div>
             <div className="col-4 my-2">
               <p>
@@ -1141,7 +1183,7 @@ const ManualCreation = ({
               <p>
                 Tax Terms <strong className="text-danger">*</strong>
               </p>
-              <select className="client-form-input" name="tax_term">
+              <select className="client-form-input" onChange={handleChange}  name="tax_term">
                 <option>Select</option>
                 {TaxTerms.map((item, index) => {
                   return (

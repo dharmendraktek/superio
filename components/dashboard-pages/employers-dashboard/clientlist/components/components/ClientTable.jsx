@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {  clientTableField } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { Country, State, City } from "country-state-city";
@@ -470,7 +470,7 @@ const ClientTable = () => {
                 <option>Select</option>
                 {ownerList.map((item, index) => {
                   return (
-                    <option key={index} selected value={item.user.id}>
+                    <option key={index}  value={item.user.id}>
                       {item.user.first_name} {item.user.last_name} {item.user.email}
                     </option>
                   );
@@ -719,7 +719,7 @@ const ClientTable = () => {
             <tr>
               {clientTableField.map((item, index) => {
                 return (
-                  <>
+                  <React.Fragment key={index}>
                     {item.title == "input" ? (
                       <th key={index} style={{ width: `${item.size}` }}>
                         <input type="checkbox" />
@@ -729,7 +729,7 @@ const ClientTable = () => {
                         {item.title}
                       </th>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </tr>
