@@ -5,7 +5,7 @@ import { useState } from "react";
 const tabsName = [
     {title:'Personal Information'},
     {title:'Bank Details'},
-    {title:'Salery Details'},
+    {title:'Salary Details'},
 ]
 
 const EmployeeProfile = () => {
@@ -132,9 +132,9 @@ const EmployeeProfile = () => {
             Bank Detials
           </div>
           }
-          {tab == 'Salery Details' &&
+          {tab == 'Salary Details' &&
           <div>
-            Salery Details 
+            Salary Details 
           </div>
           }
           </div>
@@ -168,9 +168,9 @@ const EmployeeProfile = () => {
             Bank Detials
           </div>
           }
-          {tab == 'Salery Details' &&
+          {tab == 'Salary Details' &&
           <div>
-            Salery Details 
+            Salary Details 
           </div>
           } */}
         </div>

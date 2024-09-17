@@ -109,7 +109,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   return (
     <Paper>
        <div className="">
-        <div className="d-flex justify-content-between py-4 px-4">
+        <div className="d-flex justify-content-between py-2 px-2">
           <div className="d-flex gap-3">
             <h4>Notes</h4>
             <div className="submissions d-flex gap-2">
@@ -122,7 +122,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                       tab == item.value
                         ? "bg-primary text-white border-primary"
                         : "bg-white text-black"
-                    } border text-black align-items-center cursor-pointer border-1 rounded-2 ps-2 d-flex gap-3`}
+                    } border text-black align-items-center cursor-pointer border-1 ps-2 d-flex gap-3`}
                   >
                     <span className="fs-6">{item.name}</span>
                     <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">
@@ -149,7 +149,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
         {tab == "job" && (
           <>
             {/* <hr className="border border-secondary"></hr> */}
-            <div className="px-4 Py-4">
+            <div className="px-2 Py-4">
               <div className="border py-1 px-3 rounded-1 d-flex  border-top-black border-end-black">
                 <div style={{ width: "350px" }}>
                   <p>ADDED BY/ ON</p>

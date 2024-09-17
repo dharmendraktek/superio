@@ -64,7 +64,7 @@ const Index = () => {
 
 
 
-
+   console.log("----------applicant data ", applicantData);
 
     return(
         <>

@@ -7,7 +7,7 @@ const UploadSingleDocument = ({handleFileUpload}) => {
               <label>
                 <div
                   htmlFor="#upload"
-                  className="border border-black rounded-1 p-2"
+                  className="border-black rounded-1 p-2"
                   style={{ width: "60px", height: "60px" }}
                 >
                   <Image
