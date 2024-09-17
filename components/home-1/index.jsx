@@ -36,7 +36,7 @@ const index = () => {
       <Hero1 />
       {/* End Hero Section */}
 
-      <section className="job-categories ui-job-categories">
+      {/* <section className="job-categories ui-job-categories">
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>Popular Job Categories</h2>
@@ -48,14 +48,13 @@ const index = () => {
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
-            {/* <!-- Category Block --> */}
             <JobCategorie1 />
           </div>
         </div>
-      </section>
+      </section> */}
       {/* End Job Categorie Section */}
 
-      <section className="job-section">
+      {/* <section className="job-section">
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>Featured Jobs</h2>
@@ -77,12 +76,11 @@ const index = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* End Job Featured Section */}
 
-      <section className="testimonial-section">
+      {/* <section className="testimonial-section">
         <div className="container-fluid">
-          {/* <!-- Sec Title --> */}
           <div className="sec-title text-center">
             <h2>Testimonials From Our Customers</h2>
             <div className="text">
@@ -91,42 +89,37 @@ const index = () => {
           </div>
         </div>
         <div className="carousel-outer" data-aos="fade-up">
-          {/* <!-- Testimonial Carousel --> */}
           <div className="testimonial-carousel gap-x25 center-item-active slick-list-visible">
             <Testimonial />
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Testimonial Section --> */}
 
-      <section className="clients-section">
+      {/* <section className="clients-section">
         <div className="sponsors-outer" data-aos="fade">
-          {/* <!--Sponsors Carousel--> */}
           <ul className="sponsors-carousel">
             <Partner />
           </ul>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Clients Section--> */}
 
-      <section className="about-section">
+      {/* <section className="about-section">
         <div className="auto-container">
           <div className="row">
             <About />
           </div>
 
-          {/* <!-- Fun Fact Section --> */}
           <div className="fun-fact-section">
             <div className="row">
               <Funfact />
             </div>
           </div>
-          {/* <!-- Fun Fact Section --> */}
         </div>
-      </section>
-      {/* <!-- End About Section --> */}
+      </section> */}
 
-      <section className="news-section">
+      {/* <section className="news-section">
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>Recent News Articles</h2>
@@ -134,22 +127,21 @@ const index = () => {
               Fresh job related news content posted each day.
             </div>
           </div>
-          {/* End ."sec-title */}
           <div className="row" data-aos="fade-up">
             <Blog />
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End News Section --> */}
 
-      <section className="app-section">
+      {/* <section className="app-section">
         <div className="auto-container">
           <AppSection />
         </div>
-      </section>
+      </section> */}
       {/* <!-- End App Section --> */}
 
-      <CallToAction />
+      {/* <CallToAction /> */}
       {/* <!-- End Call To Action --> */}
 
       <FooterDefault />

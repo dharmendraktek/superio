@@ -28,7 +28,7 @@ const StarRating = ({ maxStars = 5, initialRating = 0, onRatingChange }) => {
 const Star = ({ index, isFilled, onClick }) => {
     return (
         <span
-            className={`star ${isFilled ? 'filled' : ''}`}
+            className={`star ${isFilled ? 'filled' : ''} fs-4`}
             onClick={onClick}
         >
             ★

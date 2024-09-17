@@ -743,7 +743,7 @@ const ApplicantSubmissionDetails = ({
           </button> */}
             </div>
             <div className="my-3 px-2">
-              <div className="d-flex gap-2">
+              <div className="d-flex align-items-center gap-2">
                 <div className="w-25">
                   <p>Technical Skills</p>
                 </div>

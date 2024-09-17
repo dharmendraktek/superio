@@ -116,6 +116,7 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
     setOwnerList([])
     setEscaleList([])
   }
+
  
 
   return (

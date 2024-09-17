@@ -30,22 +30,29 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
   
 
   const handleCreateNotes = async() => {
-    setIsLoading(true);
-    let data = {
-    text: descriptionData,
-    type:'applicant',
-    created_at:new Date(),
-    updated_at:new Date(),
-    applicant_ref:applicantData.id,
-    user:209,
-  }
-     const response =  updateNoteId ? await patchReq(`/applicant-notes/${updateNoteId}/`, data) :await postApiReq('/applicant-notes/', data);
-     setIsLoading(false);
-     if(response.status) {
-      handleGetApplicantDetails();
-      let message = updateNoteId ? 'Note updated successfully' : 'Note created successfully'; 
-      toast.success(message)
-     }
+    let closeBtn = document.getElementById('closeNote');   
+    try{
+      setIsLoading(true);
+      let data = {
+      text: descriptionData,
+      type:'applicant',
+      created_at:new Date(),
+      updated_at:new Date(),
+      applicant_ref:applicantData.id,
+      user:209,
+    }
+       const response =  updateNoteId ? await patchReq(`/applicant-notes/${updateNoteId}/`, data) :await postApiReq('/applicant-notes/', data);
+       setIsLoading(false);
+       if(response.status) {
+      closeBtn.click();
+        handleGetApplicantDetails();
+        let message = updateNoteId ? 'Note updated successfully' : 'Note created successfully'; 
+        toast.success(message)
+       }
+    }
+    catch(err){
+      toast.error(err.message || 'Someting went wrong')
+    }
   }   
  
    const handleDeleteNotes = async(id) => {
@@ -72,7 +79,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                     tab == item.value
                       ? "bg-primary text-white border-primary"
                       : "bg-white text-black"
-                  } border text-black align-items-center cursor-pointer border-1 rounded-2 ps-2 d-flex gap-3`}
+                  } border text-black align-items-center cursor-pointer border-1  ps-2 d-flex gap-3`}
                 >
                   <span className="fs-6">{item.name}</span>
                   <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">
@@ -99,8 +106,8 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
       {tab == "job" && (
         <>
           {/* <hr className="border border-secondary"></hr> */}
-          <div className="px-4 Py-4">
-            <div className="border py-1 px-3 rounded-1 d-flex  border-top-black border-end-black">
+          <div className="Py-4">
+            <div className="border py-1  rounded-1 d-flex  border-top-black border-end-black">
               <div style={{ width: "350px" }}>
                 <p>ADDED BY/ ON</p>
               </div>
@@ -275,7 +282,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
         </>
       )}
       {tab == "applicant" && (
-        <div className="px-3">
+        <div className="">
           <div className="px-4 Py-4">
             <div className="border py-1 px-3 rounded-1 d-flex justify-content-between border-top-black border-end-black">
               <div style={{ width: "350px" }}>
@@ -379,7 +386,11 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                   })}
               </div>
               {!(applicantData?.applicant_note?.find((item) => item.type == tab)) && (
-                <div className="text-center w-100 py-3">No notes available</div>
+                <div className="text-center w-100 py-3">
+                  <strong>
+                  No notes available
+                  </strong>
+                  </div>
               )}
             </div>
 
@@ -402,6 +413,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                   className="btn-close text-reset"
                   data-bs-dismiss="offcanvas"
                   aria-label="Close"
+                  id="closeNote"
                   onClick={() => {
                     setOpen(!open);
                     setForm((prev) => ({ ...prev, description: "<p></p>" }));

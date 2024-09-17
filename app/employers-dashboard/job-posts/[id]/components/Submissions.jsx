@@ -6,7 +6,7 @@ import Paper from "@/components/common/Paper";
 import { getReq } from "@/utils/apiHandlers";
 
 const tabsName = [
-    { id: 1, name: "Pipline" },
+    { id: 1, name: "Tagged" },
     { id: 2, name: "All" },
     { id: 3, name: "Client Submissions" },
     { id: 4, name: "Interviews" },
@@ -18,32 +18,43 @@ const tabsName = [
 
 const Submissions = ({jobData}) => {
     const [tab, setTab] = useState(1);
+    const [submissionData, setSubmissionData] = useState([]);
+
+    // let {submissions} = jobData;
+
+    useEffect(() => {
+     if(jobData?.submissions?.length > 0 && tab !=2){
+      let filteredSumisson = jobData?.submissions.filter((item) => item.current_status == tab);
+        setSubmissionData(filteredSumisson);
+     }else {
+        setSubmissionData(jobData?.submissions);
+     }
+    }, [jobData, tab])
 
     return(
       <Paper>
-
         <div className="">
-        <div className="d-flex justify-content-between py-4 px-4">
+        <div className="d-flex justify-content-between py-2  px-2">
           <h4>Submissions</h4>
           <div className="submissions d-flex gap-2">
             {tabsName.map((item, index) => {
+              let filtered = jobData?.submissions.filter((_item) => _item.current_status == item.id)?.length;
               return (
                 <div
                   key={index}
                   onClick={() => setTab(item.id)}
-                  className={`tabs ${tab == item.id ? 'bg-primary text-white border-primary' : 'bg-white text-black'} border text-black cursor-pointer align-items-center border-1 rounded-2 ps-2 d-flex gap-3`}
+                  className={`tabs ${tab == item.id ? 'bg-primary text-white border-primary' : 'bg-white text-black'} border text-black cursor-pointer align-items-center  rounded-start-2 ps-2 d-flex gap-3`}
                 >
                   <span className="fs-6">{item.name}</span>
-                  <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">4</div>
+                  <div className="bg-white d-flex align-items-center justify-content-center  text-black rounded-end-1 h-100 px-2">{item.id == 2 ? jobData?.submissions.length : filtered}</div>
                 </div>
               );
             })}
           </div>
       </div>
-          {tab == 1 &&
+          {tab &&
           <>
-        {/* <hr className="border border-secondary"></hr> */}
-             <div className="px-4 py-3">
+             <div className="px-2 py-3">
                 <div className="border py-1 px-3 rounded-1 d-flex justify-content-between border-top-black border-end-black">
                   <div className="w-20">
                   <p>NAME</p>
@@ -70,7 +81,7 @@ const Submissions = ({jobData}) => {
                   <p></p>
                   </div>
                 </div>
-                {jobData && jobData.submissions.map((item) => {
+                {submissionData?.map((item) => {
                   return(
                 <div className="py-2">
                   <Stepper submissionDetails={item} />
@@ -78,33 +89,15 @@ const Submissions = ({jobData}) => {
                   )
                 })
                 }
+                {submissionData?.length == 0 &&
+                  <div className="text-center py-3">
+                    <strong>
+                    No submissions available
+                    </strong>
+                  </div>
+               }
              </div>
           </>
-          }
-           {tab == 2 &&
-             <div className="px-3">
-                 hii i am the pipline
-             </div>
-          }
-           {tab == 3 &&
-             <div className="px-3">
-                 hii i am the pipline
-             </div>
-          }
-           {tab == 4 &&
-             <div className="px-3">
-                 hii i am the pipline
-             </div>
-          }
-           {tab == 5 &&
-             <div className="px-3">
-                 hii i am the pipline
-             </div>
-          }
-          {tab == 6  &&
-             <div className="px-3">
-                 hii i am the pipline
-             </div>
           }
         </div>
       </Paper>

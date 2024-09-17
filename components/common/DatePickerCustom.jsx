@@ -27,7 +27,7 @@ const DatePickerCustom = ({
   return (
     <div className="">
       <div
-        className={`d-flex justify-items-center px-2 border-bottom border-black position-relative rounded-md h-[45px] date-sm w-48 ${
+        className={`d-flex justify-items-center px-2 border-black position-relative rounded-md h-[45px] date-sm w-48 ${
           error ? "border-red" : "border-c"
         } ${className}`}
         style={{ height: "36px", borderBottom: "1px solid rgb(8, 8, 8)" }}

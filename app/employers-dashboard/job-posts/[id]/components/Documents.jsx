@@ -9,6 +9,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import ViewDocumentModal from "./ViewDocumentModal";
 import Paper from "@/components/common/Paper";
+import DocumentPreviewModal from "@/components/common/DocumentPreviewModal";
 
 const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
   const [open, setOpen] = useState(false);
@@ -64,9 +65,10 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
 
   return (
     <Paper>
-    <div className="h-50 py-2">
-      <ViewDocumentModal img={img}/>
-      <div className="d-flex justify-content-between px-4 py-4">
+    <div className="h-50">
+      <DocumentPreviewModal img={img} />
+      {/* <ViewDocumentModal img={img}/> */}
+      <div className="d-flex justify-content-between px-2 py-2">
         <h4>Documents</h4>
         {!open && (
           <button
@@ -149,7 +151,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
                 return (
                   <div
                     key={index}
-                    className="border m-2   position-relative d-flex align-items-center  rounded-1"
+                    className="px-2 position-relative d-flex align-items-center  rounded-1"
                     onMouseEnter={() => setOption(item.id)}
                     onMouseLeave={() => setOption(false)}
                     style={{ width: "48%", height: "60px", background:'aliceblue' }}
@@ -183,8 +185,9 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
                           </span>
                         </div>
                         <div
-                          data-bs-toggle="modal"
-                          data-bs-target="#viewDocModal"
+                           data-bs-toggle="offcanvas"
+                           data-bs-target="#documentQuickView"
+                           aria-controls="documentQuickView"
                           className="d-flex justify-content-center align-items-center"
                           style={{
                             width: "30px",

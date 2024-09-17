@@ -12,7 +12,7 @@ const stepsData = [
   // {id:8, name:'Tagged'},
 ];
 
-const Stepper = ({ submissionDetails }) => {
+const Stepper = ({ submissionDetails, side }) => {
   let {
     mobile,
     firstname,
@@ -24,10 +24,14 @@ const Stepper = ({ submissionDetails }) => {
     pay_rate_contract_type,
   } = submissionDetails.applicant_details[0];
 
+  let {submitted_by_details, job_detail} = submissionDetails;
+  let {first_name, last_name} = submitted_by_details;
+
+  let {client_name, contact_manager, job_code, job_type, title, payment_frequency, delivery_manager, amount} = job_detail;
+
   console.log(
     "-----------submission details ",
-    submissionDetails.current_status,
-    submissionDetails.current_substatus_details
+   submissionDetails
   );
 
   return (
@@ -38,21 +42,41 @@ const Stepper = ({ submissionDetails }) => {
         subStatus={submissionDetails?.current_substatus}
       />
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
-        <div className="w-20">
-          <p>
+        <div className="w-25">
+          {side == 'applicant' ?
+          <div>
+          <strong>
+            {job_code} - {title}
+          </strong>
+          <p>{client_name}</p>
+          </div>
+          :
+          <strong>
             {(firstname || "") +
               " " +
               (middlename || "") +
               " " +
               (lastname || "")}
-          </p>
+          </strong>
+          }
         </div>
+        {side == "applicant" &&
+        <div className="w-20">
+            Record 
+        </div>
+        }
         <div className="">
-          <p>SUBMITTED BY/ON</p>
+          <strong>{first_name+' '+ last_name}</strong>
         </div>
+        {side == 'applicant' ?
+         <div>
+
+         </div>
+        :
         <div style={{ width: "" }}>
-          <p>{mobile}</p>
+          <strong>{mobile}</strong>
         </div>
+        }
         <div style={{ width: "150px" }}>
           <p></p>
         </div>
@@ -65,6 +89,12 @@ const Stepper = ({ submissionDetails }) => {
           </strong>
         </div>
         <div className="w-20 text-center">
+          {side=='applicant' ?
+           <div>
+
+           </div>
+          :
+          <div>
           <p className="text-primary">{submissionDetails?.current_substatus_details?.display_name || ''}</p>
           <span
             data-bs-toggle="modal"
@@ -73,6 +103,8 @@ const Stepper = ({ submissionDetails }) => {
           >
             {reactIcons.edit}
           </span>
+          </div>
+          }
         </div>
         <div>
           <p></p>

@@ -30,7 +30,7 @@ const menuList = [
   { name: "APPLICANTS", url: "/employers-dashboard/all-applicants" },
   {
     name: "REPORTS",
-    url: "",
+    url: "/employers-dashboard/manage-jobs",
     option: [
       {
         name: "Interview Schedule Reports",
@@ -57,7 +57,7 @@ const HeaderNavContent = () => {
             return (
               <>
                 <li
-                  className="position-relative d-flex align-items-center gap-3"
+                  className="position-relative d-flex align-items-center  gap-3"
                   onClick={() => {
                     if (item.name == "REPORTS") {
                       setOpenReport(!optionReport);
@@ -65,7 +65,9 @@ const HeaderNavContent = () => {
                   }}
                 >
                   <Link href={item.url}>
-                    <span>{item.name}</span>
+                    <span 
+                    // className={`${window.location.pathname.includes(item.url)? "text-primary" : ''} `}
+                    >{item.name}</span>
                     {item.name == "REPORTS" && (
                       <span className="fs-5">{reactIcons.arrowfilldown}</span>
                     )}
