@@ -1,24 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {
-  blogItems,
-  candidateItems,
-  employerItems,
-  findJobItems,
-  homeItems,
-  pageItems,
-  shopItems,
-  clientItems,
-} from "../../data/mainMenuData";
-import {
-  isActiveParent,
-  isActiveLink,
-  isActiveParentChaild,
-} from "../../utils/linkActiveChecker";
-import { usePathname, useRouter } from "next/navigation";
+
 import React, { useEffect, useState } from "react";
-import { getUserDetails } from "@/features/employer/employerAction";
 import { reactIcons } from "@/utils/icons";
 import Cookies from "js-cookie";
 
@@ -42,13 +26,10 @@ const menuList = [
 
 const HeaderNavContent = () => {
   const [optionReport, setOpenReport] = useState(false);
-  const [url, setUrl] = useState(window.location.pathname);
-  const router = useRouter();
-  const { pathname } = router;
+  const [url, setUrl] = useState();
 
   let token = Cookies.get('is_user_refresh')
   
-  console.log("------------pathname -----", pathname);
 
   return (
     <>
@@ -71,7 +52,7 @@ const HeaderNavContent = () => {
                   <Link href={item.url}>
                     <span 
                     style={{boxShadow:"0 2px 1px rgb(6 118 51 / 55%) !important"}}
-                    className={`${(window.location.pathname || url) == item.url? "  text-success shadow  px-2 py-2 rounded-1" : ''} `}
+                    className={`${url == item.url? "  text-success shadow  px-2 py-2 rounded-1" : ''} `}
                     >{item.name}</span>
                     {item.name == "REPORTS" && (
                       <span className="fs-5">{reactIcons.arrowfilldown}</span>
