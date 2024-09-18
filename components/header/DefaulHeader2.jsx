@@ -88,10 +88,10 @@ const DefaulHeader2 = () => {
               )
            })
            }
-          </div>
+          </div> */}
           <div>
 
-          </div> */}
+          </div>
         </div>
       </div>
     </header>

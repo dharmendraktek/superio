@@ -17,6 +17,7 @@ import moment from "moment";
 import { reactIcons } from "@/utils/icons";
 import ApplicantSubmissionDetails from "../../../../../components/common/ApplicantSubmissionDetails";
 import { toast } from "react-toastify";
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 
 const initialState = {
   job: "",
@@ -183,17 +184,9 @@ const Index = () => {
 
 
   return (
-    <>
+    <InnerLayout>
       {isLoading && <Loader />}
-
-      <LoginPopup />
-      {/* End Login Popup Modal */}
-
-      <DashboardCandidatesHeader />
-      {/* End Header */}
-
-      <MobileMenu />
-      <div className="mt-5 pt-5 px-4 theme-background">
+      <div className="px-4 theme-background">
         <div className="mt-2 d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
             <Link href={`/employers-dashboard/all-applicants/${id}`}>
@@ -458,7 +451,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </>
+    </InnerLayout>
   );
 };
 

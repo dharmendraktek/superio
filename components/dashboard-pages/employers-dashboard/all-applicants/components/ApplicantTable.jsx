@@ -82,31 +82,6 @@ const ApplicantTable = () => {
     <div className="theme-background">
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
-        {/* <div className="position-relative">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ width: "350px" }}
-            className="border border-primary px-4 rounded-1"
-            placeholder="Search anything..."
-          />
-          <span
-            className="position-absolute fs-4 text-primary"
-            style={{ left: "2px" }}
-          >
-            {reactIcons.search}
-          </span>
-          {search && (
-            <span
-              onClick={() => setSearch("")}
-              className="position-absolute cursor-pointer	  text-primary fs-5"
-              style={{ right: "8px" }}
-            >
-              {reactIcons.close}
-            </span>
-          )}
-        </div> */}
         <MultiSearch
           openFields={openFields}
           setOpenFields={setOpenFields}
