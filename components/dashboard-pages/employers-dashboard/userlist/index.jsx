@@ -1,63 +1,50 @@
-"use client";
-import MobileMenu from "../../../header/MobileMenu";
-import LoginPopup from "../../../common/form/login/LoginPopup";
-import DashboardCandidatesSidebar from "../../../header/DashboardCandidatesSidebar";
-import BreadCrumb from "../../BreadCrumb";
-import TopCardBlock from "./components/TopCardBlock";
-import ProfileChart from "./components/ProfileChart";
-import Notification from "./components/Notification";
-import CopyrightFooter from "../../CopyrightFooter";
-import JobApplied from "./components/JobApplied";
-import DashboardCandidatesHeader from "../../../header/DashboardCandidatesHeader";
-import MenuToggler from "../../MenuToggler";
-import MyProfile from "./components/components/my-profile";
-import UserTable from "./components/UserTable";
-import { useState } from "react";
-import { reactIcons } from "@/utils/icons";
+// import MobileMenu from "../../../header/MobileMenu";
+// import DashboardCandidatesHeader from "../../../header/DashboardCandidatesHeader";
+// import UserTable from "./components/UserTable";
 
-const tabsName = [
-  { id: 1, name: "ACTIVE USERS" },
-  { id: 2, name: "INACTIVE USERS" },
-];
+// const Index = () => {
+//   return (
+//     <div className="page-wrapper theme-background">
+//       <span className="header-span"></span>
+//       <DashboardCandidatesHeader />
+//       <MobileMenu />
+//       <section className="user-dashboard">
+//         <div className="dashboard-outer">
+//           <div className="row">
+//             <div className="col-xl-12 col-lg-12 px-5 ">
+//               <UserTable />
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+//     </div>
+//   );
+// };
+
+// export default Index;
+
+import dynamic from "next/dynamic";
+import Loader from "@/components/common/Loader"; // Assuming you already have a loader component
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+
+const UserTable = dynamic(() => import("./components/UserTable"), {
+  ssr: false,
+  loading: () => <Loader />, // Show loader while loading
+});
 
 const Index = () => {
-  
-
   return (
-    <div className="page-wrapper theme-background">
-      <span className="header-span"></span>
-      {/* <!-- Header Span for hight --> */}
-
-      <LoginPopup />
-      {/* End Login Popup Modal */}
-
-      <DashboardCandidatesHeader />
-      {/* End Header */}
-
-      <MobileMenu />
-      {/* End MobileMenu */}
-
-      {/* <DashboardCandidatesSidebar /> */}
-      {/* <!-- End Candidates Sidebar Menu --> */}
-
-      {/* <!-- Dashboard --> */}
+    <InnerLayout>
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="row">
-            <div className="col-xl-12 col-lg-12 px-5 ">
-              <UserTable  />
+            <div className="col-xl-12 col-lg-12 px-5">
+              <UserTable />
             </div>
           </div>
-          {/* End .row profile and notificatins */}
         </div>
-        {/* End dashboard-outer */}
       </section>
-      {/* <!-- End Dashboard --> */}
-
-      {/* <CopyrightFooter /> */}
-      {/* <!-- End Copyright --> */}
-    </div>
-    // End page-wrapper
+    </InnerLayout>
   );
 };
 

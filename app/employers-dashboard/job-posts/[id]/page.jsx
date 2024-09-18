@@ -19,6 +19,7 @@ import Loader from "@/components/common/Loader";
 import moment from "moment";
 import Paper from "@/components/common/Paper";
 import StarRating from "@/components/common/StarRating";
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 
 const applicantTabList = [
   { id: 1, name: "Snapshot" },
@@ -62,56 +63,38 @@ const Index = () => {
     }
   }, [id]);
 
-  console.log("------------job data------",jobData ,jobData?.documents?.find((item) => item.is_default == true));
-
   return (
-    <>
+    <InnerLayout>
       {!jobData && <Loader />}
-      <div className="page-wrapper">
-        <span className="header-span"></span>
-        {/* <!-- Header Span for height --> */}
+      <section className="user-dashboard theme-background">
+        <div className="dashboard-outer">
+          {/* <BreadCrumb title="Manage jobs!" /> */}
+          {/* breadCrumb */}
 
-        {/* End Login Popup Modal */}
-
-        <DashboardHeader />
-        {/* End Header */}
-
-        <MobileMenu />
-        {/* End MobileMenu */}
-
-        {/* <DashboardEmployerSidebar /> */}
-        {/* <!-- End User Sidebar Menu --> */}
-
-        {/* <!-- Dashboard --> */}
-        <section className="user-dashboard theme-background">
-          <div className="dashboard-outer">
-            {/* <BreadCrumb title="Manage jobs!" /> */}
-            {/* breadCrumb */}
-
-            <MenuToggler />
-            {/* Collapsible sidebar button */}
-            {open && (
-              <div className="d-flex justify-content-between mt-2 px-4 gap-3">
-                <div className="d-flex  gap-3">
-                  {applicantTabList.map((item) => {
-                    return (
-                      <div
-                        className={`cursor-pointer px-3 rounded-1 bg-secondary ${
-                          tab == item.id
-                            ? "border-2 text-primary border-bottom border-primary"
-                            : ""
-                        }`}
-                        onClick={() => setTab(item.id)}
-                        key={item.id}
-                      >
-                        <span className="fw-medium">{item.name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="">
-                  <div className="d-flex">
-                    {/* <div className="border position-relative rounded-start-1 cursor-pointer border-secondary px-2">
+          <MenuToggler />
+          {/* Collapsible sidebar button */}
+          {open && (
+            <div className="d-flex justify-content-between mt-2 px-4 gap-3">
+              <div className="d-flex  gap-3">
+                {applicantTabList.map((item) => {
+                  return (
+                    <div
+                      className={`cursor-pointer px-3 rounded-1 bg-secondary ${
+                        tab == item.id
+                          ? "border-2 text-primary border-bottom border-primary"
+                          : ""
+                      }`}
+                      onClick={() => setTab(item.id)}
+                      key={item.id}
+                    >
+                      <span className="fw-medium">{item.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="">
+                <div className="d-flex">
+                  {/* <div className="border position-relative rounded-start-1 cursor-pointer border-secondary px-2">
                       <div className="" onClick={() => setSettingOpt(!settingOpt)}>
                         <span>{reactIcons.setting}</span>
                         <span>{reactIcons.downarrow}</span>
@@ -132,48 +115,46 @@ const Index = () => {
                         </div>
                       )}
                     </div> */}
-                    {/* <div className="border border-secondary px-2 cursor-pointer">
+                  {/* <div className="border border-secondary px-2 cursor-pointer">
                       <span>{reactIcons.share}</span>
                     </div> */}
-                    {/* <div className="border border-secondary px-2 cursor-pointer">
+                  {/* <div className="border border-secondary px-2 cursor-pointer">
                       <span>{reactIcons.mail}</span>
                     </div> */}
-                    <div className="border border-secondary position-relative px-2">
+                  <div className="border border-secondary position-relative px-2">
+                    <div
+                      className="d-flex gap-1  cursor-pointer bg-secondary"
+                      onClick={() => setSubmitOpt(!submitOpt)}
+                    >
+                      <span className="fw-medium">Submit</span>
+                      <span>{reactIcons.downarrow}</span>
+                    </div>
+                    {submitOpt && (
                       <div
-                        className="d-flex gap-1  cursor-pointer bg-secondary"
-                        onClick={() => setSubmitOpt(!submitOpt)}
+                        className="position-absolute bg-white  border border-secondary rounded-1"
+                        style={{
+                          width: "200px",
+                          height: "80px",
+                          top: "30px",
+                          zIndex: "1000",
+                          right: 0,
+                        }}
                       >
-                        <span className="fw-medium">Submit</span>
-                        <span>{reactIcons.downarrow}</span>
-                      </div>
-                      {submitOpt && (
-                        <div
-                          className="position-absolute bg-white  border border-secondary rounded-1"
-                          style={{
-                            width: "200px",
-                            height: "80px",
-                            top: "30px",
-                            zIndex: "1000",
-                            right: 0,
-                          }}
-                        >
-                          <div className="hover-bg-change px-2 my-1">
-                            <Link
-                              href={`/employers-dashboard/job-posts/submit-applicants/${id}`}
-                              onClick={() => setSubmitOpt(false) }
-                            >
-                              <p className="cursor-pointer ">
-                                Submit Applicant
-                              </p>
-                            </Link>
-                          </div>
-                          {/* <div>  
+                        <div className="hover-bg-change px-2 my-1">
+                          <Link
+                            href={`/employers-dashboard/job-posts/submit-applicants/${id}`}
+                            onClick={() => setSubmitOpt(false)}
+                          >
+                            <p className="cursor-pointer ">Submit Applicant</p>
+                          </Link>
+                        </div>
+                        {/* <div>  
                                 <p className="cursor-pointer">Add & Submit Applicant</p>
                                  </div> */}
-                        </div>
-                      )}
-                    </div>
-                    {/* <div
+                      </div>
+                    )}
+                  </div>
+                  {/* <div
                       onClick={() => {
                         window.open(
                           BASE_URL + `/applicant-documents/${jobData?.documents?.find((item) => item.is_default == true).id}/download/`
@@ -183,187 +164,180 @@ const Index = () => {
                     >
                       <span>{reactIcons.download}</span>
                     </div> */}
-                  </div>
                 </div>
               </div>
-            )}
-            <div className="row mx-3">
-              <div className={`${open ? "col-lg-9" : "col-12"}`}>
-                {open ? (
-                  <>
-                    <Paper>
-                      <div className="px-2">
+            </div>
+          )}
+          <div className="row mx-3">
+            <div className={`${open ? "col-lg-9" : "col-12"}`}>
+              {open ? (
+                <>
+                  <Paper>
+                    <div className="px-2">
                       <div className="d-flex justify-content-between">
-                           <div className="d-flex align-items-center">
-                           <Link href="/employers-dashboard/job-posts">
-                                <span className="fs-2">
-                                  {reactIcons.backarrow}
-                                </span>
-                                <span className="text-primary">Back</span>
-                              </Link>
-                           </div>
-                            <button
-                              onClick={() => setOpen(!open)}
-                              className="theme-btn btn-style-four small"
-                            >
-                              Edit Job
-                            </button>
+                        <div className="d-flex align-items-center">
+                          <Link href="/employers-dashboard/job-posts">
+                            <span className="fs-2">{reactIcons.backarrow}</span>
+                            <span className="text-primary">Back</span>
+                          </Link>
+                        </div>
+                        <button
+                          onClick={() => setOpen(!open)}
+                          className="theme-btn btn-style-four small"
+                        >
+                          Edit Job
+                        </button>
+                      </div>
+                      <div className="d-flex justify-content-between gap-2">
+                        <div>
+                          <div className="d-flex mt-2 gap-2">
+                            <h5 className="fw-bolder">
+                              {jobData?.job_code || "N/A"}{" "}
+                              {jobData?.title || ""}
+                            </h5>
                           </div>
-                        <div className="d-flex justify-content-between gap-2">
-                          <div>
-                            <div className="d-flex mt-2 gap-2">
-                              <h5 className="fw-bolder">
-                                {jobData?.job_code || 'N/A'} {jobData?.title || ''}
-                              </h5>
-                            </div>
-                            <div className="d-flex">
-                              <p className="me-2">
-                                {jobData?.client_name
-                                  ? jobData.client_name
-                                  : "N/A"}
-                              </p>{" "}
-                              |{" "}
-                              <p className="mx-2">
-                                {" "}
-                                {jobData?.address} {jobData?.city}{" "}
-                                {jobData?.state} {jobData?.country}
-                              </p>
-                            </div>
+                          <div className="d-flex">
+                            <p className="me-2">
+                              {jobData?.client_name
+                                ? jobData.client_name
+                                : "N/A"}
+                            </p>{" "}
+                            |{" "}
+                            <p className="mx-2">
+                              {" "}
+                              {jobData?.address} {jobData?.city}{" "}
+                              {jobData?.state} {jobData?.country}
+                            </p>
                           </div>
                         </div>
-                        <div>
-                          <div className="d-flex gap-2">
-                            <strong> Assigned To - </strong>
-                            <div className="d-flex gap-1">
-                              {jobData?.assign_details.map((item) => {
-                                return (
-                                  <div className="border border-primary rounded-1">
+                      </div>
+                      <div>
+                        <div className="d-flex gap-2">
+                          <strong> Assigned To - </strong>
+                          <div className="d-flex gap-1">
+                            {jobData?.assign_details.map((item) => {
+                              return (
+                                <div className="border border-primary rounded-1">
                                   <span>
                                     {item.first_name} {item.last_name}
                                   </span>
-                                  </div>
-                                );
-                              })}
-                            </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        </div>
-                        <hr className="border"></hr>
-                        <div className="d-flex justify-content-between">
-                          <div>
-                            <strong className="fs-6">Delivery Manager</strong>
-                            <br />
-                            <p>{jobData?.delivery_manager_name || "N/A"}</p>
-                          </div>
-                          <div>
-                            <strong>Client Bill Rate/Salary</strong>
-                            <p>
-                              {
-                                currencyJson.find(
-                                  (item) => item.code == jobData?.currency
-                                )?.symbol
-                              }{" "}
-                              {jobData?.amount ? jobData?.amount : "N.A"}/
-                              {jobData?.payment_frequency
-                                ? jobData?.payment_frequency
-                                : "N.A"}
-                              /{jobData?.job_type ? jobData?.job_type : "N.A"}
-                            </p>
-                          </div>
-                          <div>
-                            <strong>Pay Rate / Salary</strong>
-                            <p>N/A</p>
-                          </div>
-                          <div>
-                            <strong>Created By & On</strong>
-                            <br />
-                            <span>
-                              {jobData?.created_by
-                                ? jobData?.created_by.first_name +
-                                  " " +
-                                  jobData?.created_by.last_name
-                                : "N/A"}
-                            </span>
-                            <span>
-                              {" "}
-                              On{" "}
-                              {moment(jobData?.created_at).format(
-                                "DD/MM/YYYY  hh:mm A"
-                              )}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="my-2">
-                          <strong>Job Description</strong >
-                          <div
-                            className="mt-2"
-                            dangerouslySetInnerHTML={{
-                              __html: viewMore
-                                ? jobData?.description?.slice(
-                                    0,
-                                    jobData?.description?.length
-                                  )
-                                : jobData?.description?.slice(0, 500),
-                            }}
-                          />
-                          {jobData?.description?.length > 500 && (
-                            <button
-                              onClick={() => setViewMore(!viewMore)}
-                              className="theme-btn btn-style-one small mt-2"
-                            >
-                              {viewMore ? "Less" : "More"}
-                            </button>
-                          )}
                         </div>
                       </div>
-                    </Paper>
-                    <div className="my-2">
-                      <Submissions jobData={jobData} />
+                      <hr className="border"></hr>
+                      <div className="d-flex justify-content-between">
+                        <div>
+                          <strong className="fs-6">Delivery Manager</strong>
+                          <br />
+                          <p>{jobData?.delivery_manager_name || "N/A"}</p>
+                        </div>
+                        <div>
+                          <strong>Client Bill Rate/Salary</strong>
+                          <p>
+                            {
+                              currencyJson.find(
+                                (item) => item.code == jobData?.currency
+                              )?.symbol
+                            }{" "}
+                            {jobData?.amount ? jobData?.amount : "N.A"}/
+                            {jobData?.payment_frequency
+                              ? jobData?.payment_frequency
+                              : "N.A"}
+                            /{jobData?.job_type ? jobData?.job_type : "N.A"}
+                          </p>
+                        </div>
+                        <div>
+                          <strong>Pay Rate / Salary</strong>
+                          <p>N/A</p>
+                        </div>
+                        <div>
+                          <strong>Created By & On</strong>
+                          <br />
+                          <span>
+                            {jobData?.created_by
+                              ? jobData?.created_by.first_name +
+                                " " +
+                                jobData?.created_by.last_name
+                              : "N/A"}
+                          </span>
+                          <span>
+                            {" "}
+                            On{" "}
+                            {moment(jobData?.created_at).format(
+                              "DD/MM/YYYY  hh:mm A"
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="my-2">
+                        <strong>Job Description</strong>
+                        <div
+                          className="mt-2"
+                          dangerouslySetInnerHTML={{
+                            __html: viewMore
+                              ? jobData?.description?.slice(
+                                  0,
+                                  jobData?.description?.length
+                                )
+                              : jobData?.description?.slice(0, 500),
+                          }}
+                        />
+                        {jobData?.description?.length > 500 && (
+                          <button
+                            onClick={() => setViewMore(!viewMore)}
+                            className="theme-btn btn-style-one small mt-2"
+                          >
+                            {viewMore ? "Less" : "More"}
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="my-2">
-                      <Notes
-                        jobId={id}
-                        noteData={noteData}
-                        setNoteData={setNoteData}
-                      />
-                    </div>
-                    <div className="my-2">
-                      <Documents
-                        jobId={id}
-                        jobData={jobData}
-                        handleGetJobDetails={handleGetJobDetails}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <ManualCreation
-                    setOpen={setOpen}
-                    jobData={jobData}
-                    setJobData={setJobData}
-                    name="update"
-                    handleGetJobDetails={handleGetJobDetails}
-                  />
-                )}
-              </div>
-              {open && (
-                <div className="col-3">
-                  <JobSearchBoard
-                    searchString={searchString}
-                    setSearchString={setSearchString}
-                  />
-                </div>
+                  </Paper>
+                  <div className="my-2">
+                    <Submissions jobData={jobData} />
+                  </div>
+                  <div className="my-2">
+                    <Notes
+                      jobId={id}
+                      noteData={noteData}
+                      setNoteData={setNoteData}
+                    />
+                  </div>
+                  <div className="my-2">
+                    <Documents
+                      jobId={id}
+                      jobData={jobData}
+                      handleGetJobDetails={handleGetJobDetails}
+                    />
+                  </div>
+                </>
+              ) : (
+                <ManualCreation
+                  setOpen={setOpen}
+                  jobData={jobData}
+                  setJobData={setJobData}
+                  name="update"
+                  handleGetJobDetails={handleGetJobDetails}
+                />
               )}
             </div>
-            {/* End .row */}
+            {open && (
+              <div className="col-3">
+                <JobSearchBoard
+                  searchString={searchString}
+                  setSearchString={setSearchString}
+                />
+              </div>
+            )}
           </div>
-          {/* End dashboard-outer */}
-        </section>
-        {/* <!-- End Dashboard --> */}
-
-        {/* <CopyrightFooter /> */}
-        {/* <!-- End Copyright --> */}
-      </div>
-    </>
-    // End page-wrapper
+          {/* End .row */}
+        </div>
+        {/* End dashboard-outer */}
+      </section>
+    </InnerLayout>
   );
 };
 

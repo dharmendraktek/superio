@@ -1,12 +1,17 @@
+import Loader from "@/components/common/Loader";
 import dynamic from "next/dynamic";
-import JobPosts from "@/components/dashboard-pages/employers-dashboard/jobposts";
+
+const JobPosts = dynamic(() => import("@/components/dashboard-pages/employers-dashboard/jobposts"), {
+  ssr: false, // Disable SSR if JobPosts relies on browser-specific features
+  loading: () => <Loader />, // Optional loading state
+});
 
 export const metadata = {
-  title: "Candidates Dashboard || Superio - Job Borad React NextJS Template",
-  description: "Superio - Job Borad React NextJS Template",
+  title: "Candidates Dashboard || Superio - Job Board React NextJS Template",
+  description: "Superio - Job Board React NextJS Template",
 };
 
-const index = () => {
+const IndexPage = () => {
   return (
     <>
       <JobPosts />
@@ -14,4 +19,4 @@ const index = () => {
   );
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
+export default IndexPage;

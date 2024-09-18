@@ -27,14 +27,21 @@ export default function RootLayout({ children }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleStart = () => setLoading(true);
-    const handleComplete = () => setLoading(false);
+    const handleStart = (url) => {
+      console.log(`Loading: ${url}`);
+      setLoading(true);
+    };
+    const handleComplete = (url) => {
+      console.log(`Completed: ${url}`);
+      setLoading(false);
+    };
 
+    // Subscribe to Next.js Router events
     Router.events.on('routeChangeStart', handleStart);
     Router.events.on('routeChangeComplete', handleComplete);
     Router.events.on('routeChangeError', handleComplete);
 
-    // Cleanup on unmount
+    // Cleanup event listeners on component unmount
     return () => {
       Router.events.off('routeChangeStart', handleStart);
       Router.events.off('routeChangeComplete', handleComplete);

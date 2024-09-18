@@ -126,12 +126,12 @@ const index = () => {
             className="d-flex justify-content-center  align-items-center"
             style={{ width: "100%", height: "100vh" }}
           >
-            <img
-              src="/images/home.jpg"
-              // width={900}
-              // height={1000}
-              style={{ width: "100%", height: "100%" }}
-            />
+             <Image
+                  width={1000}
+                  height={800}
+                  src="/images/home3.png"
+                  alt="brand"
+              />
           </div>
         </div>
         <div className="col-6">

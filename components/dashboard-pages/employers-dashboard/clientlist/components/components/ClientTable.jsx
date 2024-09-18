@@ -259,7 +259,7 @@ const ClientTable = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between mt-3">
         <div className="d-flex">
           <div
             className="d-flex me-2 border border-primary rounded-1  "
