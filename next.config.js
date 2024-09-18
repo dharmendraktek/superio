@@ -7,12 +7,6 @@ const nextConfig = {
         CLIENT_URL: process.env.CLIENT_URL,
     },
 
-  // assetPrefix: process.env.NEXT_PUBLIC_BASE_URL || '',
-  // basePath: '/_next', // Or modify as per your directory structure
- 
-  //   trailingSlash: true,
-
-
     webpack: (config, { isServer }) => {
         return config;
     },
