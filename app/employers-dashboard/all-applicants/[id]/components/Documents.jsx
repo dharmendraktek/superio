@@ -129,7 +129,7 @@ const Documents = ({
       </div>
       {open ? (
         <div>
-          <div className="row mt-4    ">
+          <div className="row mt-4">
             <div className="col-4">
               <p className="mb-2">Upload Document</p>
               <UploadSingleDocument handleFileUpload={handleFileUpload} />
@@ -238,7 +238,7 @@ const Documents = ({
                 return (
                   <div
                     key={index}
-                    className="border m-2   position-relative d-flex align-items-center  rounded-1"
+                    className="border my-2 position-relative d-flex align-items-center  rounded-1"
                     onMouseEnter={() => setOption(item.id)}
                     onMouseLeave={() => setOption(false)}
                     style={{ height: "80px" }}

@@ -94,7 +94,6 @@ const JobPostsTable = () => {
         item.submissions.some((submission) => submission.selected === true)
       );
       setIsSelected(filteredData);
-    console.log("---------filtered data ---------", filteredData);
       // setJobData(filteredData);
     }
   }, [jobPostList]); 
@@ -170,15 +169,15 @@ const JobPostsTable = () => {
               {jobPostsTableField.map((item, index) => {
                 return (
                   <>
-                    {item.title == "input" ? (
+                    {/* {item.title == "input" ? (
                       <th style={{ width: "200px" }}>
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
-                    ) : (
+                    ) : ( */}
                       <th style={{ width: "200px" }} key={index}>
                         {removeSpecialChar(item.title)}
                       </th>
-                    )}
+                    {/* )} */}
                   </>
                 );
               })}
@@ -229,7 +228,7 @@ const JobPostsTable = () => {
                       className="d-flex align-items-center justify-content-between"
                       style={{ width: "130px" }}
                     >
-                      <input type="checkbox" />
+                      {/* <input type="checkbox" /> */}
                       {item.submissions.length > 0 && (
                         <>
                           <div
@@ -293,34 +292,37 @@ const JobPostsTable = () => {
                       {item.title}
                       {/* <a href="#">Super CV Pack</a> */}
                     </td>
-                    <td className="">{item.client_name}</td>
-                    <td>{item.city}</td>
-                    <td className="">{item.state}</td>
-                    <td className="">{item.job_status}</td>
+                    <td className="">{item.client_name || 'N/A'}</td>
+                    <td>{item.city || 'N/A'}</td>
+                    <td className="">{item.state || 'N/A'}</td>
+                    <td className="">{item.job_status || 'N/A'}</td>
                     <td className="">
-                      {item.currency}
-                      {item.currency ? "/" : ""}
-                      {item.amount}
-                      {item.amount ? "/" : ""}
-                      {item.payment_frequency}
+                      {item.currency || 'N.A'}
+                      {item.currency ? "/" : "/"}
+                      {item.amount || 'N.A'}
+                      {item.amount ? "/" : "/"}
+                      {item.payment_frequency || 'N.A'}
                     </td>
-                    <td className="">{item.delivery_manager_name}</td>
-                    <td className="">{item.contact_manager_name}</td>
+                    <td className="">{item.delivery_manager_name || 'N/A'}</td>
+                    <td className="">{item.contact_manager_name || 'N/A'}</td>
                     <td className="">
                       <div className="d-flex flex-wrap">
                         {item.assign_details.map((item) => {
                           return <span>{item.first_name},</span>;
                         })}
+                        {item.assign_details.length == 0 &&
+                          'N/A'
+                        }
                       </div>
                     </td>
-                    <td className="">{"-"}</td>
+                    <td className="">{(item?.created_by?.first_name || 'N/A')+ ' ' + (item?.created_by?.last_name || '')}</td>
                     <td className="">
                       {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
                     <td className="">
                       {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="">{item.head_account_manager_name}</td>
+                    <td className="">{item.head_account_manager_name || 'N/A'}</td>
                     <td>
                       <div className="option-box">
                         <ul className="option-list">
@@ -421,7 +423,7 @@ const JobPostsTable = () => {
                           <table>
                             <thead className="table-inner-thead">
                               <th  style={{width:'60px'}}>
-                                <input className="mx-1" type="checkbox" />
+                                {/* <input className="mx-1" type="checkbox" /> */}
                               </th>
                               <th>Submission ID</th>
                               <th>Applicant Name</th>
@@ -431,12 +433,12 @@ const JobPostsTable = () => {
                               <th>Country</th>
                               <th>Experience</th>
                               <th>Source</th>
-                              <th>Revision Status</th>
-                              <th>Application Status</th>
+                              {/* <th>Revision Status</th> */}
+                              {/* <th>Application Status</th> */}
                               {/* <th>Outlook MSG</th> */}
                               <th style={{ width: "250px" }}>Bill Rate</th>
                               <th style={{ width: "250px" }}>Pay Rate</th>
-                              <th>Employer Name</th>
+                              {/* <th>Employer Name</th> */}
                               <th>Availability</th>
                               <th>Submitted By</th>
                               {/* <th>PW Submission Type</th> */}
@@ -458,8 +460,9 @@ const JobPostsTable = () => {
                                   bill_rate_type,
                                   bill_rate_contract_type,
                                   submitted_by_details,
+                                  submission_on
                                 } = _item;
-                                let { firstname, middlename, lastname, authorization, mobile, address,country, experience, source , notice_period, current_amount,  current_currency, current_job_type, current_payment_frequency, submission_on} =
+                                let {id, firstname, middlename, lastname, authorization, mobile, address,country, experience, source , notice_period, current_amount,  current_currency, current_job_type, current_payment_frequency, } =
                                   _item.applicant_details[0];
 
                                   let current_ctc = `${(current_currency || 'N.A') + '/' + (current_amount || 'N.A') + '/' + (current_payment_frequency || 'N.A') + '/' + (current_job_type || 'N.A')}`
@@ -482,36 +485,38 @@ const JobPostsTable = () => {
                                     </td>
                                     <td>{_item.id}</td>
                                     <td>
+                                      <Link href={`/employers-dashboard/all-applicants/${id}`}>
                                       {firstname || '' +
                                         " " +
                                         middlename || '' +
                                         " " +
                                         lastname || ''}
+                                      </Link>
                                     </td>
-                                    <td>{authorization}</td>
-                                    <td>{mobile}</td>
+                                    <td>{authorization || 'N/A'}</td>
+                                    <td>{mobile || 'N/A'}</td>
                                     <td>{address || 'N.A'}</td>
-                                    <td>{country}</td>
-                                    <td>{experience}</td>
-                                    <td>{source}</td>
-                                    <td>Revision Status</td>
-                                    <td>Application Status</td>
+                                    <td>{country || 'N/A'}</td>
+                                    <td>{experience || 'N/A'}</td>
+                                    <td>{source || 'N/A'}</td>
+                                    {/* <td>Revision Status</td> */}
+                                    {/* <td>Application Status</td> */}
                                     {/* <th>Outlook MSG</th> */}
                                     <td style={{ width: "250px" }}>
-                                      {bill_rate_currency}/{bill_rate_amount}/
-                                      {bill_rate_type}/{bill_rate_contract_type}
+                                      {bill_rate_currency || 'N.A'}/{bill_rate_amount || 'N.A'}/
+                                      {bill_rate_type || 'N.A'}/{bill_rate_contract_type || 'N.A'}
                                     </td>
                                     <td style={{ width: "250px" }}>
-                                      {pay_rate_currency}/{pay_rate_amount}/
-                                      {pay_rate_type}/{pay_rate_contract_type}
+                                      {pay_rate_currency || 'N.A'}/{pay_rate_amount || 'N.A'}/
+                                      {pay_rate_type || 'N.A'}/{pay_rate_contract_type || 'N.A'}
                                     </td>
-                                    <td>Employer Name</td>
-                                    <td>{availability}</td>
-                                    <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
+                                    {/* <td>Employer Name</td> */}
+                                    <td>{availability || 'N/A'}</td>
+                                    <td>{(submitted_by_details?.first_name || 'N/A') + ' ' + (submitted_by_details?.last_name || '')}</td>
                                     {/* <th>PW Submission Type</th> */}
-                                    <td>{notice_period}</td>
-                                    <td style={{width:'200px'}}>{current_ctc}</td>
-                                    <td style={{width:'200px'}}>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
+                                    <td>{notice_period || 'N/A'}</td>
+                                    <td style={{width:'200px'}}>{current_ctc || 'N/A'}</td>
+                                    <td style={{width:'200px'}}>{submission_on ?  moment(submission_on).format('DD-MM-YYYY hh:mm A') : 'N/A'}</td>
                                     {/* <td>Additional Details</td> */}
                                   </tr>
                                 );

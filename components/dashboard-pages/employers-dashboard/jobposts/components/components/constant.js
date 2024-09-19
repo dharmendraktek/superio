@@ -1,7 +1,7 @@
 
 export const jobPostsTableField = [
   
-  {title:'input'},
+  {title:'Submission'},
   {title:'Job Code'},
   {title:'Job Title'},
   // {title:'Business Unit'},

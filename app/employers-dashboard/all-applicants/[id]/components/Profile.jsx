@@ -14,7 +14,7 @@ const Profile = ({ setTab, applicantData, setApplicantData }) => {
     <Paper>
       <div className="d-flex text-black justify-content-between">
         <div>
-          <div className="d-flex gap-2">
+          <div className="d-flex algin-items-center gap-2">
             <div>
               <Link href="/employers-dashboard/all-applicants">
                 <span className="fs-2">{reactIcons.backarrow}</span>

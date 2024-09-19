@@ -2,8 +2,8 @@ import dynamic from "next/dynamic";
 import Packages from "@/components/dashboard-pages/employers-dashboard/packages";
 
 export const metadata = {
-  title: "Packages || Superio - Job Borad React NextJS Template",
-  description: "Superio - Job Borad React NextJS Template",
+  title: "Packages || KatalixAI - Job Borad React NextJS Template",
+  description: "KatalixAI - Job Borad React NextJS Template",
 };
 
 const index = () => {

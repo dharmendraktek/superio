@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 import Faq from "@/components/pages-menu/faq";
 
 export const metadata = {
-  title: 'Faq || Superio - Job Borad React NextJS Template',
+  title: 'Faq || KatalixAI - Job Borad React NextJS Template',
   description:
-    'Superio - Job Borad React NextJS Template',
+    'KatalixAI - Job Borad React NextJS Template',
   
 }
 

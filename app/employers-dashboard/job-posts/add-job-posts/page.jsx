@@ -3,8 +3,8 @@
 
 
 // export const metadata = {
-//   title: "Candidates Dashboard || Superio - Job Borad React NextJS Template",
-//   description: "Superio - Job Borad React NextJS Template",
+//   title: "Candidates Dashboard || KatalixAI - Job Borad React NextJS Template",
+//   description: "KatalixAI - Job Borad React NextJS Template",
 // };
 
 // const index = () => {
@@ -26,8 +26,8 @@ const AddJob = dynamic(() => import("@/components/dashboard-pages/employers-dash
 });
 
 export const metadata = {
-  title: "Candidates Dashboard || Superio - Job Board React NextJS Template",
-  description: "Superio - Job Board React NextJS Template",
+  title: "Candidates Dashboard || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const Index = () => {

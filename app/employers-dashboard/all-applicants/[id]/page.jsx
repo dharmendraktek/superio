@@ -65,7 +65,7 @@ const Index = () => {
     <InnerLayout>
       {isLoading && <Loader />}
       <div className="px-3 theme-background">
-        <div className="d-flex justify-content-between pt-5 pb-1 mt-2 gap-3">
+        <div className="d-flex justify-content-between pb-1 mt-2 gap-3">
           <div className="d-flex  gap-3">
             {applicantTabList.map((item) => {
               return (

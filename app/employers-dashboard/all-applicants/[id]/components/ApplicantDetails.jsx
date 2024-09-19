@@ -11,7 +11,7 @@ const ApplicantDetails = ({ applicantData }) => {
           <h4 className="py-2  text-primary">Applicant Details</h4>
           <div className="my-2 ">
             <p>Created By & On</p>
-            <span>{applicantData?.created_by?.first_name + " " + applicantData?.created_by?.last_name} On {moment(applicantData.created_at).format('DD-MM-YYYY hh:mm A')}</span>
+            <span>{(applicantData?.created_by?.first_name || 'N/A') + " " + (applicantData?.created_by?.last_name || '')} On {moment(applicantData.created_at).format('DD-MM-YYYY hh:mm A')}</span>
           </div>
           <div className="my-2">
             <p>Ownership</p>

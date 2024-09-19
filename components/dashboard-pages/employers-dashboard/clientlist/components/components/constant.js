@@ -1,6 +1,6 @@
 
 export const clientTableField = [
-  {title:"input", size:'130px'},
+  {title:"Client Contact", size:'130px'},
   {title:'Client Id', size:'150px'},
   {title:'Client Name', size:'250px'},
   {title:'Email', size:'300px'},

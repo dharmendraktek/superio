@@ -1,6 +1,7 @@
 'use client'
 import Paper from "@/components/common/Paper";
-import { useState } from "react";
+import { getReq } from "@/utils/apiHandlers";
+import { useEffect, useState } from "react";
 
 const tabsName = [
     {title:'Personal Information'},
@@ -8,9 +9,9 @@ const tabsName = [
     {title:'Salary Details'},
 ]
 
-const EmployeeProfile = () => {
+const EmployeeProfile = ({userDetails}) => {
     const [tab, setTab] = useState('Personal Information')
-
+   
     return(
         <Paper>
         <div className='container-fluid px-5'>
@@ -20,7 +21,7 @@ const EmployeeProfile = () => {
                 <div style={{width:'160px', height:'160px', borderRadius:'5px'}} className="border border-primary"></div>
                 </label>
                 <div>
-                <strong className="fs-6">Dharmendra Patel</strong>
+                <strong className="fs-6">{userDetails?.user?.first_name + ' ' + userDetails?.user?.last_name}</strong>
                 </div>
             </div>
             <div className="w-100 mx-5">
@@ -42,7 +43,7 @@ const EmployeeProfile = () => {
                     <strong>Employee Code</strong>
                 </div>
                 <div className="w-50">
-                    <p>1972</p>
+                    <p>{userDetails?.empcode}</p>
                 </div>
             </div>
             <div className="d-flex my-1">
@@ -50,7 +51,7 @@ const EmployeeProfile = () => {
                     <strong>User Name</strong>
                 </div>
                 <div className="w-50">
-                    <p>Dharmendra Patel</p>
+                    <p>{userDetails?.user?.first_name + ' ' + userDetails?.user?.last_name}</p>
                 </div>
             </div>
             <div className="d-flex my-1">
@@ -66,7 +67,7 @@ const EmployeeProfile = () => {
                     <strong>Email</strong>
                 </div>
                 <div className="w-50">
-                    <p>dharmendra.patel@gmail.com</p>
+                    <p>{userDetails?.user?.email}</p>
                 </div>
             </div>
             <div className="d-flex my-1">
@@ -74,7 +75,7 @@ const EmployeeProfile = () => {
                     <strong>Date of Birth</strong>
                 </div>
                 <div className="w-50">
-                    <pattern>01/06/1962</pattern>
+                    <pattern>{userDetails?.user?.birth_date || 'N/A'}</pattern>
                 </div>
             </div>
             <div className="d-flex my-1">
@@ -82,7 +83,7 @@ const EmployeeProfile = () => {
                     <strong>Date of Joining</strong>
                 </div>
                 <div className="w-50">
-                    <p>14/06/2014</p>
+                    <p>{userDetails?.joining_date}</p>
                 </div>
             </div>
             <div className="d-flex my-1">
@@ -90,15 +91,7 @@ const EmployeeProfile = () => {
                     <strong>Designation</strong>
                 </div>
                 <div className="w-50">
-                    <p>React js developer</p>
-                </div>
-            </div>
-            <div className="d-flex my-1">
-                <div className="w-50">
-                    <strong>Designation</strong>
-                </div>
-                <div className="w-50">
-                    <p>React js developer</p>
+                    <p>{userDetails?.role_name}</p>
                 </div>
             </div>
             <div className="d-flex my-1">

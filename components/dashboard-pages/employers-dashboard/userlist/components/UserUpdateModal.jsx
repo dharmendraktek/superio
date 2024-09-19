@@ -99,6 +99,8 @@ const UserUpdateModal = ({ item, getUserList }) => {
         data
       );
       if (response.status) {
+        let closeBtn = document.getElementById('closeBtn');
+        closeBtn.click();
         setIsLoading(false);
         toast.success("User data successfully updated.");
         getUserList();
@@ -118,6 +120,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
               type="button"
               className="closed-modal"
               data-bs-dismiss="modal"
+              id='closeBtn'
             ></button>
             {/* End close modal btn */}
 

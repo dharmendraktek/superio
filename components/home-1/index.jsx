@@ -129,7 +129,7 @@ const index = () => {
              <Image
                   width={1000}
                   height={800}
-                  src="/images/home3.png"
+                  src="/images/home4.png"
                   alt="brand"
               />
           </div>

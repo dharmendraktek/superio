@@ -63,19 +63,19 @@ export const VendorCopanyLinkedInFollower = [
 
 export const processOptions = [
     {name:'Add Note', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Send Email', dataToggle:'', dataTarget:'', ariaControls:'' },
-    {name:'Add Confirmation', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Send Email', dataToggle:'', dataTarget:'', ariaControls:'' },
+    {name:'Add Confirmation', dataToggle:'modal', dataTarget:'#clientSubmissionModal', ariaControls:'clientsubmission'},
     {name:'Disqualify', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Remove', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Update Status', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Share Job', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Remove', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Update Status', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Share Job', dataToggle:'', dataTarget:'', ariaControls:''},
     {name:'Submit To Client', dataToggle:'modal', dataTarget:'#clientSubmissionModal', ariaControls:'clientsubmission'},
-    {name:'Add To Group', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Add To Group', dataToggle:'', dataTarget:'', ariaControls:''},
     {name:'Schedule Interview', dataToggle:'offcanvas', dataTarget:'#interviewSchedule', ariaControls:'offcanvasRight' },
-    {name:'Submit To Other Job', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Add Task', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Export', dataToggle:'', dataTarget:'', ariaControls:''},
-    {name:'Request More Details', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Submit To Other Job', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Add Task', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Export', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Request More Details', dataToggle:'', dataTarget:'', ariaControls:''},
 ]
 
 

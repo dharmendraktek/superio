@@ -11,6 +11,7 @@ import moment from "moment";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
+import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 
 // export const applicantData = [
 //   {
@@ -40,6 +41,7 @@ const ApplicantTable = () => {
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
   const [expand, setExpand] = useState(null);
+  const [isSelected, setIsSelected] = useState([]);
 
   useEffect(() => {
     let param;
@@ -77,6 +79,16 @@ const ApplicantTable = () => {
       setApplicantData(response.data.results);
     }
   };
+
+  useEffect(() => {
+    if (applicantData.length > 0) {
+      const filteredData = applicantData.filter((item) =>
+        item.jobs_associated.some((submission) => submission.selected === true)
+      );
+      setIsSelected(filteredData);
+      // setJobData(filteredData);
+    }
+  }, [applicantData]); 
 
   return (
     <div className="theme-background">
@@ -239,17 +251,17 @@ const ApplicantTable = () => {
                           href="/employers-dashboard/all-applicants/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
                         >
-                          {item?.firstname} {item?.middlename} {item?.lastname}
+                          {item?.firstname || 'N/A'} {item?.middlename || ''} {item?.lastname || ''}
                         </Link>
                       </td>
                       <td className="" style={{ width: "250px" }}>
-                        {item.job_title}
+                        {item.job_title || 'N/A'}
                       </td>
                       <td className="" style={{ width: "300px" }}>
-                        {item.email}
+                        {item.email || 'N/A'}
                       </td>
                       <td className="" style={{ width: "300px" }}>
-                        {item.mobile}
+                        {item.mobile || 'N/A'}
                       </td>
                       <td style={{ width: "300px" }}>
                         <div className="d-flex flex-wrap gap-1">
@@ -273,6 +285,9 @@ const ApplicantTable = () => {
                                 </div>
                               );
                             })}
+                            {item.primary_skills.length == 0 &&
+                             'N/A'
+                            }
                         </div>
                       </td>
                       <td style={{ width: "300px" }}>
@@ -297,19 +312,22 @@ const ApplicantTable = () => {
                                 </div>
                               );
                             })}
+                            {item?.secondary_skills?.length == 0 && 
+                              'N/A'
+                            }
                         </div>
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        {item.city}
+                        {item.city || 'N/A'}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.source}
+                        {item.source || 'N/A'}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.state}
+                        {item.state || 'N/A'}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.status}
+                        {item.status || 'N/A'}
                       </td>
                       <td
                         className="d-flex flex-wrap gap-2"
@@ -318,13 +336,16 @@ const ApplicantTable = () => {
                         {item.ownership_details.map((item) => {
                           return (
                             <span key={item.id}>
-                              {item.first_name} {item.last_name}
+                              {item.first_name || 'N/A'} {item.last_name || ''}
                             </span>
                           );
                         })}
+                        {item.ownership_details.length == 0 &&
+                          'N/A'
+                        }
                       </td>
                       <td className="" style={{ width: "250px" }}>
-                        {item.authorization}
+                        {item.authorization || 'N/A'}
                         {/* <div className="option-box text-center">
                     <ul className="option-list">
                       <li>
@@ -372,16 +393,16 @@ const ApplicantTable = () => {
                       <td style={{ width: "250px" }}>
                         {item.created_by
                           ? item?.created_by?.first_name +
-                            " " +
+                            "" +
                             item?.created_by?.last_name
-                          : "-"}
+                          : "N/A"}
                       </td>
                       <td style={{ width: "250px" }}>
                         {item.updated_by
                           ? item?.updated_by?.first_name +
-                            " " +
+                            "" +
                             item?.updated_by?.last_name
-                          : "-"}
+                          : "N/A"}
                       </td>
                       <td style={{ width: "200px" }}>
                         {moment(item.created_at).format("DD-MM-YYYY  hh:mm A")}
@@ -393,8 +414,10 @@ const ApplicantTable = () => {
                     {item.id == expand && (
                       <tr>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  applicantData={applicantData} />  
+                      <InterviewScheduleModal   jobPostList={[]}  applicantData={applicantData} />
+                      <ClientSubmissionModal submissionDetails={applicantData} side="applicant" /> 
                         <div className="mx-3 my-2">
+                          {isSelected.length > 0 &&
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {
                               return (
@@ -413,6 +436,7 @@ const ApplicantTable = () => {
                               );
                             })}
                           </div>
+                          }
                         </div>
                         <td colSpan={15}>
                           <div className="mx-2 border rounded-1  inner-table shadow">
@@ -422,7 +446,7 @@ const ApplicantTable = () => {
                             <table className="custom-scroll-2nd">
                               <thead className="table-inner-thead">
                                 <th style={{width:'60px'}}>
-                                  <input type="checkbox" className="mx-1" />
+                                  {/* <input type="checkbox" className="mx-1" /> */}
                                 </th>
                                 <th>Job Code</th>
                                 <th>Job Title</th>
@@ -461,21 +485,16 @@ const ApplicantTable = () => {
                                     submission_on    
                                   } = _item;
 
-                                  let { job_code, title, client_name, delivery_manager, amount, currency, payment_frequency } =
+                                  let {id, job_code, title, client_name, delivery_manager, amount, currency, payment_frequency } =
                                     job_detail;
                                   let {first_name, last_name} = delivery_manager;
-                                  let deliverManagerName = (first_name || '') + (last_name || '')
+                                  let deliverManagerName = (first_name || '')+ ' ' + (last_name || '')
                                   let clientRate = (currency || 'N.A') + '/' + (amount || 'N.A') + '/' + (payment_frequency || 'N.A')
                                   let {source} = applicant_details[0];
 
                                   let applicantResume = item.documents.find((doc) => doc.is_default == true);
                                   let {communication, overall, profesionalism, technical} = applicant_rating;
-                                  
-
-                                  let overallRating = (communication + overall + profesionalism + technical)/4
-
- 
-                                  
+                                  let overallRating = (communication + overall + profesionalism + technical)/4                                  
                                   return (
                                     <tr>
                                       <td style={{width:'60px'}}>
@@ -494,7 +513,11 @@ const ApplicantTable = () => {
                                         />
                                       </td>
                                       <td>{job_code ? job_code : "N/A"}</td>
-                                      <td>{title ? title : "N/A"}</td>
+                                      <td>
+                                      <Link href={`/employers-dashboard/job-posts/${id}`}>
+                                        {title ? title : "N/A"}
+                                      </Link>
+                                        </td>
                                       <td className="cursor-pointer">
                                         <Link
                                           href="/employers-dashboard/all-applicants/[id]"

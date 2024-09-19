@@ -7,8 +7,8 @@ const UserList = dynamic(() => import("@/components/dashboard-pages/employers-da
 });
 
 export const metadata = {
-  title: "Candidates Dashboard || Superio - Job Board React NextJS Template",
-  description: "Superio - Job Board React NextJS Template",
+  title: "Employers Dashboard || KatalixAI - Users List",
+  description: "KatalixAI - Users List",
 };
 
 const IndexPage = () => {

@@ -7,8 +7,8 @@ const AllApplicants = dynamic(() => import("@/components/dashboard-pages/employe
 });
 
 export const metadata = {
-  title: "All Applicants || Superio - Job Board React NextJS Template",
-  description: "Superio - Job Board React NextJS Template",
+  title: "All Applicants || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const IndexPage = () => {

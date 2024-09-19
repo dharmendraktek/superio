@@ -1,5 +1,7 @@
+'use client'
 import Paper from "@/components/common/Paper";
 import TopCardBlock from "./TopCardBlock";
+import { useEffect } from "react";
 
 
 const cardContent = [
@@ -14,7 +16,7 @@ const cardContent = [
     {
       id: 2,
       icon: "fa-solid fa-wallet",
-      countNumber: "2.45",
+      countNumber: "-",
       metaName: "Leave Balance",
       uiClass: "ui-red",
       value:'leave-management'
@@ -22,7 +24,7 @@ const cardContent = [
     {
       id: 3,
       icon: "fa-clipboard-user",
-      countNumber: "74",
+      countNumber: "-",
       metaName: "Your Attendance",
       uiClass: "ui-yellow",
       value:'attendance'
@@ -54,14 +56,19 @@ const cardContent = [
   ];
 
 
-const PersonalInfo  = ({menuItem, setMenuItem}) => {
+const PersonalInfo  = ({menuItem, setMenuItem, userDetails}) => {
+   useEffect(() => {
+     cardContent[0]['countNumber'] = userDetails?.empcode;   
+   }, [userDetails])
+
+   
     return(
         <Paper>
             <div className="row">
              <div>
                 <h4 className="pb-2">Personal Information</h4>
              </div>
-             <TopCardBlock cardContent={cardContent} setMenuItem={setMenuItem} menuItem={menuItem}/>
+             <TopCardBlock cardContent={cardContent} setMenuItem={setMenuItem} menuItem={menuItem} userDetails={userDetails} />
             </div>
         </Paper>
     )

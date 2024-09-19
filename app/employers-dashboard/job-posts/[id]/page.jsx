@@ -121,7 +121,7 @@ const Index = () => {
                   {/* <div className="border border-secondary px-2 cursor-pointer">
                       <span>{reactIcons.mail}</span>
                     </div> */}
-                  <div className="border border-secondary position-relative px-2">
+                  <div className="border rounded-1 border-secondary position-relative px-2">
                     <div
                       className="d-flex gap-1  cursor-pointer bg-secondary"
                       onClick={() => setSubmitOpt(!submitOpt)}

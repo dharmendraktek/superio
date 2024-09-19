@@ -147,7 +147,7 @@ const ClientTable = () => {
         closeBtn.click();
         setLoading(false);
         setForm(initialState);
-        toast.success("You have been created client successfully!");
+        toast.success("Client has been created successfully!");
         getClientList();
       }
     } catch (err) {
@@ -164,7 +164,7 @@ const ClientTable = () => {
         const closeBtn = document.getElementById('closeBtnClient');
         closeBtn.click();
         setLoading(false);
-        toast.success("You have been updated client successfylly!");
+        toast.success("Client has been updated successfully!");
         getClientList();
       }
     } catch (err) {
@@ -187,7 +187,7 @@ const ClientTable = () => {
     const response = await patchReq(`/activate-client/${id}/`);
 
     if (response.status) {
-      toast.success("Client status updated successfully !");
+      toast.success("Client status has been updated successfully !");
       getClientList();
     }
   };
@@ -197,7 +197,7 @@ const ClientTable = () => {
     const response = await patchReq(`/delete-client/${id}/`);
 
     if (response.status) {
-      toast.success("Client status updated successfully !");
+      toast.success("Client status has been updated successfully !");
       getClientList();
     }
   };
@@ -222,7 +222,7 @@ const ClientTable = () => {
         const closeBtn = document.getElementById('closeBtnContact');
         closeBtn.click();
         setContLoading(false);
-        toast.success("You have been created client contact successfully!");
+        toast.success("Client contact has been created successfully!");
         getClientList();
         setContactData(initialStateContact);
       }
@@ -247,7 +247,7 @@ const ClientTable = () => {
         const closeBtn = document.getElementById('closeBtnContact');
         closeBtn.click();
         setContLoading(false);
-        toast.success("You have been updated client contact successfylly!");
+        toast.success("Client contact has been updated successfully!");
         getClientList();
       }
     } catch (err) {
@@ -601,7 +601,7 @@ const ClientTable = () => {
                 value={form.client_cont}
                 onChange={handleChange}
                 className="client-form-input"
-                type="text"
+                type="number"
               />
             </div>
             <div className="col-6 my-1">
@@ -720,15 +720,16 @@ const ClientTable = () => {
               {clientTableField.map((item, index) => {
                 return (
                   <React.Fragment key={index}>
-                    {item.title == "input" ? (
+                    {/* {item.title == "input" ? (
                       <th key={index} style={{ width: `${item.size}` }}>
                         <input type="checkbox" />
                       </th>
-                    ) : (
+                    ) :
+                     ( */}
                       <th  style={{ width: `${item.size}` }} key={index}>
                         {item.title}
                       </th>
-                    )}
+                   {/* )} */}
                   </React.Fragment>
                 );
               })}
@@ -742,7 +743,7 @@ const ClientTable = () => {
                   <tr key={index} className="">
                     {
                       <td className="d-flex align-items-center justify-content-between" style={{width:"130px"}}>
-                        <input type="checkbox" />
+                        {/* <input type="checkbox" /> */}
                         {item.contact_manager.length > 0 && (
                           <>
                             <div
@@ -801,22 +802,22 @@ const ClientTable = () => {
                     >
                       {item.client_name}
                     </td>
-                    <td style={{width:"300px"}}>{item.client_email}</td>
-                    <td style={{width:"300px"}}>{item.client_cont}</td>
-                    <td style={{width:"300px"}}>{item.client_website}</td>
-                    <td style={{width:"150px"}}>{item.status}</td>
+                    <td style={{width:"300px"}}>{item.client_email || 'N/A'}</td>
+                    <td style={{width:"300px"}}>{item.client_cont || 'N/A'}</td>
+                    <td style={{width:"300px"}}>{item.client_website || 'N/A'}</td>
+                    <td style={{width:"150px"}}>{item.status || 'N/A'}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td style={{width:"200px"}}>{item.owner_name}</td>
+                    <td style={{width:"200px"}}>{item.owner_name || 'N/A'}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>
                       {item.created_by}
                     </td> */}
                     <td className="" style={{ width: "250px" }}>
-                      {moment(item.created_at).format("DD-MM-YYYY hh:mm A")}
+                      {item.created_at ? moment(item.created_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
                     </td>
                     <td className="" style={{ width: "250px" }}>
-                      {moment(item.updated_at).format("DD-MM-YYYY hh:mm A")}
+                      {item.updated_at ? moment(item.updated_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
                     </td>
                     <td style={{width:"150px"}}>
                       <div className="option-box">
@@ -919,15 +920,15 @@ const ClientTable = () => {
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
                                     >
-                                      {contact.name}
+                                      {contact.name || 'N/A'}
                                     </td>
-                                    <td>{contact.email}</td>
-                                    <td>{contact.off_cont}</td>
-                                    <td>{contact.designation}</td>
-                                    <td>{contact.contact}</td>
+                                    <td>{contact.email || 'N/A'}</td>
+                                    <td>{contact.off_cont || 'N/A'}</td>
+                                    <td>{contact.designation || 'N/A'}</td>
+                                    <td>{contact.contact || 'N/A'}</td>
                                     {/* <td>Alaska</td> */}
-                                    <td>{contact.ownership}</td>
-                                    <td>{contact.status}</td>
+                                    <td>{contact.ownership || 'N/A'}</td>
+                                    <td>{contact.status || 'N/A'}</td>
                                     {/* <td>{contact.createdBy}</td> */}
                                   </tr>
                                 );

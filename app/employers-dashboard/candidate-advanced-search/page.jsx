@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 
 export const metadata = {
-  title: "Candidates Dashboard || Superio - Job Borad React NextJS Template",
-  description: "Superio - Job Borad React NextJS Template",
+  title: "Candidates Dashboard || KatalixAI - Job Borad React NextJS Template",
+  description: "KatalixAI - Job Borad React NextJS Template",
 };
 
 

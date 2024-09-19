@@ -2,54 +2,45 @@
 import MobileMenu from "../../../header/MobileMenu";
 import DashboardHeader from "../../../header/DashboardHeader";
 import LoginPopup from "../../../common/form/login/LoginPopup";
-import DashboardEmployerSidebar from "../../../header/DashboardEmployerSidebar";
-import BreadCrumb from "../../BreadCrumb";
-import TopCardBlock from "./components/TopCardBlock";
-import ProfileChart from "./components/ProfileChart";
-import Notification from "./components/Notification";
-import Applicants from "./components/Applicants";
 import CopyrightFooter from "../../CopyrightFooter";
-import MenuToggler from "../../MenuToggler";
 import PersonalInfo from "./components/PersonalInfo";
-import JobInfo from "./components/JobInfo";
 import AttendanceCalender from "./components/AttendanceCalender";
 import HolidayCalender from "./components/HolidayCalender";
 import LeaveManagement from "./components/LeaveManagement";
-import EmployeeInfo from "./components/EmployeeInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmployeeProfile from "./components/EmployeeProfile";
 import WorkFromHome from "./components/WorkFromHome";
 import HelpDesk from "./components/HelpDesk";
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+import { getReq } from "@/utils/apiHandlers";
 
 const Index = () => {
   const [menuItem, setMenuItem] = useState('employee-detial')
+  const [userDetails, setUserDetails] = useState();
+
+  const getUserDetails = async() => {
+     const response = await getReq(`/current-user/`);
+     if(response.status){
+      console.log("---------------response data -----", response.data);
+      setUserDetails(response.data);
+     }
+  }
+
+  useEffect(() => {
+     getUserDetails();
+  }, [])
+
   return (
-    <div className="page-wrapper theme-background ">
-      <span className="header-span"></span>
-      {/* <!-- Header Span for hight --> */}
-
-      <LoginPopup />
-      {/* End Login Popup Modal */}
-
-      <DashboardHeader />
-      {/* End Header */}
-
-      <MobileMenu />
-      {/* End MobileMenu */}
-
-      {/* <DashboardEmployerSidebar /> */}
-      {/* <!-- End User Sidebar Menu --> */}
-
-      {/* <!-- Dashboard --> */}
+      <InnerLayout>
       <section className="user-dashboard">
         <div className="dashboard-outer">
           {/* <BreadCrumb title="Dashboard Home!" /> */}
           {/* breadCrumb */}
           <div className="py-2 px-3">
-          <PersonalInfo menuItem={menuItem} setMenuItem={setMenuItem} />
+          <PersonalInfo userDetails={userDetails} menuItem={menuItem} setMenuItem={setMenuItem} />
           <div className="my-2">
           {menuItem == 'employee-detial' &&
-          <EmployeeProfile />
+          <EmployeeProfile userDetails={userDetails} />
           }
           {menuItem == 'attendance' &&
           <AttendanceCalender />
@@ -118,12 +109,7 @@ const Index = () => {
           </div> */}
         </div>
       </section>
-      {/* <!-- End Dashboard --> */}
-
-      <CopyrightFooter />
-      {/* <!-- End Copyright --> */}
-    </div>
-    // End page-wrapper
+      </InnerLayout>
   );
 };
 

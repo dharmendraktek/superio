@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
         />
         <meta
           name="description"
-          content="Superio - Job Borad React NextJS Template"
+          content="KatalixAI - Job Borad React NextJS Template"
         />
         <meta name="ibthemes" content="ATFN" />
 
