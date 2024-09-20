@@ -217,7 +217,7 @@ const Index = () => {
                           <div className="d-flex gap-1">
                             {jobData?.assign_details.map((item) => {
                               return (
-                                <div className="border border-primary rounded-1">
+                                <div className="border border-primary rounded-1 px-1">
                                   <span>
                                     {item.first_name} {item.last_name}
                                   </span>

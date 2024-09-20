@@ -62,10 +62,10 @@ export const VendorCopanyLinkedInFollower = [
 
 
 export const processOptions = [
-    {name:'Add Note', dataToggle:'', dataTarget:'', ariaControls:''},
+    {name:'Add Note', dataToggle:'offcanvas', dataTarget:'#offcanvasRight', ariaControls:'offcanvasRight'},
     // {name:'Send Email', dataToggle:'', dataTarget:'', ariaControls:'' },
     {name:'Add Confirmation', dataToggle:'modal', dataTarget:'#clientSubmissionModal', ariaControls:'clientsubmission'},
-    {name:'Disqualify', dataToggle:'', dataTarget:'', ariaControls:''},
+    // {name:'Disqualify', dataToggle:'', dataTarget:'', ariaControls:''},
     // {name:'Remove', dataToggle:'', dataTarget:'', ariaControls:''},
     // {name:'Update Status', dataToggle:'', dataTarget:'', ariaControls:''},
     // {name:'Share Job', dataToggle:'', dataTarget:'', ariaControls:''},

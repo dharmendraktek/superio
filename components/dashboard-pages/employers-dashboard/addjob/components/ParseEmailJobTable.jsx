@@ -24,20 +24,20 @@ const ParseEmailJobTable = () => {
   };
 
   const handleGetJobsByEmail = async () => {
-    let data  = {
-      date: moment(new Date()).format('YYYY-MM-DD'),
-    }
+    let data = {
+      date: moment(new Date()).format("YYYY-MM-DD"),
+    };
     setIsLoading(true);
-    const response = await postApiReq(`/process-emails/`, data );
+    const response = await postApiReq(`/process-emails/`, data);
     setIsLoading(false);
-    if(response){
+    if (response) {
       handleGetParseJobByEmail();
     }
   };
 
   useEffect(() => {
     handleGetJobsByEmail();
-    if(page){
+    if (page) {
       handleGetParseJobByEmail();
     }
   }, [page]);
@@ -54,23 +54,20 @@ const ParseEmailJobTable = () => {
     handleGetParseJobByEmail();
   }, []);
 
-  const handleInactiveJobPost = async(id) => {
-    const response = await deleteReq(`/temp-jobs/${id}/`)
-    if(response.status){
+  const handleInactiveJobPost = async (id) => {
+    const response = await deleteReq(`/temp-jobs/${id}/`);
+    if (response.status) {
       handleGetParseJobByEmail();
-     toast.success('Job post Inactivated successfully')
+      toast.success("Job post Inactivated successfully");
     }
-}
+  };
 
   return (
     <>
-     {isLoading &&
-              <Loader />
-      }
+      {isLoading && <Loader />}
       <div className="py-1">
         {open ? (
           <>
-         
             <h4 className="my-3">Parse Job Post By Email</h4>
             <div className="table_div custom-scroll-sm">
               <table className="default-table">
@@ -93,17 +90,26 @@ const ParseEmailJobTable = () => {
                     return (
                       <>
                         <tr key={index} className="">
-                          <td style={{ width: "300px" }}>{item.title}</td>
+                          <td
+                            style={{ width: "300px" }}
+                            onClick={() => {
+                              setJobItem(item);
+                              setOpen(false);
+                            }}
+                            className="text-primary text-decoration-underline cursor-pointer"
+                          >
+                            {item.title || "N/A"}
+                          </td>
                           <td style={{ width: "150px" }}>
-                            {item.job_type ? item.job_type : "-"}
+                            {item.job_type ? item.job_type : "N/A"}
                           </td>
                           {/* <td className="trans-id">{item.empcode}</td>   */}
                           <td style={{ width: "150px" }}>
-                            {item.client ? item.client : "-"}
+                            {item.client ? item.client : "N/A"}
                             {/* <a href="#">Super CV Pack</a> */}
                           </td>
                           <td className="" style={{ width: "200px" }}>
-                            {item.address ? item.address : "-"}
+                            {item.address ? item.address : "N/A"}
                           </td>
                           <td style={{ width: "300px" }}>
                             <button
@@ -111,18 +117,20 @@ const ParseEmailJobTable = () => {
                               class=""
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
-                              title={
-                              item.primary_skills.slice(1, item.primary_skills.length).map((item) => {
-                                  return item.name
+                              title={item.primary_skills
+                                .slice(1, item.primary_skills.length)
+                                .map((item) => {
+                                  return item.name;
                                 })}
-                              
                             >
                               <div className="d-flex flex-wrap">
                                 {item.primary_skills.slice(0, 1).map((item) => {
                                   return <span>{item.name}...</span>;
                                 })}
                               </div>
-          
+                              {item.primary_skills.length == 0 &&
+                                'N/A'
+                              }
                             </button>
                           </td>
                           <td className="" style={{ width: "300px" }}>
@@ -130,10 +138,13 @@ const ParseEmailJobTable = () => {
                               {item.secondary_skills.slice(0, 1).map((item) => {
                                 return <span>{item.name}...</span>;
                               })}
+                              {item.secondary_skills.length == 0 &&
+                               'N/A'
+                              }
                             </div>
                           </td>
                           <td className="" style={{ width: "100px" }}>
-                            {item.experience}
+                            {item.experience || "N/A"}
                           </td>
                           <td className="" style={{ width: "200px" }}>
                             {moment(item.created_at).format(
@@ -188,7 +199,9 @@ const ParseEmailJobTable = () => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#clientDeleteModal"
                                     data-text="Declined"
-                                    onClick={() => handleInactiveJobPost(item.id)}
+                                    onClick={() =>
+                                      handleInactiveJobPost(item.id)
+                                    }
                                   >
                                     <span className="la la-trash"></span>
                                   </button>

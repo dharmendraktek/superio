@@ -59,21 +59,21 @@ const DashboardHeader = () => {
                     {/* End .nav-outer */}
 
                     <div className="outer-box">
-                        <button className="menu-btn">
+                        {/* <button className="menu-btn">
                             <span className="count">1</span>
                             <span className="icon la la-heart-o"></span>
-                        </button>
+                        </button> */}
                         {/* wishlisted menu */}
 
-                        <button className="menu-btn">
+                        {/* <button className="menu-btn">
                             <span className="icon la la-bell"></span>
-                        </button>
+                        </button> */}
                         {/* End notification-icon */}
 
                         {/* <!-- Dashboard Option --> */}
                         <div className="dropdown dashboard-option">
                             <a
-                                className="dropdown-toggle"
+                                class       Name="dropdown-toggle"
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"

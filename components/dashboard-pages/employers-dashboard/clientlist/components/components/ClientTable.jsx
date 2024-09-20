@@ -235,11 +235,11 @@ const ClientTable = () => {
     }
   };
 
-  const handleUpdateClientContact = async () => {
+  const handleUpdateClientContact = async (id) => {
     try {
       setContLoading(true);
       const response = await patchReq(
-        `/contact-manager/${contactData.client_ref}/`,
+        `/contact-manager/${id}/`,
         contactData
       );
       setContLoading(false);

@@ -1,8 +1,5 @@
 'use client'
-import MobileMenu from "../../../header/MobileMenu";
-import DashboardHeader from "../../../header/DashboardHeader";
-import LoginPopup from "../../../common/form/login/LoginPopup";
-import CopyrightFooter from "../../CopyrightFooter";
+
 import PersonalInfo from "./components/PersonalInfo";
 import AttendanceCalender from "./components/AttendanceCalender";
 import HolidayCalender from "./components/HolidayCalender";
@@ -13,22 +10,28 @@ import WorkFromHome from "./components/WorkFromHome";
 import HelpDesk from "./components/HelpDesk";
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 import { getReq } from "@/utils/apiHandlers";
+import { useDispatch, useSelector } from "react-redux";
+import { employeeDetails } from "../../../../features/employer/employerSlice";
 
 const Index = () => {
   const [menuItem, setMenuItem] = useState('employee-detial')
   const [userDetails, setUserDetails] = useState();
+  const dispatch = useDispatch();
+  const employee = useSelector((state) => state.employer.user);
 
   const getUserDetails = async() => {
      const response = await getReq(`/current-user/`);
      if(response.status){
-      console.log("---------------response data -----", response.data);
       setUserDetails(response.data);
+      dispatch(employeeDetails(response.data))
      }
   }
 
   useEffect(() => {
      getUserDetails();
   }, [])
+
+  console.log("-------------employees ----", employee);
 
   return (
       <InnerLayout>

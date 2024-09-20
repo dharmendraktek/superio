@@ -1,7 +1,7 @@
 import { getReq } from "@/utils/apiHandlers";
 import { BASE_URL } from "@/utils/endpoints";
 import axios from "axios";
-import { employeeDetail } from "./employerSlice";
+import { useDispatch } from "react-redux";
 
 
 export const handleGetLobs = async() => {
@@ -33,9 +33,3 @@ export const handleGetUsersList = async() => {
   } 
 
 
-export const getUserDetails = async() => {
-    const response = await getReq('/current-user/');
-    if(response.status){
-      return response.data
-    }
-}

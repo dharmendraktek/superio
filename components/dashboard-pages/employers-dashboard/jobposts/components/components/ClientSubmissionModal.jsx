@@ -40,7 +40,6 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
     }
   }, [submissionDetails]);
 
-  console.log("--------submisssion detail ", submissionId);
   useEffect(() => {
     if (submissionDetails?.length > 0) {
       handleGetStatus();
@@ -59,7 +58,6 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
   };
 
   const handleUpdateStatus = async () => {
-    console.log("-------------sumbission detaills ", submissionId);
     try {
       const response = await patchReq(
         `/submissions/${submissionId}/update-status/`,
@@ -69,7 +67,6 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
         toast.success("Status has been changed successfully");
       }
     } catch (err) {
-      console.log("-------------erron ", err);
     }
   };
 

@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import InterviewScheduleModal from "./InterviewScheduleModal";
 import ClientSubmissionModal from "./ClientSubmissionModal";
 import { useCallback } from "react";
+import NotesModal from "@/components/common/NotesModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -53,7 +54,6 @@ const JobPostsTable = () => {
     }
   };
 
-
   useEffect(() => {
     if (search) {
       setPage(0);
@@ -87,7 +87,6 @@ const JobPostsTable = () => {
     }
   };
 
-
   useEffect(() => {
     if (jobPostList.length > 0) {
       const filteredData = jobPostList.filter((item) =>
@@ -96,7 +95,7 @@ const JobPostsTable = () => {
       setIsSelected(filteredData);
       // setJobData(filteredData);
     }
-  }, [jobPostList]); 
+  }, [jobPostList]);
 
   return (
     <>
@@ -174,9 +173,9 @@ const JobPostsTable = () => {
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : ( */}
-                      <th style={{ width: "200px" }} key={index}>
-                        {removeSpecialChar(item.title)}
-                      </th>
+                    <th style={{ width: "200px" }} key={index}>
+                      {removeSpecialChar(item.title)}
+                    </th>
                     {/* )} */}
                   </>
                 );
@@ -292,37 +291,41 @@ const JobPostsTable = () => {
                       {item.title}
                       {/* <a href="#">Super CV Pack</a> */}
                     </td>
-                    <td className="">{item.client_name || 'N/A'}</td>
-                    <td>{item.city || 'N/A'}</td>
-                    <td className="">{item.state || 'N/A'}</td>
-                    <td className="">{item.job_status || 'N/A'}</td>
+                    <td className="">{item.client_name || "N/A"}</td>
+                    <td>{item.city || "N/A"}</td>
+                    <td className="">{item.state || "N/A"}</td>
+                    <td className="">{item.job_status || "N/A"}</td>
                     <td className="">
-                      {item.currency || 'N.A'}
+                      {item.currency || "N.A"}
                       {item.currency ? "/" : "/"}
-                      {item.amount || 'N.A'}
+                      {item.amount || "N.A"}
                       {item.amount ? "/" : "/"}
-                      {item.payment_frequency || 'N.A'}
+                      {item.payment_frequency || "N.A"}
                     </td>
-                    <td className="">{item.delivery_manager_name || 'N/A'}</td>
-                    <td className="">{item.contact_manager_name || 'N/A'}</td>
+                    <td className="">{item.delivery_manager_name || "N/A"}</td>
+                    <td className="">{item.contact_manager_name || "N/A"}</td>
                     <td className="">
                       <div className="d-flex flex-wrap">
                         {item.assign_details.map((item) => {
                           return <span>{item.first_name},</span>;
                         })}
-                        {item.assign_details.length == 0 &&
-                          'N/A'
-                        }
+                        {item.assign_details.length == 0 && "N/A"}
                       </div>
                     </td>
-                    <td className="">{(item?.created_by?.first_name || 'N/A')+ ' ' + (item?.created_by?.last_name || '')}</td>
+                    <td className="">
+                      {(item?.created_by?.first_name || "N/A") +
+                        " " +
+                        (item?.created_by?.last_name || "")}
+                    </td>
                     <td className="">
                       {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
                     <td className="">
                       {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
-                    <td className="">{item.head_account_manager_name || 'N/A'}</td>
+                    <td className="">
+                      {item.head_account_manager_name || "N/A"}
+                    </td>
                     <td>
                       <div className="option-box">
                         <ul className="option-list">
@@ -392,37 +395,43 @@ const JobPostsTable = () => {
                   {item.id == expand && (
                     <tr>
                       <div className="mx-5 my-3 border rounded-1  inner-table shadow">
-                        <InterviewScheduleModal  jobPostList={jobPostList}  applicantData={[]} />
-                        <ClientSubmissionModal submissionDetails={jobPostList} />
+                        <InterviewScheduleModal
+                          jobPostList={jobPostList}
+                          applicantData={[]}
+                        />
+                        <ClientSubmissionModal
+                          submissionDetails={jobPostList}
+                        />
+                        <NotesModal submissionDetails={jobPostList} />
                         <div className="mx-3 my-2">
-                          {isSelected.length > 0 &&
-                          <div className="d-flex gap-2">
-                            {processOptions.map((item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="border px-2 rounded-1"
-                                  data-bs-toggle={item.dataToggle}
-                                  data-bs-target={item.dataTarget}
-                                  // data-bs-toggle='modal'
-                                  // data-bs-target='#clientSubmissionModal'
+                          {isSelected.length > 0 && (
+                            <div className="d-flex gap-2">
+                              {processOptions.map((item, index) => {
+                                return (
+                                  <div
+                                    key={index}
+                                    className="border px-2 rounded-1"
+                                    data-bs-toggle={item.dataToggle}
+                                    data-bs-target={item.dataTarget}
+                                    // data-bs-toggle='modal'
+                                    // data-bs-target='#clientSubmissionModal'
 
-                                  // aria-controls={item.ariaControls}
-                                >
-                                  <span className="text-primary cursor-pointer">
-                                    {item.name}
-                                  </span>
-                                  {/* <span>|</span> */}
-                                </div>
-                              );
-                            })}
-                          </div>
-                          }
+                                    // aria-controls={item.ariaControls}
+                                  >
+                                    <span className="text-primary cursor-pointer">
+                                      {item.name}
+                                    </span>
+                                    {/* <span>|</span> */}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                         <td colSpan={15}>
                           <table>
                             <thead className="table-inner-thead">
-                              <th  style={{width:'60px'}}>
+                              <th style={{ width: "60px" }}>
                                 {/* <input className="mx-1" type="checkbox" /> */}
                               </th>
                               <th>Submission ID</th>
@@ -443,8 +452,8 @@ const JobPostsTable = () => {
                               <th>Submitted By</th>
                               {/* <th>PW Submission Type</th> */}
                               <th>Notice Period</th>
-                              <th style={{width:'200px'}}>Current CTC</th>
-                              <th style={{width:'200px'}}>Submitted On</th>
+                              <th style={{ width: "200px" }}>Current CTC</th>
+                              <th style={{ width: "200px" }}>Submitted On</th>
                               {/* <th>Additional Details</th> */}
                             </thead>
                             <tbody>
@@ -460,23 +469,51 @@ const JobPostsTable = () => {
                                   bill_rate_type,
                                   bill_rate_contract_type,
                                   submitted_by_details,
-                                  submission_on
+                                  submission_on,
                                 } = _item;
-                                let {id, firstname, middlename, lastname, authorization, mobile, address,country, experience, source , notice_period, current_amount,  current_currency, current_job_type, current_payment_frequency, } =
-                                  _item.applicant_details[0];
+                                let {
+                                  id,
+                                  firstname,
+                                  middlename,
+                                  lastname,
+                                  authorization,
+                                  mobile,
+                                  address,
+                                  country,
+                                  experience,
+                                  source,
+                                  notice_period,
+                                  current_amount,
+                                  current_currency,
+                                  current_job_type,
+                                  current_payment_frequency,
+                                } = _item.applicant_details[0];
 
-                                  let current_ctc = `${(current_currency || 'N.A') + '/' + (current_amount || 'N.A') + '/' + (current_payment_frequency || 'N.A') + '/' + (current_job_type || 'N.A')}`
+                                let current_ctc = `${
+                                  (current_currency || "N.A") +
+                                  "/" +
+                                  (current_amount || "N.A") +
+                                  "/" +
+                                  (current_payment_frequency || "N.A") +
+                                  "/" +
+                                  (current_job_type || "N.A")
+                                }`;
 
                                 return (
                                   <tr>
-                                    <td style={{width:'60px'}}>
-                                      <input type="checkbox" 
+                                    <td style={{ width: "60px" }}>
+                                      <input
+                                        type="checkbox"
                                         onChange={(e) => {
                                           let update = [...jobPostList];
                                           if (e.target.checked) {
-                                            update[index]["submissions"][_index]['selected'] = e.target.checked;
+                                            update[index]["submissions"][
+                                              _index
+                                            ]["selected"] = e.target.checked;
                                           } else {
-                                            update[index]["submissions"][_index]['selected'] = e.target.checked;
+                                            update[index]["submissions"][
+                                              _index
+                                            ]["selected"] = e.target.checked;
                                           }
                                           setJobPostList(update);
                                         }}
@@ -485,38 +522,56 @@ const JobPostsTable = () => {
                                     </td>
                                     <td>{_item.id}</td>
                                     <td>
-                                      <Link href={`/employers-dashboard/all-applicants/${id}`}>
-                                      {firstname || '' +
-                                        " " +
-                                        middlename || '' +
-                                        " " +
-                                        lastname || ''}
+                                      <Link
+                                        href={`/employers-dashboard/all-applicants/${id}`}
+                                      >
+                                        {firstname ||
+                                          "" + " " + middlename ||
+                                          "" + " " + lastname ||
+                                          ""}
                                       </Link>
                                     </td>
-                                    <td>{authorization || 'N/A'}</td>
-                                    <td>{mobile || 'N/A'}</td>
-                                    <td>{address || 'N.A'}</td>
-                                    <td>{country || 'N/A'}</td>
-                                    <td>{experience || 'N/A'}</td>
-                                    <td>{source || 'N/A'}</td>
+                                    <td>{authorization || "N/A"}</td>
+                                    <td>{mobile || "N/A"}</td>
+                                    <td>{address || "N.A"}</td>
+                                    <td>{country || "N/A"}</td>
+                                    <td>{experience || "N/A"}</td>
+                                    <td>{source || "N/A"}</td>
                                     {/* <td>Revision Status</td> */}
                                     {/* <td>Application Status</td> */}
                                     {/* <th>Outlook MSG</th> */}
                                     <td style={{ width: "250px" }}>
-                                      {bill_rate_currency || 'N.A'}/{bill_rate_amount || 'N.A'}/
-                                      {bill_rate_type || 'N.A'}/{bill_rate_contract_type || 'N.A'}
+                                      {bill_rate_currency || "N.A"}/
+                                      {bill_rate_amount || "N.A"}/
+                                      {bill_rate_type || "N.A"}/
+                                      {bill_rate_contract_type || "N.A"}
                                     </td>
                                     <td style={{ width: "250px" }}>
-                                      {pay_rate_currency || 'N.A'}/{pay_rate_amount || 'N.A'}/
-                                      {pay_rate_type || 'N.A'}/{pay_rate_contract_type || 'N.A'}
+                                      {pay_rate_currency || "N.A"}/
+                                      {pay_rate_amount || "N.A"}/
+                                      {pay_rate_type || "N.A"}/
+                                      {pay_rate_contract_type || "N.A"}
                                     </td>
                                     {/* <td>Employer Name</td> */}
-                                    <td>{availability || 'N/A'}</td>
-                                    <td>{(submitted_by_details?.first_name || 'N/A') + ' ' + (submitted_by_details?.last_name || '')}</td>
+                                    <td>{availability || "N/A"}</td>
+                                    <td>
+                                      {(submitted_by_details?.first_name ||
+                                        "N/A") +
+                                        " " +
+                                        (submitted_by_details?.last_name || "")}
+                                    </td>
                                     {/* <th>PW Submission Type</th> */}
-                                    <td>{notice_period || 'N/A'}</td>
-                                    <td style={{width:'200px'}}>{current_ctc || 'N/A'}</td>
-                                    <td style={{width:'200px'}}>{submission_on ?  moment(submission_on).format('DD-MM-YYYY hh:mm A') : 'N/A'}</td>
+                                    <td>{notice_period || "N/A"}</td>
+                                    <td style={{ width: "200px" }}>
+                                      {current_ctc || "N/A"}
+                                    </td>
+                                    <td style={{ width: "200px" }}>
+                                      {submission_on
+                                        ? moment(submission_on).format(
+                                            "DD-MM-YYYY hh:mm A"
+                                          )
+                                        : "N/A"}
+                                    </td>
                                     {/* <td>Additional Details</td> */}
                                   </tr>
                                 );
@@ -530,11 +585,11 @@ const JobPostsTable = () => {
                 </>
               );
             })}
-            {!isLoading && jobPostList.length == 0 &&
-              <tr className="">
-                <td>No Data Found</td>
+            {!isLoading && jobPostList.length == 0 && (
+              <tr className="text-center mt-5">
+                <td colSpan={7}>No data found</td>
               </tr>
-            }
+            )}
             {/* End tr */}
           </tbody>
         </table>

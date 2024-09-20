@@ -9,12 +9,27 @@ import { isActiveLink } from "../../utils/linkActiveChecker";
 
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
-import { postApiReq } from "@/utils/apiHandlers";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { employeeDetails } from "@/features/employer/employerSlice";
+
+
 const DashboardCandidatesHeader = () => {
     const [navbar, setNavbar] = useState(false);
+    const employeeInfo = useSelector((state) => state.employer.user);
+    const dispatch = useDispatch();
+   
+  const getUserDetails = async() => {
+    const response = await getReq(`/current-user/`);
+    if(response.status){
+     dispatch(employeeDetails(response.data))
+    }
+ }
 
-
+ useEffect(() => {
+    getUserDetails();
+ }, [])
 
     const changeBackground = () => {
         if (window.scrollY >= 0) {
@@ -77,15 +92,15 @@ const DashboardCandidatesHeader = () => {
                     {/* End .nav-outer */}
 
                     <div className="outer-box">
-                        <button className="menu-btn">
+                        {/* <button className="menu-btn">
                             <span className="count">1</span>
                             <span className="icon la la-heart-o"></span>
-                        </button>
+                        </button> */}
                         {/* wishlisted menu */}
 
-                        <button className="menu-btn">
+                        {/* <button className="menu-btn">
                             <span className="icon la la-bell"></span>
-                        </button>
+                        </button> */}
                         {/* End notification-icon */}
 
                         {/* <!-- Dashboard Option --> */}
@@ -103,7 +118,10 @@ const DashboardCandidatesHeader = () => {
                                     width={50}
                                     height={50}
                                 />
-                                <span className="name">My Account</span>
+                                <div className="ms-2">
+                                <h5 className="text-capitalize">{(employeeInfo?.user?.first_name || '')+ " " + (employeeInfo?.user?.last_name || '')}</h5>
+                                <span className="text-black">{employeeInfo?.user?.email}</span>
+                                </div>
                             </a>
 
                             <ul className="dropdown-menu">

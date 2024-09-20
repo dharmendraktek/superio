@@ -5,6 +5,8 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Paper from '@/components/common/Paper';
 import { reactIcons } from '@/utils/icons';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 // import { Button, ButtonGroup } from '@mui/material';
 
 const localizer = momentLocalizer(moment);
@@ -13,6 +15,20 @@ const AttendanceCalendar = () => {
   const [events, setEvents] = useState([]);
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState(Views.MONTH);
+  const employee = useSelector((state) => state.employer.user);
+
+  // const handleGetUserAttendanceDetails = async() => {
+  //       const response = await axios.get(`http://10.10.105.226:8000/attendance-details/?emp_code=${employee.empcode}`);
+  //       console.log("---------------response ", response);
+  //       if(response.status){
+  //       }
+  // }
+
+  // useEffect(() => {
+  //   if(employee?.empcode){
+  //     handleGetUserAttendanceDetails(); 
+  //   }
+  // }, [employee])
 
   useEffect(() => {
     // Mock data, replace with your API call

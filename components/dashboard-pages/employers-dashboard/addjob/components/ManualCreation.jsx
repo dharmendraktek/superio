@@ -53,7 +53,7 @@ const initialState = {
   post_on_portal: new Date(),
   is_active: 1,
   priority: "",
-  post_on_portal: true,
+  post_on_portal:false,
   // post_date_on_portal: "",
 };
 
@@ -129,8 +129,10 @@ const ManualCreation = ({
   //   }
   // }, [jobData.languages])\
 
+
   useEffect(() => {
     if (jobData) {
+      console.log("-----------job dat a", jobData);
       setAssignList(jobData.assign_details ? jobData.assign_details : []);
       setComments(jobData.comment);
       setForm((prev) => ({
@@ -177,7 +179,7 @@ const ManualCreation = ({
         account_manager: jobData.account_manager,
         delivery_manager: jobData.delivery_manager,
         assign: jobData.assign ? jobData.assign : [],
-        tax_term: "",
+        tax_term:jobData.tax_term ? jobData.tax_term : '',
         department: jobData.department,
         description: jobData.description ? jobData.description : "<p></p>",
         is_active: 1,
@@ -225,12 +227,12 @@ const ManualCreation = ({
   };
 
   const handleGetJobCode = async () => {
-    // if (!jobData) {
+    if (!jobData) {
     const response = await getReq("/next-job-code/");
     if (response.status) {
       setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
     }
-    // }
+    }
   };
 
   const handleGetLobs = async () => {
@@ -286,7 +288,6 @@ const ManualCreation = ({
       jobDescriptionErr: "",
     }))
   
-    console.log("-----------form sdfsd", form);
 
     if (!form.job_code) {
       setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
@@ -297,15 +298,15 @@ const ManualCreation = ({
     if (!form.client) {
       setError((prev) => ({ ...prev, clientErr: "This field is required" }));
     }
-    if (!form.lob) {
-      setError((prev) => ({ ...prev, lobErr: "This field is required" }));
-    }
-    if (!form.contact_manager) {
-      setError((prev) => ({
-        ...prev,
-        contactManagerErr: "This field is required",
-      }));
-    }
+    // if (!form.lob) {
+    //   setError((prev) => ({ ...prev, lobErr: "This field is required" }));
+    // }
+    // if (!form.contact_manager) {
+    //   setError((prev) => ({
+    //     ...prev,
+    //     contactManagerErr: "This field is required",
+    //   }));
+    // }
     if (!form.state) {
       setError((prev) => ({ ...prev, stateErr: "This field is required" }));
     }
@@ -351,7 +352,7 @@ const ManualCreation = ({
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
-    if (!(form.description == '<p></p>')) {
+    if ((form.description == '<p></p>')) {
       setError((prev) => ({
         ...prev,
         jobDescriptionErr: "This field is required",
@@ -377,13 +378,12 @@ const ManualCreation = ({
       assign,
       description,
     } = form;
-    console.log
     if (
-      job_code &&
+      // job_code &&
       title &&
       client &&
-      lob &&
-      contact_manager &&
+      // lob &&
+      // contact_manager &&
       state &&
       city &&
       job_status &&
@@ -394,7 +394,7 @@ const ManualCreation = ({
       tax_term &&
       delivery_manager &&
       account_manager &&
-      assign.length > 0 &&
+      // assign.length > 0 &&
       description
     ) {
       return true;
@@ -404,13 +404,16 @@ const ManualCreation = ({
   };
 
   const handleSubmit = async () => {
-    console.log("---------hanvle validationg ", handleValidation());
+
     if (handleValidation()) {
       if (name == "update" && !comments && !jobType == "Email") {
         setCommentsErr("This field is required");
         return;
       } else if (!jobType == "Email") {
         form["comment"] = comments;
+      }
+      if((name == "create")){
+        delete form["job_code"]
       }
       try {
         setIsLoading(true);
@@ -430,7 +433,7 @@ const ManualCreation = ({
             handleGetJobDetails();
             let btnModal = document.getElementById("commentModalClose");
             btnModal.click();
-            // setTab(null);
+            setTab(null);
             // router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
           } else {
             if (documents.length > 0) {
@@ -443,8 +446,8 @@ const ManualCreation = ({
           }
         }
       } catch (err) {
-        setIsLoading(true);
-        toast.error(err.response || "Something went wrong");
+        setIsLoading(false);
+        // toast.error(err.response || "Something went wrong");
       }
     }else{
       let closeBtn = document.getElementById('jobCommentModal')
@@ -530,6 +533,7 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
+
   return (
     <div className="py-2">
       <LanguageModal handleGetLanguageList={handleGetLanguageList} />
@@ -570,7 +574,7 @@ const ManualCreation = ({
             {reactIcons.backarrow}
           </span>
           <span className="text-primary">Back</span>
-          <h4 className="fw-medium text-primary">
+          <h4 className="fw-medium text-black">
             {name == "update" ? "Update Job Posting" : "New Job Posting"}
           </h4>
         </div>
@@ -580,7 +584,7 @@ const ManualCreation = ({
             onClick={name == "create" || jobType == "Email" ? handleSubmit : ""}
             data-bs-toggle="modal"
             data-bs-target={
-              name == "update" && !(jobType == "Email")  ? "#commentsModal" : ""
+              (name == "update" && !(jobType == "Email"))  ? "#commentsModal" : ""
             }
           >
             {isLoading ? (
@@ -614,7 +618,7 @@ const ManualCreation = ({
             <h6 className="fs-3 fw-medium text-black">Job Details</h6>
           </div>
           <div className="row px-5">
-            {!jobType && (
+            {!jobType  && (
               <div className="col-4 my-2">
                 <p>
                   Job Code <strong className="text-danger">*</strong>
@@ -755,7 +759,8 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                Names of LOB <strong className="text-danger">*</strong>
+                Names of LOB 
+                {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
                 value={form.lob}
@@ -777,7 +782,8 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                Contact Manager <strong className="text-danger">*</strong>
+                Contact Manager 
+                {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
                 value={form.contact_manager}
@@ -974,8 +980,9 @@ const ManualCreation = ({
                     return (
                       <div
                         key={index}
-                        className="mx-1 my-1 px-1 gap-6 text-black fw-medium border border-primary rounded-1"
+                        className="mx-1 my-1 px-1 gap-6 text-black fw-medium  border-primary rounded-1"
                         // style={{ background: "var(--primary-2nd-color)" }}
+                        style={{border:'1px solid'}}
                       >
                         <span>{item.name ? item.name : item}</span>
                         <span
@@ -1039,8 +1046,9 @@ const ManualCreation = ({
                     return (
                       <div
                         key={index}
-                        className="mx-1 px-1 my-1 gap-6 text-black fw-medium border border-primary rounded-1"
+                        className="mx-1 px-1 my-1 gap-6 text-black fw-medium  border-primary rounded-1"
                         // style={{ background: "var(--primary-2nd-color)" }}
+                        style={{border:'1px solid'}}
                       >
                         <span>{item.name ? item.name : item}</span>
                         <span
@@ -1183,7 +1191,7 @@ const ManualCreation = ({
               <p>
                 Tax Terms <strong className="text-danger">*</strong>
               </p>
-              <select className="client-form-input" onChange={handleChange}  name="tax_term">
+              <select className="client-form-input" value={form.tax_term} onChange={handleChange}  name="tax_term">
                 <option>Select</option>
                 {TaxTerms.map((item, index) => {
                   return (
@@ -1373,7 +1381,7 @@ const ManualCreation = ({
                 />
               )}
               <span className="text-danger">{error.jobDescriptionErr}</span>
-              {!jobType && (
+              {/* {!jobType && (
                 <div className="mt-4 d-flex gap-2 ">
                   <input
                     type="checkbox"
@@ -1387,7 +1395,7 @@ const ManualCreation = ({
                   />
                   <label className="fw-medium">Post Job on Career Portal</label>
                 </div>
-              )}
+              )} */}
             </div>
             {!jobType && (
               <div className="col-12 my-1">

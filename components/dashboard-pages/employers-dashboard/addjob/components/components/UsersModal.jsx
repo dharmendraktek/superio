@@ -43,6 +43,12 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
       setUsersList(merged);
     }
   }
+
+  const handleClear = () => {
+    setTeamId('');
+    setSearch('');
+    handleGetUsersList();
+  }
    
   
 
@@ -132,8 +138,8 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
               </div>
             </div>
             <div className="modal-footer">
-              <button  type="button" className="theme-btn btn-style-one small" data-bs-dismiss="modal">Save</button>
-              <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Close</button>
+              <button  type="button" className="theme-btn btn-style-one small" data-bs-dismiss="modal" onClick={handleClear}>Save</button>
+              <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal" onClick={handleClear}>Close</button>
             </div>
           </div>
         </div>

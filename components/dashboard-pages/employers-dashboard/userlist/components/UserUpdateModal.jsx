@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const initialState = {
-  username: "",
+  first_name: "",
+  last_name:"",
   user_role: "",
   user_team: "",
   user_dept: "",
@@ -65,10 +66,12 @@ const UserUpdateModal = ({ item, getUserList }) => {
   }, []);
 
   useEffect(() => {
+    console.log("-------------item ", item);
     if (item) {
       setUserData((prev) => ({
         ...prev,
-        username: item.user.username,
+        first_name: item.user.first_name,
+        last_name: item.user.last_name,
         user_role: item.user_role,
         user_dept: item.user_dept,
         user_reportingmanager: item.user_reportingmanager,
@@ -84,6 +87,8 @@ const UserUpdateModal = ({ item, getUserList }) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
   const data = {
+    first_name:userData.first_name,
+    last_name:userData.last_name,
     user_role: userData.user_role,
     user_dept: userData.user_dept,
     user_reportingmanager: userData.user_reportingmanager,
@@ -147,12 +152,26 @@ const UserUpdateModal = ({ item, getUserList }) => {
                     </div>
                     <div className="col-6">
                       <div className="form-group">
-                        <label>Name</label>
+                        <label>Firstname</label>
                         <input
                           type="text"
-                          name="username"
-                          placeholder="Name"
-                          value={userData.username}
+                          name="first_name"
+                          placeholder="Firstname"
+                          value={userData.first_name}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      {/* name */}
+                    </div>
+                    <div className="col-6">
+                      <div className="form-group">
+                        <label>Lastname</label>
+                        <input
+                          type="text"
+                          name="last_name"
+                          placeholder="Lastname"
+                          value={userData.last_name}
                           onChange={handleChange}
                           required
                         />
