@@ -17,18 +17,18 @@ const AttendanceCalendar = () => {
   const [view, setView] = useState(Views.MONTH);
   const employee = useSelector((state) => state.employer.user);
 
-  // const handleGetUserAttendanceDetails = async() => {
-  //       const response = await axios.get(`http://10.10.105.226:8000/attendance-details/?emp_code=${employee.empcode}`);
-  //       console.log("---------------response ", response);
-  //       if(response.status){
-  //       }
-  // }
+  const handleGetUserAttendanceDetails = async() => {
+        const response = await axios.get(`http://10.10.105.228:8000/attendance-details/?emp_code=1767`);
+        console.log("---------------response ", response);
+        if(response.status){
+        }
+  }
 
-  // useEffect(() => {
-  //   if(employee?.empcode){
-  //     handleGetUserAttendanceDetails(); 
-  //   }
-  // }, [employee])
+  useEffect(() => {
+    if(employee?.empcode){
+      handleGetUserAttendanceDetails(); 
+    }
+  }, [employee])
 
   useEffect(() => {
     // Mock data, replace with your API call

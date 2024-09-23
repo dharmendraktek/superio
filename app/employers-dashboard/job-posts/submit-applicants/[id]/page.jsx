@@ -171,14 +171,18 @@ const Index = () => {
     filtredApplicant.forEach((item) => {
       handleAddMultiForm(item.id);
     });
+    console.log("------------filtered applicant ", filtredApplicant);
     setSelectedJobs(filtredApplicant);
     setOpen(true);
   };
 
   const handleSubmitApplicant = async () => {
+    console.log("----------------multi submit form ----------------", multiSubmissionForm);
     const response = await postApiReq("/submission/", multiSubmissionForm);
     if (response.status) {
       toast.success("Applicant submitted to job successfully");
+      setOpen(false);
+      setMultiSubmissionForm([])
     }
   };
 
@@ -219,10 +223,11 @@ const Index = () => {
           <div className="w-75">
             {open ? (
               selectedJobs?.map((item, index) => {
+                console.log("-------------item -------", item)
                 return (
                   <div className="mb-3">
                     <ApplicantSubmissionDetails
-                      applicantData={applicantData}
+                      applicantData={item}
                       jobData={jobData}
                       item={item}
                       multiSubmissionForm={multiSubmissionForm}

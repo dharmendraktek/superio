@@ -250,6 +250,7 @@ const CallLogs = ({ applicantData, handleGetApplicantDetails }) => {
                   handleDate={(date) =>
                     setForm((prev) => ({ ...prev, followup_time: date }))
                   }
+                  showTime={true}
                 />
               </div>
               <div className="col-6 my-1">

@@ -11,7 +11,8 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     // new_status:'',
-    new_substatus:''
+    new_substatus:'',
+    comment:''
   });
 
 
@@ -68,6 +69,7 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
                <div className="my-2">
                 <p>Comment</p>
                 <textarea 
+                  onChange={(e) => setForm((prev) => ({...prev, comment:e.target.value}))}
                   className="border border-secondary px-2 py-1 w-100 rounded-1"
                 />
                </div>

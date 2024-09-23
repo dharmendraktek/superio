@@ -109,6 +109,13 @@ const ApplicantSubmissionDetails = ({
   const [loadingAiCheck, setLoadingAiCheck] = useState(false);
   const [aiCheckResult, setAiCheckResult] = useState({});
   const [openManualRating, setOpenManualRating] = useState(true);
+  const [availableDoc, setAvailabeleDoc] = useState([]);
+
+
+  
+  useEffect(() => {
+      getApplicantDocuments();
+  }, [])
 
   // this function handle the skills
 
@@ -425,6 +432,8 @@ const ApplicantSubmissionDetails = ({
     let file = e.target.files;
     Object.values(file).forEach((item) => {
       setDocuments((prev) => [...prev, item]);
+      console.log("-------item ", item);
+      setDocDetail((prev) =>({...prev, title:item.name}))
     });
   };
 
@@ -434,9 +443,18 @@ const ApplicantSubmissionDetails = ({
     setDocuments(filteredData);
   };
 
+  const getApplicantDocuments = async() => {
+    const response = await getReq(`/applicant-documents/?applicant_id=${applicantData?.id}`)
+    if(response.status){
+      setAvailabeleDoc(response.data);
+    }
+  }
+
+
   let applicantDetails =
     applicantData?.length > 0 ? applicantData[index] : applicantData;
   const handleUploadDoc = async (formIndex) => {
+    setIsLoading(true);
     const formData = new FormData();
     documents.forEach((file, index) => {
       formData.append("files", file);
@@ -454,7 +472,13 @@ const ApplicantSubmissionDetails = ({
 
     if (documents.length > 0) {
       const response = await postApiReq(`/applicant-documents/`, formData);
+      setIsLoading(false);
       if (response.status) {
+        getApplicantDocuments();
+        setDocuments([]);
+        setDocDetail((prev) => ({...prev, title:'', type:'', comment:''}))
+        setAddDoc(false);
+        toast.success("Document has been uploaded successfully!")
       }
     }
   };
@@ -570,8 +594,11 @@ const ApplicantSubmissionDetails = ({
       handleGetApplicantDetails();
     }else if(response.error){
       toast.error(response.error.error);
+      getApplicantDocuments(); 
     }
   };
+
+  console.log("------------doc detial s ", docDetail);
 
 
   return (
@@ -1129,7 +1156,12 @@ const ApplicantSubmissionDetails = ({
                   <div className="col-4">
                     <p className="mb-2">Upload Document</p>
                     <UploadSingleDocument handleFileUpload={handleFileUpload} />
-                    <p className="text-danger">{document?.name}</p>
+                    {documents.length > 0 && documents.map((file) => {
+                      return(
+                        <p className="text-danger">{file?.name}</p>
+                      )
+                    })
+                    }
                   </div>
                   <div className="col-8">
                     <div className="d-flex flex-fill gap-5 ">
@@ -1249,15 +1281,14 @@ const ApplicantSubmissionDetails = ({
                     <th>Action</th>
                   </thead>
                   <tbody>
-                    {(applicantData?.length > 0
-                      ? applicantData[index]
-                      : applicantData
-                    )?.documents?.map((item, index) => {
+                    {availableDoc?.map((item, index) => {
+                      let updated_by = {item};
+                      let {first_name, last_name} = updated_by;
                       return (
                         <tr>
                           <td className="px-2">{item.document_name}</td>
                           <td>{item.type}</td>
-                          <td>-</td>
+                          <td>{first_name} {last_name}</td>
                           <td>
                             {moment(item.uploaded_at).format(
                               "DD-MM-YYYY hh:mm A"
@@ -2013,7 +2044,7 @@ const ApplicantSubmissionDetails = ({
                                   background: "var(--primary-2nd-color)",
                                 }}
                               >
-                                <span>{item.first_name}</span>
+                                <span>{item.first_name} {item.last_name}</span>
                               </div>
                             );
                           })}
@@ -2076,7 +2107,7 @@ const ApplicantSubmissionDetails = ({
                                     }
                                   }}
                                 />
-                                <span className="mx-2">{item.first_name}</span>
+                                <span className="mx-2">{item.first_name} {item.last_name}</span>
                               </div>
                             );
                           })}

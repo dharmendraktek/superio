@@ -227,7 +227,8 @@ const ManualCreation = ({
   };
 
   const handleGetJobCode = async () => {
-    if (!jobData) {
+    console.log("-------------job data ", jobData, name);
+    if (!jobData || name=="parse") {
     const response = await getReq("/next-job-code/");
     if (response.status) {
       setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
@@ -424,11 +425,13 @@ const ManualCreation = ({
             ? await patchReq(`/jobs/${jobData.id}/`, form)
             : await postApiReq("/jobs/", form);
         setIsLoading(false);
+         
         if (response.status) {
           if (jobData) {
             if (documents.length > 0) {
               handleSaveDocuments(jobData.id);
             }
+            setOpen(true);
             toast.success("Job post updated successfully !");
             handleGetJobDetails();
             let btnModal = document.getElementById("commentModalClose");
@@ -1291,7 +1294,7 @@ const ManualCreation = ({
                           className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
                           style={{ background: "var(--primary-2nd-color)" }}
                         >
-                          <span>{item.first_name}</span>
+                          <span>{item.first_name} {item.last_name}</span>
                           <span
                             onClick={() => handleClose(item)}
                             className="text-black fs-6 cursor-pointer"

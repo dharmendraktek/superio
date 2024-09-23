@@ -65,7 +65,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
       });
       updateData.push({
         text: descriptionData,
-        type: tab,
+        type: 'job',
         user: 209,
         created_at: new Date(),
         updated_at: new Date(),
@@ -78,7 +78,6 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
     const closeBtn = document.getElementById('closeNote');
     closeBtn.click();
     toast.success("Note Created Successfully");
-
     setNoteData(response.data.notes);
   };
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 
-const UploadSingleDocument = ({handleFileUpload}) => {
+const UploadSingleDocument = ({handleFileUpload, multiple}) => {
     return(
         <>
               <label>
@@ -24,6 +24,7 @@ const UploadSingleDocument = ({handleFileUpload}) => {
                     handleFileUpload(e);
                   }}
                   className="d-none"
+                  multiple
                 />
               </label>
         </>

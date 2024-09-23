@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import TimeZoneModal from "./TimeZoneModal";
 import moment from "moment";
 import UsersListDropdown from "@/components/common/UsersListDropdown";
+import UploadSingleDocument from "@/components/common/UploadSingleDocument";
 
 const initialState = {
   applicant: "",
@@ -26,9 +27,9 @@ const initialState = {
   duration: "30",
   mode: "online",
   link: "https://meeting.com/interview123",
-  is_notify_applicant: "",
-  is_notify_interviewer: "",
-  show_feedback_to_other_interviewer: "",
+  is_notify_applicant: false,
+  is_notify_interviewer: false,
+  show_feedback_to_other_interviewer: false,
   client: "",
   contact_manager: null,
   endclient: null,
@@ -54,13 +55,14 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const [form, setForm] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [document, setDocument] = useState();
-  const [additionalDoc, setAdditionalDoc] = useState();
+  const [additionalDoc, setAdditionalDoc] = useState([]);
   const [jobData, setJobData] = useState([]);
   const [selectedUsersIds, setSelectedUsersIds] = useState([]);
   const [reminder, setReminder] = useState(remInitialState);
   const [reminderUsersIds, setReminderUsersIds] = useState([]);
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
+
 
   useEffect(() => {
     if (jobPostList.length > 0) {
@@ -103,12 +105,14 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   };
 
   const handleScheduleInterview = async () => {    
+    form["submission_ref"] = jobData[0]?.submissions[0]?.id;
     try {
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
       setIsLoading(false);
       if (response.status) {
         handleSubmitReminder(response.data.id);
+        handleAddInterviewDocuments(response.data.id);
         toast.success(
           "The applicant interview has been scheduled successfully."
         );
@@ -120,20 +124,37 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
 
   const handleGetInterviewRoundList = async() => {
     const response = await getReq('/interview-round-choice/');
-    console.log("-------------response -------", response);
     if(response.status){
         setRoundList(response.data);
     }
   }
 
   const handleFileUpload = (e, type) => {
-    let file = e.target.files[0];
     if (type == "resume") {
+      let file = e.target.files[0];
       setDocument(file);
     } else if (type == "additional") {
-      setAdditionalDoc(file);
+      console.log("-------------data ", e.target.files);
+      let fileArray = Object.values(e.target.files);
+      setAdditionalDoc(fileArray);
     }
   };
+
+  const handleAddInterviewDocuments = async(interviewId) => {
+       setAdditionalDoc((prev) => [...prev, document])
+       const formData = new FormData();
+       formData.append('interview_ref', interviewId);
+       console.log("--------------addtional doc ", additionalDoc);
+       
+        additionalDoc.forEach((file) => {
+          formData.append('files', file);
+       })
+       const response = await postApiReq('/interview-email-documents/', formData);
+       if(response.status){
+        console.log("-------------interview documents uploaded successfully ");
+       }
+  }
+
   let jobId = jobData.length > 0 &&
   jobData[0]?.id;
   
@@ -379,7 +400,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                   <option>Select</option>
                   {roundList.map((item, index) => {
                     return (
-                      <option key={index} value={item.value}>
+                      <option key={index} value={item.id}>
                         {item.name}
                       </option>
                     );
@@ -634,17 +655,32 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                     </div>
                     <div className="col-6 my-2">
                       <p>Resume</p>
-                      <input
+                      <UploadSingleDocument handleFileUpload={(e) => handleFileUpload(e, 'resume') }  />  
+                      {/* <input
                         type="file"
                         onChange={(e) => handleFileUpload(e, "resume")}
-                      />
+                      /> */}
+                      <div>
+                        {document &&
+                        <span className="text-primary">{document.name}</span>
+                        }
+                      </div>
                     </div>
                     <div className="col-6 my-2">
                       <p>Additional Attachment</p>
-                      <input
+                      <UploadSingleDocument handleFileUpload={(e) => handleFileUpload(e, 'additional') } multiple />  
+
+                      {/* <input
                         type="file"
                         onChange={(e) => handleFileUpload(e, "additional")}
-                      />
+                        multiple
+                      /> */}
+                      {additionalDoc?.map((item) => {
+                         return(
+                          <p className="text-primary">{item.name}</p>
+                         )
+                      })
+                      }
                     </div>
                     <div className="col-12">
                       <p>Comments</p>

@@ -461,7 +461,7 @@ const ApplicantTable = () => {
                                 <th>Client Bill Rate/Salary</th>
                                 <th style={{ width: "250px" }}>Bill Rate</th>
                                 <th style={{ width: "250px" }}>Pay Rate</th>
-                                <th>Employer Name</th>
+                                {/* <th>Employer Name</th> */}
                                 <th>Submitted By</th>
                                 <th>Submitted On</th>
                                 {/* <th>Additional Details</th> */}
@@ -539,17 +539,17 @@ const ApplicantTable = () => {
                                       <td>{overallRating}</td>
                                       <td>{client_name || "N/A"}</td>
                                       <td>{source}</td>
-                                      <td>{clientRate}</td>
+                                      <td>{clientRate || 'N/A'}</td>
                                       <td style={{ width: "250px" }}>
-                                        {bill_rate_currency}/{bill_rate_amount}/
-                                        {bill_rate_type}/
-                                        {bill_rate_contract_type}
+                                        {bill_rate_currency || 'N.A'}/{bill_rate_amount || 'N.A'}/
+                                        {bill_rate_type || 'N.A'}/
+                                        {bill_rate_contract_type || "N.A"}
                                       </td>
                                       <td style={{ width: "250px" }}>
-                                        {pay_rate_currency}/{pay_rate_amount}/
-                                        {pay_rate_type}/{pay_rate_contract_type}
+                                        {pay_rate_currency || 'N.A'}/{pay_rate_amount || 'N.A'}/
+                                        {pay_rate_type || 'N.A'}/{pay_rate_contract_type || 'N.A'}
                                       </td>
-                                      <td>Employer Name</td>
+                                      {/* <td>Employer Name</td> */}
                                       <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
                                       <td>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
                                       {/* <td>Additional Details</td> */}

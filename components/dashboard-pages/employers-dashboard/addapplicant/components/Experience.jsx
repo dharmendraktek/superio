@@ -30,6 +30,7 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
     const handleAddWorkExp = async() => {
         setIsLoading(true);
         form['applicant_ref'] = applicantDetails.id;
+        console.log("--------------form ", form); 
         const response = await postApiReq('/applicant-work_experiences/', form)
         setIsLoading(false);
         if(response.status){
@@ -48,6 +49,7 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
       }
     }
 
+    console.log("--------------applicant details ", openOption);
 
     return(
         <Paper>
@@ -118,6 +120,7 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
             :
             <div>
                {applicantDetails?.work_experience?.map((item) => {
+                console.log("------------itme ", item);
                 return(
                   <div key={item.id} className="my-2 px-2 py-2 d-flex justify-content-between border" >
                     <div>
@@ -135,7 +138,7 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
                 >
                   {reactIcons.dots}
                 </strong>
-                {item.id && item.id == openOption && (
+                {item.id == openOption && (
                   <div
                     className="position-absolute bg-white shadow px-2 py-1 rounded-1"
                     style={{

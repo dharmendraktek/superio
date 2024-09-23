@@ -489,6 +489,8 @@ const JobPostsTable = () => {
                                   current_payment_frequency,
                                 } = _item.applicant_details[0];
 
+                                console.log("---------------first name ", middlename, lastname);
+
                                 let current_ctc = `${
                                   (current_currency || "N.A") +
                                   "/" +
@@ -525,10 +527,10 @@ const JobPostsTable = () => {
                                       <Link
                                         href={`/employers-dashboard/all-applicants/${id}`}
                                       >
-                                        {firstname ||
-                                          "" + " " + middlename ||
-                                          "" + " " + lastname ||
-                                          ""}
+                                        {(firstname ||
+                                          "") + " " + (middlename ||
+                                          "") + " " + (lastname ||
+                                          "")}
                                       </Link>
                                     </td>
                                     <td>{authorization || "N/A"}</td>
@@ -587,7 +589,7 @@ const JobPostsTable = () => {
             })}
             {!isLoading && jobPostList.length == 0 && (
               <tr className="text-center mt-5">
-                <td colSpan={7}>No data found</td>
+                <td colSpan={5}>No data found</td>
               </tr>
             )}
             {/* End tr */}

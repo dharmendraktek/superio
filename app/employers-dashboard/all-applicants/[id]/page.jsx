@@ -85,7 +85,7 @@ const Index = () => {
           </div>
           <div className="">
             <div className="d-flex ">
-              <div className="border border-secondary rounded-start-1 position-relative px-2">
+              {/* <div className="border border-secondary rounded-start-1 position-relative px-2">
                 <div className="d-flex gap-1">
                   <span className="fs-5">{reactIcons.setting}</span>
                   <span className="fs-6">{reactIcons.downarrow}</span>
@@ -105,13 +105,13 @@ const Index = () => {
                     <p className="cursor-pointer">Quick Submit</p>
                   </div>
                 )}
-              </div>
-              <div className="border border-secondary px-2 cursor-pointer">
+              </div> */}
+              {/* <div className="border border-secondary px-2 cursor-pointer">
                 <span>{reactIcons.share}</span>
               </div>
               <div className="border border-secondary px-2 cursor-pointer">
                 <span>{reactIcons.mail}</span>
-              </div>
+              </div> */}
               <div className="border border-secondary position-relative px-2">
                 <div
                   className="cursor-pointer d-flex gap-1"
@@ -136,8 +136,8 @@ const Index = () => {
                     >
                       <p className="cursor-pointer">Submit to job</p>
                     </Link>
-                    <p className="cursor-pointer">Tag to job</p>
-                    <p className="cursor-pointer">Quick Submit</p>
+                    {/* <p className="cursor-pointer">Tag to job</p>
+                    <p className="cursor-pointer">Quick Submit</p> */}
                   </div>
                 )}
               </div>

@@ -50,6 +50,7 @@ export const workAuthorization = [
 
 
 export const sourceTypes = [
+    {name:'Manual Creation'},
     {name:'Dice'},
     {name:'Dice Posting'},
     {name:'Monester'},

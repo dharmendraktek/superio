@@ -10,6 +10,7 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
   const [form, setForm] = useState({
     new_status: "",
     // new_substatus:''
+    comment:''
   });
   const [submissionId, setSubmissionId] = useState();
 
@@ -112,7 +113,7 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
             </div>
             <div className="my-2">
               <p>Comment</p>
-              <textarea className="border border-secondary px-2 py-1 w-100 rounded-1" />
+              <textarea className="border border-secondary px-2 py-1 w-100 rounded-1" onChange={(e) => setForm((prev) => ({...prev, comment:e.target.value}) )} />
             </div>
           </div>
           <div className="modal-footer">

@@ -41,7 +41,7 @@ const initialState = {
   skype_id: "",
   linkedin: "",
   authorization: "",
-  authorization_expiry:null,
+  authorization_expiry: null,
   is_clearance: "",
   clearance: "",
   relocation: "",
@@ -139,16 +139,46 @@ const CandidateCreation = ({
       setForm((prev) => ({
         ...prev,
         name_title: applicantData.name_title ? applicantData.name_title : "",
-        firstname: applicantData.firstname == 'null' || !applicantData.firstname ?  "" : applicantData.firstname,
-        middlename: applicantData.middlename =='null' || !applicantData.middlename ? "" : applicantData.middlename ,
-        lastname: applicantData.lastname == 'null' || !applicantData.lastname ? "" : applicantData.lastname ,
-        email: applicantData.email == 'null' || !applicantData.email ? '' : applicantData.email,
-        mobile: applicantData.mobile == 'null' || !applicantData.mobile ? '' : applicantData.mobile,
-        dob: applicantData.dob == "null" || !applicantData.dob ? null : new Date(applicantData.dob) ,
-        country: applicantData.country =='null' || !applicantData.country?  "": applicantData.country ,
-        state: applicantData.state == 'null'|| !applicantData.state ? '' : applicantData.state ,
-        city: applicantData.city == 'null' || !applicantData.city ? '' : applicantData.city,
-        address: applicantData.address == 'null' || !applicantData.address ? '' : applicantData.address,
+        firstname:
+          applicantData.firstname == "null" || !applicantData.firstname
+            ? ""
+            : applicantData.firstname,
+        middlename:
+          applicantData.middlename == "null" || !applicantData.middlename
+            ? ""
+            : applicantData.middlename,
+        lastname:
+          applicantData.lastname == "null" || !applicantData.lastname
+            ? ""
+            : applicantData.lastname,
+        email:
+          applicantData.email == "null" || !applicantData.email
+            ? ""
+            : applicantData.email,
+        mobile:
+          applicantData.mobile == "null" || !applicantData.mobile
+            ? ""
+            : applicantData.mobile,
+        dob:
+          applicantData.dob == "null" || !applicantData.dob
+            ? null
+            : new Date(applicantData.dob),
+        country:
+          applicantData.country == "null" || !applicantData.country
+            ? ""
+            : applicantData.country,
+        state:
+          applicantData.state == "null" || !applicantData.state
+            ? ""
+            : applicantData.state,
+        city:
+          applicantData.city == "null" || !applicantData.city
+            ? ""
+            : applicantData.city,
+        address:
+          applicantData.address == "null" || !applicantData.address
+            ? ""
+            : applicantData.address,
         zipcode: applicantData.zipcode ? applicantData.zipcode : "",
         source: applicantData.source ? applicantData.source : "",
         referred_by: applicantData.referred_by ? applicantData.referred_by : "",
@@ -156,16 +186,22 @@ const CandidateCreation = ({
         ownership: applicantData.ownership ? applicantData.ownership : [],
         job_title: applicantData.job_title ? applicantData.job_title : "",
         relocation: applicantData.relocation ? applicantData.relocation : "",
-        primary_skills: typeof applicantData.primary_skills == 'object'
-          ? applicantData.primary_skills
-          : applicantData.primary_skills
-          ? applicantData.primary_skills.split(",").map((item) => {return { name:item }})
-          : [],
-          secondary_skills: typeof applicantData.secondary_skills == 'object'
-          ? applicantData.secondary_skills
-          : applicantData.secondary_skills
-          ? applicantData.secondary_skills.split(",").map((item) => {return { name:item }})
-          : [],
+        primary_skills:
+          typeof applicantData.primary_skills == "object"
+            ? applicantData.primary_skills
+            : applicantData.primary_skills
+            ? applicantData.primary_skills.split(",").map((item) => {
+                return { name: item };
+              })
+            : [],
+        secondary_skills:
+          typeof applicantData.secondary_skills == "object"
+            ? applicantData.secondary_skills
+            : applicantData.secondary_skills
+            ? applicantData.secondary_skills.split(",").map((item) => {
+                return { name: item };
+              })
+            : [],
         notice_period: applicantData.notice_period
           ? applicantData.notice_period
           : "",
@@ -180,9 +216,11 @@ const CandidateCreation = ({
           ? applicantData.is_clearance
           : "",
         clearance: applicantData.clearance ? applicantData.clearance : "",
-        current_company: applicantData.current_company == 'null' || !applicantData.current_company
-          ? '' : applicantData.current_company
-          ,
+        current_company:
+          applicantData.current_company == "null" ||
+          !applicantData.current_company
+            ? ""
+            : applicantData.current_company,
         tax_terms: applicantData.tax_terms ? applicantData.tax_terms : "",
         experience: applicantData.experience ? applicantData.experience : "",
         preferred_location: applicantData.preferred_location
@@ -227,71 +265,80 @@ const CandidateCreation = ({
     }
   };
 
-
   const handleSubmit = async () => {
-    if(!form.firstname){
-      setError((prev) => ({...prev, firstNameErr:'This Field is required'}))
+    if (!form.firstname) {
+      setError((prev) => ({ ...prev, firstNameErr: "This Field is required" }));
       // return;
     }
-    if(!form.lastname){
-      setError((prev) => ({...prev, lastNameErr:'This Field is required'}))
+    if (!form.lastname) {
+      setError((prev) => ({ ...prev, lastNameErr: "This Field is required" }));
       // return;
     }
-    if(!form.email){
-      setError((prev) => ({...prev, emailErr:'This Field is required'}))
+    if (!form.email) {
+      setError((prev) => ({ ...prev, emailErr: "This Field is required" }));
       // return;
     }
-    if(!form.mobile){
-      setError((prev) => ({...prev, mobileErr:'This Field is required'}))
+    if (!form.mobile) {
+      setError((prev) => ({ ...prev, mobileErr: "This Field is required" }));
       // return;
     }
-    if(!form.authorization){
-      setError((prev) => ({...prev, workAuthErr:'This Field is required'}))
+    if (!form.authorization) {
+      setError((prev) => ({ ...prev, workAuthErr: "This Field is required" }));
       // return;
     }
-    if(!form.source){
-      setError((prev) => ({...prev, sourceErr:'This Field is required'}))
+    if (!form.source) {
+      setError((prev) => ({ ...prev, sourceErr: "This Field is required" }));
       // return;
     }
-    if(!form.tax_terms){
-      setError((prev) => ({...prev, taxTermErr:'This Field is required'}))
+    if (!form.tax_terms) {
+      setError((prev) => ({ ...prev, taxTermErr: "This Field is required" }));
       return;
     }
-    if(form.firstname && form.lastname && form.email && form.mobile && form.authorization && form.source && form.source && form.tax_terms){
+    if (
+      form.firstname &&
+      form.lastname &&
+      form.email &&
+      form.mobile &&
+      form.authorization &&
+      form.source &&
+      form.source &&
+      form.tax_terms
+    ) {
       try {
         setIsLoading(true);
-      const response = applicantData?.id
-        ? await patchReq(`/applicants/${applicantData?.id}/`, form)
-        : await postApiReq("/applicants/", form);
-      setIsLoading(false);
-      if (response.status) {
-        let message = applicantData.id
-          ? "Applicant updated successfully"
-          : "Applicant created successfully";
-         
-        toast.success(message);
-        setApplicantDetails(response.data);
-        if (!applicantData.id) {
-          setActiveForm(2);
-        }else if(applicantData.id){
-          // router.push('/employers-dashboard/all-applicants/{}')
+        const response = applicantData?.id
+          ? await patchReq(`/applicants/${applicantData?.id}/`, form)
+          : await postApiReq("/applicants/", form);
+        setIsLoading(false);
+        if (response.status) {
+          let message = applicantData.id
+            ? "Applicant updated successfully"
+            : "Applicant created successfully";
+
+          toast.success(message);
+          setApplicantDetails(response.data);
+          if (!applicantData.id) {
+            setActiveForm(2);
+          } else if (applicantData.id) {
+            // router.push('/employers-dashboard/all-applicants/{}')
+          }
         }
+        if (response.error) {
+          toast.error(response.error.detail);
+        }
+      } catch (err) {
+        setIsLoading(false);
+        toast.error();
       }
-      if (response.error) {
-        toast.error(response.error.detail);
-      }
-    } catch (err) {
-      setIsLoading(false);
-      toast.error();
-    }
     }
   };
 
+  console.log("-------------relocation value ", form.relocation);
 
   return (
     <div className="shadow py-3 px-3 bg-white">
       <div className="d-flex justify-content-between">
-        <h4>{tab ? 'Applicant Details' :'Applicant Details'}</h4>
+        <h4>{tab ? "Applicant Details" : "Applicant Details"}</h4>
         <div className="d-flex gap-2">
           <button
             onClick={handleSubmit}
@@ -397,7 +444,7 @@ const CandidateCreation = ({
           <input
             name="mobile"
             onChange={(e) => {
-              setError((prev) => ({ ...prev, emailErr: "" }));
+              setError((prev) => ({ ...prev, mobileErr: "" }));
               handleChange(e);
             }}
             value={form.mobile}
@@ -451,12 +498,12 @@ const CandidateCreation = ({
           >
             <option>Select</option>
             {workAuthorization.map((item) => {
-              return(
-                <option key={item.name} value={item.name}>{item.name}</option>
-              )
-            })
-
-            }
+              return (
+                <option key={item.name} value={item.name}>
+                  {item.name}
+                </option>
+              );
+            })}
           </select>
           <span className="text-danger">{error.workAuthErr}</span>
         </div>
@@ -588,11 +635,12 @@ const CandidateCreation = ({
           >
             <option>Select</option>
             {sourceTypes.map((item, index) => {
-              return(
-                <option key={index} value={item.value}>{item.name}</option>
-              )
-            })
-            }
+              return (
+                <option key={index} value={item.value}>
+                  {item.name}
+                </option>
+              );
+            })}
           </select>
           <span className="text-danger">{error.sourceErr}</span>
         </div>
@@ -781,16 +829,16 @@ const CandidateCreation = ({
             </select>
           </div>
         </div>
-        <div className="col-4 my-1">
+        {/* <div className="col-4 my-1">
           <p>Relocation</p>
           <div className="d-flex gap-2 mt-3">
             <div className="d-flex gap-2">
               <input
                 name="relocation"
-                onChange={handleChange}
+                onChange={() => setForm((prev) =>({...prev, relocation:true}))}
                 value={true}
                 type="radio"
-                checked={form.relocation ? true : false}
+                checked={!form.relocation}
                 // className="client-form-input"
               />
               <label>Yes</label>
@@ -798,10 +846,41 @@ const CandidateCreation = ({
             <div className="d-flex gap-2">
               <input
                 name="relocation"
-                onChange={handleChange}
+                onChange={() => setForm((prev) =>({...prev, relocation:false}))}
                 value={false}
                 type="radio"
-                checked={form.relocation ? false : true}
+                checked={form.relocation}
+                // className="client-form-input"
+              />
+              <label>No</label>
+            </div>
+          </div>
+        </div> */}
+        <div className="col-4 my-1">
+          <p>Relocation</p>
+          <div className="d-flex gap-2 mt-3">
+            <div className="d-flex gap-2">
+              <input
+                name="relocation"
+                onChange={() =>
+                  setForm((prev) => ({ ...prev, relocation: true }))
+                }
+                value={true}
+                type="radio"
+                checked={form.relocation === true}
+                // className="client-form-input"
+              />
+              <label>Yes</label>
+            </div>
+            <div className="d-flex gap-2">
+              <input
+                name="relocation"
+                onChange={() =>
+                  setForm((prev) => ({ ...prev, relocation: false }))
+                }
+                value={false}
+                type="radio"
+                checked={form.relocation === false}
                 // className="client-form-input"
               />
               <label>No</label>
@@ -828,7 +907,7 @@ const CandidateCreation = ({
               className="text-primary custom-tooltip"
             >
               {reactIcons.info}
-              </span>
+            </span>
             {/* <button type="button" className="btn custom-tooltip " data-toggle="tooltip" data-placement="top" title="Please enter skills enter button as seprator">
               {reactIcons.info}
 </button>
@@ -970,12 +1049,9 @@ const CandidateCreation = ({
             className="client-form-input"
           >
             <option>select</option>
-           {TaxTerms.map((item) => {
-            return(
-              <option key={item.name}>{item.name}</option>
-            )
-           })
-           }
+            {TaxTerms.map((item) => {
+              return <option key={item.name}>{item.name}</option>;
+            })}
           </select>
           <span className="text-danger">{error.taxTermErr}</span>
         </div>
@@ -1092,20 +1168,20 @@ const CandidateCreation = ({
         </div>
       </div>
       <div className="d-flex my-4 gap-2">
-          <button
-            onClick={handleSubmit}
-            className="theme-btn btn-style-one small"
-            disabled={isLoading}
-          >
-            {isLoading ? <BtnBeatLoader /> : "Save & Continue"}
-          </button>
-          <button
-            onClick={() => setForm(initialState)}
-            className="theme-btn btn-style-four small"
-          >
-            Reset
-          </button>
-        </div>
+        <button
+          onClick={handleSubmit}
+          className="theme-btn btn-style-one small"
+          disabled={isLoading}
+        >
+          {isLoading ? <BtnBeatLoader /> : "Save & Continue"}
+        </button>
+        <button
+          onClick={() => setForm(initialState)}
+          className="theme-btn btn-style-four small"
+        >
+          Reset
+        </button>
+      </div>
     </div>
   );
 };

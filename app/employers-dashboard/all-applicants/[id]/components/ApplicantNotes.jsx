@@ -27,10 +27,14 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [noteData, setNoteData] = useState([]);
-  
+  const [noteErr, setNoteErr] = useState();
 
   const handleCreateNotes = async() => {
-    let closeBtn = document.getElementById('closeNote');   
+    let closeBtn = document.getElementById('closeNote');
+    if(!descriptionData){
+      setNoteErr('This field is required');
+      return;
+    }   
     try{
       setIsLoading(true);
       let data = {
@@ -239,6 +243,9 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                 ></button>
               </div>
               <div className="offcanvas-body">
+                <div>
+                 <span className="text-danger">{noteErr}</span>
+                </div>
                 <div>
                   {open && (
                     <HtmlEditor

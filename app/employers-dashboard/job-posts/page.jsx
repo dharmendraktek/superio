@@ -1,3 +1,4 @@
+import Breadcrumb from "@/components/common/Breadcrumb";
 import Loader from "@/components/common/Loader";
 import dynamic from "next/dynamic";
 
@@ -14,6 +15,7 @@ export const metadata = {
 const IndexPage = () => {
   return (
     <>
+      {/* <Breadcrumb /> */}
       <JobPosts />
     </>
   );

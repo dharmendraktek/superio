@@ -52,6 +52,8 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
     handleGetUsersList();
   }, []);
 
+ console.log("--------------upload doc -------", form);
+
   useEffect(() => {
     if (meetingDetails) {
       setAttendeeList(meetingDetails.attendee_details);
@@ -441,6 +443,9 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
               </div>
               <div className="col-6 my-1">
                 <UploadSingleDocument handleFileUpload={handleFileUpload} />
+                {form.document &&
+                <span className="text-danger">{form.document.name}</span>
+                }
               </div>
               <div className="d-flex justify-content-end gap-2">
                 <button
