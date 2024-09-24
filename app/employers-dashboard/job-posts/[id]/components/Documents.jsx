@@ -148,6 +148,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
           {jobData?.documents?.length > 0 ? (
             <div className="d-flex gap-2 flex-wrap">
               {jobData?.documents?.map((item, index) => {
+                console.log("-------------item --------", item);
                 return (
                   <div
                     key={index}

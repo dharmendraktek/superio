@@ -32,7 +32,7 @@ const JobParse = ({setTab, tab}) => {
   return (
     <>
     {jobData ?
-     <ManualCreation name='parse' setTab={setTab} tab={tab} jobData={jobData} />
+     <ManualCreation name='parse' setTab={setTab} tab={tab} jobData={jobData}  />
     :
     <div className="py-2">
       <div className="shadow rounded-1" style={{height:'700px'}}>

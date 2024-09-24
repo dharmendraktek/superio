@@ -10,13 +10,12 @@ import MobileMenu from "@/components/header/MobileMenu";
 
 import Paper from "@/components/common/Paper";
 import Pagination from "@/components/common/Pagination";
-import { jobPostsTableField } from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/constant";
-import { removeSpecialChar } from "@/utils/constant";
+
 import Link from "next/link";
-import moment from "moment";
 import { reactIcons } from "@/utils/icons";
 import ApplicantSubmissionDetails from "../../../../../components/common/ApplicantSubmissionDetails";
 import { toast } from "react-toastify";
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 
 const initialState = {
   job: "",
@@ -173,15 +172,8 @@ const Index = () => {
   return (
     <>
       {isLoading && <Loader />}
-
-      <LoginPopup />
-      {/* End Login Popup Modal */}
-
-      <DashboardCandidatesHeader />
-      {/* End Header */}
-
-      <MobileMenu />
-      <div className="mt-5 pt-5 px-4 theme-background">
+      <InnerLayout>
+      <div className="px-4 theme-background">
         <div className="mt-2 d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
             <Link href={`/employers-dashboard/all-applicants/${id}`}>
@@ -295,6 +287,7 @@ const Index = () => {
                       </thead>
                       <tbody>
                         {jobPostList.map((item, index) => {
+                          console.log("------------------item ", item);
                           return (
                             <>
                               <tr key={index} className="">
@@ -309,16 +302,16 @@ const Index = () => {
                                   </td>
                                 )}
                                 <td style={{ width: "150px" }}>
-                                  {item.job_code}
+                                  {item.job_code || 'N/A'}
                                 </td>
-                                <td style={{ width: "200px" }}>{item.title}</td>
+                                <td style={{ width: "200px" }}>{item.title || "N/A"}</td>
                                 <td style={{ width: "100px" }}>N/A</td>
                                 <td className="" style={{ width: "150px" }}>
-                                  {item.client_name}
+                                  {item.client_name || 'N/A'}
                                 </td>
-                                <td style={{ width: "100px" }}>{item.city}</td>
+                                <td style={{ width: "100px" }}>{item.city || 'N/A'}</td>
                                 <td className="" style={{ width: "100px" }}>
-                                  {item.state}
+                                  {"N/A"}
                                 </td>
                               </tr>
                             </>
@@ -375,6 +368,7 @@ const Index = () => {
           </div>
         </div>
       </div>
+      </InnerLayout>
     </>
   );
 };

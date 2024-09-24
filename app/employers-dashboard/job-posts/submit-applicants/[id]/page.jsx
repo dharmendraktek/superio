@@ -365,27 +365,27 @@ const Index = () => {
                                     href="/employers-dashboard/all-applicants/[id]"
                                     as={`/employers-dashboard/all-applicants/${item.id}`}
                                   >
-                                    {item?.firstname} {item?.middlename}{" "}
-                                    {item?.lastname}
+                                    {item?.firstname || 'N/A'} {item?.middlename || ''}{" "}
+                                    {item?.lastname || ''}
                                   </Link>
                                 </td>
                                 <td className="" style={{ width: "250px" }}>
-                                  {item.job_title}
+                                  {item.job_title || 'N/A'}
                                 </td>
                                 <td className="" style={{ width: "300px" }}>
-                                  {item.email}
+                                  {item.email || 'N/A'}
                                 </td>
                                 <td className="" style={{ width: "300px" }}>
-                                  {item.mobile}
+                                  {item.mobile || 'N/A'}
                                 </td>
                                 <td className="" style={{ width: "250px" }}>
-                                  {item.authorization}
+                                  {item.authorization || 'N/A'}
                                 </td>
                                 <td style={{ width: "250px" }}>
                                   {item.created_by
-                                    ? item?.created_by?.first_name +
+                                    ? (item?.created_by?.first_name || 'N/A') +
                                       " " +
-                                      item?.created_by?.last_name
+                                      (item?.created_by?.last_name || '')
                                     : "-"}
                                 </td>
                                 <td style={{ width: "200px" }}>

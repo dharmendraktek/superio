@@ -80,6 +80,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
         item.jobs_associated.some((jobs) => jobs.selected === true)
       );
       setJobData(filteredData);
+      handleGetInterviewRoundList();
     }
   }, [applicantData])
 
@@ -125,6 +126,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const handleGetInterviewRoundList = async() => {
     const response = await getReq('/interview-round-choice/');
     if(response.status){
+      console.log("------------resonspe list round list", response.data);
         setRoundList(response.data);
     }
   }
