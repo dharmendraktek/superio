@@ -133,7 +133,6 @@ const ManualCreation = ({
 
   useEffect(() => {
     if (jobData) {
-      console.log("-----------job dat a", jobData);
       setAssignList(jobData.assign_details ? jobData.assign_details : []);
       setComments(jobData.comment);
       setForm((prev) => ({
@@ -290,7 +289,6 @@ const ManualCreation = ({
       jobDescriptionErr: "",
     }))
     
-    console.log("-----------form client ", form);
 
     if (!form.job_code) {
       setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
@@ -429,7 +427,7 @@ const ManualCreation = ({
         setIsLoading(false);
          
         if (response.status) {
-          if (jobData) {
+          if (jobData && name == 'update') {
             if (documents.length > 0) {
               handleSaveDocuments(jobData.id);
             }
@@ -446,7 +444,7 @@ const ManualCreation = ({
             }
             setIsLoading(false);
             setForm(initialState);
-            toast.success("Job post created successfully !");
+            toast.success("Job post has been created successfully !");
             router.push("/employers-dashboard/job-posts");
           }
         }
