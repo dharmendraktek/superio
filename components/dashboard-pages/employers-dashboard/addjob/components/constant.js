@@ -38,8 +38,8 @@ export const TaxTerms = [
 ];
 
 export const taxTermSubType = [
-  { name: "W2", type: { source1: "3rd Party", source2: "Own Corporation" } },
-  { name: "C2C", type: { source1: "Immigrants", source2: "Non-Immigrants" } },
+  { name: "C2C", type: { source1: "3rd Party", source2: "Own Corporation" } },
+  { name: "W2", type: { source1: "Immigrants", source2: "Non-Immigrants" } },
 ];
 
 export const documentsList = [

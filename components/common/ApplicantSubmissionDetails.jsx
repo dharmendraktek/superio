@@ -1499,6 +1499,7 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.relocation}
                     </span>
                   </div>
+                  {applicantCheck.relocation == "Yes" &&
                   <div className="col-4 my-2">
                     <p>
                       Reason{" "}
@@ -1524,6 +1525,7 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.reason}
                     </span>
                   </div>
+                  }
                   {!(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason &&
                   <div className="col-4 my-2">
                     <p>
