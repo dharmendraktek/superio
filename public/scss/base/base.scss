@@ -360,3 +360,11 @@ nextjs-portal {
   background-color: #77a6f7; /* Light gray */
   color: white;
 }
+.modal {
+  z-index: 1051; /* Default Bootstrap modal z-index */
+}
+
+.modal-backdrop {
+  z-index: 1050; /* Ensure backdrop stays below modal */
+}
+

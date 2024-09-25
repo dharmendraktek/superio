@@ -16,6 +16,13 @@ import {
   VendorCopanyStrength,
 } from "@/utils/constant";
 import ApplicantRatingModal from "./ApplicantRatingModal";
+import {
+  relocationReasonList,
+  TaxTerms,
+  taxTermSubType,
+} from "../dashboard-pages/employers-dashboard/addjob/components/constant";
+import DocumentListModal from "./DocumentListModal";
+import Loader from "./Loader";
 
 const { default: Paper } = require("@/components/common/Paper");
 
@@ -28,6 +35,26 @@ const initialState = {
   reference_type: "",
   years_acquainted: "",
 };
+
+const manualRatingInitialState = {
+  applicant_id: "",
+    app_profile_picture: "",
+    app_connections: "",
+    app_linkedin_match_with_resume: "true",
+    app_creation_date: "",
+    vendor_followers: "",
+    vendor_employees_strength: "",
+    vendor_glassdoor: "",
+    app_skill_matrix: "",
+    app_active_offer: "",
+    app_technical_questionaire: "",
+    reference_check: "",
+    tax_terms: "",
+    subtype_taxterms:"",
+    relocation:"",
+    relocation_reason:"",
+    relocation_otherreason:''
+}
 
 const ApplicantSubmissionDetails = ({
   multiSubmissionForm,
@@ -83,20 +110,7 @@ const ApplicantSubmissionDetails = ({
   const [openForm, setOpenForm] = useState(0);
   const [addDoc, setAddDoc] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [applicantCheck, setApplicantCheck] = useState({
-    applicant_id: "",
-    app_profile_picture: "",
-    app_connections: "",
-    app_linkedin_match_with_resume: "true",
-    app_creation_date: "",
-    vendor_followers: "",
-    vendor_employees_strength: "",
-    vendor_glassdoor: "",
-    app_skill_matrix: "",
-    app_active_offer: "",
-    app_technical_questionaire: "",
-    reference_check: "",
-  });
+  const [applicantCheck, setApplicantCheck] = useState(manualRatingInitialState);
 
   const [applicantCheckErr, setApplicantCheckErr] = useState();
   const [docDetail, setDocDetail] = useState({
@@ -111,11 +125,9 @@ const ApplicantSubmissionDetails = ({
   const [openManualRating, setOpenManualRating] = useState(true);
   const [availableDoc, setAvailabeleDoc] = useState([]);
 
-
-  
   useEffect(() => {
-      getApplicantDocuments();
-  }, [])
+    getApplicantDocuments();
+  }, []);
 
   // this function handle the skills
 
@@ -432,8 +444,7 @@ const ApplicantSubmissionDetails = ({
     let file = e.target.files;
     Object.values(file).forEach((item) => {
       setDocuments((prev) => [...prev, item]);
-      console.log("-------item ", item);
-      setDocDetail((prev) =>({...prev, title:item.name}))
+      setDocDetail((prev) => ({ ...prev, title: item.name }));
     });
   };
 
@@ -443,13 +454,14 @@ const ApplicantSubmissionDetails = ({
     setDocuments(filteredData);
   };
 
-  const getApplicantDocuments = async() => {
-    const response = await getReq(`/applicant-documents/?applicant_id=${applicantData?.id}`)
-    if(response.status){
+  const getApplicantDocuments = async () => {
+    const response = await getReq(
+      `/applicant-documents/?applicant_id=${applicantData?.id}`
+    );
+    if (response.status) {
       setAvailabeleDoc(response.data);
     }
-  }
-
+  };
 
   let applicantDetails =
     applicantData?.length > 0 ? applicantData[index] : applicantData;
@@ -476,9 +488,9 @@ const ApplicantSubmissionDetails = ({
       if (response.status) {
         getApplicantDocuments();
         setDocuments([]);
-        setDocDetail((prev) => ({...prev, title:'', type:'', comment:''}))
+        setDocDetail((prev) => ({ ...prev, title: "", type: "", comment: "" }));
         setAddDoc(false);
-        toast.success("Document has been uploaded successfully!")
+        toast.success("Document has been uploaded successfully!");
       }
     }
   };
@@ -557,11 +569,10 @@ const ApplicantSubmissionDetails = ({
       );
       if (response.status) {
         setOpenManualRating(false);
-        toast.success('Next Proccess to click AI Checking Button')
+        toast.success("Next Proccess to click AI Checking Button");
       }
     }
   };
-
 
   useEffect(() => {
     if (applicantDetails) {
@@ -575,14 +586,14 @@ const ApplicantSubmissionDetails = ({
   const handleAIChecking = async () => {
     let data = {
       applicant_id: applicantData?.id,
-      job_id:multiSubmissionForm[index].job,
+      job_id: multiSubmissionForm[index].job,
     };
     setLoadingAiCheck(true);
     const response = await postApiReq("/candidate-ai-check/", data);
     setLoadingAiCheck(false);
     if (response.status) {
-      setAiCheckResult(response.data.ratings)
-      let btnRating = document.getElementById('ratingBtn');
+      setAiCheckResult(response.data.ratings);
+      let btnRating = document.getElementById("ratingBtn");
       btnRating.click();
     }
   };
@@ -592,29 +603,26 @@ const ApplicantSubmissionDetails = ({
     if (response.status) {
       toast.success("Document deleted successfully");
       handleGetApplicantDetails();
-    }else if(response.error){
+    } else if (response.error) {
       toast.error(response.error.error);
-      getApplicantDocuments(); 
+      getApplicantDocuments();
     }
   };
-
-  console.log("------------doc detial s ", docDetail);
 
 
   return (
     <Paper>
+      {loadingAiCheck && <Loader text="AI checking process" />}
       <div
         className="d-flex justify-content-between px-2 py-1 text-white rounded-1 mb-3"
         style={{ backgroundColor: "var(--primary-2nd-color)" }}
       >
         <h4 className="fw-medium fs-4">
-          {
-            (applicantDetails?.firstname || '') +
+          {(applicantDetails?.firstname || "") +
             " " +
-            (applicantDetails?.middlename || '') +
+            (applicantDetails?.middlename || "") +
             " " +
-            (applicantDetails?.lastname || '')
-          }
+            (applicantDetails?.lastname || "")}
         </h4>
         <span
           onClick={() => {
@@ -671,7 +679,9 @@ const ApplicantSubmissionDetails = ({
                           return (
                             <tr>
                               <td className="px-2">{item.name}</td>
-                              <td className="px-2">{item.years_of_experience}</td>
+                              <td className="px-2">
+                                {item.years_of_experience}
+                              </td>
                             </tr>
                           );
                         }
@@ -841,7 +851,7 @@ const ApplicantSubmissionDetails = ({
             <div>
               {openRef ? (
                 <div className="px-2">
-                  <div className="row my-2">  
+                  <div className="row my-2">
                     <div className="col-4 my-1">
                       <p>
                         Reference Name{" "}
@@ -1066,7 +1076,9 @@ const ApplicantSubmissionDetails = ({
                         value={true}
                         type="radio"
                         checked={
-                          multiSubmissionForm[index].relocation == 'true' ? true : false
+                          multiSubmissionForm[index].relocation == "true"
+                            ? true
+                            : false
                         }
                         // className="client-form-input"
                       />
@@ -1079,7 +1091,9 @@ const ApplicantSubmissionDetails = ({
                         value={false}
                         type="radio"
                         checked={
-                          multiSubmissionForm[index].relocation == 'false' ? true : false
+                          multiSubmissionForm[index].relocation == "false"
+                            ? true
+                            : false
                         }
                         // className="client-form-input"
                       />
@@ -1156,12 +1170,10 @@ const ApplicantSubmissionDetails = ({
                   <div className="col-4">
                     <p className="mb-2">Upload Document</p>
                     <UploadSingleDocument handleFileUpload={handleFileUpload} />
-                    {documents.length > 0 && documents.map((file) => {
-                      return(
-                        <p className="text-danger">{file?.name}</p>
-                      )
-                    })
-                    }
+                    {documents.length > 0 &&
+                      documents.map((file) => {
+                        return <p className="text-danger">{file?.name}</p>;
+                      })}
                   </div>
                   <div className="col-8">
                     <div className="d-flex flex-fill gap-5 ">
@@ -1260,7 +1272,7 @@ const ApplicantSubmissionDetails = ({
                         {isLoading ? <BtnBeatLoader /> : "Save"}
                       </button>
                       <button
-                         onClick={() => setAddDoc(false)}
+                        onClick={() => setAddDoc(false)}
                         className="theme-btn btn-style-four small"
                         id="btnCancel"
                       >
@@ -1282,13 +1294,15 @@ const ApplicantSubmissionDetails = ({
                   </thead>
                   <tbody>
                     {availableDoc?.map((item, index) => {
-                      let updated_by = {item};
-                      let {first_name, last_name} = updated_by;
+                      let updated_by = { item };
+                      let { first_name, last_name } = updated_by;
                       return (
                         <tr>
                           <td className="px-2">{item.document_name}</td>
                           <td>{item.type}</td>
-                          <td>{first_name} {last_name}</td>
+                          <td>
+                            {first_name} {last_name}
+                          </td>
                           <td>
                             {moment(item.uploaded_at).format(
                               "DD-MM-YYYY hh:mm A"
@@ -1299,7 +1313,10 @@ const ApplicantSubmissionDetails = ({
                               <span className="text-primary cursor-pointer">
                                 {reactIcons.download}
                               </span>
-                              <span onClick={() => handleDeleteDoc(item.id)} className="text-danger cursor-pointer">
+                              <span
+                                onClick={() => handleDeleteDoc(item.id)}
+                                className="text-danger cursor-pointer"
+                              >
                                 {reactIcons.delete}
                               </span>
                             </div>
@@ -1318,20 +1335,16 @@ const ApplicantSubmissionDetails = ({
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
             >
               <h5 className="fw-medium">Manual Rating</h5>
-              {!openManualRating &&
-              <button
-                type="button"
-                className="theme-btn btn-style-one small"
-                onClick={() => handleAIChecking(applicantData.id)}
-                disabled={openManualRating}
-              >
-                {loadingAiCheck ?
-                 <BtnBeatLoader />
-                 :
-                 'AI Checking'
-                }
-              </button>
-              }
+              {!openManualRating && (
+                <button
+                  type="button"
+                  className="theme-btn btn-style-one small"
+                  onClick={() => handleAIChecking(applicantData.id)}
+                  disabled={openManualRating}
+                >
+                  {loadingAiCheck ? <BtnBeatLoader /> : "AI Checking"}
+                </button>
+              )}
               {/* <button
                 onClick={() => setAddDoc(true)}
                 type="button"
@@ -1340,76 +1353,266 @@ const ApplicantSubmissionDetails = ({
                 Add
               </button> */}
             </div>
-            {openManualRating &&
-            <div className="my-2">
-              <div className="row">
-                <div className="col-4 my-1">
-                  <p>
-                    LinkedIn Profile Picture{" "}
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_profile_picture"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_profile_picture == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Yes</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_profile_picture"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_profile_picture == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>No</label>
-                    </div>
+            {openManualRating && (
+              <div className="my-2">
+                <div className="row">
+                  <div className="col-4 my-2">
+                    <p>
+                      Tax Terms <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="tax_terms"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.tax_terms}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {TaxTerms.slice(0, 2).map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.tax_terms}
+                    </span>
                   </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_profile_picture}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Applicant LinkedIn Connection{" "}
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <select
-                    name="app_connections"
-                    onChange={handleApplicantChangeCheck}
-                    value={applicantCheck.app_connections}
-                    type="text"
-                    className="client-form-input"
-                  >
-                    <option>Select</option>
-                    {LinkendInConnection.map((item, index) => {
-                      return (
-                        <option key={index} value={item.value}>
-                          {item.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_connections}
-                  </span>
-                </div>
-                {/* <div className="col-4 my-2">
+                  {!(applicantCheck.tax_terms == "Select") && applicantCheck.tax_terms 
+                       && (
+                    <div className="col-4 my-1">
+                      <p>
+                        Corporation Type <strong className="text-danger">*</strong>
+                      </p>
+                      <div className="d-flex gap-2 mt-3">
+                        <div className="d-flex gap-2">
+                          <input
+                            name="subtype_taxterms"
+                            onChange={handleApplicantChangeCheck}
+                            value={taxTermSubType.find(
+                              (item) => item.name == applicantCheck.tax_terms
+                            )?.type?.source1}
+                            type="radio"
+                            checked={
+                              applicantCheck.subtype_taxterms == taxTermSubType.find(
+                                (item) => item.name == applicantCheck.tax_terms
+                              )?.type?.source1  
+                            }
+                            // className="client-form-input"
+                          />
+                          <label>
+                            {
+                              taxTermSubType.find(
+                                (item) => item.name == applicantCheck.tax_terms
+                              )?.type?.source1
+                            }
+                          </label>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <input
+                            name="subtype_taxterms"
+                            onChange={handleApplicantChangeCheck}
+                            value={taxTermSubType.find(
+                              (item) => item.name == applicantCheck.tax_terms
+                            )?.type?.source2}
+                            type="radio"
+                            checked={
+                              applicantCheck.subtype_taxterms == taxTermSubType.find(
+                                (item) => item.name == applicantCheck.tax_terms
+                              )?.type?.source2
+                            }
+                            // className="client-form-input"
+                          />
+                          <label>
+                            {
+                              taxTermSubType.find(
+                                (item) => item.name == applicantCheck.tax_terms
+                              )?.type?.source2
+                            }
+                          </label>
+                        </div>
+                      </div>
+                      <span className="text-danger">
+                        {applicantCheckErr?.subtype_taxterms}
+                      </span>
+                    </div>
+                  )}
+                  {applicantCheck.subtype_taxterms && (
+                    <div className="col-4">
+                      <p>Mandatory Documents</p>
+                      <span
+                        data-bs-toggle="modal"
+                        data-bs-target="#documentListModal"
+                        className="text-primary cursor-pointer"
+                      >
+                        View List
+                      </span>
+                    </div>
+                  )}
+                   <div className="col-4 my-1">
+                    <p>
+                      Relocation{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="relocation"
+                          onChange={handleApplicantChangeCheck}
+                          value={'Yes'}
+                          type="radio"
+                          checked={
+                            applicantCheck.relocation == "Yes"
+                          }
+                        />
+                        <label>Yes</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="relocation"
+                          onChange={handleApplicantChangeCheck}
+                          value={"No"}
+                          type="radio"
+                          checked={
+                            applicantCheck.relocation == "No"
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>No</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="relocation"
+                          onChange={handleApplicantChangeCheck}
+                          value={"Local"}
+                          type="radio"
+                          checked={
+                            applicantCheck.relocation== "Local"
+                          }
+                        />
+                        <label>Local</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.relocation}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Reason{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="relocation_reason"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.relocation_reason}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {relocationReasonList.map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.reason}
+                    </span>
+                  </div>
+                  {!(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason &&
+                  <div className="col-4 my-2">
+                    <p>
+                      Other Reason{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <textarea
+                      name="relocation_otherreason"
+                      onChange={handleApplicantChangeCheck}
+                      placeholder="Type here..."
+                      value={applicantCheck.relocation_otherreason}
+                      type="text"
+                      className="client-form-input"
+                    />
+                    <span className="text-danger">
+                      {applicantCheckErr?.relocation_otherreason}
+                    </span>
+                  </div>
+                  }
+                  <div className="col-12 my-2">
+                    <h5>LinkedIn</h5>
+                  </div>
+                  <div className="col-4 my-1">
+                    <p>
+                      LinkedIn Profile Picture{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_profile_picture"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_profile_picture == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Yes</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_profile_picture"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_profile_picture == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>No</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_profile_picture}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Applicant LinkedIn Connection{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="app_connections"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.app_connections}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {LinkendInConnection.map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_connections}
+                    </span>
+                  </div>
+                  {/* <div className="col-4 my-2">
                   <p>
                     Applicant linkedin match with resume{" "}
                     <strong className="text-danger"></strong>
@@ -1452,303 +1655,305 @@ const ApplicantSubmissionDetails = ({
                     {submissionDetailsErr.resumeErr}
                   </span>
                 </div> */}
-                <div className="col-4 my-2">
-                  <p>
-                    LinkedIn Creation <strong className="text-danger">*</strong>
-                  </p>
-                  <select
-                    name="app_creation_date"
-                    onChange={handleApplicantChangeCheck}
-                    value={applicantCheck.app_creation_date}
-                    type="text"
-                    className="client-form-input"
+                  <div className="col-4 my-2">
+                    <p>
+                      LinkedIn Creation{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="app_creation_date"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.app_creation_date}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {LinkendInCreaction.map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_creation_date}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Vendor Company Strength{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="vendor_employees_strength"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.vendor_employees_strength}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {VendorCopanyStrength.map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.vendor_employees_strength}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Vendor Company LinkendIn Followers{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <select
+                      name="vendor_followers"
+                      onChange={handleApplicantChangeCheck}
+                      value={applicantCheck.vendor_followers}
+                      type="text"
+                      className="client-form-input"
+                    >
+                      <option>Select</option>
+                      {VendorCopanyLinkedInFollower.map((item, index) => {
+                        return (
+                          <option key={index} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <span className="text-danger">
+                      {applicantCheckErr?.vendor_followers}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Glassdor review about Vendor
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="vendor_glassdoor"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.vendor_glassdoor == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Positive</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="vendor_glassdoor"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.vendor_glassdoor == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Negative</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.vendor_glassdoor}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Applicant Skilled Matrix
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_skill_matrix"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_skill_matrix == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Mentioned</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_skill_matrix"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_skill_matrix == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Not Mentioned</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_skill_matrix}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Does Applicant have Active Offer ?
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_active_offer"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_active_offer == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Yes</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_active_offer"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_active_offer == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>No</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_active_offer}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Technical Questionaire{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_technical_questionaire"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_technical_questionaire == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Yes</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="app_technical_questionaire"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.app_technical_questionaire == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>No</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.app_technical_questionaire}
+                    </span>
+                  </div>
+                  <div className="col-4 my-2">
+                    <p>
+                      Reference Check <strong className="text-danger">*</strong>
+                    </p>
+                    <div className="d-flex gap-2 mt-3">
+                      <div className="d-flex gap-2">
+                        <input
+                          name="reference_check"
+                          onChange={handleApplicantChangeCheck}
+                          value={true}
+                          type="radio"
+                          checked={
+                            applicantCheck.reference_check == "true"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>Yes</label>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <input
+                          name="reference_check"
+                          onChange={handleApplicantChangeCheck}
+                          value={false}
+                          type="radio"
+                          checked={
+                            applicantCheck.reference_check == "false"
+                              ? true
+                              : false
+                          }
+                          // className="client-form-input"
+                        />
+                        <label>No</label>
+                      </div>
+                    </div>
+                    <span className="text-danger">
+                      {applicantCheckErr?.reference_check}
+                    </span>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-end gap-2">
+                  <button
+                    onClick={() => {
+                      handleSubmitManualRating();
+                    }}
+                    className="theme-btn btn-style-one small"
                   >
-                    <option>Select</option>
-                    {LinkendInCreaction.map((item, index) => {
-                      return (
-                        <option key={index} value={item.value}>
-                          {item.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_creation_date}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Vendor Company Strength{" "}
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <select
-                    name="vendor_employees_strength"
-                    onChange={handleApplicantChangeCheck}
-                    value={applicantCheck.vendor_employees_strength}
-                    type="text"
-                    className="client-form-input"
-                  >
-                    <option>Select</option>
-                    {VendorCopanyStrength.map((item, index) => {
-                      return (
-                        <option key={index} value={item.value}>
-                          {item.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <span className="text-danger">
-                    {applicantCheckErr?.vendor_employees_strength}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Vendor Company LinkendIn Followers{" "}
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <select
-                    name="vendor_followers"
-                    onChange={handleApplicantChangeCheck}
-                    value={applicantCheck.vendor_followers}
-                    type="text"
-                    className="client-form-input"
-                  >
-                    <option>Select</option>
-                    {VendorCopanyLinkedInFollower.map((item, index) => {
-                      return (
-                        <option key={index} value={item.value}>
-                          {item.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <span className="text-danger">
-                    {applicantCheckErr?.vendor_followers}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Glassdor review about Vendor
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="vendor_glassdoor"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.vendor_glassdoor == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Positive</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="vendor_glassdoor"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.vendor_glassdoor == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Negative</label>
-                    </div>
-                  </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.vendor_glassdoor}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Applicant Skilled Matrix
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_skill_matrix"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_skill_matrix == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Mentioned</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_skill_matrix"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_skill_matrix == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Not Mentioned</label>
-                    </div>
-                  </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_skill_matrix}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Does Applicant have Active Offer ?
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_active_offer"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_active_offer == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Yes</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_active_offer"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_active_offer == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>No</label>
-                    </div>
-                  </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_active_offer}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Technical Questionaire{" "}
-                    <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_technical_questionaire"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_technical_questionaire == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Yes</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="app_technical_questionaire"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.app_technical_questionaire == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>No</label>
-                    </div>
-                  </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.app_technical_questionaire}
-                  </span>
-                </div>
-                <div className="col-4 my-2">
-                  <p>
-                    Reference <strong className="text-danger">*</strong>
-                  </p>
-                  <div className="d-flex gap-2 mt-3">
-                    <div className="d-flex gap-2">
-                      <input
-                        name="reference_check"
-                        onChange={handleApplicantChangeCheck}
-                        value={true}
-                        type="radio"
-                        checked={
-                          applicantCheck.reference_check == "true"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>Yes</label>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <input
-                        name="reference_check"
-                        onChange={handleApplicantChangeCheck}
-                        value={false}
-                        type="radio"
-                        checked={
-                          applicantCheck.reference_check == "false"
-                            ? true
-                            : false
-                        }
-                        // className="client-form-input"
-                      />
-                      <label>No</label>
-                    </div>
-                  </div>
-                  <span className="text-danger">
-                    {applicantCheckErr?.reference_check}
-                  </span>
+                    Save
+                  </button>
+                  <button onClick={() => setApplicantCheck(manualRatingInitialState)} className="theme-btn btn-style-four small">
+                    Reset
+                  </button>
                 </div>
               </div>
-              <div className="d-flex justify-content-end gap-2">
-                <button
-                  onClick={() => {
-                    handleSubmitManualRating();
-                  }}
-                  className="theme-btn btn-style-one small"
-                >
-                  Save
-                </button>
-                <button className="theme-btn btn-style-three small">
-                  Cancel
-                </button>
-              </div>
-            </div>
-            }
+            )}
           </div>
           <div className="my-2 px-2">
             <ApplicantRatingModal aiCheckResult={aiCheckResult} />
+            <DocumentListModal applicantCheck = {applicantCheck} />
             <div
               className="d-flex justify-content-between px-2 py-1"
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
@@ -1848,10 +2053,9 @@ const ApplicantSubmissionDetails = ({
                         }
                       >
                         <option>Select</option>
-                        <option>1099</option>
-                        <option>C2H</option>
-                        <option>Contract</option>
-                        <option>Full Time</option>
+                        {TaxTerms.map((item, index) => {
+                          return <option key={index}>{item.name}</option>;
+                        })}
                       </select>
                     </div>
                     <span className="text-danger">
@@ -1905,10 +2109,9 @@ const ApplicantSubmissionDetails = ({
                         className="client-input-style form-mult-box"
                       >
                         <option>Select</option>
-                        <option>1099</option>
-                        <option>C2H</option>
-                        <option>Contract</option>
-                        <option>Full Time</option>
+                        {TaxTerms.map((item, index) => {
+                          return <option key={index}>{item.name}</option>;
+                        })}
                       </select>
                     </div>
                   </div>
@@ -1922,7 +2125,9 @@ const ApplicantSubmissionDetails = ({
                           value={true}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation =='true' ? true : false
+                            multiSubmissionForm[index].relocation == "true"
+                              ? true
+                              : false
                           }
                           // className="client-form-input"
                         />
@@ -1935,7 +2140,9 @@ const ApplicantSubmissionDetails = ({
                           value={false}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation == 'false' ? true : false
+                            multiSubmissionForm[index].relocation == "false"
+                              ? true
+                              : false
                           }
                           // className="client-form-input"
                         />
@@ -2044,7 +2251,9 @@ const ApplicantSubmissionDetails = ({
                                   background: "var(--primary-2nd-color)",
                                 }}
                               >
-                                <span>{item.first_name} {item.last_name}</span>
+                                <span>
+                                  {item.first_name} {item.last_name}
+                                </span>
                               </div>
                             );
                           })}
@@ -2078,7 +2287,10 @@ const ApplicantSubmissionDetails = ({
                                         ...prev,
                                         recipientList: [
                                           ...prev.recipientList,
-                                          { first_name: item.first_name },
+                                          {
+                                            first_name: item.first_name,
+                                            last_name: item.last_name,
+                                          },
                                         ],
                                       }));
                                       setForm((prev) => ({
@@ -2107,7 +2319,9 @@ const ApplicantSubmissionDetails = ({
                                     }
                                   }}
                                 />
-                                <span className="mx-2">{item.first_name} {item.last_name}</span>
+                                <span className="mx-2">
+                                  {item.first_name} {item.last_name}
+                                </span>
                               </div>
                             );
                           })}

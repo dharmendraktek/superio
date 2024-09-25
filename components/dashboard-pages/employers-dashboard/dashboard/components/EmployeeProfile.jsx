@@ -1,7 +1,11 @@
 'use client'
 import Paper from "@/components/common/Paper";
-import { getReq } from "@/utils/apiHandlers";
+import { employeeDetails } from "@/features/employer/employerSlice";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const tabsName = [
     {title:'Personal Information'},
@@ -11,17 +15,67 @@ const tabsName = [
 
 const EmployeeProfile = ({userDetails}) => {
     const [tab, setTab] = useState('Personal Information')
+    const [profileImg, setProfileImg] = useState();
+    const userinfo = useSelector((state) => state.employer.user);
+    const dispatch = useDispatch();
+
+
+    const getUserDetails = async() => {
+        const response = await getReq(`/current-user/`);
+        if(response.status){
+         dispatch(employeeDetails(response.data))
+        }
+     }
+
+    const handleFileUpload = (e) => {
+        let file = e.target.files[0]
+        setProfileImg(file);
+    }
    
+    
+    const handleUploadProfilePhoto = async() => {
+        let formData = new FormData();
+        formData.append('profile_photo', profileImg);
+        try{
+            const response = await postApiReq(`/upload-profile-photo/${userinfo.id}/`, formData)
+            if(response.status){
+                toast.success('Profile image has been uploaded successfully');
+                getUserDetails();
+                setProfileImg('');
+            }
+        }catch(err){
+            toast.error(err.response || 'Something went wrong');
+        }
+         
+    }
+    
+    useEffect(() => {
+        if(profileImg){
+            handleUploadProfilePhoto();
+        }
+    }, [profileImg])
+
+
     return(
         <Paper>
         <div className='container-fluid px-5'>
            <div className="d-flex">
            <div className="">
                 <label htmlFor="#profileImg">
-                <div style={{width:'160px', height:'160px', borderRadius:'5px'}} className="border border-primary"></div>
+                <div style={{width:'160px', height:'160px', borderRadius:'5px'}} className="border border-primary">
+                    <img
+                      alt="profile"
+                      src={userinfo?.profile_photo ? userinfo?.profile_photo :'/images/user-dummy.png'}
+                      style={{width:'160px', height:'158px'}}
+                    />
+                </div>
                 </label>
-                <div>
-                <strong className="fs-6">{userDetails?.user?.first_name + ' ' + userDetails?.user?.last_name}</strong>
+                <div className="my-2 text-center">
+                    <label htmlFor="profilePhoto">
+                    <input type="file" id="profilePhoto" className=""  onChange={handleFileUpload} />
+                    {/* <button className="theme-btn btn-style-two small">Upload</button> */}
+                    </label>
+                {/* <strong className="fs-6">{userDetails?.user?.first_name + ' ' + userDetails?.user?.last_name}</strong> */}
                 </div>
             </div>
             <div className="w-100 mx-5">

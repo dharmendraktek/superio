@@ -9,79 +9,43 @@ import { useSelector } from 'react-redux';
 
 const localizer = momentLocalizer(moment);
 
-let attandanceData = [
-  {
-      "id": 1435,
-      "status": {
-          "id": 8,
-          "status_code": 101,
-          "type": "absent"
-      },
-      "user_id": "1972",
-      "username": "Dharmendra Patel",
-      "shift_in_time": "13:00:00",
-      "shift_out_time": "22:00:00",
-      "late_status": "NOLATE",
-      "first_timestamp": "2024-09-16T12:59:20Z",
-      "last_timestamp": "2024-09-16T12:59:20Z",
-      "duration": "9h 1m",
-      "all_timestamps": "['2024-09-16 12:59:20', '2024-09-16 22:00:23']",
-      "created_at": "2024-09-16T12:59:20Z",
-      "updated_at": "2024-09-16T12:59:20Z"
-  },
-  {
-      "id": 1552,
-      "status": {
-          "id": 8,
-          "status_code": 101,
-          "type": "absent"
-      },
-      "user_id": "1972",
-      "username": "Dharmendra Patel",
-      "shift_in_time": "13:00:00",
-      "shift_out_time": "22:00:00",
-      "late_status": "NOLATE",
-      "first_timestamp": "2024-09-17T13:03:28Z",
-      "last_timestamp": "2024-09-17T13:03:28Z",
-      "duration": "9h 3m",
-      "all_timestamps": "['2024-09-17 13:03:28', '2024-09-17 22:07:21']",
-      "created_at": "2024-09-17T13:03:28Z",
-      "updated_at": "2024-09-17T13:03:28Z"
-  }
-]
-
 const AttendanceCalendar = () => {
   const [events, setEvents] = useState([]);
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState(Views.MONTH);
+  const [hoveredEvent, setHoveredEvent] = useState(null);
   const employee = useSelector((state) => state.employer.user);
 
   const handleGetUserAttendanceDetails = async () => {
     try {
-      // const response = await axios.get(`http://10.10.105.228:8000/attendance-details/?emp_code=${employee.empcode}`);
-      // if (response.data) {
-        const transformedEvents = attandanceData.map(record => {
-          const startTime = moment(record.first_timestamp).toDate();
-          const endTime = moment(record.last_timestamp).toDate();
-          const duration = moment.utc(moment(endTime).diff(moment(startTime))).format("HH:mm");
+      const response = await axios.get(`http://10.10.105.228:8000/attendance-details/?emp_code=${employee.empcode}`);
+      if (response.data) {
+        const transformedEvents = response.data.map(record => {
+          const startTime = moment(record.first_timestamp).format("DD-MM-YYYY HH:mm:ss");
+          const endTime = moment(record.last_timestamp).utc().toDate();
+
+          console.log("----------------start time --------", startTime);
 
           return {
             title: record.status.type === 'absent'
               ? 'Absent'
-              : `Check-In: ${moment(startTime).format('HH:mm')}, Check-Out: ${moment(endTime).format('HH:mm')}`,
+              : `
+              Check-In: ${moment(startTime).format('HH:mm')},Check-Out: ${moment(endTime).format('HH:mm')}`,
             start: startTime,
             end: endTime,
             allDay: record.status.type === 'absent',
             resource: {
-              status: record.status.type === 'absent' ? 'Absent' : getStatus(record.shift_in_time, record.first_timestamp),
+              status: record.status.type === 'absent' ? 'Absent' : getStatus(record.first_timestamp, record.last_timestamp),
               date: moment(startTime).format('YYYY-MM-DD'),
-              duration, // Add duration to resource
+              duration: moment.duration(moment(endTime).diff(moment(startTime))).humanize(),
+              startTime: moment(startTime).format('HH:mm'),
+              endTime: moment(endTime).format('HH:mm'),
             },
           };
         });
 
         setEvents(transformedEvents);
-      // }
+      }
     } catch (error) {
       console.error('Error fetching attendance details:', error);
     }
@@ -111,8 +75,10 @@ const AttendanceCalendar = () => {
       default:
         backgroundColor = 'green';
     }
-    return { style: { backgroundColor } };
+    return { style: { backgroundColor, height: '100%' } };
   };
+
+  console.log("-----------------events -------", events);
 
   const dateCellWrapper = ({ value }) => {
     const day = moment(value).format('YYYY-MM-DD');
@@ -140,16 +106,52 @@ const AttendanceCalendar = () => {
     return (
       <div
         style={{
+          position: 'relative',
+          height: '100%',
+          backgroundColor,
+          overflow: 'hidden',
+          cursor: 'pointer',
+        }}
+        onMouseEnter={() => setHoveredEvent(event)}
+        onMouseLeave={() => setHoveredEvent(null)}
+      >
+        <div style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100%',
-          backgroundColor,
-        }}
-      >
-        <span>{moment(value).date()}</span>
-        <span>{content}</span>
+          height: '50%',
+        }}>
+          <span>{moment(value).date()}</span>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          height: '50%',
+          padding: '5px',
+        }}>
+          <span>{content}</span>
+        </div>
+        {hoveredEvent && hoveredEvent.resource.date === day && (
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1,
+          }}>
+            <span>Check-In: {hoveredEvent.resource.startTime}</span>
+            <span>Check-Out: {hoveredEvent.resource.endTime}</span>
+            <span>Duration: {hoveredEvent.resource.duration}</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -207,7 +209,6 @@ const AttendanceCalendar = () => {
             dateCellWrapper,
           }}
           style={{ height: '100%' }}
-          tooltipAccessor={(event) => `Duration: ${event.resource.duration}`} // Tooltip for duration
         />
       </div>
     </Paper>

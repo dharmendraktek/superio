@@ -17,6 +17,7 @@ import JobPostCommentsModal from "./components/JobPostCommentsModal";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { useRouter } from "next/navigation";
 import Paper from "@/components/common/Paper";
+import { isNumber } from "lodash";
 
 const initialState = {
   job_code: "",
@@ -152,7 +153,7 @@ const ManualCreation = ({
         state: jobData.state,
         city: jobData.city,
         job_status: jobData.job_status,
-        client: jobData.client,
+        client: isNumber(jobData.client) ? jobData.client : '',
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
@@ -288,7 +289,8 @@ const ManualCreation = ({
       assignToErr: "",
       jobDescriptionErr: "",
     }))
-  
+    
+    console.log("-----------form client ", form);
 
     if (!form.job_code) {
       setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
@@ -437,7 +439,7 @@ const ManualCreation = ({
             let btnModal = document.getElementById("commentModalClose");
             btnModal.click();
             setTab(null);
-            // router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
+            router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
           } else {
             if (documents.length > 0) {
               handleSaveDocuments(response.data.id);
@@ -537,6 +539,7 @@ const ManualCreation = ({
   };
 
 
+
   return (
     <div className="py-2">
       <LanguageModal handleGetLanguageList={handleGetLanguageList} />
@@ -584,10 +587,10 @@ const ManualCreation = ({
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
-            onClick={name == "create" || jobType == "Email" ? handleSubmit : ""}
+            onClick={(name == "create" || name=='parse' || jobType == "Email") ? handleSubmit : ""}
             data-bs-toggle="modal"
             data-bs-target={
-              (name == "update" && !(jobType == "Email"))  ? "#commentsModal" : ""
+              (name == "update" && !(name =='parse') && !(jobType == "Email"))  ? "#commentsModal" : ""
             }
           >
             {isLoading ? (

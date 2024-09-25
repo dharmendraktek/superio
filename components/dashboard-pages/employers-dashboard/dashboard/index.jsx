@@ -31,7 +31,6 @@ const Index = () => {
      getUserDetails();
   }, [])
 
-  console.log("-------------employees ----", employee);
 
   return (
       <InnerLayout>

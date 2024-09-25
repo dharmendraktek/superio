@@ -12,6 +12,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
+import NotesModal from "@/components/common/NotesModal";
 
 // export const applicantData = [
 //   {
@@ -393,14 +394,14 @@ const ApplicantTable = () => {
                       <td style={{ width: "250px" }}>
                         {item.created_by
                           ? item?.created_by?.first_name +
-                            "" +
+                            " " +
                             item?.created_by?.last_name
                           : "N/A"}
                       </td>
                       <td style={{ width: "250px" }}>
                         {item.updated_by
                           ? item?.updated_by?.first_name +
-                            "" +
+                            " " +
                             item?.updated_by?.last_name
                           : "N/A"}
                       </td>
@@ -416,6 +417,7 @@ const ApplicantTable = () => {
                         <div className="my-3 px-5 border rounded-1  inner-table ">
                       <InterviewScheduleModal   jobPostList={[]}  applicantData={applicantData} />
                       <ClientSubmissionModal submissionDetails={applicantData} side="applicant" /> 
+                      <NotesModal submissionDetails={applicantData } side="applicant" />
                         <div className="mx-3 my-2">
                           {isSelected.length > 0 &&
                           <div className="d-flex gap-2">
