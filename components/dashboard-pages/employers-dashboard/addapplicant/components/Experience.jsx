@@ -120,7 +120,6 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
             :
             <div>
                {applicantDetails?.work_experience?.map((item) => {
-                console.log("------------itme ", item);
                 return(
                   <div key={item.id} className="my-2 px-2 py-2 d-flex justify-content-between border" >
                     <div>

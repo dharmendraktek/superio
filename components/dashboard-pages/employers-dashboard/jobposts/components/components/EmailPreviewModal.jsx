@@ -1,4 +1,4 @@
-import HtmlEditor from "@/components/common/HtmlEditor";
+import MyCKEditor from "@/components/common/MyCkEditor";
 
 const EmailPreviewModal = () => {
     return(
@@ -43,7 +43,7 @@ const EmailPreviewModal = () => {
                     <p>Body</p>
                    </div>
                    <div className="col-9">
-                    <HtmlEditor />
+                    <MyCKEditor />
                    </div>
                </div>
             </div>

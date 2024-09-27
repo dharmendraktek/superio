@@ -43,7 +43,6 @@ const index = () => {
 
   let token = Cookies.get("is_user_token");
  useEffect(() => {
-  console.log("-------------token ", token);
    if (token) {
      window.location.href = "/employers-dashboard/dashboard";
    }

@@ -66,7 +66,6 @@ const UserUpdateModal = ({ item, getUserList }) => {
   }, []);
 
   useEffect(() => {
-    console.log("-------------item ", item);
     if (item) {
       setUserData((prev) => ({
         ...prev,

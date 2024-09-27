@@ -145,7 +145,7 @@ const Index = () => {
                             href={`/employers-dashboard/job-posts/submit-applicants/${id}`}
                             onClick={() => setSubmitOpt(false)}
                           >
-                            <p className="cursor-pointer ">Submit Applicant</p>
+                            <span className="cursor-pointer text-black">Submit Applicant</span>
                           </Link>
                         </div>
                         {/* <div>  

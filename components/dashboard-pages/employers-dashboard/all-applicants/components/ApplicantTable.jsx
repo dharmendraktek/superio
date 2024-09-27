@@ -13,6 +13,7 @@ import { use, useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 import NotesModal from "@/components/common/NotesModal";
+import ResumePreviewModal from "@/components/common/ResumePreviewModal";
 
 // export const applicantData = [
 //   {
@@ -43,6 +44,7 @@ const ApplicantTable = () => {
   const [openAct, setOpenAct] = useState(false);
   const [expand, setExpand] = useState(null);
   const [isSelected, setIsSelected] = useState([]);
+  const [openResume, setOpenResume] = useState(null);
 
   useEffect(() => {
     let param;
@@ -89,7 +91,9 @@ const ApplicantTable = () => {
       setIsSelected(filteredData);
       // setJobData(filteredData);
     }
-  }, [applicantData]); 
+  }, [applicantData]);
+
+  console.log("----------------------open resume ", openResume);
 
   return (
     <div className="theme-background">
@@ -178,6 +182,7 @@ const ApplicantTable = () => {
               </tr>
             </thead>
             <tbody>
+              <ResumePreviewModal openResume={openResume} setOpenResume={setOpenResume} />
               {applicantData.map((item, index) => {
                 return (
                   <>
@@ -243,6 +248,7 @@ const ApplicantTable = () => {
                         <Link
                           href="/employers-dashboard/all-applicants/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
+                          target="_blank"
                         >
                           {item.applicant_code}
                         </Link>
@@ -251,18 +257,33 @@ const ApplicantTable = () => {
                         <Link
                           href="/employers-dashboard/all-applicants/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
+                          target="_blank"
+                          onMouseEnter={() => {
+                            setOpenResume(item);
+                           let previewBtn= document.getElementById('resumepreview');
+                           previewBtn.click();
+                          }}
                         >
-                          {item?.firstname || 'N/A'} {item?.middlename || ''} {item?.lastname || ''}
+                          {item?.firstname || "N/A"} {item?.middlename || ""}{" "}
+                          {item?.lastname || ""}
                         </Link>
+                        <span
+                          data-bs-toggle="modal"
+                          data-bs-target="#resumePreviewModal"
+                          className="d-none"
+                          id="resumepreview"
+                        >
+                          click
+                        </span>
                       </td>
                       <td className="" style={{ width: "250px" }}>
-                        {item.job_title || 'N/A'}
+                        {item.job_title || "N/A"}
                       </td>
                       <td className="" style={{ width: "300px" }}>
-                        {item.email || 'N/A'}
+                        {item.email || "N/A"}
                       </td>
                       <td className="" style={{ width: "300px" }}>
-                        {item.mobile || 'N/A'}
+                        {item.mobile || "N/A"}
                       </td>
                       <td style={{ width: "300px" }}>
                         <div className="d-flex flex-wrap gap-1">
@@ -286,9 +307,7 @@ const ApplicantTable = () => {
                                 </div>
                               );
                             })}
-                            {item.primary_skills.length == 0 &&
-                             'N/A'
-                            }
+                          {item.primary_skills.length == 0 && "N/A"}
                         </div>
                       </td>
                       <td style={{ width: "300px" }}>
@@ -313,22 +332,20 @@ const ApplicantTable = () => {
                                 </div>
                               );
                             })}
-                            {item?.secondary_skills?.length == 0 && 
-                              'N/A'
-                            }
+                          {item?.secondary_skills?.length == 0 && "N/A"}
                         </div>
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        {item.city || 'N/A'}
+                        {item.city || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.source || 'N/A'}
+                        {item.source || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.state || 'N/A'}
+                        {item.state || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {item.status || 'N/A'}
+                        {item.status || "N/A"}
                       </td>
                       <td
                         className="d-flex flex-wrap gap-2"
@@ -337,16 +354,14 @@ const ApplicantTable = () => {
                         {item.ownership_details.map((item) => {
                           return (
                             <span key={item.id}>
-                              {item.first_name || 'N/A'} {item.last_name || ''}
+                              {item.first_name || "N/A"} {item.last_name || ""}
                             </span>
                           );
                         })}
-                        {item.ownership_details.length == 0 &&
-                          'N/A'
-                        }
+                        {item.ownership_details.length == 0 && "N/A"}
                       </td>
                       <td className="" style={{ width: "250px" }}>
-                        {item.authorization || 'N/A'}
+                        {item.authorization || "N/A"}
                         {/* <div className="option-box text-center">
                     <ul className="option-list">
                       <li>
@@ -415,154 +430,221 @@ const ApplicantTable = () => {
                     {item.id == expand && (
                       <tr>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  applicantData={applicantData} />
-                      <ClientSubmissionModal submissionDetails={applicantData} side="applicant" /> 
-                      <NotesModal submissionDetails={applicantData } side="applicant" />
-                        <div className="mx-3 my-2">
-                          {isSelected.length > 0 &&
-                          <div className="d-flex gap-2">
-                            {processOptions.map((item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="border px-2 rounded-1"
-                                  data-bs-toggle={item.dataToggle}
-                                  data-bs-target={item.dataTarget}
-                                  aria-controls={item.ariaControls}
-                                >
-                                  <span className="text-primary cursor-pointer">
-                                    {item.name}
-                                  </span>
-                                  {/* <span>|</span> */}
-                                </div>
-                              );
-                            })}
-                          </div>
-                          }
-                        </div>
-                        <td colSpan={15}>
-                          <div className="mx-2 border rounded-1  inner-table shadow">
-                            {/* <div className="mx-3 my-1">
-                            this the filter table and search bard
-                          </div> */}
-                            <table className="custom-scroll-2nd">
-                              <thead className="table-inner-thead">
-                                <th style={{width:'60px'}}>
-                                  {/* <input type="checkbox" className="mx-1" /> */}
-                                </th>
-                                <th>Job Code</th>
-                                <th>Job Title</th>
-                                <th>Submission Record</th>
-                                <th>Delivery Manager</th>
-                                <th>Resume</th>
-                                <th>Profile Status</th>
-                                {/* <th>Outlook MSG</th> */}
-                                <th>Submission Rating</th>
-                                <th>Client</th>
-                                <th>Source</th>
-                                <th>Client Bill Rate/Salary</th>
-                                <th style={{ width: "250px" }}>Bill Rate</th>
-                                <th style={{ width: "250px" }}>Pay Rate</th>
-                                {/* <th>Employer Name</th> */}
-                                <th>Submitted By</th>
-                                <th>Submitted On</th>
-                                {/* <th>Additional Details</th> */}
-                              </thead>
-                              <tbody>
-                                {item.jobs_associated.map((_item, _index) => {
-                                  let {
-                                    pay_rate_currency,
-                                    pay_rate_amount,
-                                    pay_rate_type,
-                                    pay_rate_contract_type,
-                                    bill_rate_currency,
-                                    bill_rate_amount,
-                                    bill_rate_type,
-                                    bill_rate_contract_type,
-                                    current_status_details,
-                                    applicant_rating,
-                                    applicant_details,
-                                    job_detail,
-                                    submitted_by_details,
-                                    submission_on    
-                                  } = _item;
-
-                                  let {id, job_code, title, client_name, delivery_manager, amount, currency, payment_frequency } =
-                                    job_detail;
-                                  let {first_name, last_name} = delivery_manager;
-                                  let deliverManagerName = (first_name || '')+ ' ' + (last_name || '')
-                                  let clientRate = (currency || 'N.A') + '/' + (amount || 'N.A') + '/' + (payment_frequency || 'N.A')
-                                  let {source} = applicant_details[0];
-
-                                  let applicantResume = item.documents.find((doc) => doc.is_default == true);
-                                  let {communication, overall, profesionalism, technical} = applicant_rating;
-                                  let overallRating = (communication + overall + profesionalism + technical)/4                                  
+                          <InterviewScheduleModal
+                            jobPostList={[]}
+                            applicantData={applicantData}
+                          />
+                          <ClientSubmissionModal
+                            submissionDetails={applicantData}
+                            side="applicant"
+                          />
+                          <NotesModal
+                            submissionDetails={applicantData}
+                            side="applicant"
+                          />
+                          <div className="mx-3 my-2">
+                            {isSelected.length > 0 && (
+                              <div className="d-flex gap-2">
+                                {processOptions.map((item, index) => {
                                   return (
-                                    <tr>
-                                      <td style={{width:'60px'}}>
-                                        <input type="checkbox"
-                                         onChange={(e) => {
-                                          let update = [...applicantData];
-                                          if (e.target.checked) {
-                                            update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
-                                          } else {
-                                            update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
-                                          }
-                                          setApplicantData(update);
-                                        }}
-                                        checked={_item?.selected}
-
-                                        />
-                                      </td>
-                                      <td>{job_code ? job_code : "N/A"}</td>
-                                      <td>
-                                      <Link href={`/employers-dashboard/job-posts/${id}`}>
-                                        {title ? title : "N/A"}
-                                      </Link>
-                                        </td>
-                                      <td className="cursor-pointer">
-                                        <Link
-                                          href="/employers-dashboard/all-applicants/[id]"
-                                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                                        >
-                                          <span className="text-primary">
-                                            Click Here
-                                          </span>
-                                        </Link>
-                                      </td>
-                                      <td>{deliverManagerName}</td>
-                                      <td>
-                                        <span  onClick={() => {
-                                              window.open(BASE_URL + `/applicant-documents/${applicantResume?.id}/download/`);
-                                        }} className="fs-5 text-primary cursor-pointer">{reactIcons.document}</span>
-                                      </td>
-                                      <td>{current_status_details?.display_name}</td>
-                                      {/* <th>Outlook MSG</th> */}
-                                      <td>{overallRating}</td>
-                                      <td>{client_name || "N/A"}</td>
-                                      <td>{source}</td>
-                                      <td>{clientRate || 'N/A'}</td>
-                                      <td style={{ width: "250px" }}>
-                                        {bill_rate_currency || 'N.A'}/{bill_rate_amount || 'N.A'}/
-                                        {bill_rate_type || 'N.A'}/
-                                        {bill_rate_contract_type || "N.A"}
-                                      </td>
-                                      <td style={{ width: "250px" }}>
-                                        {pay_rate_currency || 'N.A'}/{pay_rate_amount || 'N.A'}/
-                                        {pay_rate_type || 'N.A'}/{pay_rate_contract_type || 'N.A'}
-                                      </td>
-                                      {/* <td>Employer Name</td> */}
-                                      <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
-                                      <td>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
-                                      {/* <td>Additional Details</td> */}
-                                    </tr>
+                                    <div
+                                      key={index}
+                                      className="border px-2 rounded-1"
+                                      data-bs-toggle={item.dataToggle}
+                                      data-bs-target={item.dataTarget}
+                                      aria-controls={item.ariaControls}
+                                    >
+                                      <span className="text-primary cursor-pointer">
+                                        {item.name}
+                                      </span>
+                                      {/* <span>|</span> */}
+                                    </div>
                                   );
                                 })}
-                              </tbody>
-                            </table>
+                              </div>
+                            )}
                           </div>
-                        </td>
-                      </div>
+                          <td colSpan={15}>
+                            <div className="mx-2 border rounded-1  inner-table shadow">
+                              {/* <div className="mx-3 my-1">
+                            this the filter table and search bard
+                          </div> */}
+                              <table className="custom-scroll-2nd">
+                                <thead className="table-inner-thead">
+                                  <th style={{ width: "60px" }}>
+                                    {/* <input type="checkbox" className="mx-1" /> */}
+                                  </th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Submission Record</th>
+                                  <th>Delivery Manager</th>
+                                  <th>Resume</th>
+                                  <th>Profile Status</th>
+                                  {/* <th>Outlook MSG</th> */}
+                                  <th>Submission Rating</th>
+                                  <th>Client</th>
+                                  <th>Source</th>
+                                  <th>Client Bill Rate/Salary</th>
+                                  <th style={{ width: "250px" }}>Bill Rate</th>
+                                  <th style={{ width: "250px" }}>Pay Rate</th>
+                                  {/* <th>Employer Name</th> */}
+                                  <th>Submitted By</th>
+                                  <th>Submitted On</th>
+                                  {/* <th>Additional Details</th> */}
+                                </thead>
+                                <tbody>
+                                  {item.jobs_associated.map((_item, _index) => {
+                                    let {
+                                      pay_rate_currency,
+                                      pay_rate_amount,
+                                      pay_rate_type,
+                                      pay_rate_contract_type,
+                                      bill_rate_currency,
+                                      bill_rate_amount,
+                                      bill_rate_type,
+                                      bill_rate_contract_type,
+                                      current_status_details,
+                                      applicant_rating,
+                                      applicant_details,
+                                      job_detail,
+                                      submitted_by_details,
+                                      submission_on,
+                                    } = _item;
+
+                                    let {
+                                      id,
+                                      job_code,
+                                      title,
+                                      client_name,
+                                      delivery_manager,
+                                      amount,
+                                      currency,
+                                      payment_frequency,
+                                    } = job_detail;
+                                    let { first_name, last_name } =
+                                      delivery_manager;
+                                    let deliverManagerName =
+                                      (first_name || "") +
+                                      " " +
+                                      (last_name || "");
+                                    let clientRate =
+                                      (currency || "N.A") +
+                                      "/" +
+                                      (amount || "N.A") +
+                                      "/" +
+                                      (payment_frequency || "N.A");
+                                    let { source } = applicant_details[0];
+
+                                    let applicantResume = item.documents.find(
+                                      (doc) => doc.is_default == true
+                                    );
+                                    let {
+                                      communication,
+                                      overall,
+                                      profesionalism,
+                                      technical,
+                                    } = applicant_rating;
+                                    let overallRating =
+                                      (communication +
+                                        overall +
+                                        profesionalism +
+                                        technical) /
+                                      4;
+                                    return (
+                                      <tr>
+                                        <td style={{ width: "60px" }}>
+                                          <input
+                                            type="checkbox"
+                                            onChange={(e) => {
+                                              let update = [...applicantData];
+                                              if (e.target.checked) {
+                                                update[index][
+                                                  "jobs_associated"
+                                                ][_index]["selected"] =
+                                                  e.target.checked;
+                                              } else {
+                                                update[index][
+                                                  "jobs_associated"
+                                                ][_index]["selected"] =
+                                                  e.target.checked;
+                                              }
+                                              setApplicantData(update);
+                                            }}
+                                            checked={_item?.selected}
+                                          />
+                                        </td>
+                                        <td>{job_code ? job_code : "N/A"}</td>
+                                        <td>
+                                          <Link
+                                            href={`/employers-dashboard/job-posts/${id}`}
+                                          >
+                                            {title ? title : "N/A"}
+                                          </Link>
+                                        </td>
+                                        <td className="cursor-pointer">
+                                          <Link
+                                            href="/employers-dashboard/all-applicants/[id]"
+                                            as={`/employers-dashboard/all-applicants/${item.id}`}
+                                          >
+                                            <span className="text-primary">
+                                              Click Here
+                                            </span>
+                                          </Link>
+                                        </td>
+                                        <td>{deliverManagerName}</td>
+                                        <td>
+                                          <span
+                                            onClick={() => {
+                                              window.open(
+                                                BASE_URL +
+                                                  `/applicant-documents/${applicantResume?.id}/download/`
+                                              );
+                                            }}
+                                            className="fs-5 text-primary cursor-pointer"
+                                          >
+                                            {reactIcons.document}
+                                          </span>
+                                        </td>
+                                        <td>
+                                          {current_status_details?.display_name}
+                                        </td>
+                                        {/* <th>Outlook MSG</th> */}
+                                        <td>{overallRating}</td>
+                                        <td>{client_name || "N/A"}</td>
+                                        <td>{source}</td>
+                                        <td>{clientRate || "N/A"}</td>
+                                        <td style={{ width: "250px" }}>
+                                          {bill_rate_currency || "N.A"}/
+                                          {bill_rate_amount || "N.A"}/
+                                          {bill_rate_type || "N.A"}/
+                                          {bill_rate_contract_type || "N.A"}
+                                        </td>
+                                        <td style={{ width: "250px" }}>
+                                          {pay_rate_currency || "N.A"}/
+                                          {pay_rate_amount || "N.A"}/
+                                          {pay_rate_type || "N.A"}/
+                                          {pay_rate_contract_type || "N.A"}
+                                        </td>
+                                        {/* <td>Employer Name</td> */}
+                                        <td>
+                                          {submitted_by_details?.first_name +
+                                            " " +
+                                            submitted_by_details?.last_name}
+                                        </td>
+                                        <td>
+                                          {moment(submission_on).format(
+                                            "DD-MM-YYYY hh:mm A"
+                                          )}
+                                        </td>
+                                        {/* <td>Additional Details</td> */}
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </div>
                       </tr>
                     )}
                   </>

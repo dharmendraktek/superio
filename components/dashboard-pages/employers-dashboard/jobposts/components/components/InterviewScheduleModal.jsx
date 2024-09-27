@@ -126,7 +126,6 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const handleGetInterviewRoundList = async() => {
     const response = await getReq('/interview-round-choice/');
     if(response.status){
-      console.log("------------resonspe list round list", response.data);
         setRoundList(response.data);
     }
   }
@@ -136,7 +135,6 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       let file = e.target.files[0];
       setDocument(file);
     } else if (type == "additional") {
-      console.log("-------------data ", e.target.files);
       let fileArray = Object.values(e.target.files);
       setAdditionalDoc(fileArray);
     }
@@ -146,14 +144,12 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
        setAdditionalDoc((prev) => [...prev, document])
        const formData = new FormData();
        formData.append('interview_ref', interviewId);
-       console.log("--------------addtional doc ", additionalDoc);
        
         additionalDoc.forEach((file) => {
           formData.append('files', file);
        })
        const response = await postApiReq('/interview-email-documents/', formData);
        if(response.status){
-        console.log("-------------interview documents uploaded successfully ");
        }
   }
 

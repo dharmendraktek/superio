@@ -13,6 +13,7 @@ import { getReq, postApiReq } from "@/utils/apiHandlers";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { employeeDetails } from "@/features/employer/employerSlice";
+import employerMenuData from "@/data/employerMenuData";
 
 
 const DashboardCandidatesHeader = () => {
@@ -49,7 +50,7 @@ const DashboardCandidatesHeader = () => {
         refresh:token
     }
   
-    const handleLogout = async() => {
+    const  handleLogout = async() => {
        const response  = await postApiReq('/logout/', data);
        if(response.status){
            toast.success('Logout sucessfully')
@@ -121,12 +122,12 @@ const DashboardCandidatesHeader = () => {
                                 />
                                 <div className="ms-2">
                                 <h5 className="text-capitalize">{(employeeInfo?.user?.first_name || '')+ " " + (employeeInfo?.user?.last_name || '')}</h5>
-                                <span className="text-black">{employeeInfo?.user?.email}</span>
+                                <span className="text-black fw-normal">{employeeInfo?.role_name}</span>
                                 </div>
                             </a>
 
                             <ul className="dropdown-menu">
-                                {candidatesMenuData.map((item) => (
+                                {employerMenuData.map((item) => (
                                     <li
                                         className={`${
                                             isActiveLink(
@@ -137,7 +138,12 @@ const DashboardCandidatesHeader = () => {
                                                 : ""
                                         } mb-1`}
                                         key={item.id}
-                                        onClick={handleLogout}
+                                        onClick={() =>{
+                                            if(item.name == 'Logout'){
+                                                handleLogout()
+                                            }
+                                        }
+                                        }
                                     >
                                         <Link href={item.routePath}>
                                             <i

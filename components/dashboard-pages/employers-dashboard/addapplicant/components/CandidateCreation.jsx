@@ -333,7 +333,6 @@ const CandidateCreation = ({
     }
   };
 
-  console.log("-------------relocation value ", form.relocation);
 
   return (
     <div className="shadow py-3 px-3 bg-white">

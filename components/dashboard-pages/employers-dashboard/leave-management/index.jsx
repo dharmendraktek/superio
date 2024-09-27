@@ -1,28 +1,28 @@
 "use client";
 import Paper from "@/components/common/Paper";
-import LeaveRequestForm from "../../leave-management/components/LeaveRequestForm";
 import { useState } from "react";
+import LeaveRequestForm from "./components/LeaveRequestForm";
+import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 
-const LeaveManagement = () => {
+const Index = () => {
   const [openForm, setOpenForm] = useState(false);
   const [tab, setTab] = useState(false);
 
   return (
+    <InnerLayout>
+    <section className="px-4">
     <Paper>
       {openForm ? (
-        <div>
-          hiii
-        </div>
-        // <LeaveRequestForm setOpenForm={setOpenForm} />
+        <LeaveRequestForm setOpenForm={setOpenForm} />
       ) : (
         <div>
              <div className="d-flex justify-content-between py-2">
             <h4>Leave Management System</h4>
           </div>
           <div className="d-flex justify-content-between py-2">
-            <div className="d-flex border border-primary rounded-1">
-                <div onClick={() => setTab(false)} className={`px-2 rounded-start-1 cursor-pointer fw-medium ${tab ? 'bg-white' : 'bg-primary text-white fw-medium'}`}>Balance History</div>
-                <div onClick={() => setTab(true)} className={`px-2 cursor-pointer rounded-end-1 fw-medium ${tab ? 'bg-primary text-white fw-medium' : 'bg-white'}`}>Apply History</div>
+            <div className="d-flex border border-primary ">
+                <div onClick={() => setTab(false)} className={`px-2  cursor-pointer fw-medium ${tab ? 'bg-white' : 'bg-primary text-white fw-medium'}`}>Balance History</div>
+                <div onClick={() => setTab(true)} className={`px-2 cursor-pointer fw-medium ${tab ? 'bg-primary text-white fw-medium' : 'bg-white'}`}>Apply History</div>
             </div>
             <button className="theme-btn btn-style-one small" onClick={() => setOpenForm(true)}>Create</button>
           </div>
@@ -132,7 +132,9 @@ const LeaveManagement = () => {
         </div>
       )}
     </Paper>
+    </section>
+    </InnerLayout>
   );
 };
 
-export default LeaveManagement;
+export default Index;

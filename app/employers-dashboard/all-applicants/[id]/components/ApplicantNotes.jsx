@@ -1,11 +1,9 @@
 "use client";
 
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
-import HtmlEditor from "@/components/common/HtmlEditor";
-import { deleteReq, getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
-import { BASE_URL } from "@/utils/endpoints";
+import MyCKEditor from "@/components/common/MyCkEditor";
+import { deleteReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
-import axios from "axios";
 import moment from "moment";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -248,7 +246,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                 </div>
                 <div>
                   {open && (
-                    <HtmlEditor
+                    <MyCKEditor
                       form={form}
                       wrapperStyle={{
                         border: "1px solid gray",
@@ -431,7 +429,7 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
               <div className="offcanvas-body">
                 <div>
                   {open && (
-                    <HtmlEditor
+                    <MyCKEditor
                       form={form}
                       wrapperStyle={{
                         border: "1px solid gray",

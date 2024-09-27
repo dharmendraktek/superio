@@ -90,7 +90,6 @@ const Index = () => {
     setIsLoading(false);
     if (response.status) {
       setDataCount(response.data.count);
-      console.log("------------response ", search , response.data.results);
       setApplicantData(response.data.results);
     }
   };
@@ -171,7 +170,6 @@ const Index = () => {
     filtredApplicant.forEach((item) => {
       handleAddMultiForm(item.id);
     });
-    console.log("------------filtered applicant ", filtredApplicant);
     setSelectedJobs(filtredApplicant);
     setOpen(true);
   };
@@ -223,7 +221,6 @@ const Index = () => {
           <div className="w-75">
             {open ? (
               selectedJobs?.map((item, index) => {
-                console.log("-------------item -------", item)
                 return (
                   <div className="mb-3">
                     <ApplicantSubmissionDetails

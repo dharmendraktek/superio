@@ -287,7 +287,6 @@ const Index = () => {
                       </thead>
                       <tbody>
                         {jobPostList.map((item, index) => {
-                          console.log("------------------item ", item);
                           return (
                             <>
                               <tr key={index} className="">

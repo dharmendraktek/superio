@@ -1,10 +1,10 @@
 'use client'
-import HtmlEditor from "@/components/common/HtmlEditor";
 import { postApiReq } from "@/utils/apiHandlers";
 import { useState } from "react";
 import ManualCreation from "./ManualCreation";
 import { toast } from "react-toastify";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import MyCKEditor from "@/components/common/MyCkEditor";
 
 const JobParse = ({setTab, tab}) => {
   const [form, setForm] = useState({
@@ -35,7 +35,7 @@ const JobParse = ({setTab, tab}) => {
      <ManualCreation name='parse' setTab={setTab} tab={tab} jobData={jobData}  />
     :
     <div className="py-2">
-      <div className="shadow rounded-1" style={{height:'700px'}}>
+      <div className="shadow rounded-1" style={{height:'490px'}}>
         <div className="w-100">
           <div className="d-flex justify-content-between p-2 rounded-top-1" style={{background:'var(--theme-color-first)'}}>
             <h4 className="text-white">Parse Job Details</h4>
@@ -49,14 +49,14 @@ const JobParse = ({setTab, tab}) => {
             <button className="theme-btn small btn-style-four text-black" onClick={() => setTab(null)}>Cancel</button>
             </div>
           </div>
-          <HtmlEditor 
+          <MyCKEditor 
             setDescriptionData={setDescriptionData}
             form={form}
-            wrapperStyle={{
-              // border: "1px solid lightgray",
-              minHeight: "620px",
-              borderRadius: "3px",
-            }}
+            // wrapperStyle={{
+            //   // border: "1px solid lightgray",
+            //   minHeight: "620px",
+            //   borderRadius: "3px",
+            // }}
           
           /> 
         </div>

@@ -19,6 +19,7 @@ import InterviewScheduleModal from "./InterviewScheduleModal";
 import ClientSubmissionModal from "./ClientSubmissionModal";
 import { useCallback } from "react";
 import NotesModal from "@/components/common/NotesModal";
+import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -35,6 +36,7 @@ const JobPostsTable = () => {
   const [active, setActive] = useState(true);
   const [submissionDetails, setSubmissionDetails] = useState();
   const [isSelected, setIsSelected] = useState([]);
+  const [jobDetails, setJobDetails] = useState();
 
   useEffect(() => {
     getJobpostsList();
@@ -100,6 +102,7 @@ const JobPostsTable = () => {
   return (
     <>
       {isLoading && <Loader />}
+      {/* <JobDetailsPreviewModal jobDetails={jobDetails} setJobDetails={setJobDetails} /> */}
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           <div
@@ -288,8 +291,26 @@ const JobPostsTable = () => {
                     </td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td>
-                      {item.title}
-                      {/* <a href="#">Super CV Pack</a> */}
+                    <Link
+                          href="/employers-dashboard/job-posts/[id]"
+                          as={`/employers-dashboard/all-applicants/${item.id}`}
+                          target="_blank"
+                          onMouseEnter={() => {
+                            setJobDetails(item);
+                           let previewBtn= document.getElementById('jobDetailsPreview');
+                           previewBtn.click();
+                          }}
+                        >
+                          {item?.title}
+                        </Link>
+                      <span
+                          data-bs-toggle="modal"
+                          data-bs-target="#jobDetailsPreviewModal"
+                          className="d-none"
+                          id="jobDetailsPreview"
+                        >
+                          click
+                        </span>
                     </td>
                     <td className="">{item.client_name || "N/A"}</td>
                     <td>{item.city || "N/A"}</td>
@@ -488,9 +509,6 @@ const JobPostsTable = () => {
                                   current_job_type,
                                   current_payment_frequency,
                                 } = _item.applicant_details[0];
-
-                                console.log("---------------first name ", middlename, lastname);
-
                                 let current_ctc = `${
                                   (current_currency || "N.A") +
                                   "/" +
@@ -526,6 +544,7 @@ const JobPostsTable = () => {
                                     <td>
                                       <Link
                                         href={`/employers-dashboard/all-applicants/${id}`}
+                                        target="_blank"
                                       >
                                         {(firstname ||
                                           "") + " " + (middlename ||

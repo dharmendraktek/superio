@@ -73,7 +73,6 @@ const InterviewScheduleTable = () => {
     );
     // ?page=${page + 1}&size=25${param ? param : ""
     setIsLoading(false);
-    console.log("-------------responsen interview list ", response);
     if (response.status) {
       setDataCount(response.data.count);
       setInterviewData(response.data.results || response.data);

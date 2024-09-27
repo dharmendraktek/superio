@@ -10,7 +10,7 @@ const ParseJobEmailModal = ({setTab}) => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-                <p className="text-black">If you want to receive updates on the latest job postings, please forward your email to this email address.<strong className="text-primary">aman.gour@ktekresourcing.com</strong> </p>
+                <p className="text-black">If you want to receive updates on the latest job postings, please forward your email to this email address.<strong className="text-primary">jobs.ai@ktekresourcing.com</strong> </p>
             </div>
             <div className="modal-footer">
               <p>If you want to see pending jobs, please click the 'Continue' button.</p>

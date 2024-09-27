@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import BtnBeatLoader from "./BtnBeatLoader";
-import HtmlEditor from "./HtmlEditor";
 import { patchReq, postApiReq } from "@/utils/apiHandlers";
 import { toast } from "react-toastify";
+import MyCKEditor from "./MyCkEditor";
 
 const NotesModal = ({submissionDetails, side=''}) => {
   const [open, setOpen] = useState(false);
@@ -105,7 +105,7 @@ const NotesModal = ({submissionDetails, side=''}) => {
       </div>
       <div className="offcanvas-body">
         <div>
-          <HtmlEditor
+          <MyCKEditor
             form={form}
             wrapperStyle={{
               border: "1px solid gray",

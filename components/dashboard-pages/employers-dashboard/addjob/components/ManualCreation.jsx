@@ -1,14 +1,10 @@
 import DatePickerCustom from "@/components/common/DatePickerCustom";
-import { BASE_URL } from "@/utils/endpoints";
-import axios from "axios";
 import { City, Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
 import { jobStatus, jobTypes, priorityTypes, TaxTerms } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
-import HtmlEditor from "@/components/common/HtmlEditor";
 import Image from "next/image";
-import SelectWithSearch from "@/components/common/SelectWithSearch";
 import LanguageModal from "./components/LanguageModal";
 import UsersModal from "./components/UsersModal";
 import { deleteReq, getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
@@ -18,6 +14,7 @@ import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { useRouter } from "next/navigation";
 import Paper from "@/components/common/Paper";
 import { isNumber } from "lodash";
+import MyCKEditor from "@/components/common/MyCkEditor";
 
 const initialState = {
   job_code: "",
@@ -135,6 +132,11 @@ const ManualCreation = ({
     if (jobData) {
       setAssignList(jobData.assign_details ? jobData.assign_details : []);
       setComments(jobData.comment);
+      let jobType = jobTypes.find((item) => item.name == jobData?.job_type)?.name
+      let country = countryList.find((item) => item.name == jobData?.country);
+      let jobStatus = jobStatus.map((item) => item.name == jobData?.job_status)?.name
+
+
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
@@ -142,16 +144,16 @@ const ManualCreation = ({
         currency: jobData.currency,
         amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
         payment_frequency: jobData.payment_frequency,
-        job_type: jobData.job_type,
+        job_type: jobType ? jobType : '',
         start_date: jobData.start_date,
         end_date: jobData.end_date,
         remote: jobData.remote,
-        lob: jobData.lob,
+        lob: isNumber(jobData.lob) ? jobData.lob : '',
         address: jobData.address,
-        country: jobData.country,
+        country: country ? country?.name : '',
         state: jobData.state,
         city: jobData.city,
-        job_status: jobData.job_status,
+        job_status: jobStatus? jobStatus :'' ,
         client: isNumber(jobData.client) ? jobData.client : '',
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
@@ -227,7 +229,6 @@ const ManualCreation = ({
   };
 
   const handleGetJobCode = async () => {
-    console.log("-------------job data ", jobData, name);
     if (!jobData || name=="parse") {
     const response = await getReq("/next-job-code/");
     if (response.status) {
@@ -1363,7 +1364,7 @@ const ManualCreation = ({
                 Job Description <strong className="text-danger">*</strong>{" "}
               </p>
               {(name == "update" || name == "parse") && form.description && (
-                <HtmlEditor
+                <MyCKEditor
                   setDescriptionData={setDescriptionData}
                   form={form}
                   wrapperStyle={{
@@ -1374,7 +1375,7 @@ const ManualCreation = ({
                 />
               )}
               {name == "create" && form.description && (
-                <HtmlEditor
+                <MyCKEditor
                   setDescriptionData={setDescriptionData}
                   form={form}
                   wrapperStyle={{

@@ -115,7 +115,7 @@ export const postApiReq = async (endpoint ,data) => {
         // handleLogout();
         // removeAuthCookie();
         localStorage.removeItem('is_user_token');
-        window.location = '/';
+        window.location.href = '/';
         return handleApiError(err);
       } else {
         return handleApiError(err);
@@ -151,7 +151,7 @@ export const patchReq = async (endpoint, data) => {
     .catch((err) => {
       if (err.response.status == 401) {
         handleGenerateToken();
-        window.location = '/';
+        window.location.href = '/';
       } else {
         return handleApiError(err);
       }
@@ -169,6 +169,7 @@ export const getReq = async(endpoint) => {
     .catch((err) => {
       if (err?.response?.status == 401) {
         handleGenerateToken();
+        window.location.href ='/';
       } else {
         return handleApiError(err);
       }

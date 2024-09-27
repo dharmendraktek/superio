@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie"; // Import the cookie parsing function
 
+let id = 165323232;
 // Define routes that require authentication
 const protectedRoutes = [
   "/employers-dashboard/dashboard",
@@ -10,6 +11,7 @@ const protectedRoutes = [
   "/employers-dashboard/all-applicants",
   "/employers-dashboard/job-posts/add-job-posts",
   '/employers-dashboard/manage-jobs',
+  `/employers-dashboard/all-applicants/${id}`
 ];
 
 // Middleware function

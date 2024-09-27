@@ -122,7 +122,7 @@ const Index = () => {
                 </div>
                 {submitOpt && (
                   <div
-                    className="position-absolute bg-secondary border border-secondary rounded-1 px-2"
+                    className="position-absolute bg-white hover-bg-color border border-secondary rounded-1 px-2"
                     style={{
                       width: "200px",
                       height: "80px",
@@ -134,7 +134,7 @@ const Index = () => {
                     <Link
                       href={`/employers-dashboard/all-applicants/submit_jobs/${id}`}
                     >
-                      <p className="cursor-pointer">Submit to job</p>
+                      <span className="cursor-pointer text-black">Submit to job</span>
                     </Link>
                     {/* <p className="cursor-pointer">Tag to job</p>
                     <p className="cursor-pointer">Quick Submit</p> */}
@@ -143,13 +143,16 @@ const Index = () => {
               </div>
               <div
                 onClick={() => {
-                  window.open(
-                    BASE_URL + `/applicant-documents/${id}/download/`
-                  );
+                  let document = applicantData?.documents?.find((item) => item.is_default == true);
+                  if(document){
+                    window.open(
+                      BASE_URL + `/applicant-documents/${document?.id}/download/`
+                    );
+                  }
                 }}
                 className="border border-secondary rounded-end-1 cursor-pointer px-2"
               >
-                <span>{reactIcons.download}</span>
+                <span className="text-primary">{reactIcons.download}</span>
               </div>
             </div>
           </div>

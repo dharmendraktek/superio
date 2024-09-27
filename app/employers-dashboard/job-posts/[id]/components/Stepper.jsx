@@ -29,10 +29,7 @@ const Stepper = ({ submissionDetails, side }) => {
 
   let {client_name, contact_manager, job_code, job_type, title, payment_frequency, delivery_manager, amount} = job_detail;
 
-  console.log(
-    "-----------submission details ",
-   submissionDetails
-  );
+ 
 
   return (
     <>
@@ -97,8 +94,8 @@ const Stepper = ({ submissionDetails, side }) => {
           <div>
           <p className="text-primary">{submissionDetails?.current_substatus_details?.display_name || ''}</p>
           <span
-            data-bs-toggle="modal"
-            data-bs-target="#statusModal"
+              data-bs-toggle="modal"
+              data-bs-target="#statusModal"
             className="text-primary cursor-pointer"
           >
             {reactIcons.edit}

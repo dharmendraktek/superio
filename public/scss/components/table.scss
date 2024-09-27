@@ -96,6 +96,15 @@ tbody tr:nth-child(even) {
 }
 
 
+.table_div_custom {
+  width: 100%;
+  // height: 700px; /* Use 'height' instead of 'min-height' and 'max-height' if you want a fixed height */
+  border: 1px solid #ede9e9;
+  border-radius: 2px;
+  overflow-x :auto; /* Use 'auto' to allow scrolling only when necessary */
+  overflow-y: auto;
+}
+
 
 // ::-webkit-scrollbar {
 //   background-color: #77a6f7;

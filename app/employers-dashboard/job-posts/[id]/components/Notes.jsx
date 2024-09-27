@@ -2,6 +2,7 @@
 
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import HtmlEditor from "@/components/common/HtmlEditor";
+import MyCKEditor from "@/components/common/MyCkEditor";
 import Paper from "@/components/common/Paper";
 import { deleteReq, getReq, patchReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
@@ -285,7 +286,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                   <span className="text-danger">{form.error}</span>
                   <div>
                     {open && (
-                      <HtmlEditor
+                      <MyCKEditor
                         form={form}
                         wrapperStyle={{
                           border: "1px solid gray",
@@ -463,7 +464,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                 <div className="offcanvas-body">
                   <div>
                     {open && (
-                      <HtmlEditor
+                      <MyCKEditor
                         form={form}
                         wrapperStyle={{
                           border: "1px solid gray",

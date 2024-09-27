@@ -1,7 +1,6 @@
 import { reactIcons } from "@/utils/icons";
 
 const ApplicantRatingModal = ({ aiCheckResult }) => {
-  console.log("-----------aic check ruesl ", aiCheckResult);
 
   return (
     <div

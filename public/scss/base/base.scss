@@ -4,6 +4,7 @@
   --primary-2nd-color: #f9ab00;
   --primary-2nd-hover-bg-color: #e9a000;
   --theme-color-first : #77a6f7;
+  --hover-bg-color:#5353d3c9;
 }
 
 .gradient-color-1 {
@@ -357,8 +358,8 @@ nextjs-portal {
 }
 
 .hover-bg-change:hover {
-  background-color: #77a6f7; /* Light gray */
-  color: white;
+  background-color:var(--hover-bg-color); /* Light gray */
+  color: white !important;
 }
 .modal {
   z-index: 1051; /* Default Bootstrap modal z-index */
@@ -368,3 +369,12 @@ nextjs-portal {
   z-index: 1050; /* Ensure backdrop stays below modal */
 }
 
+
+.ck-editor__editable {
+  min-height: 400px; /* Set a minimum height */
+  height: 450px; /* Set exact height */
+}
+
+.rbc-date-cell{
+  text-align:center !important;
+}

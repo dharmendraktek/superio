@@ -1,34 +1,60 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import { ContentState, EditorState, convertFromHTML } from 'draft-js';
 
-const MyCKEditor = () => {
-  const [editorData, setEditorData] = useState('<p>Start typing...</p>');
+const MyCKEditor = ({ setDescriptionData, form, wrapperStyle }) => {
+  const [editorData, setEditorData] = useState('<p></p>');
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  useEffect(() => {
+    if (form.description) {
+      setEditorData(form.description);
+      const blocksFromHTML = convertFromHTML(form.description);
+      const contentState = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      );
+      setEditorState(EditorState.createWithContent(contentState));
+    }
+  }, [form.description]);
+
+  const handleChange = (event, editor) => {
+    const data = editor.getData();
+    setEditorData(data);
+    setDescriptionData(data);
+  };
+
+  const handleFocus = () => {
+    console.log('Editor focused');
+  };
+
+  const handleBlur = () => {
+    console.log('Editor blurred');
+  };
+
+  useEffect(() => {
+    console.log('Editor is ready to use!');
+  }, []);
 
   return (
-    <div className="">
-      <h4>Editor</h4>
+    <div>
       <CKEditor
         editor={ClassicEditor}
         data={editorData}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          setEditorData(data);
-          console.log({ event, editor, data });
-        }}
+        onChange={handleChange}
         onReady={(editor) => {
           console.log('Editor is ready to use!', editor);
         }}
-        onBlur={(event, editor) => {
-          console.log('Blur.', editor);
+        config={{
+      
         }}
-        onFocus={(event, editor) => {
-          console.log('Focus.', editor);
-        }}
+        onBlur={handleBlur}
+        // onFocus={handleFocus}
       />
-      {/* <h3>Editor Content:</h3>
-      <div dangerouslySetInnerHTML={{ __html: editorData }} /> */}
     </div>
   );
 };

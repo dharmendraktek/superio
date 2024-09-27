@@ -1,9 +1,9 @@
 
 
-const Paper = ({children}) => {
+const Paper = ({children, height}) => {
 
     return(
-        <div className="shadow p-3 my-2 bg-white rounded-1">
+        <div className="shadow p-3 my-2 bg-white rounded-1 " style={{height:`${height ? height : 'fit-content'}`}}>
             {children}
         </div>
     )

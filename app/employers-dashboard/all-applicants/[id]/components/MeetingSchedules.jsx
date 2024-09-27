@@ -52,7 +52,6 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
     handleGetUsersList();
   }, []);
 
- console.log("--------------upload doc -------", form);
 
   useEffect(() => {
     if (meetingDetails) {
