@@ -41,13 +41,13 @@ module.exports = [
     routePath: "/employers-dashboard/calendar",
     active: "",
   },
-  // {
-  //   id: 7,
-  //   name: "Packages",
-  //   icon: "la-box",
-  //   routePath: "/employers-dashboard/packages",
-  //   active: "",
-  // },
+  {
+    id: 7,
+    name: "All Users Attendance",
+    icon: "la-box",
+    routePath: "/employers-dashboard/all-users-attendance",
+    active: "",
+  },
   // {
   //   id: 8,
   //   name: "Messages",
@@ -73,7 +73,7 @@ module.exports = [
     id: 11,
     name: "Logout",
     icon: "la-sign-out",
-    routePath: "/",
+    routePath: "",
     active: "",
   },
   // {

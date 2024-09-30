@@ -134,7 +134,7 @@ const ManualCreation = ({
       setComments(jobData.comment);
       let jobType = jobTypes.find((item) => item.name == jobData?.job_type)?.name
       let country = countryList.find((item) => item.name == jobData?.country);
-      let jobStatus = jobStatus.map((item) => item.name == jobData?.job_status)?.name
+      let jobNewStatus = jobStatus.map((item) => item.name == jobData?.job_status)?.name
 
 
       setForm((prev) => ({
@@ -153,7 +153,7 @@ const ManualCreation = ({
         country: country ? country?.name : '',
         state: jobData.state,
         city: jobData.city,
-        job_status: jobStatus? jobStatus :'' ,
+        job_status: jobNewStatus? jobNewStatus  :'' ,
         client: isNumber(jobData.client) ? jobData.client : '',
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,

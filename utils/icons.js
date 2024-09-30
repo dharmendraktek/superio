@@ -57,6 +57,7 @@ import { FaEdit } from "react-icons/fa";
 import { IoPersonCircle } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
 
+import { IoMdEyeOff } from "react-icons/io";
 
 
 
@@ -113,4 +114,5 @@ export const reactIcons = {
     setting:<MdOutlineSettingsSuggest />,
     user:<IoPersonCircle />,
     time:<IoMdTime />,
+    eyeOff: <IoMdEyeOff />
 }

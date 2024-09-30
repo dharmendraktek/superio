@@ -102,7 +102,7 @@ const JobPostsTable = () => {
   return (
     <>
       {isLoading && <Loader />}
-      {/* <JobDetailsPreviewModal jobDetails={jobDetails} setJobDetails={setJobDetails} /> */}
+      <JobDetailsPreviewModal jobDetails={jobDetails} setJobDetails={setJobDetails} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           <div
@@ -284,6 +284,7 @@ const JobPostsTable = () => {
                       <Link
                         href="/employers-dashboard/job-posts/[id]"
                         as={`/employers-dashboard/job-posts/${item.id}`}
+                        target="_blank"
                       >
                         {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
                         {item.job_code}
@@ -291,26 +292,30 @@ const JobPostsTable = () => {
                     </td>
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td>
+                      <div className="d-flex align-items-center gap-2">
+                      {jobDetails?.id == item.id &&
+                      <span
+                          data-bs-toggle="modal"
+                          data-bs-target="#jobDetailsPreviewModal"
+                          className="cursor-pointer text-primary fs-5"
+                          id="jobDetailsPreview"
+                        >
+                          {reactIcons.view}
+                        </span>
+                      }
                     <Link
                           href="/employers-dashboard/job-posts/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
                           target="_blank"
                           onMouseEnter={() => {
                             setJobDetails(item);
-                           let previewBtn= document.getElementById('jobDetailsPreview');
-                           previewBtn.click();
+                          //  let previewBtn= document.getElementById('jobDetailsPreview');
+                          //  previewBtn.click();
                           }}
                         >
                           {item?.title}
                         </Link>
-                      <span
-                          data-bs-toggle="modal"
-                          data-bs-target="#jobDetailsPreviewModal"
-                          className="d-none"
-                          id="jobDetailsPreview"
-                        >
-                          click
-                        </span>
+                      </div>
                     </td>
                     <td className="">{item.client_name || "N/A"}</td>
                     <td>{item.city || "N/A"}</td>

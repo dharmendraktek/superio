@@ -47,7 +47,7 @@ const remInitialState = {
   // frequency: 1,
   email: [],
   times: 1,
-  interview:'',
+  interview: "",
 };
 
 const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
@@ -62,7 +62,6 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const [reminderUsersIds, setReminderUsersIds] = useState([]);
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
-
 
   useEffect(() => {
     if (jobPostList.length > 0) {
@@ -82,7 +81,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
-  }, [applicantData])
+  }, [applicantData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -90,22 +89,20 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   };
 
   const handleSubmitReminder = async (id) => {
-    let data = {...reminder,  
-      interview:id,
-    }
-  
+    let data = { ...reminder, interview: id };
+
     try {
       const response = await postApiReq("/interview-reminder/", data);
       if (response.status) {
-        let btn = document.getElmentById('closeBtnInterview');
+        let btn = document.getElmentById("closeBtnInterview");
         btn.click();
       }
     } catch (err) {
-      toast.error(err || 'Somthing went wrong');
+      toast.error(err || "Somthing went wrong");
     }
   };
 
-  const handleScheduleInterview = async () => {    
+  const handleScheduleInterview = async () => {
     form["submission_ref"] = jobData[0]?.submissions[0]?.id;
     try {
       setIsLoading(true);
@@ -123,12 +120,12 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
     }
   };
 
-  const handleGetInterviewRoundList = async() => {
-    const response = await getReq('/interview-round-choice/');
-    if(response.status){
-        setRoundList(response.data);
+  const handleGetInterviewRoundList = async () => {
+    const response = await getReq("/interview-round-choice/");
+    if (response.status) {
+      setRoundList(response.data);
     }
-  }
+  };
 
   const handleFileUpload = (e, type) => {
     if (type == "resume") {
@@ -140,57 +137,75 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
     }
   };
 
-  const handleAddInterviewDocuments = async(interviewId) => {
-       setAdditionalDoc((prev) => [...prev, document])
-       const formData = new FormData();
-       formData.append('interview_ref', interviewId);
-       
-        additionalDoc.forEach((file) => {
-          formData.append('files', file);
-       })
-       const response = await postApiReq('/interview-email-documents/', formData);
-       if(response.status){
-       }
-  }
+  const handleAddInterviewDocuments = async (interviewId) => {
+    setAdditionalDoc((prev) => [...prev, document]);
+    const formData = new FormData();
+    formData.append("interview_ref", interviewId);
 
-  let jobId = jobData.length > 0 &&
-  jobData[0]?.id;
-  
-  let applicantId = (jobData.length > 0 && applicantData.length > 0) ? 
-  jobData[0]?.jobs_associated[0]?.applicant_details[0]?.id : jobData[0]?.submissions[0]?.applicant_details[0]?.id;
-  
+    additionalDoc.forEach((file) => {
+      formData.append("files", file);
+    });
+    const response = await postApiReq("/interview-email-documents/", formData);
+    if (response.status) {
+    }
+  };
+
+  let jobId = jobData.length > 0 && jobData[0]?.id;
+
+  let applicantId =
+    jobData.length > 0 && applicantData.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.id
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.id;
+
   let firstName =
-  (jobData.length > 0 && applicantData.length > 0) ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.firstname :
-    jobData[0]?.submissions[0]?.applicant_details[0]?.firstname;
-  
-    let middleName =
-  (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.middlename :
-    jobData[0]?.submissions[0]?.applicant_details[0]?.middlename;
-  
+    jobData.length > 0 && applicantData.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.firstname
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.firstname;
+
+  let middleName =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.middlename
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.middlename;
+
   let lastName =
-  (jobData.length > 0 && applicantData?.length > 0) ?
-  jobData[0]?.jobs_associated[0]?.applicant_details[0]?.lastname : jobData[0]?.submissions[0]?.applicant_details[0]?.lastname;
-  
-  let clientName =   (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.job_detail?.client_name : jobData[0]?.client_name;
-  
-  let clientId =  (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.job_detail?.client : jobData[0]?.client;
-  
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.lastname
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.lastname;
 
-  let contactManagerId =  (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.job_detail?.contact_manager : jobData[0]?.contact_manager;
+  let clientName =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.job_detail?.client_name
+      : jobData[0]?.client_name;
 
+  let clientId =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.job_detail?.client
+      : jobData[0]?.client;
 
-  
-  let jobTitle = (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.job_detail?.title : jobData[0]?.title;
-  
-  let jobCode = (jobData.length > 0 && applicantData?.length > 0) ? jobData[0]?.jobs_associated[0]?.job_detail?.job_code  : jobData[0]?.job_code;
-  
+  let contactManagerId =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.job_detail?.contact_manager
+      : jobData[0]?.contact_manager;
+
+  let jobTitle =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.job_detail?.title
+      : jobData[0]?.title;
+
+  let jobCode =
+    jobData.length > 0 && applicantData?.length > 0
+      ? jobData[0]?.jobs_associated[0]?.job_detail?.job_code
+      : jobData[0]?.job_code;
+
   let applicantEmail =
-  (jobData.length > 0 && applicantData.length > 0) ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.email :
-    jobData[0]?.submissions[0]?.applicant_details[0]?.email;
-  
-    let applicantContact =
-    (jobData.length > 0 && applicantData.length > 0) ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.mobile :
-    jobData[0]?.submissions[0]?.applicant_details[0]?.mobile;
+    jobData.length > 0 && applicantData.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.email
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.email;
+
+  let applicantContact =
+    jobData.length > 0 && applicantData.length > 0
+      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.mobile
+      : jobData[0]?.submissions[0]?.applicant_details[0]?.mobile;
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, additional_notifiers: selectedUsersIds }));
@@ -213,9 +228,9 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       ...prev,
       client: clientId,
       contact_manager: contactManagerId,
-      mobile:applicantContact,
-      applicant:applicantId,
-      job:jobId,
+      mobile: applicantContact,
+      applicant: applicantId,
+      job: jobId,
     }));
   }, [clientId, applicantContact]);
 
@@ -229,7 +244,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
     >
       <TimeZoneModal form={form} setForm={setForm} />
       <div className="offcanvas-header">
-        <h5 id="interviewScheduleRightLabel">Schedule Interview</h5>
+        <h5 id="interviewScheduleRightLabel" className="text-primary fw-500">Schedule Interview</h5>
         <button
           type="button"
           className="btn-close text-reset"
@@ -248,7 +263,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                   type="text"
                   value={(jobCode || "") + "-" + (jobTitle || "")}
                   disabled
-                  className="client-form-input"
+                  className="client-form-input fw-700"
                 />
               </div>
               <div>
@@ -262,18 +277,18 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                     (lastName || "")
                   }
                   disabled
-                  className="client-form-input"
+                  className="client-form-input fw-700"
                 />
               </div>
             </div>
             <div className="w-50">
               <div className="d-flex gap-2">
                 <span>{reactIcons.mail}</span>
-                <p>{applicantEmail}</p>
+                <p className="fw-700">{applicantEmail}</p>
               </div>
               <div className="d-flex gap-2">
                 <span>{reactIcons.phonecall}</span>
-                <p>{applicantContact}</p>
+                <p className="fw-700">{applicantContact}</p>
               </div>
             </div>
           </div>
@@ -536,11 +551,20 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                       <p>
                         End Client <strong className="text-danger">*</strong>
                       </p>
-                      <input name="endclient" className="client-form-input" onChange={handleChange} />
+                      <input
+                        name="endclient"
+                        className="client-form-input"
+                        onChange={handleChange}
+                      />
                     </div>
                     <div className="col-6 my-2">
                       <p>Contact Number</p>
-                      <input name="mobile" value={form.mobile} className="client-form-input" onChange={handleChange}  />
+                      <input
+                        name="mobile"
+                        value={form.mobile}
+                        className="client-form-input"
+                        onChange={handleChange}
+                      />
                     </div>
                     <div className="col-12">
                       <p>Reminder</p>
@@ -653,20 +677,27 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                     </div>
                     <div className="col-6 my-2">
                       <p>Resume</p>
-                      <UploadSingleDocument handleFileUpload={(e) => handleFileUpload(e, 'resume') }  />  
+                      <UploadSingleDocument
+                        handleFileUpload={(e) => handleFileUpload(e, "resume")}
+                      />
                       {/* <input
                         type="file"
                         onChange={(e) => handleFileUpload(e, "resume")}
                       /> */}
                       <div>
-                        {document &&
-                        <span className="text-primary">{document.name}</span>
-                        }
+                        {document && (
+                          <span className="text-primary">{document.name}</span>
+                        )}
                       </div>
                     </div>
                     <div className="col-6 my-2">
                       <p>Additional Attachment</p>
-                      <UploadSingleDocument handleFileUpload={(e) => handleFileUpload(e, 'additional') } multiple />  
+                      <UploadSingleDocument
+                        handleFileUpload={(e) =>
+                          handleFileUpload(e, "additional")
+                        }
+                        multiple
+                      />
 
                       {/* <input
                         type="file"
@@ -674,11 +705,8 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                         multiple
                       /> */}
                       {additionalDoc?.map((item) => {
-                         return(
-                          <p className="text-primary">{item.name}</p>
-                         )
-                      })
-                      }
+                        return <p className="text-primary">{item.name}</p>;
+                      })}
                     </div>
                     <div className="col-12">
                       <p>Comments</p>

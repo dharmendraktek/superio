@@ -49,11 +49,15 @@ const manualRatingInitialState = {
     app_active_offer: "",
     app_technical_questionaire: "",
     reference_check: "",
-    tax_terms: "",
+    taxterm: "",
     subtype_taxterms:"",
     relocation:"",
     relocation_reason:"",
-    relocation_otherreason:''
+    relocation_otherreason:'',
+    rtr_employer_name: false,
+    passport_number: "pass12345",
+    comment: "",
+    visa_employer_name: false
 }
 
 const ApplicantSubmissionDetails = ({
@@ -608,6 +612,8 @@ const ApplicantSubmissionDetails = ({
       getApplicantDocuments();
     }
   };
+
+  console.log("----------applicant check ------", applicantCheck);
 
 
   return (
@@ -1361,9 +1367,9 @@ const ApplicantSubmissionDetails = ({
                       Tax Terms <strong className="text-danger">*</strong>
                     </p>
                     <select
-                      name="tax_terms"
+                      name="taxterm"
                       onChange={handleApplicantChangeCheck}
-                      value={applicantCheck.tax_terms}
+                      value={applicantCheck.taxterm}
                       type="text"
                       className="client-form-input"
                     >
@@ -1377,10 +1383,10 @@ const ApplicantSubmissionDetails = ({
                       })}
                     </select>
                     <span className="text-danger">
-                      {applicantCheckErr?.tax_terms}
+                      {applicantCheckErr?.taxterm}
                     </span>
                   </div>
-                  {!(applicantCheck.tax_terms == "Select") && applicantCheck.tax_terms 
+                  {!(applicantCheck.taxterm == "Select") && applicantCheck.taxterm 
                        && (
                     <div className="col-4 my-1">
                       <p>
@@ -1392,12 +1398,12 @@ const ApplicantSubmissionDetails = ({
                             name="subtype_taxterms"
                             onChange={handleApplicantChangeCheck}
                             value={taxTermSubType.find(
-                              (item) => item.name == applicantCheck.tax_terms
+                              (item) => item.name == applicantCheck.taxterm
                             )?.type?.source1}
                             type="radio"
                             checked={
                               applicantCheck.subtype_taxterms == taxTermSubType.find(
-                                (item) => item.name == applicantCheck.tax_terms
+                                (item) => item.name == applicantCheck.taxterm
                               )?.type?.source1  
                             }
                             // className="client-form-input"
@@ -1405,7 +1411,7 @@ const ApplicantSubmissionDetails = ({
                           <label>
                             {
                               taxTermSubType.find(
-                                (item) => item.name == applicantCheck.tax_terms
+                                (item) => item.name == applicantCheck.taxterm
                               )?.type?.source1
                             }
                           </label>
@@ -1415,12 +1421,12 @@ const ApplicantSubmissionDetails = ({
                             name="subtype_taxterms"
                             onChange={handleApplicantChangeCheck}
                             value={taxTermSubType.find(
-                              (item) => item.name == applicantCheck.tax_terms
+                              (item) => item.name == applicantCheck.taxterm
                             )?.type?.source2}
                             type="radio"
                             checked={
                               applicantCheck.subtype_taxterms == taxTermSubType.find(
-                                (item) => item.name == applicantCheck.tax_terms
+                                (item) => item.name == applicantCheck.taxterm
                               )?.type?.source2
                             }
                             // className="client-form-input"
@@ -1428,7 +1434,7 @@ const ApplicantSubmissionDetails = ({
                           <label>
                             {
                               taxTermSubType.find(
-                                (item) => item.name == applicantCheck.tax_terms
+                                (item) => item.name == applicantCheck.taxterm
                               )?.type?.source2
                             }
                           </label>
@@ -1526,7 +1532,7 @@ const ApplicantSubmissionDetails = ({
                     </span>
                   </div>
                   }
-                  {!(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason &&
+                  {(applicantCheck.relocation == 'Yes') && !(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason &&
                   <div className="col-4 my-2">
                     <p>
                       Other Reason{" "}
@@ -1545,6 +1551,51 @@ const ApplicantSubmissionDetails = ({
                     </span>
                   </div>
                   }
+                    <div className="col-4 my-2">
+                      <div className="d-flex gap-2">
+                       <input name="rtr_employer_name" type='checkbox' checked={applicantCheck.rtr_employer_name} onChange={(e) => setApplicantCheck((prev) => ({...prev, rtr_employer_name:e.target.checked}))} />
+                       <p>RTR Employer Name</p>
+                      </div>
+                      <div className="d-flex gap-2">
+                       <input name="visa_employer_name" type='checkbox' checked={applicantCheck.visa_employer_name} onChange={(e) => ({...prev, visa_employer_name:e.target.checked})} />
+                       <p>Visa Employer Name</p>
+                      </div>
+                    </div>
+                     <div className="col-4 my-2">
+                     <p>
+                       Passport Number
+                       <strong className="text-danger">*</strong>
+                     </p>
+                     <textarea
+                       name="relocation_otherreason"
+                       onChange={handleApplicantChangeCheck}
+                       placeholder="Type here..."
+                       value={applicantCheck.passport_number}
+                       type="text"
+                       className="client-form-input"
+                     />
+                     <span className="text-danger">
+                       {applicantCheckErr?.passport_number}
+                     </span>
+                   </div>
+                   <div className="col-4 my-2">
+                    <p>
+                      Comment{" "}
+                      <strong className="text-danger">*</strong>
+                    </p>
+                    <textarea
+                      name="comment"
+                      onChange={handleApplicantChangeCheck}
+                      placeholder="Type here..."
+                      value={applicantCheck.comment}
+                      type="text"
+                      className="client-form-input"
+                    />
+                    <span className="text-danger">
+                      {applicantCheckErr?.comment}
+                    </span>
+                  </div>
+                  
                   <div className="col-12 my-2">
                     <h5>LinkedIn</h5>
                   </div>

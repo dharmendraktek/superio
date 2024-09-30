@@ -44,7 +44,7 @@ const ApplicantTable = () => {
   const [openAct, setOpenAct] = useState(false);
   const [expand, setExpand] = useState(null);
   const [isSelected, setIsSelected] = useState([]);
-  const [openResume, setOpenResume] = useState(null);
+  const [applicantDetails, setApplicantDetails] = useState(null);
 
   useEffect(() => {
     let param;
@@ -93,7 +93,7 @@ const ApplicantTable = () => {
     }
   }, [applicantData]);
 
-  console.log("----------------------open resume ", openResume);
+  console.log("----------------------open resume ", applicantDetails);
 
   return (
     <div className="theme-background">
@@ -182,7 +182,7 @@ const ApplicantTable = () => {
               </tr>
             </thead>
             <tbody>
-              <ResumePreviewModal openResume={openResume} setOpenResume={setOpenResume} />
+              <ResumePreviewModal applicantDetails={applicantDetails} setApplicantDetails={setApplicantDetails} />
               {applicantData.map((item, index) => {
                 return (
                   <>
@@ -259,7 +259,7 @@ const ApplicantTable = () => {
                           as={`/employers-dashboard/all-applicants/${item.id}`}
                           target="_blank"
                           onMouseEnter={() => {
-                            setOpenResume(item);
+                            setApplicantDetails(item);
                            let previewBtn= document.getElementById('resumepreview');
                            previewBtn.click();
                           }}

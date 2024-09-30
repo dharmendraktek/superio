@@ -190,11 +190,11 @@ const index = () => {
                     required
                   />
                   <span
-                    className="cursor-pointer position-absolute fs-5"
+                    className="cursor-pointer text-primary position-absolute fs-5"
                     style={{right:'10px'}}
                     onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   >
-                    {isPasswordVisible ? reactIcons.view : reactIcons.eyeOff}{" "}
+                    {isPasswordVisible ? reactIcons.view : reactIcons.eyeOff}
                   </span>
                   <span className="text-danger">{error.passErr}</span>
                 </div>
