@@ -8,8 +8,8 @@ const DocumentListModal = ({applicantCheck}) => {
   
 
   useEffect(() =>{
-    if(applicantCheck.subtype_taxterms){
-        let filteredList = documentsList.find((item)=> item.source == applicantCheck.subtype_taxterms);
+    if(applicantCheck.subtype_taxterm){
+        let filteredList = documentsList.find((item)=> item.source == applicantCheck.subtype_taxterm);
         setDocList(filteredList);
     }
   }, [applicantCheck])

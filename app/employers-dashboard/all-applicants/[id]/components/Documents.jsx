@@ -149,7 +149,7 @@ const Documents = ({
                     <option value='Select'>Select</option>
                     {documentTypes.map((item, index) => {
                       return (
-                        <option key={index} value={item.name}>
+                        <option key={index} value={item.value}>
                           {item.name}
                         </option>
                       );

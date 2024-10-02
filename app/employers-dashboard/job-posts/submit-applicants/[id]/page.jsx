@@ -175,7 +175,6 @@ const Index = () => {
   };
 
   const handleSubmitApplicant = async () => {
-    console.log("----------------multi submit form ----------------", multiSubmissionForm);
     const response = await postApiReq("/submission/", multiSubmissionForm);
     if (response.status) {
       toast.success("Applicant submitted to job successfully");

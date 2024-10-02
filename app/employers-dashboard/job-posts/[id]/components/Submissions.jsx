@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Stepper from "./Stepper";
 import Paper from "@/components/common/Paper";
-import { getReq } from "@/utils/apiHandlers";
 
 const tabsName = [
     { id: 1, name: "Tagged" },

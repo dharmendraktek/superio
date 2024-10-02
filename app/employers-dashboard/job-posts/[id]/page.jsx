@@ -13,13 +13,15 @@ import Submissions from "./components/Submissions";
 import Notes from "./components/Notes";
 import Documents from "./components/Documents";
 import JobSearchBoard from "./components/JobSearchBoard";
-import { getReq } from "@/utils/apiHandlers";
+import { getReq, postApiReq } from "@/utils/apiHandlers";
 import { currencyJson } from "@/utils/currency";
 import Loader from "@/components/common/Loader";
 import moment from "moment";
 import Paper from "@/components/common/Paper";
 import StarRating from "@/components/common/StarRating";
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+import UsersModal from "@/components/dashboard-pages/employers-dashboard/addjob/components/components/UsersModal";
+import JobAssignModal from "@/components/common/JobAssignModal";
 
 const applicantTabList = [
   { id: 1, name: "Snapshot" },
@@ -62,6 +64,8 @@ const Index = () => {
       handleSearchString();
     }
   }, [id]);
+
+  
 
   return (
     <InnerLayout>
@@ -143,9 +147,10 @@ const Index = () => {
                         <div className="hover-bg-change px-2 my-1">
                           <Link
                             href={`/employers-dashboard/job-posts/submit-applicants/${id}`}
-                            onClick={() => setSubmitOpt(false)}
                           >
-                            <span className="cursor-pointer text-black">Submit Applicant</span>
+                            <span className="cursor-pointer text-black">
+                              Submit Applicant
+                            </span>
                           </Link>
                         </div>
                         {/* <div>  
@@ -170,6 +175,7 @@ const Index = () => {
           )}
           <div className="row mx-3">
             <div className={`${open ? "col-lg-9" : "col-12"}`}>
+              <JobAssignModal jobId={id} />
               {open ? (
                 <>
                   <Paper>
@@ -181,12 +187,22 @@ const Index = () => {
                             <span className="text-primary">Back</span>
                           </Link>
                         </div>
-                        <button
-                          onClick={() => setOpen(!open)}
-                          className="theme-btn btn-style-four small"
-                        >
-                          Edit Job
-                        </button>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="theme-btn btn-style-one small"
+                            // onClick={handleAssingJob}
+                            data-bs-toggle="modal"
+                            data-bs-target="#jobAssignModal"
+                          >
+                            Assign
+                          </button>
+                          <button
+                            onClick={() => setOpen(!open)}
+                            className="theme-btn btn-style-four small"
+                          >
+                            Edit Job
+                          </button>
+                        </div>
                       </div>
                       <div className="d-flex justify-content-between gap-2">
                         <div>

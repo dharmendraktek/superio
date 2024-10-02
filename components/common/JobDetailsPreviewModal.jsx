@@ -5,13 +5,12 @@ const JobDetailsPreviewModal = ({ jobDetails, setJobDetails }) => {
   const [tab, setTab] = useState("details");
   const [num, setNum] = useState(1);
   const [initialNum, setInitialNum] = useState(0);
+  const [viewMore, setViewMore] = useState(false);
 
   const tabsName = [
     { id: 1, name: "Job Details", value: "details" },
     { id: 2, name: "Documents", value: "doc" },
   ];
-
-  console.log("-------------documents de------", jobDetails?.state);
 
   return (
     <div
@@ -38,7 +37,7 @@ const JobDetailsPreviewModal = ({ jobDetails, setJobDetails }) => {
           </div>
           <div className="modal-body">
             <div>
-              <div className="d-flex">
+              {/* <div className="d-flex">
                 {tabsName.map((item, index) => {
                   return (
                     <div
@@ -235,7 +234,22 @@ const JobDetailsPreviewModal = ({ jobDetails, setJobDetails }) => {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
+              <div
+                className="mt-2 border border-secondary px-2 py-2 table_div_custom custom-scroll-sm rounded-1 text-black fs-5"
+                style={{height:"500px"}}
+                dangerouslySetInnerHTML={{
+                  __html:jobDetails?.description
+                }}
+              />
+              {/* {jobDetails?.description?.length > 500 && (
+                <button
+                  onClick={() => setViewMore(!viewMore)}
+                  className="theme-btn btn-style-one small mt-2"
+                >
+                  {viewMore ? "Less" : "More"}
+                </button>
+              )} */}
             </div>
           </div>
           {/* <div className="modal-footer">

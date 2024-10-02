@@ -38,7 +38,6 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
         toast.success('Status has been changed successfully');
        }
     }catch(err){
-        console.log("-------------erron ", err);
     }
   } 
   

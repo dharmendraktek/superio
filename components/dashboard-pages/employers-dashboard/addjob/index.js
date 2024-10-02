@@ -202,9 +202,9 @@ const Index = () => {
                         style={{ width: "210px", height: "115px" }}
                       >
                         <div
-                          data-bs-toggle="modal"
-                          data-bs-target="#parseJobEmailModal"
-                          className="text-center rounded-1 py-3 bg-primary"
+                          // data-bs-toggle="modal"
+                          // data-bs-target="#parseJobEmailModal"
+                          className="text-center rounded-1 py-3 bg-secondary"
                         >
                           <span className="text-white fs-1">{reactIcons.emailRead}</span>
                           <p className="text-white fs-5 fw-semibold">

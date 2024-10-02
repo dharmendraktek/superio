@@ -1218,7 +1218,6 @@ const ManualCreation = ({
               >
                 <option value={""}>Select</option>
                 {usersList.map((item) => {
-                  // console.log("-------------item ", item);
                   return (
                     <option value={item.id} key={item.id}>
                       {item.first_name} {item.last_name} ({item.email})
@@ -1298,7 +1297,10 @@ const ManualCreation = ({
                         >
                           <span>{item.first_name} {item.last_name}</span>
                           <span
-                            onClick={() => handleClose(item)}
+                            onClick={() =>{
+                              if(!(name=='update'))
+                              handleClose(item)
+                              }}
                             className="text-black fs-6 cursor-pointer"
                           >
                             {reactIcons.close}
@@ -1323,6 +1325,8 @@ const ManualCreation = ({
                 );
               })}
             </select> */}
+                {!(name == 'update') &&
+                <div>
                 <span
                   className="cursor-pointer  text-primary"
                   data-bs-toggle="modal"
@@ -1337,6 +1341,8 @@ const ManualCreation = ({
                 >
                   {reactIcons.settings}
                 </span>
+                </div>
+                } 
                 <span className="text-danger">{error.assignToErr}</span>
               </div>
             )}

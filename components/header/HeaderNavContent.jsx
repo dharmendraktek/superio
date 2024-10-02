@@ -35,12 +35,23 @@ const HeaderNavContent = () => {
     setOpenReport(openReport === index ? null : index);
   };
 
+  const filteredMenuList = menuList.filter((item) => {
+    // Hide USER and CLIENT menu for Operations department
+    if (
+      userDetails?.department_name === "Operation" &&
+      (item.name === "USER" || item.name === "CLIENT")
+    ) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <>
       {token && (
         <nav className="nav main-menu" style={{ height: "80px" }}>
           <ul className="navigation" id="navbar">
-            {menuList.map((item, index) => {
+            {filteredMenuList.map((item, index) => {
               return (
                 <li
                   key={index}

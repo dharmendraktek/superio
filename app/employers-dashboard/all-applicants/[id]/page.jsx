@@ -29,6 +29,7 @@ import { reactIcons } from "@/utils/icons";
 import Link from "next/link";
 import { BASE_URL } from "@/utils/endpoints";
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+import TagToJobApplicantModal from "@/components/common/TagToJobApplicantModal";
 
 const applicantTabList = [
   { id: 1, name: "Snapshot" },
@@ -64,6 +65,7 @@ const Index = () => {
   return (
     <InnerLayout>
       {isLoading && <Loader />}
+      <TagToJobApplicantModal />
       <div className="px-3 theme-background">
         <div className="d-flex justify-content-between pb-1 mt-2 gap-3">
           <div className="d-flex  gap-3">
@@ -122,7 +124,7 @@ const Index = () => {
                 </div>
                 {submitOpt && (
                   <div
-                    className="position-absolute bg-white hover-bg-color border border-secondary rounded-1 px-2"
+                    className="position-absolute bg-white hover-bg-color border border-secondary rounded-1"
                     style={{
                       width: "200px",
                       height: "80px",
@@ -131,22 +133,39 @@ const Index = () => {
                       right: 0,
                     }}
                   >
+                    <div className="hover-bg-change px-2">
                     <Link
                       href={`/employers-dashboard/all-applicants/submit_jobs/${id}`}
                     >
-                      <span className="cursor-pointer text-black">Submit to job</span>
+                      <span className="cursor-pointer text-black fw-600">
+                        Submit to job
+                      </span>
                     </Link>
-                    {/* <p className="cursor-pointer">Tag to job</p>
-                    <p className="cursor-pointer">Quick Submit</p> */}
+                    </div>
+                    <div className="hover-bg-change px-2">
+                    <p
+                      className="cursor-pointer text-black fw-600 "
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#tagToJobApplicantModal"
+                      aria-controls="tagToJobApplicantModalLabel"
+                    >
+                      Tag to job
+                    </p>
+                    </div>
+
+                    {/* <p className="cursor-pointer">Quick Submit</p> */}
                   </div>
                 )}
               </div>
               <div
                 onClick={() => {
-                  let document = applicantData?.documents?.find((item) => item.is_default == true);
-                  if(document){
+                  let document = applicantData?.documents?.find(
+                    (item) => item.is_default == true
+                  );
+                  if (document) {
                     window.open(
-                      BASE_URL + `/applicant-documents/${document?.id}/download/`
+                      BASE_URL +
+                        `/applicant-documents/${document?.id}/download/`
                     );
                   }
                 }}

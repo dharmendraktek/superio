@@ -93,7 +93,6 @@ const ApplicantTable = () => {
     }
   }, [applicantData]);
 
-  console.log("----------------------open resume ", applicantDetails);
 
   return (
     <div className="theme-background">
@@ -182,7 +181,10 @@ const ApplicantTable = () => {
               </tr>
             </thead>
             <tbody>
-              <ResumePreviewModal applicantDetails={applicantDetails} setApplicantDetails={setApplicantDetails} />
+              <ResumePreviewModal
+                applicantDetails={applicantDetails}
+                setApplicantDetails={setApplicantDetails}
+              />
               {applicantData.map((item, index) => {
                 return (
                   <>
@@ -254,27 +256,34 @@ const ApplicantTable = () => {
                         </Link>
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        <Link
-                          href="/employers-dashboard/all-applicants/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                          target="_blank"
-                          onMouseEnter={() => {
-                            setApplicantDetails(item);
-                           let previewBtn= document.getElementById('resumepreview');
-                           previewBtn.click();
-                          }}
-                        >
-                          {item?.firstname || "N/A"} {item?.middlename || ""}{" "}
-                          {item?.lastname || ""}
-                        </Link>
-                        <span
-                          data-bs-toggle="modal"
-                          data-bs-target="#resumePreviewModal"
-                          className="d-none"
-                          id="resumepreview"
-                        >
-                          click
-                        </span>
+                        <div className="d-flex gap-2 align-items-center">
+                          {applicantDetails?.id == item.id && 
+                            <span
+                              data-bs-toggle="modal"
+                              data-bs-target="#resumePreviewModal"
+                              className="text-primary fs-5 cursor-pointer"
+                              id="resumepreview"
+                              onMouseEnter={() => {
+                                let previewBtn =
+                                  document.getElementById("resumepreview");
+                                previewBtn.click();
+                              }}
+                            >
+                              {reactIcons.view}
+                            </span>
+                          }
+                          <Link
+                            href="/employers-dashboard/all-applicants/[id]"
+                            as={`/employers-dashboard/all-applicants/${item.id}`}
+                            target="_blank"
+                            onMouseEnter={() => {
+                              setApplicantDetails(item);
+                            }}
+                          >
+                            {item?.firstname || "N/A"} {item?.middlename || ""}{" "}
+                            {item?.lastname || ""}
+                          </Link>
+                        </div>
                       </td>
                       <td className="" style={{ width: "250px" }}>
                         {item.job_title || "N/A"}

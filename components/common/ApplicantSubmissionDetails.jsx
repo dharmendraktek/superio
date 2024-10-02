@@ -50,12 +50,12 @@ const manualRatingInitialState = {
     app_technical_questionaire: "",
     reference_check: "",
     taxterm: "",
-    subtype_taxterms:"",
+    subtype_taxterm:"",
     relocation:"",
     relocation_reason:"",
     relocation_otherreason:'',
     rtr_employer_name: false,
-    passport_number: "pass12345",
+    passport_number: "",
     comment: "",
     visa_employer_name: false
 }
@@ -66,6 +66,7 @@ const ApplicantSubmissionDetails = ({
   index,
   applicantData,
   clearAll,
+  jobData
 }) => {
   const [refrenceDetails, setRefrenceDetails] = useState({
     name: "",
@@ -552,7 +553,39 @@ const ApplicantSubmissionDetails = ({
     setApplicantCheckErr(newErrors);
   };
 
+
+  const validateDocument  = () => {
+    let {subtype_taxterm, taxterm} = applicantCheck;
+    let idProof = applicantData?.documents?.some((item) => item.type == "Driving License")
+    let resume = applicantData?.documents?.some((item) => item.type == "Resume")
+    let I94 =  applicantData?.documents?.some((item) => item.type == "I94")
+    let travelHistory = applicantData?.documents?.some((item) => item.type == "Travel History")
+    let ssN = applicantData?.documents?.some((item) => item.type == "SSN")
+    let visaCopy = applicantData?.documents?.some((item) => item.type == "Visa Copy")
+    let rtR = applicantData?.documents?.some((item) => item.type == "RTR Attachment")
+    let rtto = applicantData?.documents?.some((item) => item.type == "RTTO Attachment")
+    let eAD = applicantData?.documents?.some((item) => item.type == "Employment Authorization Document")
+    let transcript = applicantData?.documents?.some((item) => item.type == "Transcripts")
+    let h1b = applicantData?.documents?.some((item) => item.type == "H1B Copy")  
+
+    if(taxterm == 'W2' && subtype_taxterm == 'Immigrants' && idProof && resume){
+      return true;
+    }else if(taxterm == 'W2' && subtype_taxterm == 'Non-Immigrants' && idProof && resume && rtR){
+       return true;
+    }else if(taxterm == 'C2C' && subtype_taxterm == '3rd Party' &&  idProof && I94 && travelHistory && ssN && (visaCopy || h1b) && rtR && resume ){
+       return true;
+    }else if(taxterm == 'C2C' && subtype_taxterm == 'Own Corporation' && idProof && rtR && resume){
+      return true;
+    }else {
+       toast.error('Need all mandantory documents according to list');
+      return false; 
+    }
+  }
+
+
   const handleSubmitManualRating = async () => {
+    applicantCheck['job_id'] = jobData?.id;
+    validateDocument();
     validateApplicantCheck();
     if (
       applicantCheck.app_active_offer &&
@@ -565,7 +598,8 @@ const ApplicantSubmissionDetails = ({
       applicantCheck.vendor_employees_strength &&
       applicantCheck.vendor_glassdoor &&
       applicantCheck.app_technical_questionaire &&
-      applicantCheck.vendor_followers
+      applicantCheck.vendor_followers && 
+      validateDocument()
     ) {
       const response = await postApiReq(
         "/linkedin-manual-check/",
@@ -613,7 +647,6 @@ const ApplicantSubmissionDetails = ({
     }
   };
 
-  console.log("----------applicant check ------", applicantCheck);
 
 
   return (
@@ -1198,7 +1231,7 @@ const ApplicantSubmissionDetails = ({
                           <option value="Select">Select</option>
                           {documentTypes.map((item, index) => {
                             return (
-                              <option key={index} value={item.name}>
+                              <option key={index} value={item.value}>
                                 {item.name}
                               </option>
                             );
@@ -1395,14 +1428,14 @@ const ApplicantSubmissionDetails = ({
                       <div className="d-flex gap-2 mt-3">
                         <div className="d-flex gap-2">
                           <input
-                            name="subtype_taxterms"
+                            name="subtype_taxterm"
                             onChange={handleApplicantChangeCheck}
                             value={taxTermSubType.find(
                               (item) => item.name == applicantCheck.taxterm
                             )?.type?.source1}
                             type="radio"
                             checked={
-                              applicantCheck.subtype_taxterms == taxTermSubType.find(
+                              applicantCheck.subtype_taxterm == taxTermSubType.find(
                                 (item) => item.name == applicantCheck.taxterm
                               )?.type?.source1  
                             }
@@ -1418,14 +1451,14 @@ const ApplicantSubmissionDetails = ({
                         </div>
                         <div className="d-flex gap-2">
                           <input
-                            name="subtype_taxterms"
+                            name="subtype_taxterm"
                             onChange={handleApplicantChangeCheck}
                             value={taxTermSubType.find(
                               (item) => item.name == applicantCheck.taxterm
                             )?.type?.source2}
                             type="radio"
                             checked={
-                              applicantCheck.subtype_taxterms == taxTermSubType.find(
+                              applicantCheck.subtype_taxterm == taxTermSubType.find(
                                 (item) => item.name == applicantCheck.taxterm
                               )?.type?.source2
                             }
@@ -1441,11 +1474,11 @@ const ApplicantSubmissionDetails = ({
                         </div>
                       </div>
                       <span className="text-danger">
-                        {applicantCheckErr?.subtype_taxterms}
+                        {applicantCheckErr?.subtype_taxterm}
                       </span>
                     </div>
                   )}
-                  {applicantCheck.subtype_taxterms && (
+                  {!(applicantCheck.taxterm == "Select") && applicantCheck.taxterm && applicantCheck.subtype_taxterm && (
                     <div className="col-4">
                       <p>Mandatory Documents</p>
                       <span
@@ -1532,7 +1565,7 @@ const ApplicantSubmissionDetails = ({
                     </span>
                   </div>
                   }
-                  {(applicantCheck.relocation == 'Yes') && !(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason &&
+                  {(applicantCheck.relocation == 'Yes') && !(applicantCheck.relocation_reason == "Select") && applicantCheck.relocation_reason == "Other" &&
                   <div className="col-4 my-2">
                     <p>
                       Other Reason{" "}
@@ -1557,7 +1590,7 @@ const ApplicantSubmissionDetails = ({
                        <p>RTR Employer Name</p>
                       </div>
                       <div className="d-flex gap-2">
-                       <input name="visa_employer_name" type='checkbox' checked={applicantCheck.visa_employer_name} onChange={(e) => ({...prev, visa_employer_name:e.target.checked})} />
+                       <input name="visa_employer_name" type='checkbox' checked={applicantCheck.visa_employer_name} onChange={(e) => setApplicantCheck((prev) => ({...prev, visa_employer_name:e.target.checked}))} />
                        <p>Visa Employer Name</p>
                       </div>
                     </div>
@@ -1567,7 +1600,7 @@ const ApplicantSubmissionDetails = ({
                        <strong className="text-danger">*</strong>
                      </p>
                      <textarea
-                       name="relocation_otherreason"
+                       name="passport_number"
                        onChange={handleApplicantChangeCheck}
                        placeholder="Type here..."
                        value={applicantCheck.passport_number}

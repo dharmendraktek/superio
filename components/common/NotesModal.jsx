@@ -17,7 +17,6 @@ const NotesModal = ({submissionDetails, side=''}) => {
   const [jobData, setJobData] = useState();
   const [applicantData, setApplicantData] = useState();
 
-  console.log("-------------- submission details of notes modal", submissionDetails);
 
   useEffect(() => {
     if (submissionDetails?.length > 0 && side == "applicant") {
@@ -43,7 +42,6 @@ const NotesModal = ({submissionDetails, side=''}) => {
         })
         .filter((item) => item.submissions.length > 0);
 
-        console.log("----------------filtered data ----", filteredData);
         setApplicantData(filteredData[0]?.submissions[0]?.applicant_details)
 
     //   setSubmissionId(filteredData[0]?.submissions[0]?.applicant_details?.id);

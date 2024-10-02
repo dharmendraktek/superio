@@ -14,21 +14,21 @@ export const noticePeriodOption = [
 
 export const documentTypes = [
 
-    {name:'Driving License'},
+    {name:'Driving License', value:'Driving License'},
     // {name:'EML File'},
-    {name:'Employment Authorization Document'},
-    {name:'H1B Copy'},
-    {name:'Passport'},
-    {name:'Resume'},
-    {name:'SSN'},
-    {name:'Transcripts'},
-    {name:'Passport Number'}, // need to open input box to fill passport number
-    {name:"I94"},
-    {name:"Travel History"},
-    {name:"RTR Attachment"},
-    {name:"RTTO Attachment"},
-    {name:"Visa Copy"},
-    {name:"State Id"},
+    {name:'Employment Authorization Document', value:'Employment Authorization Document'},
+    {name:'H1B Copy', value:'H1B Copy'},
+    {name:'Passport', value:'Passport'},
+    {name:'Resume', value:'Resume'},
+    {name:'SSN', value:'SSN'},
+    {name:'Transcripts', value:'Transcripts'},
+    // {name:'Passport Number', }, // need to open input box to fill passport number
+    {name:"I94", value:'I94'},
+    {name:"Travel History", value:'Travel History'},
+    {name:"RTR Attachment", value:'RTR Attachment'},
+    {name:"RTTO Attachment", value:'RTTO Attachment'},
+    {name:"Visa Copy", value:'Visa Copy'},
+    {name:"State Id", value:'Driving License'},
 ]
 
 

@@ -19,7 +19,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   const [tab, setTab] = useState("job");
   const [form, setForm] = useState({
     description: "<p></p>",
-    error:''
+    error: "",
   });
   const [descriptionData, setDescriptionData] = useState();
   const [openOption, setOpenOption] = useState();
@@ -28,14 +28,14 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if(!(form.description == '<p></p>')){
-       setForm((prev) => ({...prev, error:''}))
+    if (!(form.description == "<p></p>")) {
+      setForm((prev) => ({ ...prev, error: "" }));
     }
-  }, [form.description])
+  }, [form.description]);
 
   const handleCreateNotes = async () => {
-    if(descriptionData == '<p></p>'){
-      setForm((prev) => ({...prev, error:'This field is required'}))
+    if (descriptionData == "<p></p>") {
+      setForm((prev) => ({ ...prev, error: "This field is required" }));
       return;
     }
     let data;
@@ -66,7 +66,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
       });
       updateData.push({
         text: descriptionData,
-        type: 'job',
+        type: "job",
         user: 209,
         created_at: new Date(),
         updated_at: new Date(),
@@ -76,7 +76,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
       notes_write: updateNoteId ? data : updateData,
     });
     setIsLoading(false);
-    const closeBtn = document.getElementById('closeNote');
+    const closeBtn = document.getElementById("closeNote");
     closeBtn.click();
     toast.success("Note Created Successfully");
     setNoteData(response.data.notes);
@@ -84,16 +84,16 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
 
   const handleDeleteNotes = async (noteId) => {
     let updateData;
-    let data= [];
+    let data = [];
     let temp = [...noteData];
     updateData = temp.map((item) => {
       delete item["user"];
       item["user"] = 209;
       return item;
     });
-    if(updateData.length > 1){
-     data = updateData.filter((item) => item.id !== noteId);
-    }else{
+    if (updateData.length > 1) {
+      data = updateData.filter((item) => item.id !== noteId);
+    } else {
       data.push({ id: noteId, delete: true });
     }
     const response = await patchReq(`/jobs/${jobId}/`, {
@@ -105,10 +105,9 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
     }
   };
 
-
   return (
     <Paper>
-       <div className="">
+      <div className="">
         <div className="d-flex justify-content-between py-2 px-2">
           <div className="d-flex gap-3">
             <h4>Notes</h4>
@@ -210,7 +209,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                             >
                               {reactIcons.dots}
                             </strong>
-  
+
                             {item.id == openOption && (
                               <div
                                 className="position-absolute bg-white shadow px-2 py-1 rounded-1"
@@ -252,9 +251,11 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                     })}
                 </div>
               </div>
-              {!(noteData.find((item) => item.type == tab)) && (
-                  <div className="text-center w-100 py-3">No notes available</div>
-                )}
+              {!noteData.find((item) => item.type == tab) && (
+                <div className="text-center w-100 py-3">
+                  <strong>No notes available</strong>
+                </div>
+              )}
               <div
                 style={{ width: "800px !important" }}
                 className="offcanvas offcanvas-end"
@@ -277,7 +278,11 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                     id="closeNote"
                     onClick={() => {
                       setOpen(!open);
-                      setForm((prev) => ({ ...prev, description: "<p></p>", error:'' }));
+                      setForm((prev) => ({
+                        ...prev,
+                        description: "<p></p>",
+                        error: "",
+                      }));
                       setUpdateNoteId(null);
                     }}
                   ></button>
@@ -389,7 +394,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                             >
                               {reactIcons.dots}
                             </strong>
-  
+
                             {item.id == openOption && (
                               <div
                                 className="position-absolute bg-white shadow px-2 py-1 rounded-1"
@@ -400,12 +405,15 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                                   zIndex: "1000",
                                 }}
                               >
+                                <div className="hover-bg-change">
                                 <p
                                   onClick={() => handleDeleteNotes(item.id)}
                                   className="cursor-pointer"
                                 >
                                   {reactIcons.delete} Delete
                                 </p>
+                                </div>
+                                <div className="hover-bg-change">
                                 <p
                                   onClick={() => {
                                     setUpdateNoteId(item.id);
@@ -423,6 +431,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                                   {" "}
                                   {reactIcons.edit} Update
                                 </p>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -430,11 +439,13 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                       );
                     })}
                 </div>
-                {!(noteData.find((item) => item.type == tab)) && (
-                  <div className="text-center w-100 py-3">No notes available</div>
+                {!noteData.find((item) => item.type == tab) && (
+                  <div className="text-center w-100 py-3">
+                    No notes available
+                  </div>
                 )}
               </div>
-  
+
               <div
                 style={{ width: "800px !important" }}
                 className="offcanvas offcanvas-end"

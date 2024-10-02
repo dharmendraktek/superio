@@ -1,6 +1,5 @@
 
 const DocumentPreviewModal = ({img}) => {
-    console.log("-------------img -------", img);
     return(
         <div
         style={{ width: "800px !important", background: "light-gray" }}

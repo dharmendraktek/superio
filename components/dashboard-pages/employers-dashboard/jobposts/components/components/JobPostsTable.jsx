@@ -299,6 +299,11 @@ const JobPostsTable = () => {
                           data-bs-target="#jobDetailsPreviewModal"
                           className="cursor-pointer text-primary fs-5"
                           id="jobDetailsPreview"
+                          onMouseEnter={() => {
+                            setJobDetails(item);
+                           let previewBtn= document.getElementById('jobDetailsPreview');
+                           previewBtn.click();
+                          }}
                         >
                           {reactIcons.view}
                         </span>
@@ -306,7 +311,7 @@ const JobPostsTable = () => {
                     <Link
                           href="/employers-dashboard/job-posts/[id]"
                           as={`/employers-dashboard/all-applicants/${item.id}`}
-                          target="_blank"
+                          target="_blank" 
                           onMouseEnter={() => {
                             setJobDetails(item);
                           //  let previewBtn= document.getElementById('jobDetailsPreview');

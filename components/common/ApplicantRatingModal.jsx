@@ -27,11 +27,11 @@ const ApplicantRatingModal = ({ aiCheckResult }) => {
             <div>
               <div className="my-2 d-flex gap-2">
                 <h5 className="fw-medium">
-                  Total Rating : {aiCheckResult?.rating_count}
+                  Total Rating : {aiCheckResult?.rating_count}/100
                 </h5>
                 {/* <span></span> */}
               </div>
-              <div>
+              <div className="table_div_custom custom-scroll-sm" style={{height:"600px"}}>
                 {Object.values(aiCheckResult)
                   ?.slice(0, Object.values(aiCheckResult).length - 1)
                   .map((item, index) => {

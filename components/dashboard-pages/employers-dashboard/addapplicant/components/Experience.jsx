@@ -30,7 +30,6 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
     const handleAddWorkExp = async() => {
         setIsLoading(true);
         form['applicant_ref'] = applicantDetails.id;
-        console.log("--------------form ", form); 
         const response = await postApiReq('/applicant-work_experiences/', form)
         setIsLoading(false);
         if(response.status){
@@ -49,7 +48,6 @@ const Experience = ({applicantDetails, handleGetApplicantDetails}) => {
       }
     }
 
-    console.log("--------------applicant details ", openOption);
 
     return(
         <Paper>
