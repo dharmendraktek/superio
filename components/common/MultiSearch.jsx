@@ -14,6 +14,7 @@ const MultiSearch = ({
   endDate,
   setEndDate,
 }) => {
+
   return (
     <div className="" style={{ width: "400px" }}>
       <div className="d-flex border border-primary rounded-1 position-relative">
@@ -22,7 +23,7 @@ const MultiSearch = ({
           style={{ width: "fit-content" }}
           className="px-2 rounded-start-1 border-end border-primary bg-primary text-white fw-medium  cursor-pointer"
         >
-          <span>{keys.find((item) => item.value == fieldName).name}</span>
+          <span>{keys.find((item) => item.value == fieldName)?.name}</span>
           <span>{reactIcons.arrowfilldown}</span>
         </div>
         {openFields && (
@@ -35,7 +36,7 @@ const MultiSearch = ({
               top: "35px",
             }}
           >
-            <div className="w-100 d-flex flex-wrap">
+            <div className="w-100 d-flex flex-wrap rounded-1">
               {keys.map((item, index) => {
                 return (
                   <div
@@ -44,7 +45,7 @@ const MultiSearch = ({
                       setFieldName(item.value);
                       setOpenFields(false);
                     }}
-                    className={`cursor-pointer px-2 rounded-1 fw-medium w-50 ${item.value == fieldName ? 'bg-primary text-white' : 'bg-white'}`}
+                    className={`cursor-pointer hover-bg-change my-1 px-2 rounded-1 fw-medium w-50 ${item.value == fieldName ? 'bg-primary text-white' : 'bg-white'}`}
                   >
                     <span>{item.name}</span>
                   </div>

@@ -1,41 +1,24 @@
 "use client";
 
+import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
-import { candidateSearchKey, processOptions } from "@/utils/constant";
+import {  jobReportFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
-import Link from "next/link";
-import { use, useEffect, useState } from "react";
-import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
+import { useEffect, useState } from "react";
 
-// export const interviewData = [
-//   {
-//     id: 672652,
-//     name: "Anil Patel",
-//     email: "anilpatel365@gmail.com",
-//     mobile: "9610465261",
-//     city: "Indore",
-//     source: "Dice",
-//     state: "Madhyapradesh",
-//     status: "New Lead",
-//     title: "Full stack developer",
-//     ownership: "-",
-//     authorization: "-",
-//   },
-// ];
-
-const InterviewScheduleTable = () => {
+const JobReportTable = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-  const [interviewData, setInterviewData] = useState([]);
+  const [jobReportData, setJobReportData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
-  const [fieldName, setFieldName] = useState("search-any");
+  const [fieldName, setFieldName] = useState("search_any");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
@@ -43,39 +26,53 @@ const InterviewScheduleTable = () => {
 
   useEffect(() => {
     let param;
-    if (fieldName == "created" && startDate && endDate) {
+    if (startDate && endDate) {
       setPage(0);
-      param = `&created_start_date=${moment(startDate)
-        .startOf("day")
-        .toISOString()}&created_end_date=${moment(endDate)
-        .endOf("day")
-        .toISOString()}`;
-    } else if (fieldName == "updated" && startDate && endDate) {
-      setPage(0);
-      param = `&updated_start_date=${moment(startDate)
-        .startOf("day")
-        .toISOString()}&updated_end_date=${moment(endDate)
-        .endOf("day")
-        .toISOString()}`;
-    } else if (fieldName && search) {
-      setPage(0);
-      param = `&${fieldName}=${search}`;
+      param = `&job_created_start=${moment(startDate).format(
+        "yyyy-MM-DD"
+      )}&job_created_end=${moment(endDate).format("yyyy-MM-DD")}`;
     }
-    // setTimeout(() => {
-    handleGetInterviewsList(param);
-    // }, 700)
-  }, [search, startDate, endDate, page]);
 
-  const handleGetInterviewsList = async (param) => {
+    if (fieldName && search) {
+      setPage(0);
+      param = param ? param + `&${fieldName}=${search}` : `&${fieldName}=${search}`;
+    }
+    if (fieldName == "assigned_today") {
+      setPage(0);
+      param = `&${fieldName}=""`;
+    }
+    getJobReportList(param);
+  }, [search, startDate, endDate, page, fieldName]);
+
+ 
+
+  const handleClear = () => {
+    setFieldName('');
+    setStartDate(null);
+    setEndDate(null);
+  }
+
+  const handleExportExcel = async() => {
+    window.open(BASE_URL + '/job-assignment-report/report/?export=excel', '_blank', 'noopener,noreferrer');
+
+    // try{
+    //   const response = await getReq('/job-assignment-report/report/?export=excel');
+    //   if(response.status){
+    //   }
+    // }catch(err){
+    //   toast.error(err.response || "Something went wrong")
+    // }
+  }
+ 
+
+  const getJobReportList = async (param) => {
     setIsLoading(true);
-    const response = await getReq('/interviews/'
-    //   `/interviews/}`
+    const response = await getReq(`/job-report/report/?page=${page + 1}&size=25${param ? param : ""}`
     );
-    // ?page=${page + 1}&size=25${param ? param : ""
     setIsLoading(false);
     if (response.status) {
       setDataCount(response.data.count);
-      setInterviewData(response.data.results || response.data);
+      setJobReportData(response.data.results || response.data);
     }
   };
 
@@ -83,35 +80,11 @@ const InterviewScheduleTable = () => {
     <div>
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
-        {/* <div className="position-relative">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ width: "350px" }}
-            className="border border-primary px-4 rounded-1"
-            placeholder="Search anything..."
-          />
-          <span
-            className="position-absolute fs-4 text-primary"
-            style={{ left: "2px" }}
-          >
-            {reactIcons.search}
-          </span>
-          {search && (
-            <span
-              onClick={() => setSearch("")}
-              className="position-absolute cursor-pointer	  text-primary fs-5"
-              style={{ right: "8px" }}
-            >
-              {reactIcons.close}
-            </span>
-          )}
-        </div> */}
+        <div className="d-flex align-items-center gap-2">
         <MultiSearch
           openFields={openFields}
           setOpenFields={setOpenFields}
-          keys={candidateSearchKey}
+          keys={jobReportFilterKey}
           search={search}
           fieldName={fieldName}
           setFieldName={setFieldName}
@@ -121,31 +94,51 @@ const InterviewScheduleTable = () => {
           endDate={endDate}
           setEndDate={setEndDate}
         />
-        {/* <Link href="/employers-dashboard/all-applicants/add-applicant">
-          <button className="bg-primary px-3 text-white rounded-1 py-1">
-            + New
-          </button>
-        </Link> */}
+        <div className="d-flex gap-2 justify-content-end align-items-center">
+        <div className="d-flex gap-2 mt-1">
+          <div className="" style={{width:"200px"}}>
+            <DatePickerCustom
+              date={startDate}
+              handleDate={(date) => setStartDate(date)}
+              placeholder="From Date"
+            />
+          </div>
+          <div className=""  style={{width:"200px"}}>
+            <DatePickerCustom
+              date={endDate}
+              handleDate={(date) => setEndDate(date)}
+              placeholder="To Date"
+            />
+          </div>
+        </div>
+        <div>
+            <button className="theme-btn btn-style-two small" onClick={handleClear}>Clear</button>
+        </div>
+        </div>
+        </div>
+        <div>
+          <button className="theme-btn btn-style-one small d-flex align-items-center gap-2" onClick={() => handleExportExcel()}><span className="fw-600 fs-6">Excel</span><span>{reactIcons.download}</span></button>
+        </div>
       </div>
       <div className="mt-2">
         <div className="table_div custom-scroll-sm">
           <table className="default-table ">
             <thead className="position-sticky">
               <tr>
-                <th style={{ width: "160px" }}>
+                {/* <th style={{ width: "160px" }}>
                   <div className="d-flex gap-2">
                     <input
                       type="checkbox"
                       className="rounded-1"
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setInterviewData((prev) =>
+                          setJobReportData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
                           );
                         } else {
-                          setInterviewData((prev) =>
+                          setJobReportData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
@@ -153,7 +146,7 @@ const InterviewScheduleTable = () => {
                         }
                       }}
                     />
-                    {interviewData?.find((item) => item.selected == true) && (
+                    {jobReportData?.find((item) => item.selected == true) && (
                       <div className="position-relative">
                         <span onClick={() => setOpenAct(!openAct)}>Action</span>
                         {openAct && (
@@ -166,203 +159,173 @@ const InterviewScheduleTable = () => {
                       </div>
                     )}
                   </div>
+                </th> */}
+                <th className="" style={{ width: "200px" }}>
+                  Created On
                 </th>
-                <th className="" style={{ width: "150px" }}>
-                  Interview On
+                <th style={{ width: "150px" }}>Job Code</th>
+                <th style={{ width: "250px" }}>Job Title</th>
+                <th style={{ width: "150px" }}>Client</th>
+                <th style={{ width: "250px" }}>Contact Manager</th>
+                <th style={{ width: "300px" }}>Job Location</th>
+                <th style={{ width: "150px" }}>Job Status</th>
+                <th style={{ width: "160px" }}>Priority</th>
+                <th style={{ width: "160px" }}>LOB</th>
+                <th style={{ width: "200px" }}>Account Manager</th>
+                <th style={{ width: "200px" }}>Head Account Manager</th>
+                <th style={{ width: "150px" }}>Job Type</th>
+                <th style={{ width: "200px" }}>Tagged Count</th>
+                <th style={{ width: "200px" }} className="">
+                  Submission Count
                 </th>
-                <th style={{ width: "100px" }}>Start Time</th>
-                <th style={{ width: "100px" }}>End Time</th>
-                <th style={{ width: "250px" }}>Applicant Name</th>
-                <th style={{ width: "300px" }}>Job Title</th>
-                <th style={{ width: "200px" }}>Inerview Round</th>
-                <th style={{ width: "150px" }}>Interview Mode</th>
-                <th style={{ width: "160px" }}>Interview Outcome</th>
-                <th style={{ width: "200px" }}>Client</th>
-                <th style={{ width: "200px" }}>End Client</th>
-                <th style={{ width: "200px" }}>Interviers</th>
-                <th style={{ width: "250px" }}>Scheduled By</th>
-                <th style={{ width: "250px" }} className="">
-                  Scheduled On
-                </th>
-                <th style={{ width: "250px" }}>Applicant Mobile Number</th>
-                <th style={{ width: "250px" }}>Applicant Email</th>
-                <th style={{ width: "200px" }}>Cancellation Reason</th>
-                <th style={{ width: "200px" }}>Reschedule Reason</th>
-                <th style={{ width: "200px" }}>Recruiter Name</th>
-                <th style={{ width: "200px" }}>Ownership</th>
-                <th style={{ width: "200px" }}>Job Status</th>
-                <th style={{ width: "200px" }}>Scheduled By Email ID</th>
-                <th style={{ width: "220px" }}>Scheduled By Employee ID</th>
-                <th style={{ width: "100px" }}>Gender</th>
-                <th style={{ width: "200px" }}>Work Authoriztion</th>
-                <th style={{ width: "150px" }}>Action</th>
+                <th style={{ width: "250px" }}>Submission Count Done</th>
+                <th style={{ width: "250px" }}>Client Interview Count</th>
+                <th style={{ width: "300px" }}>Client Interview Count Done</th>
+                <th style={{ width: "250px" }}>L1 Interview Count</th>
+                <th style={{ width: "250px" }}>L1 Interview Count Done</th>
+                <th style={{ width: "250px" }}>L2 Interview Count</th>
+                <th style={{ width: "250px" }}>L2 Interview Count Done</th>
+                <th style={{ width: "250px" }}>L3 Interview Count</th>
+                <th style={{ width: "250px" }}>L3 Interview Count Done</th>
+                 <th style={{ width: "250px" }}>Confirmation Count</th>
+                {/*<th style={{ width: "200px" }}>Work Authoriztion</th>
+                <th style={{ width: "150px" }}>Action</th> */}
               </tr>
             </thead>
             <tbody>
-              {interviewData?.map((item, index) => {
-                 
-                 let {firstname, middlename, lastname, mobile, email, authorization} = item.applicant_details;
-                 let {title, client_name}  = item.job_details;
-                 let {starttime, endtime, startdate, endclient, mode, round, reason} = item;
+              {jobReportData?.map((item, index) => {
+                 const {
+                  job_code,
+                  created_at,
+                  client,
+                  lob,
+                  contact_manager,
+                  account_manager,
+                  head_account_manager,
+                  job_title,
+                  job_status,
+                  job_location,
+                  priority,
+                  submission_count,
+                  l1_interview_count,
+                  l2_interview_count,
+                  l3_interview_count,
+                  job_type,
+                  client_interview_count,
+                  confirmation_count,
+                  submissions_done,
+                  tagged_count,
+                  l1_interview_done_count,
+                  l2_interview_done_count,
+                  l3_interview_done_count,
+                  client_interview_done_count
+              } = item;
+               
                 
                 return (
                   <>
                     <tr key={index}>
-                      <td style={{ width: "160px" }}>
+                      {/* <td style={{ width: "160px" }}>
                         <div className="d-flex align-items-center justify-content-between">
                           <input
                             type="checkbox"
                             checked={item?.selected}
                             onChange={(e) => {
-                              let update = [...interviewData];
+                              let update = [...jobReportData];
                               if (e.target.checked) {
                                 update[index]["selected"] = e.target.checked;
                               } else {
                                 update[index]["selected"] = e.target.checked;
                               }
-                              setInterviewData(update);
+                              setJobReportData(update);
                             }}
                           />
-                          {/* {item.jobs_associated.length > 0 && (
-                            <>
-                              <div
-                                onClick={() => {
-                                  if (expand == item.id) {
-                                    setExpand(null);
-                                  } else {
-                                    setExpand(item.id);
-                                  }
-                                }}
-                                className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                                style={{
-                                  background: "var(--primary-2nd-color)",
-                                }}
-                              >
-                                <div
-                                  className="text-white "
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    fontSize: "12px",
-                                    borderRadius: "3px",
-                                    background: "var(--primary-2nd-color)",
-                                  }}
-                                >
-                                  <p
-                                    className="text-white fw-medium"
-                                    style={{ fontSize: "15px" }}
-                                  >
-                                    {item.jobs_associated.length}
-                                  </p>
-                                </div>
-                                <span className="cursor-pointer text-white fs-4">
-                                  {item.id == expand
-                                    ? reactIcons.arrowfillup
-                                    : reactIcons.arrowfilldown}
-                                </span>
-                              </div>
-                            </>
-                          )} */}
+                        
                         </div>
+                      </td> */}
+                      <td className="" style={{ width: "200px" }}>
+                        
+                          {moment(created_at).format('DD-MM-yyyy hh:mm A')}
+                        
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        
-                          {startdate}
-                        
+                      {job_code}
                       </td>
-                      <td className="" style={{ width: "100px" }}>
-                      {starttime}
+                      <td className="text-capitalize" style={{ width: "250px" }}>{job_title||"N/A"}</td>
+                      <td className="text-capitalize" style={{ width: "150px" }}>
+                        {client || "N/A"}
                       </td>
-                      <td className="" style={{ width: "100px" }}>
-                        {endtime}
+                      <td className="text-capitalize" style={{ width: "250px" }}>
+                        {contact_manager || "N/A"}
                       </td>
-                      <td className="" style={{ width: "250px" }}>
-                        {(firstname || '') + ' '+ (middlename || '') + ' ' + (lastname || '') }
+                      <td className="text-capitalize" style={{ width: "300px" }}>
+                      {job_location || "N/A"}
                       </td>
-                      <td className="" style={{ width: "300px" }}>
-                        {title}
+                      <td className="text-capitalize" style={{ width: "150px" }}>
+                        {job_status||"N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                      {round}
-                      </td>
-                      <td style={{ width: "150px" }}>
-                        {mode}
+                      <td className="text-capitalize" style={{ width: "160px" }}>
+                        {priority|| "N/A"}
                       </td>
                       <td className="" style={{ width: "160px" }}>
-                        {'-'}
+                        {lob || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {client_name}
+                        {account_manager || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {'end client'}
-                      </td>
-                      <td className="" style={{ width: "200px" }}>
-                         {/* {item.ownership_details.map((item) => {
-                          return (
-                            <span key={item.id}>
-                              {item.first_name} {item.last_name}
-                            </span>
-                          );
-                        })} */}
-                       { 'interviews'}
+                         {head_account_manager || "N/A"}
                       </td>
                       <td
                         className="d-flex flex-wrap gap-2"
-                        style={{ width: "250px" }}
+                        style={{ width: "150px" }}
                       >
-                       {'scheduled by'}
-                       {/* {item.created_by
-                          ? item?.created_by?.first_name +
-                            " " +
-                            item?.created_by?.last_name
-                          : "-"} */}
+                       {job_type || "N/A"}
                       </td>
-                      <td className="" style={{ width: "250px" }}>
-                        {'scheduled on'}
-                        {/* {moment(item.created_at).format("DD-MM-YYYY  hh:mm A")} */}
+                      <td className="" style={{ width: "200px" }}>
+                        {tagged_count || "N/A"}
+                      </td>
+                      <td style={{ width: "200px" }}>
+                         {submission_count || "N/A"}
                       </td>
                       <td style={{ width: "250px" }}>
-                         {mobile}
+                         {submissions_done || "N/A"}
                       </td>
                       <td style={{ width: "250px" }}>
-                         {email}
+                        {client_interview_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        'N/A'
+                      <td style={{ width: "300px" }}>
+                        {client_interview_done_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        {reason}
+                      <td style={{ width: "250px" }}>
+                        {l1_interview_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        'Recruiter name'
+                      <td style={{ width: "250px" }}>
+                      {l1_interview_done_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        'owner ship'
+                      <td style={{ width: "250px" }}>
+                      {l2_interview_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        'job status'
+                      <td style={{ width: "250px" }}>
+                      {l2_interview_done_count || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        'scheduled by email id '
+                      <td style={{ width: "250px" }}>
+                      {l3_interview_count || "N/A"}
                       </td>
-                      <td style={{ width: "220px" }}>
-                        'scheduled by emplyoee id'
+                      <td style={{ width: "250px" }}>
+                      {l3_interview_done_count || "N/A"}   
                       </td>
-                      <td style={{ width: "100px" }}>
-                    N/A    
+                       <td style={{ width: "250px" }}>
+                        {confirmation_count || "N/A"}    
                       </td>
-                      <td style={{ width: "200px" }}>
-                        {authorization}    
-                      </td>
-                      <td style={{ width: "150px" }}>
+                      {/*<td style={{ width: "150px" }}>
                         'Action'    
-                      </td>
+                      </td> */}
                     </tr>
                     {/* {item.id == expand && (
                       <tr>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  interviewData={interviewData} />  
+                      <InterviewScheduleModal   jobPostList={[]}  jobReportData={jobReportData} />  
                         <div className="mx-3 my-2">
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {
@@ -445,13 +408,13 @@ const InterviewScheduleTable = () => {
                                       <td style={{width:'60px'}}>
                                         <input type="checkbox"
                                          onChange={(e) => {
-                                          let update = [...interviewData];
+                                          let update = [...jobReportData];
                                           if (e.target.checked) {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           } else {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           }
-                                          setInterviewData(update);
+                                          setJobReportData(update);
                                         }}
                                         checked={_item?.selected}
 
@@ -506,7 +469,7 @@ const InterviewScheduleTable = () => {
                 );
               })}
               {/* End tr */}
-              {interviewData?.length == 0 && (
+              {jobReportData?.length == 0 && (
                 <tr className="mt-5 ">
                   <td colSpan={6} className="text-center">
                     No data found
@@ -524,4 +487,4 @@ const InterviewScheduleTable = () => {
   );
 };
 
-export default InterviewScheduleTable;
+export default JobReportTable;

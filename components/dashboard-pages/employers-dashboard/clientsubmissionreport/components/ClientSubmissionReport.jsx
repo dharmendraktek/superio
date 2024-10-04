@@ -5,34 +5,14 @@ import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
 import { candidateSearchKey, processOptions } from "@/utils/constant";
-import { BASE_URL } from "@/utils/endpoints";
-import { reactIcons } from "@/utils/icons";
 import moment from "moment";
-import Link from "next/link";
-import { use, useEffect, useState } from "react";
-import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
+import { useEffect, useState } from "react";
 
-// export const interviewData = [
-//   {
-//     id: 672652,
-//     name: "Anil Patel",
-//     email: "anilpatel365@gmail.com",
-//     mobile: "9610465261",
-//     city: "Indore",
-//     source: "Dice",
-//     state: "Madhyapradesh",
-//     status: "New Lead",
-//     title: "Full stack developer",
-//     ownership: "-",
-//     authorization: "-",
-//   },
-// ];
-
-const InterviewScheduleTable = () => {
+const ClientSubmissionReport = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-  const [interviewData, setInterviewData] = useState([]);
+  const [clientSubmissionData, setClientSubmissionData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
   const [fieldName, setFieldName] = useState("search-any");
@@ -62,11 +42,11 @@ const InterviewScheduleTable = () => {
       param = `&${fieldName}=${search}`;
     }
     // setTimeout(() => {
-    handleGetInterviewsList(param);
+    getClientSubmissionList(param);
     // }, 700)
   }, [search, startDate, endDate, page]);
 
-  const handleGetInterviewsList = async (param) => {
+  const getClientSubmissionList = async (param) => {
     setIsLoading(true);
     const response = await getReq('/interviews/'
     //   `/interviews/}`
@@ -75,12 +55,12 @@ const InterviewScheduleTable = () => {
     setIsLoading(false);
     if (response.status) {
       setDataCount(response.data.count);
-      setInterviewData(response.data.results || response.data);
+      setClientSubmissionData(response.data.results || response.data);
     }
   };
 
   return (
-    <div>
+    <div className="theme-background">
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
         {/* <div className="position-relative">
@@ -139,13 +119,13 @@ const InterviewScheduleTable = () => {
                       className="rounded-1"
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setInterviewData((prev) =>
+                          setClientSubmissionData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
                           );
                         } else {
-                          setInterviewData((prev) =>
+                          setClientSubmissionData((prev) =>
                             prev.map((item) => {
                               return { ...item, selected: e.target.checked };
                             })
@@ -153,7 +133,7 @@ const InterviewScheduleTable = () => {
                         }
                       }}
                     />
-                    {interviewData?.find((item) => item.selected == true) && (
+                    {clientSubmissionData?.find((item) => item.selected == true) && (
                       <div className="position-relative">
                         <span onClick={() => setOpenAct(!openAct)}>Action</span>
                         {openAct && (
@@ -199,7 +179,7 @@ const InterviewScheduleTable = () => {
               </tr>
             </thead>
             <tbody>
-              {interviewData?.map((item, index) => {
+              {clientSubmissionData?.map((item, index) => {
                  
                  let {firstname, middlename, lastname, mobile, email, authorization} = item.applicant_details;
                  let {title, client_name}  = item.job_details;
@@ -214,13 +194,13 @@ const InterviewScheduleTable = () => {
                             type="checkbox"
                             checked={item?.selected}
                             onChange={(e) => {
-                              let update = [...interviewData];
+                              let update = [...clientSubmissionData];
                               if (e.target.checked) {
                                 update[index]["selected"] = e.target.checked;
                               } else {
                                 update[index]["selected"] = e.target.checked;
                               }
-                              setInterviewData(update);
+                              setClientSubmissionData(update);
                             }}
                           />
                           {/* {item.jobs_associated.length > 0 && (
@@ -362,7 +342,7 @@ const InterviewScheduleTable = () => {
                     {/* {item.id == expand && (
                       <tr>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  interviewData={interviewData} />  
+                      <InterviewScheduleModal   jobPostList={[]}  clientSubmissionData={clientSubmissionData} />  
                         <div className="mx-3 my-2">
                           <div className="d-flex gap-2">
                             {processOptions.map((item, index) => {
@@ -445,13 +425,13 @@ const InterviewScheduleTable = () => {
                                       <td style={{width:'60px'}}>
                                         <input type="checkbox"
                                          onChange={(e) => {
-                                          let update = [...interviewData];
+                                          let update = [...clientSubmissionData];
                                           if (e.target.checked) {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           } else {
                                             update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
                                           }
-                                          setInterviewData(update);
+                                          setClientSubmissionData(update);
                                         }}
                                         checked={_item?.selected}
 
@@ -506,7 +486,7 @@ const InterviewScheduleTable = () => {
                 );
               })}
               {/* End tr */}
-              {interviewData?.length == 0 && (
+              {clientSubmissionData?.length == 0 && (
                 <tr className="mt-5 ">
                   <td colSpan={6} className="text-center">
                     No data found
@@ -524,4 +504,4 @@ const InterviewScheduleTable = () => {
   );
 };
 
-export default InterviewScheduleTable;
+export default ClientSubmissionReport;

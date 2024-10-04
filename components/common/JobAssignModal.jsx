@@ -85,6 +85,8 @@ const JobAssignModal = ({jobId}) => {
         toast.success('Job has been assigned successfully')
         setForm((prev) => ({...prev, assign:[]}))
         setAssignList([]);
+        let btn = document.getElementById('btnClose');
+        btn.click();
       }
     }catch(err){
        toast.error(err.response || 'Somthing went wrong')
@@ -99,7 +101,7 @@ const JobAssignModal = ({jobId}) => {
           <div className="modal-content">
             <div className="modal-header border border-bottom-primary">
               <h5 className="modal-title" id="jobAssignModalLabel">Assign Team Members</h5>
-              <button type="button" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" id="btnClose" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="row">

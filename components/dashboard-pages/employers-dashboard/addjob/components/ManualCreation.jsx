@@ -23,6 +23,7 @@ const initialState = {
   amount: "",
   payment_frequency: "",
   job_type: "",
+  client_taxterm:'',
   start_date: new Date(),
   end_date: new Date(),
   remote: "",
@@ -33,6 +34,7 @@ const initialState = {
   state: "",
   job_status: "",
   client: "",
+  endclient:'',
   contact_manager: "",
   interview_mode: "",
   application_form: "",
@@ -51,7 +53,7 @@ const initialState = {
   post_on_portal: new Date(),
   is_active: 1,
   priority: "",
-  post_on_portal:false,
+  post_on_portal: false,
   // post_date_on_portal: "",
 };
 
@@ -127,15 +129,17 @@ const ManualCreation = ({
   //   }
   // }, [jobData.languages])\
 
-
   useEffect(() => {
     if (jobData) {
       setAssignList(jobData.assign_details ? jobData.assign_details : []);
       setComments(jobData.comment);
-      let jobType = jobTypes.find((item) => item.name == jobData?.job_type)?.name
+      let jobType = jobTypes.find(
+        (item) => item.name == jobData?.job_type
+      )?.name;
       let country = countryList.find((item) => item.name == jobData?.country);
-      let jobNewStatus = jobStatus.map((item) => item.name == jobData?.job_status)?.name
-
+      let jobNewStatus = jobStatus.map(
+        (item) => item.name == jobData?.job_status
+      )?.name;
 
       setForm((prev) => ({
         ...prev,
@@ -144,17 +148,19 @@ const ManualCreation = ({
         currency: jobData.currency,
         amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
         payment_frequency: jobData.payment_frequency,
-        job_type: jobType ? jobType : '',
+        job_type: jobType ? jobType : "",
+        client_taxterm:jobData.endclient ? jobData.endclient:'',
+        endclient:jobData.endclient?jobData.endclient: '',
         start_date: jobData.start_date,
         end_date: jobData.end_date,
         remote: jobData.remote,
-        lob: isNumber(jobData.lob) ? jobData.lob : '',
+        lob: isNumber(jobData.lob) ? jobData.lob : "",
         address: jobData.address,
-        country: country ? country?.name : '',
+        country: country ? country?.name : "",
         state: jobData.state,
         city: jobData.city,
-        job_status: jobNewStatus? jobNewStatus  :'' ,
-        client: isNumber(jobData.client) ? jobData.client : '',
+        job_status: jobNewStatus ? jobNewStatus : "",
+        client: isNumber(jobData.client) ? jobData.client : "",
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
@@ -181,7 +187,7 @@ const ManualCreation = ({
         account_manager: jobData.account_manager,
         delivery_manager: jobData.delivery_manager,
         assign: jobData.assign ? jobData.assign : [],
-        tax_term:jobData.tax_term ? jobData.tax_term : '',
+        tax_term: jobData.tax_term ? jobData.tax_term : "",
         department: jobData.department,
         description: jobData.description ? jobData.description : "<p></p>",
         is_active: 1,
@@ -229,11 +235,11 @@ const ManualCreation = ({
   };
 
   const handleGetJobCode = async () => {
-    if (!jobData || name=="parse") {
-    const response = await getReq("/next-job-code/");
-    if (response.status) {
-      setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
-    }
+    if (!jobData || name == "parse") {
+      const response = await getReq("/next-job-code/");
+      if (response.status) {
+        setForm((prev) => ({ ...prev, job_code: response.data.next_job_code }));
+      }
     }
   };
 
@@ -270,7 +276,7 @@ const ManualCreation = ({
 
   const handleValidation = () => {
     setError((prev) => ({
-      ...prev, 
+      ...prev,
       jobCodeErr: "",
       jobTitleErr: "",
       clientErr: "",
@@ -288,8 +294,7 @@ const ManualCreation = ({
       accountManagerErr: "",
       assignToErr: "",
       jobDescriptionErr: "",
-    }))
-    
+    }));
 
     if (!form.job_code) {
       setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
@@ -339,13 +344,13 @@ const ManualCreation = ({
     if (!form.tax_term) {
       setError((prev) => ({ ...prev, taxTermErr: "This field is required" }));
     }
-    if (!form.delivery_manager && !form.delivery_manager == 'Select') {
+    if (!form.delivery_manager && !form.delivery_manager == "Select") {
       setError((prev) => ({
         ...prev,
         deliveryManagerErr: "This field is required",
       }));
     }
-    if (!form.account_manager && !form.account_manager == 'Select') {
+    if (!form.account_manager && !form.account_manager == "Select") {
       setError((prev) => ({
         ...prev,
         accountManagerErr: "This field is required",
@@ -354,7 +359,7 @@ const ManualCreation = ({
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
-    if ((form.description == '<p></p>')) {
+    if (form.description == "<p></p>") {
       setError((prev) => ({
         ...prev,
         jobDescriptionErr: "This field is required",
@@ -406,7 +411,6 @@ const ManualCreation = ({
   };
 
   const handleSubmit = async () => {
-
     if (handleValidation()) {
       if (name == "update" && !comments && !jobType == "Email") {
         setCommentsErr("This field is required");
@@ -414,8 +418,8 @@ const ManualCreation = ({
       } else if (!jobType == "Email") {
         form["comment"] = comments;
       }
-      if((name == "create")){
-        delete form["job_code"]
+      if (name == "create") {
+        delete form["job_code"];
       }
       try {
         setIsLoading(true);
@@ -426,9 +430,9 @@ const ManualCreation = ({
             ? await patchReq(`/jobs/${jobData.id}/`, form)
             : await postApiReq("/jobs/", form);
         setIsLoading(false);
-         
+
         if (response.status) {
-          if (jobData && name == 'update') {
+          if (jobData && name == "update") {
             if (documents.length > 0) {
               handleSaveDocuments(jobData.id);
             }
@@ -438,7 +442,9 @@ const ManualCreation = ({
             let btnModal = document.getElementById("commentModalClose");
             btnModal.click();
             setTab(null);
-            router.push(`/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`);
+            router.push(
+              `/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`
+            );
           } else {
             if (documents.length > 0) {
               handleSaveDocuments(response.data.id);
@@ -453,8 +459,8 @@ const ManualCreation = ({
         setIsLoading(false);
         // toast.error(err.response || "Something went wrong");
       }
-    }else{
-      let closeBtn = document.getElementById('jobCommentModal')
+    } else {
+      let closeBtn = document.getElementById("jobCommentModal");
       closeBtn.click();
     }
   };
@@ -537,8 +543,6 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
-
-
   return (
     <div className="py-2">
       <LanguageModal handleGetLanguageList={handleGetLanguageList} />
@@ -586,10 +590,16 @@ const ManualCreation = ({
         <div>
           <button
             className="theme-btn btn-style-one mx-2 small"
-            onClick={(name == "create" || name=='parse' || jobType == "Email") ? handleSubmit : ""}
+            onClick={
+              name == "create" || name == "parse" || jobType == "Email"
+                ? handleSubmit
+                : ""
+            }
             data-bs-toggle="modal"
             data-bs-target={
-              (name == "update" && !(name =='parse') && !(jobType == "Email"))  ? "#commentsModal" : ""
+              name == "update" && !(name == "parse") && !(jobType == "Email")
+                ? "#commentsModal"
+                : ""
             }
           >
             {isLoading ? (
@@ -623,7 +633,7 @@ const ManualCreation = ({
             <h6 className="fs-3 fw-medium text-black">Job Details</h6>
           </div>
           <div className="row px-5">
-            {!jobType  && (
+            {!jobType && (
               <div className="col-4 my-2">
                 <p>
                   Job Code <strong className="text-danger">*</strong>
@@ -689,6 +699,20 @@ const ManualCreation = ({
                   <option>Hourly</option>
                   <option>Monthly</option>
                   <option>Annually</option>
+                </select>
+                <select
+                  value={form.client_taxterm}
+                  name="client_taxterm"
+                  onChange={handleChange}
+                  className="client-input-style form-mult-box"
+                >
+                  <option>Select</option>
+                  {TaxTerms?.map((item, index) => {
+                    return(
+                      <option key={index} value={item.name}>{item.name}</option>
+                    )
+                  })
+                  }
                 </select>
               </div>
             </div>
@@ -764,7 +788,7 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                Names of LOB 
+                Names of LOB
                 {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
@@ -787,7 +811,7 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                Contact Manager 
+                Contact Manager
                 {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
@@ -806,6 +830,20 @@ const ManualCreation = ({
                 })}
               </select>
               <span className="text-danger">{error.contactManagerErr}</span>
+            </div>
+            <div className="col-4 my-2">
+              <p>
+                End Client
+                 {/* <strong className="text-danger">*</strong> */}
+              </p>
+              <input
+                name="endclient"
+                value={form.endclient}
+                onChange={handleChange}
+                className="client-form-input"
+                type="text"
+              />
+              {/* <span className="text-danger">{error.cityErr}</span> */}
             </div>
             <div className="col-4 my-2">
               <p>Country</p>
@@ -958,13 +996,13 @@ const ManualCreation = ({
               </div>
               <span className="text-danger">{error.experienceErr}</span>
             </div>
-            <div className="col-4 my-2">
+            {/* <div className="col-4 my-2">
               <p>
                 Primary Skills <strong className="text-danger">*</strong>{" "}
                 <span
                   data-bs-toggle="tooltip"
                   data-bs-placement="top-right"
-                  title="Please enter skills enter button as seprator"
+                  title="Please enter skills by using Enter button or mouse click as separator."
                   className="text-primary"
                 >
                   {reactIcons.info}
@@ -1002,7 +1040,21 @@ const ManualCreation = ({
                 </div>
                 <input
                   name="primary_skills"
+                  className="w-100"
                   value={skills}
+                  placeholder="Please enter skills by using Enter button or mouse click as separator."
+                  onClick={() => {
+                    if(skills){
+                      setForm((prev) => ({
+                        ...prev,
+                        primary_skills: [
+                          ...prev.primary_skills,
+                          { name: skills },
+                        ],
+                      }));
+                      setSkills("");
+                    }
+                  }}
                   onKeyDown={(e) => {
                     if (e.key == "Enter") {
                       setForm((prev) => ({
@@ -1023,14 +1075,93 @@ const ManualCreation = ({
                 />
               </div>
               <span className="text-danger">{error.primarySkillsErr}</span>
+            </div> */}
+            <div className="col-4 my-2">
+              <p>
+                Primary Skills <strong className="text-danger">*</strong>{" "}
+                <button
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="bottom" // Ensure the tooltip appears below
+                  title="Please enter skills by using Enter button or mouse click as separator."
+                  className="text-primary"
+                >
+                  {reactIcons.info}
+                </button>
+              </p>
+              <div
+                className="d-flex flex-wrap position-relative custom-scroll-sm px-2"
+                style={{
+                  minHeight: "36px",
+                  borderBottom: "1px solid black",
+                  borderRadius: "3px",
+                  maxHeight: "125px",
+                  overflowY: "auto",
+                }}
+              >
+                <div className="d-flex flex-wrap mt-1">
+                  {form.primary_skills.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="mx-1 my-1 px-1 gap-6 text-black fw-medium border-primary rounded-1"
+                        style={{ border: "1px solid" }}
+                      >
+                        <span>{item.name ? item.name : item}</span>
+                        <span
+                          className="cursor-pointer text-black ms-2"
+                          onClick={() => handleRemoveSkills(index)}
+                        >
+                          {reactIcons.close}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <input
+                  name="primary_skills"
+                  className="w-100"
+                  value={skills}
+                  placeholder="Please enter skills by using Enter button or mouse click as separator."
+                  onClick={() => {
+                    if (skills) {
+                      setForm((prev) => ({
+                        ...prev,
+                        primary_skills: [
+                          ...prev.primary_skills,
+                          { name: skills },
+                        ],
+                      }));
+                      setSkills("");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setForm((prev) => ({
+                        ...prev,
+                        primary_skills: [
+                          ...prev.primary_skills,
+                          { name: skills },
+                        ],
+                      }));
+                      setSkills("");
+                    }
+                  }}
+                  onChange={(e) => {
+                    setSkills(e.target.value);
+                  }}
+                  type="text"
+                />
+              </div>
+              <span className="text-danger">{error.primarySkillsErr}</span>
             </div>
+
             <div className="col-4 my-2">
               <p>
                 Secondary Skills{" "}
                 <button
                   data-bs-toggle="tooltip"
                   data-bs-placement="top-right"
-                  title="Please enter skills enter button as seprator"
+                  title="Please enter skills by using Enter button or mouse click as separator."
                   className="text-primary"
                 >
                   <span>{reactIcons.info}</span>
@@ -1053,7 +1184,7 @@ const ManualCreation = ({
                         key={index}
                         className="mx-1 px-1 my-1 gap-6 text-black fw-medium  border-primary rounded-1"
                         // style={{ background: "var(--primary-2nd-color)" }}
-                        style={{border:'1px solid'}}
+                        style={{ border: "1px solid" }}
                       >
                         <span>{item.name ? item.name : item}</span>
                         <span
@@ -1067,6 +1198,8 @@ const ManualCreation = ({
                   })}
                 </div>
                 <input
+                  className="w-100"
+                  placeholder="Please enter skills by using Enter button or mouse click as separator."
                   name="secondary_skills"
                   value={secondarySkills}
                   onKeyDown={(e) => {
@@ -1196,7 +1329,12 @@ const ManualCreation = ({
               <p>
                 Tax Terms <strong className="text-danger">*</strong>
               </p>
-              <select className="client-form-input" value={form.tax_term} onChange={handleChange}  name="tax_term">
+              <select
+                className="client-form-input"
+                value={form.tax_term}
+                onChange={handleChange}
+                name="tax_term"
+              >
                 <option>Select</option>
                 {TaxTerms.map((item, index) => {
                   return (
@@ -1295,12 +1433,13 @@ const ManualCreation = ({
                           className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
                           style={{ background: "var(--primary-2nd-color)" }}
                         >
-                          <span>{item.first_name} {item.last_name}</span>
+                          <span>
+                            {item.first_name} {item.last_name}
+                          </span>
                           <span
-                            onClick={() =>{
-                              if(!(name=='update'))
-                              handleClose(item)
-                              }}
+                            onClick={() => {
+                              if (!(name == "update")) handleClose(item);
+                            }}
                             className="text-black fs-6 cursor-pointer"
                           >
                             {reactIcons.close}
@@ -1325,24 +1464,24 @@ const ManualCreation = ({
                 );
               })}
             </select> */}
-                {!(name == 'update') &&
-                <div>
-                <span
-                  className="cursor-pointer  text-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#usersModal"
-                >
-                  assign
-                </span>
-                <span
-                  data-bs-toggle="modal"
-                  data-bs-target="#usersModal"
-                  className="text-primary fs-5"
-                >
-                  {reactIcons.settings}
-                </span>
-                </div>
-                } 
+                {!(name == "update") && (
+                  <div>
+                    <span
+                      className="cursor-pointer  text-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#usersModal"
+                    >
+                      assign
+                    </span>
+                    <span
+                      data-bs-toggle="modal"
+                      data-bs-target="#usersModal"
+                      className="text-primary fs-5"
+                    >
+                      {reactIcons.settings}
+                    </span>
+                  </div>
+                )}
                 <span className="text-danger">{error.assignToErr}</span>
               </div>
             )}

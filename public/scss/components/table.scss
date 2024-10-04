@@ -155,10 +155,66 @@ tbody tr:nth-child(even) {
     color: white !important;
     font-weight: 500;
     background-color: #ebbe36 !important;
+    
 }
 
 .inner-table{
    background-color: #f0f8ff7d !important;
   //  border: 1px solid black;
+  // width: max-content;
 
 }
+
+
+// .table_div {
+//   width: 100%;
+//   height: 700px; /* Fixed height for scrolling */
+//   border: 1px solid #ede9e9;
+//   border-radius: 2px;
+//   overflow-x: auto; /* Horizontal scrolling */
+//   overflow-y: auto; /* Vertical scrolling */
+// }
+
+// .default-table {
+//   width: 100%;
+//   max-width: 100%;
+//   min-width: 700px;
+//   // border: 1px solid black;
+//   border-radius: 5px;
+//   margin-bottom: 30px;
+//   background: #ffffff;
+//   table-layout: fixed;
+// }
+
+// .default-table thead {
+//   background: #77a6f7;
+//   color: white;
+//   position: sticky;
+//   top: 0;
+//   z-index: 1; /* Ensure it stays above the body rows */
+// }
+
+// .default-table thead th {
+//   padding: 10px 5px;
+//   font-size: 16px;
+//   font-weight: 500;
+//   white-space: nowrap;
+// }
+
+// .default-table tbody tr:nth-child(odd) {
+//   background-color: white;
+// }
+
+// .default-table tbody tr:nth-child(even) {
+//   background-color: #f3fcff;
+// }
+
+// .default-table tbody tr td {
+//   padding: 4px 8px;
+//   height: 40px !important;
+//   text-align: left;
+// }
+
+// .default-table tbody tr {
+//   border-top: 1px solid #ecedf2;
+// }

@@ -95,7 +95,7 @@ const ApplicantTable = () => {
 
 
   return (
-    <div className="theme-background">
+    <div>
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
         <MultiSearch
@@ -123,7 +123,7 @@ const ApplicantTable = () => {
             <thead className="position-sticky">
               <tr>
                 <th style={{ width: "160px" }}>
-                  <div className="d-flex gap-2">
+                  {/* <div className="d-flex gap-2">
                     <input
                       type="checkbox"
                       className="rounded-1"
@@ -148,19 +148,19 @@ const ApplicantTable = () => {
                         <span onClick={() => setOpenAct(!openAct)}>Action</span>
                         {openAct && (
                           <div className="position-absolute">
-                            <div className="bg-white">
+                            <div className="bg-white" style={{width:'300px'}}>
                               <p>Delete</p>
                             </div>
                           </div>
                         )}
                       </div>
                     )}
-                  </div>
+                  </div> */}
                 </th>
                 <th className="" style={{ width: "150px" }}>
-                  Applicant ID
+                  Candidate ID
                 </th>
-                <th style={{ width: "200px" }}>Applicant Name</th>
+                <th style={{ width: "200px" }}>Candidate Name</th>
                 <th style={{ width: "250px" }}>Job Title</th>
                 <th style={{ width: "300px" }}>Email Address</th>
                 <th style={{ width: "300px" }}>Mobile Number</th>
@@ -191,7 +191,7 @@ const ApplicantTable = () => {
                     <tr key={index}>
                       <td style={{ width: "160px" }}>
                         <div className="d-flex align-items-center justify-content-between">
-                          <input
+                          {/* <input
                             type="checkbox"
                             checked={item?.selected}
                             onChange={(e) => {
@@ -203,7 +203,7 @@ const ApplicantTable = () => {
                               }
                               setApplicantData(update);
                             }}
-                          />
+                          /> */}
                           {item.jobs_associated.length > 0 && (
                             <>
                               <div
@@ -217,6 +217,7 @@ const ApplicantTable = () => {
                                 className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
                                 style={{
                                   background: "var(--primary-2nd-color)",
+                                  width:'100% !important'
                                 }}
                               >
                                 <div
@@ -285,7 +286,7 @@ const ApplicantTable = () => {
                           </Link>
                         </div>
                       </td>
-                      <td className="" style={{ width: "250px" }}>
+                      <td className="text-capitalize" style={{ width: "250px" }}>
                         {item.job_title || "N/A"}
                       </td>
                       <td className="" style={{ width: "300px" }}>
@@ -305,7 +306,7 @@ const ApplicantTable = () => {
                                   className="border rounded-1 bg-white border-primary px-2"
                                 >
                                   <span
-                                    className="fw-medium"
+                                    className="fw-medium text-capitalize"
                                     style={{ fontSize: "14px" }}
                                   >
                                     {_item.name}
@@ -330,7 +331,7 @@ const ApplicantTable = () => {
                                   className="border rounded-1 bg-white border-primary px-2"
                                 >
                                   <span
-                                    className="fw-medium"
+                                    className="fw-medium text-capitalize"
                                     style={{ fontSize: "14px" }}
                                   >
                                     {_item.name}
@@ -344,16 +345,16 @@ const ApplicantTable = () => {
                           {item?.secondary_skills?.length == 0 && "N/A"}
                         </div>
                       </td>
-                      <td className="" style={{ width: "150px" }}>
+                      <td className="text-capitalize" style={{ width: "150px" }}>
                         {item.city || "N/A"}
                       </td>
-                      <td className="" style={{ width: "200px" }}>
+                      <td className="text-capitalize" style={{ width: "200px" }}>
                         {item.source || "N/A"}
                       </td>
-                      <td className="" style={{ width: "200px" }}>
+                      <td className="text-capitalize" style={{ width: "200px" }}>
                         {item.state || "N/A"}
                       </td>
-                      <td className="" style={{ width: "200px" }}>
+                      <td className="text-capitalize" style={{ width: "200px" }}>
                         {item.status || "N/A"}
                       </td>
                       <td
@@ -362,7 +363,7 @@ const ApplicantTable = () => {
                       >
                         {item.ownership_details.map((item) => {
                           return (
-                            <span key={item.id}>
+                            <span key={item.id} className="text-capitalize">
                               {item.first_name || "N/A"} {item.last_name || ""}
                             </span>
                           );
@@ -437,7 +438,7 @@ const ApplicantTable = () => {
                       </td>
                     </tr>
                     {item.id == expand && (
-                      <tr>
+                      <tr colSpan={12}>
                         <div className="my-3 px-5 border rounded-1  inner-table ">
                           <InterviewScheduleModal
                             jobPostList={[]}
@@ -473,7 +474,7 @@ const ApplicantTable = () => {
                               </div>
                             )}
                           </div>
-                          <td colSpan={15}>
+                          <td>
                             <div className="mx-2 border rounded-1  inner-table shadow">
                               {/* <div className="mx-3 my-1">
                             this the filter table and search bard
@@ -560,27 +561,58 @@ const ApplicantTable = () => {
                                         technical) /
                                       4;
                                     return (
-                                      <tr>
+                                      <tr style={{background:"white !important"}}>
                                         <td style={{ width: "60px" }}>
-                                          <input
-                                            type="checkbox"
-                                            onChange={(e) => {
-                                              let update = [...applicantData];
-                                              if (e.target.checked) {
-                                                update[index][
-                                                  "jobs_associated"
-                                                ][_index]["selected"] =
-                                                  e.target.checked;
-                                              } else {
-                                                update[index][
-                                                  "jobs_associated"
-                                                ][_index]["selected"] =
-                                                  e.target.checked;
-                                              }
-                                              setApplicantData(update);
-                                            }}
-                                            checked={_item?.selected}
-                                          />
+                                      <input
+                                        type="checkbox"
+                                        onChange={(e) => {
+                                          let update = [...applicantData];
+
+                                          update.map((applicant) => {
+                                            // Check if the applicant has a 'jobs_associated' array
+                                            if (Array.isArray(applicant.jobs_associated)) {
+                                              // Iterate over each job and set the 'selected' field to false
+                                              applicant.jobs_associated = applicant.jobs_associated.map((job) => {
+                                                return {
+                                                  ...job,
+                                                  selected: false, // Set selected to false
+                                                };
+                                              });
+                                            }
+                                            return applicant;
+                                          });
+                                          console.log("-------------update ", update);
+
+                                          // If the new checkbox is checked
+                                          if (e.target.checked) {
+                                            // Loop through all submissions and set 'selected' to false
+                                            update[index]["jobs_associated"] =
+                                              update[index]["jobs_associated"].map(
+                                                (
+                                                  submission,
+                                                  submissionIndex
+                                                ) => {
+                                                  // Set selected to false for all except the newly selected one
+                                                  return {
+                                                    ...submission,
+                                                    selected:
+                                                      submissionIndex === _index
+                                                        ? true
+                                                        : false,
+                                                  };
+                                                }
+                                              );
+                                          } else {
+                                            // If the checkbox is unchecked, just uncheck it
+                                            update[index]["jobs_associated"][
+                                              _index
+                                            ]["selected"] = false;
+                                          }
+
+                                          setApplicantData(update);
+                                        }}
+                                        checked={_item?.selected}
+                                      />
                                         </td>
                                         <td>{job_code ? job_code : "N/A"}</td>
                                         <td>

@@ -13,9 +13,10 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
     comment:''
   });
   const [submissionId, setSubmissionId] = useState();
+  console.log("-------------submission detail s--------", submissionDetails);
 
   useEffect(() => {
-    if (submissionDetails.length > 0 && side == "applicant") {
+    if (submissionDetails?.length > 0 && side == "applicant") {
       const filteredData = submissionDetails
         .map((item) => {
           const selectedSubmissions = item.jobs_associated.filter(
@@ -26,7 +27,10 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
         .filter((item) => item.submissions.length > 0);
 
       setSubmissionId(filteredData[0]?.jobs_associated[0]?.id);
-    } else if (submissionDetails.length > 0) {
+    }else if(Object.values(submissionDetails)?.length > 0 && side == "job"){
+      setSubmissionId(submissionDetails[0]?.id);
+    }
+     else if (submissionDetails.length > 0) {
       const filteredData = submissionDetails
         .map((item) => {
           const selectedSubmissions = item.submissions.filter(
@@ -100,6 +104,7 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, new_status: e.target.value }))
                 }
+                // value={value}
               >
                 <option>Select</option>
                 {statusList.map((item, index) => {

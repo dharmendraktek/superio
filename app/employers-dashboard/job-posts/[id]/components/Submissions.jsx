@@ -16,7 +16,7 @@ const tabsName = [
 
 
 const Submissions = ({jobData}) => {
-    const [tab, setTab] = useState(1);
+    const [tab, setTab] = useState(2);
     const [submissionData, setSubmissionData] = useState([]);
 
     // let {submissions} = jobData;
@@ -55,22 +55,22 @@ const Submissions = ({jobData}) => {
           <>
              <div className="px-2 py-3">
                 <div className="border py-1 px-3 rounded-1 d-flex justify-content-between border-top-black border-end-black">
-                  <div className="w-20">
+                  <div className="" style={{width:'250px'}}>
                   <p>NAME</p>
                   </div>
-                  <div className="">
+                  <div className="" style={{width:'250px'}}>
                   <p>SUBMITTED BY/ON</p>
                   </div>
-                  <div>
+                  <div style={{width:'250px'}}>
                   <p>CONTACT/LOCATION</p>
                   </div>
                   <div>
                   <p></p>
                   </div>
-                  <div>
+                  <div style={{width:'250px'}}>
                   <p>PAY RATE/WORK AUTH</p>
                   </div>
-                  <div className="w-20">
+                  <div className="" style={{width:'200px'}}>
                   <p>STATUS</p>
                   </div>
                   <div>

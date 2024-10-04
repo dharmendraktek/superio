@@ -51,19 +51,19 @@ const Submissions = ({applicantData}) => {
           </div>
                 </div>
                 <div className="d-flex my-3 border border-top-secondary py-1 border-bottom-secondary justify-content-around">
-                    <div>
+                    <div style={{width:"250px"}}>
                     <p>JOB DETAILS</p>
                     </div>
-                    <div>
+                    <div style={{width:'250px'}}>
                     <p>SUBMISSION DETAILS</p>
                     </div>
-                    <div>
+                    <div style={{width:'250px'}}>
                     <p>SUBMITTED BY</p>
                     </div>
-                    <div>
+                    <div style={{width:'250px'}}>
                     <p>CLIENT BILL RATE</p>
                     </div>
-                    <div>
+                    <div style={{width:'250px'}}>
                     <p>PAY RATE</p>
                     </div>
                 </div>

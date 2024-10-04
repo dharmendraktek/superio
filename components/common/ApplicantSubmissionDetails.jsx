@@ -585,7 +585,7 @@ const ApplicantSubmissionDetails = ({
 
   const handleSubmitManualRating = async () => {
     applicantCheck['job_id'] = jobData?.id;
-    validateDocument();
+    // validateDocument();
     validateApplicantCheck();
     if (
       applicantCheck.app_active_offer &&
@@ -1587,11 +1587,11 @@ const ApplicantSubmissionDetails = ({
                     <div className="col-4 my-2">
                       <div className="d-flex gap-2">
                        <input name="rtr_employer_name" type='checkbox' checked={applicantCheck.rtr_employer_name} onChange={(e) => setApplicantCheck((prev) => ({...prev, rtr_employer_name:e.target.checked}))} />
-                       <p>RTR Employer Name</p>
+                       <p>RTR Employer Name Checked</p>
                       </div>
                       <div className="d-flex gap-2">
                        <input name="visa_employer_name" type='checkbox' checked={applicantCheck.visa_employer_name} onChange={(e) => setApplicantCheck((prev) => ({...prev, visa_employer_name:e.target.checked}))} />
-                       <p>Visa Employer Name</p>
+                       <p>Visa Employer Name Checked</p>
                       </div>
                     </div>
                      <div className="col-4 my-2">

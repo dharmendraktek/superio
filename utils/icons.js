@@ -58,6 +58,7 @@ import { IoPersonCircle } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
 
 import { IoMdEyeOff } from "react-icons/io";
+import { BsDownload } from "react-icons/bs";
 
 
 
@@ -114,5 +115,6 @@ export const reactIcons = {
     setting:<MdOutlineSettingsSuggest />,
     user:<IoPersonCircle />,
     time:<IoMdTime />,
-    eyeOff: <IoMdEyeOff />
+    eyeOff: <IoMdEyeOff />,
+    downloadcover: <BsDownload />
 }

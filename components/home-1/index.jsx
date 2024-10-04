@@ -111,13 +111,13 @@ const index = () => {
 
   return (
     <>
-      <LoginPopup />
+      {/* <LoginPopup /> */}
       {/* End Login Popup Modal */}
 
       <DefaulHeader2 />
       {/* End Header with upload cv btn */}
 
-      <MobileMenu />
+      {/* <MobileMenu /> */}
       {/* End MobileMenu */}
       <div className="row">
         <div className="col-6">

@@ -235,6 +235,7 @@ const JobDetailsPreviewModal = ({ jobDetails, setJobDetails }) => {
                   </div>
                 </div>
               )} */}
+              {!(jobDetails?.description == "<p></p>") ?
               <div
                 className="mt-2 border border-secondary px-2 py-2 table_div_custom custom-scroll-sm rounded-1 text-black fs-5"
                 style={{height:"500px"}}
@@ -242,6 +243,11 @@ const JobDetailsPreviewModal = ({ jobDetails, setJobDetails }) => {
                   __html:jobDetails?.description
                 }}
               />
+              :
+              <div className="text-center">
+                   <strong>No job description is available</strong>
+              </div>
+              }
               {/* {jobDetails?.description?.length > 500 && (
                 <button
                   onClick={() => setViewMore(!viewMore)}

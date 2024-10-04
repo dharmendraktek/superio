@@ -1,5 +1,8 @@
+'use client'
 import { reactIcons } from "@/utils/icons";
 import StatusModal from "./StatusModal";
+import ClientSubmissionModal from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/ClientSubmissionModal";
+import { useState } from "react";
 
 const stepsData = [
   { id: 0, name: "Tagged" },
@@ -24,12 +27,19 @@ const Stepper = ({ submissionDetails, side }) => {
     pay_rate_contract_type,
   } = submissionDetails.applicant_details[0];
 
-  let {submitted_by_details, job_detail} = submissionDetails;
-  let {first_name, last_name} = submitted_by_details;
+  let { submitted_by_details, job_detail } = submissionDetails;
+  let { first_name, last_name } = submitted_by_details;
 
-  let {client_name, contact_manager, job_code, job_type, title, payment_frequency, delivery_manager, amount} = job_detail;
-
- 
+  let {
+    client_name,
+    contact_manager,
+    job_code,
+    job_type,
+    title,
+    payment_frequency,
+    delivery_manager,
+    amount,
+  } = job_detail;
 
   return (
     <>
@@ -38,46 +48,43 @@ const Stepper = ({ submissionDetails, side }) => {
         currentStatus={submissionDetails?.current_status}
         subStatus={submissionDetails?.current_substatus}
       />
+      <ClientSubmissionModal submissionDetails={submissionDetails}  side="job" />
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
-        <div className="w-25">
-          {side == 'applicant' ?
-          <div>
-          <strong>
-            {job_code} - {title}
-          </strong>
-          <p>{client_name}</p>
+        <div className="" style={{ width: "250px" }}>
+          {side == "applicant" ? (
+            <div>
+              <strong>
+                {job_code} - {title}
+              </strong>
+              <p>{client_name}</p>
+            </div>
+          ) : (
+            <div style={{ width: "250px" }}>
+              <strong>
+                {(firstname || "") +
+                  " " +
+                  (middlename || "") +
+                  " " +
+                  (lastname || "")}
+              </strong>
+            </div>
+          )}
+        </div>
+        {side == "applicant" && <div className="w-20">Record</div>}
+        <div className="" style={{ width: "250px" }}>
+          <strong>{(first_name || "N/A") + " " + (last_name || "")}</strong>
+        </div>
+        {side == "applicant" ? (
+          <div></div>
+        ) : (
+          <div style={{ width: "250px" }}>
+            <strong>{mobile}</strong>
           </div>
-          :
-          <strong>
-            {(firstname || "") +
-              " " +
-              (middlename || "") +
-              " " +
-              (lastname || "")}
-          </strong>
-          }
-        </div>
-        {side == "applicant" &&
-        <div className="w-20">
-            Record 
-        </div>
-        }
-        <div className="">
-          <strong>{first_name+' '+ last_name}</strong>
-        </div>
-        {side == 'applicant' ?
-         <div>
-
-         </div>
-        :
-        <div style={{ width: "" }}>
-          <strong>{mobile}</strong>
-        </div>
-        }
-        <div style={{ width: "150px" }}>
+        )}
+        {/* <div style={{ width: "150px" }}>
           <p></p>
-        </div>
-        <div>
+        </div> */}
+        <div style={{ width: "250px" }}>
           <strong>
             {pay_rate_currency ? pay_rate_currency : "N.A"}/
             {pay_rate_amount ? pay_rate_amount : "N.A"}/
@@ -86,22 +93,50 @@ const Stepper = ({ submissionDetails, side }) => {
           </strong>
         </div>
         <div className="w-20 text-center">
-          {side=='applicant' ?
-           <div>
-
-           </div>
-          :
-          <div>
-          <p className="text-primary">{submissionDetails?.current_substatus_details?.display_name || ''}</p>
-          <span
-              data-bs-toggle="modal"
-              data-bs-target="#statusModal"
-            className="text-primary cursor-pointer"
-          >
-            {reactIcons.edit}
-          </span>
-          </div>
-          }
+          {side == "applicant" ? (
+            <div></div>
+          ) : (
+            <div
+              className="d-flex justify-content-between"
+              style={{ width: "235px" }}
+            >
+              <div>
+                <p className="text-primary">
+                  {submissionDetails?.current_substatus_details?.display_name ||
+                    ""}
+                </p>
+                <span
+                  data-bs-toggle="modal"
+                  data-bs-target="#statusModal"
+                  className="text-primary cursor-pointer"
+                >
+                  {reactIcons.edit}
+                </span>
+              </div>
+              <div className="dropdown">
+                <span className="cursor-pointer" data-bs-toggle="dropdown">
+                  {reactIcons.dots}
+                </span>
+                <ul className="dropdown-menu">
+                  <li>
+                    <span class="dropdown-item"  data-bs-toggle='modal' data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission" >
+                      Submit To Client
+                    </span>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-bs-toggle='modal'  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
+                     Add Confirmation
+                    </a>
+                  </li>
+                  {/* <li>
+                    <a class="dropdown-item" href="#">
+                      Link 3
+                    </a>
+                  </li> */}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
         <div>
           <p></p>
@@ -167,7 +202,7 @@ const Stepper = ({ submissionDetails, side }) => {
                     width: "69px",
                     height: "3px",
                     background: `${
-                      submissionDetails.current_status >  item.id
+                      submissionDetails.current_status > item.id
                         ? "#2bbc26"
                         : "gray"
                     }`,

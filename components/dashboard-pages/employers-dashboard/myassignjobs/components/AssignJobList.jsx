@@ -1,32 +1,26 @@
 "use client";
-// import UserUpdateModal from "./UserUpdateModal";
-// import UserDeleteModal from "./components/UserDeleteModal";
 
 import { useEffect, useState } from "react";
-
-import { clientData, jobPostsTableField } from "./constant";
-import axios from "axios";
 import moment from "moment";
 import Link from "next/link";
-import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import Pagination from "@/components/common/Pagination";
 import { processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
-import InterviewScheduleModal from "./InterviewScheduleModal";
-import ClientSubmissionModal from "./ClientSubmissionModal";
-import { useCallback } from "react";
-import NotesModal from "@/components/common/NotesModal";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
+import { jobPostsTableField } from "../../jobposts/components/components/constant";
+import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
+import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
+import NotesModal from "@/components/common/NotesModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
   { id: 2, name: "INACTIVE JOB POST" },
 ];
 
-const JobPostsTable = () => {
+const AssignJobList = () => {
   const [expand, setExpand] = useState(null);
   const [jobPostList, setJobPostList] = useState([]);
   const [search, setSearch] = useState();
@@ -102,13 +96,10 @@ const JobPostsTable = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <JobDetailsPreviewModal
-        jobDetails={jobDetails}
-        setJobDetails={setJobDetails}
-      />
+      <JobDetailsPreviewModal jobDetails={jobDetails} setJobDetails={setJobDetails} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
-          <div
+          {/* <div
             className="d-flex border border-primary rounded-1"
             style={{ width: "300px", height: "30px" }}
           >
@@ -134,7 +125,7 @@ const JobPostsTable = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
           <div className="position-relative">
             <input
               type="text"
@@ -161,11 +152,11 @@ const JobPostsTable = () => {
             )}
           </div>
         </div>
-        <Link href="/employers-dashboard/job-posts/add-job-posts">
+        {/* <Link href="/employers-dashboard/job-posts/add-job-posts">
           <button className="bg-primary px-3 text-white rounded-1 py-1">
             + New
           </button>
-        </Link>
+        </Link> */}
       </div>
       <div className="table_div custom-scroll-sm">
         <table className="default-table ">
@@ -179,7 +170,7 @@ const JobPostsTable = () => {
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : ( */}
-                    <th style={{ width: "250px" }} key={index}>
+                    <th style={{ width: "200px" }} key={index}>
                       {removeSpecialChar(item.title)}
                     </th>
                     {/* )} */}
@@ -296,32 +287,30 @@ const JobPostsTable = () => {
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        {jobDetails?.id == item.id && (
-                          <span
-                            data-bs-toggle="modal"
-                            data-bs-target="#jobDetailsPreviewModal"
-                            className="cursor-pointer text-primary fs-5"
-                            id="jobDetailsPreview"
-                            onMouseEnter={() => {
-                              setJobDetails(item);
-                              let previewBtn =
-                                document.getElementById("jobDetailsPreview");
-                              previewBtn.click();
-                            }}
-                          >
-                            {reactIcons.view}
-                          </span>
-                        )}
-                        <Link
-                          href="/employers-dashboard/job-posts/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                          target="_blank"
+                      {jobDetails?.id == item.id &&
+                      <span
+                          data-bs-toggle="modal"
+                          data-bs-target="#jobDetailsPreviewModal"
+                          className="cursor-pointer text-primary fs-5"
+                          id="jobDetailsPreview"
                           onMouseEnter={() => {
                             setJobDetails(item);
-                            //  let previewBtn= document.getElementById('jobDetailsPreview');
-                            //  previewBtn.click();
+                           let previewBtn= document.getElementById('jobDetailsPreview');
+                           previewBtn.click();
                           }}
-                          className="text-capitalize"
+                        >
+                          {reactIcons.view}
+                        </span>
+                      }
+                    <Link
+                          href="/employers-dashboard/job-posts/[id]"
+                          as={`/employers-dashboard/all-applicants/${item.id}`}
+                          target="_blank" 
+                          onMouseEnter={() => {
+                            setJobDetails(item);
+                          //  let previewBtn= document.getElementById('jobDetailsPreview');
+                          //  previewBtn.click();
+                          }}
                         >
                           {item?.title}
                         </Link>
@@ -337,15 +326,9 @@ const JobPostsTable = () => {
                       {item.amount || "N.A"}
                       {item.amount ? "/" : "/"}
                       {item.payment_frequency || "N.A"}
-                      {item.client_taxterm ? "/" : "/"}
-                      {item.client_taxterm || "N.A"}
                     </td>
-                    <td className="text-capitalize">
-                      {item.delivery_manager_name || "N/A"}
-                    </td>
-                    <td className="text-capitalize">
-                      {item.contact_manager_name || "N/A"}
-                    </td>
+                    <td className="">{item.delivery_manager_name || "N/A"}</td>
+                    <td className="">{item.contact_manager_name || "N/A"}</td>
                     <td className="">
                       <div className="d-flex flex-wrap">
                         {item.assign_details.map((item) => {
@@ -547,47 +530,15 @@ const JobPostsTable = () => {
                                         type="checkbox"
                                         onChange={(e) => {
                                           let update = [...jobPostList];
-
-                                          update.map((applicant) => {
-                                            // Check if the applicant has a 'jobs_associated' array
-                                            if (Array.isArray(applicant.submissions)) {
-                                              // Iterate over each job and set the 'selected' field to false
-                                              applicant.submissions = applicant.submissions.map((job) => {
-                                                return {
-                                                  ...job,
-                                                  selected: false, // Set selected to false
-                                                };
-                                              });
-                                            }
-                                            return applicant;
-                                          });
-
-                                          // If the new checkbox is checked
                                           if (e.target.checked) {
-                                            // Loop through all submissions and set 'selected' to false
-                                            update[index]["submissions"] =
-                                              update[index]["submissions"].map(
-                                                (
-                                                  submission,
-                                                  submissionIndex
-                                                ) => {
-                                                  // Set selected to false for all except the newly selected one
-                                                  return {
-                                                    ...submission,
-                                                    selected:
-                                                      submissionIndex === _index
-                                                        ? true
-                                                        : false,
-                                                  };
-                                                }
-                                              );
-                                          } else {
-                                            // If the checkbox is unchecked, just uncheck it
                                             update[index]["submissions"][
                                               _index
-                                            ]["selected"] = false;
+                                            ]["selected"] = e.target.checked;
+                                          } else {
+                                            update[index]["submissions"][
+                                              _index
+                                            ]["selected"] = e.target.checked;
                                           }
-
                                           setJobPostList(update);
                                         }}
                                         checked={_item?.selected}
@@ -599,11 +550,10 @@ const JobPostsTable = () => {
                                         href={`/employers-dashboard/all-applicants/${id}`}
                                         target="_blank"
                                       >
-                                        {(firstname || "") +
-                                          " " +
-                                          (middlename || "") +
-                                          " " +
-                                          (lastname || "")}
+                                        {(firstname ||
+                                          "") + " " + (middlename ||
+                                          "") + " " + (lastname ||
+                                          "")}
                                       </Link>
                                     </td>
                                     <td>{authorization || "N/A"}</td>
@@ -682,4 +632,4 @@ const JobPostsTable = () => {
   );
 };
 
-export default JobPostsTable;
+export default AssignJobList;

@@ -358,8 +358,10 @@ nextjs-portal {
 }
 
 .hover-bg-change:hover {
-  background-color:var(--hover-bg-color); /* Light gray */
+  background-color:#77a6f7 !important; /* Light gray */
   color: white !important;
+  // color: var(--primary-color) !important;
+  //   background: rgba(25, 103, 210, 0.1) ;
 }
 .modal {
   z-index: 1051; /* Default Bootstrap modal z-index */
@@ -390,4 +392,38 @@ nextjs-portal {
 }
 .fw-400{
   font-weight: 400 ;
+}
+
+
+/* Custom tooltip styling */
+.tooltip {
+  background-color: black !important; /* Tooltip background */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15) !important; /* Adding box shadow */
+  font-size: 0.875rem !important; /* Adjust tooltip font size */
+  padding: 8px 12px !important; /* Tooltip padding */
+  border-radius: 4px !important; /* Optional: rounding tooltip corners */
+}
+
+.tooltip-inner {
+  color: white !important; /* Tooltip text color */
+  background-color: black !important; /* Ensure background color is black */
+}
+
+.tooltip-arrow::before {
+  border-bottom-color: black !important; /* Tooltip arrow color */
+}
+
+/* Adjust position if needed */
+[data-bs-toggle="tooltip"] {
+  position: relative;
+  cursor: pointer;
+}
+
+[data-bs-toggle="tooltip"]::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 5px; /* Adjust distance between tooltip and icon */
 }

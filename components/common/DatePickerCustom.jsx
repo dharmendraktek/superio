@@ -13,6 +13,7 @@ const DatePickerCustom = ({
   handleDate,
   dateFormat = "MMMM d, yyyy",
   showTime = false, // Default is false, if not passed
+  placeholder
 }) => {
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
@@ -20,7 +21,7 @@ const DatePickerCustom = ({
       onClick={onClick}
       ref={ref}
     >
-      {value || (showTime ? 'Select Time' : 'Select Date')}
+      {value || (showTime ? 'Select Time' : placeholder ? placeholder :'Select Date')}
     </button>
   ));
 

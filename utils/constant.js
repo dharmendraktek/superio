@@ -22,6 +22,31 @@ export const  candidateSearchKey = [
     {name:'Skills', value:'skills'},
 ]
 
+export const jobDelegationFilterKey =  [
+    {name:'Search Any', value:'search_any'},
+    {name:'Contact Manager', value:'contact_manager'},
+    {name:'Job Title', value:'job_title'},
+    // {name:'Assigned Date', value:'created'},
+    {name:'Assigned Today', value:'assigned_today'},
+    {name:'Assignee Name', value:'assign_full_name'},
+    {name:'LOB', value:'lob_name'},
+    {name:'City', value:'city'},
+    {name:'Status', value:'status'},
+    {name:'Number of Positions', value:'number_of_positions'},
+]
+
+export const jobReportFilterKey = [
+    {name:'Search Any', value:'search_any'},
+    {name:'Job Code', value:'job_code'},
+    {name:'LOB Name', value:'lob_name'},
+    {name:'Client Name', value:'client_name'},
+    {name:'Job Title', value:'job_title'},
+    {name:'Job Type', value:'job_type'},
+    {name:'Job Status', value:'job_status'},
+    {name:'Location', value:'location'},
+    {name:'Priority', value:'Priority'},
+]
+
 
 export const  sourceData = [
     {name:'Dice', value:'Dice'},

@@ -226,6 +226,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { getReq } from "@/utils/apiHandlers";
 
 const localizer = momentLocalizer(moment);
 
@@ -237,7 +238,7 @@ const AttendanceCalendar = () => {
 
   const getEmployeeAttendanceDetails = async () => {
     try {
-      const response = await axios(`http://10.10.105.228:8000/attendance-details/?emp_code=${userDetails.empcode}`);
+      const response = await getReq(`/attendance-details/?emp_code=${userDetails.empcode}`);
       if (response.status === 200) {
         const transformed = transformEvents(response.data.results);
         setEvents(transformed);

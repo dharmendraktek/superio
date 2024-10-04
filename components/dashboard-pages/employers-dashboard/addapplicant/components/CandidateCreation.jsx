@@ -902,8 +902,8 @@ const CandidateCreation = ({
             <span
               data-bs-toggle="tooltip"
               data-bs-placement="top-right"
-              title="Please enter skills enter button as seprator"
-              className="text-primary custom-tooltip"
+              title="Please enter skills by using Enter button as separator."
+              className="text-primary custom-tooltip w-100"
             >
               {reactIcons.info}
             </span>
@@ -943,6 +943,8 @@ const CandidateCreation = ({
             </div>
             <input
               name="primary_skills"
+              placeholder="Please enter skills by using Enter button as separator."
+              className="w-100"
               value={skills}
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
@@ -966,7 +968,7 @@ const CandidateCreation = ({
             <button
               data-bs-toggle="tooltip"
               data-bs-placement="top-right"
-              title="Please enter skills enter button as seprator"
+              title="Please enter skills by using Enter button as separator."
               className="text-primary"
             >
               <span>{reactIcons.info}</span>
@@ -1003,7 +1005,9 @@ const CandidateCreation = ({
             </div>
             <input
               name="secondary_skills"
+              className="w-100"
               value={secondarySkills}
+              placeholder="Please enter skills by using Enter button as separator."
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
                   setForm((prev) => ({

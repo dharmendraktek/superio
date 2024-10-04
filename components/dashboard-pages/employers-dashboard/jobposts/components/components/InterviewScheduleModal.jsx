@@ -63,11 +63,15 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
 
+  // console.log("-----------------job data and applicant data ", jobData , applicantData);
+
   useEffect(() => {
     if (jobPostList.length > 0) {
       const filteredData = jobPostList.filter((item) =>
         item.submissions.some((submission) => submission.selected === true)
       );
+      
+    console.log("-----------filtered data ----", filteredData);
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -78,6 +82,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       const filteredData = applicantData.filter((item) =>
         item.jobs_associated.some((jobs) => jobs.selected === true)
       );
+    console.log("-----------filtered data aplicnat", filteredData);
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -103,7 +108,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   };
 
   const handleScheduleInterview = async () => {
-    form["submission_ref"] = jobData[0]?.submissions[0]?.id;
+    form["submission_ref"] = jobData[0]?.filteredData?.id;
     try {
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
@@ -152,60 +157,75 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
 
   let jobId = jobData.length > 0 && jobData[0]?.id;
 
+  let filteredData = jobData[0]?.submissions?.find((item) => {
+    if(item.selected){
+      return item;
+    }
+  })
+
+  let filterApplicantData = jobData[0]?.jobs_associated?.find((item) => {
+    if(item.selected){
+      return item;
+    }
+  })
+
+
+  console.log("----------------item ", filteredData);
+
   let applicantId =
     jobData.length > 0 && applicantData.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.id
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.id;
+      ? filterApplicantData?.applicant_details[0]?.id
+      : filteredData?.applicant_details[0]?.id;
 
   let firstName =
     jobData.length > 0 && applicantData.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.firstname
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.firstname;
+      ? filterApplicantData?.applicant_details[0]?.firstname
+      : filteredData?.applicant_details[0]?.firstname;
 
   let middleName =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.middlename
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.middlename;
+      ? filterApplicantData?.applicant_details[0]?.middlename
+      : filteredData?.applicant_details[0]?.middlename;
 
   let lastName =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.lastname
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.lastname;
+      ? filterApplicantData?.applicant_details[0]?.lastname
+      : filteredData?.applicant_details[0]?.lastname;
 
   let clientName =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.job_detail?.client_name
+      ? filterApplicantData?.job_detail?.client_name
       : jobData[0]?.client_name;
 
   let clientId =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.job_detail?.client
+      ? filterApplicantData?.job_detail?.client
       : jobData[0]?.client;
 
   let contactManagerId =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.job_detail?.contact_manager
+      ? filterApplicantData?.job_detail?.contact_manager
       : jobData[0]?.contact_manager;
 
   let jobTitle =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.job_detail?.title
+      ? filterApplicantData?.job_detail?.title
       : jobData[0]?.title;
 
   let jobCode =
     jobData.length > 0 && applicantData?.length > 0
-      ? jobData[0]?.jobs_associated[0]?.job_detail?.job_code
+      ? filterApplicantData?.job_detail?.job_code
       : jobData[0]?.job_code;
 
   let applicantEmail =
     jobData.length > 0 && applicantData.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.email
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.email;
+      ? filterApplicantData?.applicant_details[0]?.email
+      : filteredData?.applicant_details[0]?.email;
 
   let applicantContact =
     jobData.length > 0 && applicantData.length > 0
-      ? jobData[0]?.jobs_associated[0]?.applicant_details[0]?.mobile
-      : jobData[0]?.submissions[0]?.applicant_details[0]?.mobile;
+      ? filterApplicantData?.applicant_details[0]?.mobile
+      : filteredData?.applicant_details[0]?.mobile;
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, additional_notifiers: selectedUsersIds }));

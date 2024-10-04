@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
 import { isActiveLink } from "@/utils/linkActiveChecker";
 import { useSelector } from "react-redux";
+import employerMenuData from "@/data/employerMenuData";
 
 const menuList = [
   { name: "DASHBOARD", url: "/employers-dashboard/dashboard" },
@@ -14,15 +15,59 @@ const menuList = [
   { name: "CLIENT", url: "/employers-dashboard/client-list" },
   { name: "JOB POSTING", url: "/employers-dashboard/job-posts" },
   { name: "APPLICANTS", url: "/employers-dashboard/all-applicants" },
+  { name: "MY ASSIGN JOBS", url: "/employers-dashboard/my-assign-jobs" },
   {
     name: "REPORTS",
-    url: "/employers-dashboard/manage-jobs",
+    url: "",
     options: [
       {
-        name: "Interview Schedule Reports",
+        name: "JOBS",
+        url: "/employers-dashboard/jobs-report",
+      },
+      {
+        name: "JOBS DELEGATION",
+        url: "/employers-dashboard/jobs-delegation-report",
+      },
+      {
+        name: "CLIENT SUBMISSION",
+        url: "/employers-dashboard/client-submission-report",
+      },
+      {
+        name: "INTERVIEW SUBMISSION",
         url: "/employers-dashboard/manage-jobs",
       },
     ],
+  },
+];
+
+const subMenuData = [
+  {
+    id: 1,
+    name: "Jobs",
+    icon: "la-home",
+    routePath: "/employers-dashboard/jobs-report",
+    active: "active",
+  },
+  {
+    id: 2,
+    name: "Jobs Delegation",
+    icon: "la-user-tie",
+    routePath: "/employers-dashboard/jobs-delegation-report",
+    active: "",
+  },
+  {
+    id: 3,
+    name: "Client",
+    icon: "la-paper-plane",
+    routePath: "/employers-dashboard/client-submission-report",
+    active: "",
+  },
+  {
+    id: 4,
+    name: "Interview",
+    icon: "la-briefcase",
+    routePath: "/employers-dashboard/manage-jobs",
+    active: "",
   },
 ];
 
@@ -32,14 +77,26 @@ const HeaderNavContent = () => {
   const userDetails = useSelector((state) => state.employer.user);
 
   const handleReportToggle = (index) => {
-    setOpenReport(openReport === index ? null : index);
+    setOpenReport(openReport === index ? null : index); // Toggle the dropdown
   };
 
   const filteredMenuList = menuList.filter((item) => {
-    // Hide USER and CLIENT menu for Operations department
+    // Hide USER and CLIENT menu for specific departments
     if (
       userDetails?.department_name === "Operation" &&
       (item.name === "USER" || item.name === "CLIENT")
+    ) {
+      return false;
+    } else if (
+      userDetails?.department_name === "Finance" &&
+      (item.name === "USER" || item.name === "CLIENT")
+    ) {
+      return false;
+    } else if (
+      userDetails?.department_name === "HR" &&
+      (item.name === "CLIENT" ||
+        item.name === "JOB POSTING" ||
+        item.name === "APPLICANTS")
     ) {
       return false;
     }
@@ -57,9 +114,13 @@ const HeaderNavContent = () => {
                   key={index}
                   className={`${
                     isActiveLink(item.url, usePathname()) ? "active" : ""
-                  } mb-1 position-relative d-flex align-items-center gap-3 `}
+                  } mb-1 position-relative d-flex align-items-center gap-3 ${
+                    item.name == "REPORTS" ? "dropdown-toggle" : ""
+                  }`}
+                  style={{ position: "relative !important" }}
+                  data-bs-toggle={`${item.name == "REPORTS" ? "dropdown" : ""}`}
                 >
-                  <Link href={item.url}>
+                  <Link href={item.url} passHref>
                     <span
                       style={{
                         boxShadow: "0 2px 1px rgb(6 118 51 / 55%) !important",
@@ -70,38 +131,32 @@ const HeaderNavContent = () => {
                           : ""
                       }`}
                       aria-expanded={openReport === index ? "true" : "false"}
-                      onClick={
-                        item.name === "REPORTS"
-                          ? (e) => {
-                              e.preventDefault();
-                              handleReportToggle(index);
-                            }
-                          : undefined
-                      }
+                      onClick={(e) => {
+                        if (item.name === "REPORTS") {
+                          e.preventDefault();
+                          handleReportToggle(index); // Handle dropdown toggle
+                        }
+                      }}
                     >
                       {item.name}
                     </span>
-                    {item.name === "REPORTS" && (
-                      <span className="fs-5">{reactIcons.arrowfilldown}</span>
-                    )}
                   </Link>
-                  {openReport === index && item.options && (
-                    <ul
-                      className="position-absolute bg-white border py-2 px-3 shadow"
-                      style={{
-                        top: "80px",
-                        zIndex: 10000,
-                        left: "650px",
-                        width: "220px",
-                      }}
-                    >
-                      {item.options.map((_item, subIndex) => (
-                        <li key={subIndex}>
-                          <Link href={_item.url}>{_item.name}</Link>
+                  <div className="position-absolute">
+                    <ul className="dropdown-menu px-2">
+                      {subMenuData.map((_item) => (
+                        <li
+                          className={`${
+                            isActiveLink(_item.routePath, usePathname())
+                              ? "active"
+                              : ""
+                          } mb-1`}
+                          key={_item.id}
+                        >
+                          <Link href={_item.routePath}>{_item.name}</Link>
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
               );
             })}
