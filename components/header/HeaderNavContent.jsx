@@ -83,7 +83,7 @@ const HeaderNavContent = () => {
   const filteredMenuList = menuList.filter((item) => {
     // Hide USER and CLIENT menu for specific departments
     if (
-      userDetails?.department_name === "Operation" &&
+      (userDetails?.department_name === "Operation" || userDetails?.department_name === "Support" ) &&
       (item.name === "USER" || item.name === "CLIENT")
     ) {
       return false;

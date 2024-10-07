@@ -199,7 +199,7 @@ const Documents = ({ jobId, jobData, handleGetJobDetails }) => {
                               background: "white",
                               borderRadius: "50%",
                             }}
-                            onClick={() => setImg(item.file)}
+                            onClick={() => setImg(item.file_url)}
                           >
                             <span className="text-primary cursor-pointer">
                               {reactIcons.view}

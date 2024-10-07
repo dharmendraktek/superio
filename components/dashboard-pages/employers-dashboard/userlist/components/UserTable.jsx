@@ -45,6 +45,7 @@ const UserTable = () => {
   const debouncedSearch = useMemo(() => debounce(fetchUserList, 500), [fetchUserList]);
 
   useEffect(() => {
+   
     if (search) {
       setPage(0);
       debouncedSearch(search);

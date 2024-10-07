@@ -314,7 +314,7 @@ const JobPostsTable = () => {
                         )}
                         <Link
                           href="/employers-dashboard/job-posts/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
+                          as={`/employers-dashboard/job-posts/${item.id}`}
                           target="_blank"
                           onMouseEnter={() => {
                             setJobDetails(item);

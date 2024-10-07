@@ -1,6 +1,5 @@
 "use client";
 
-import MyCKEditor from "@/components/common/MyCkEditor";
 import { getReq, patchReq } from "@/utils/apiHandlers";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -49,6 +48,8 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
     if (submissionDetails?.length > 0) {
       handleGetStatus();
       // setSubmissionId(submissionDetails[0].id)
+    }else if(submissionDetails?.id){
+      handleGetStatus();
     }
   }, [submissionDetails]);
 
@@ -74,6 +75,8 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
     } catch (err) {
     }
   };
+
+  console.log("------------status list ",  statusList);
 
   return (
     <div

@@ -581,7 +581,6 @@ const ApplicantTable = () => {
                                             }
                                             return applicant;
                                           });
-                                          console.log("-------------update ", update);
 
                                           // If the new checkbox is checked
                                           if (e.target.checked) {

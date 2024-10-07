@@ -19,11 +19,13 @@ import FormContent from "../common/form/login/FormContent";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { postReq } from "@/utils/apiHandlers";
+import { postApiReq, postReq } from "@/utils/apiHandlers";
 import { toast } from "react-toastify";
 import BtnBeatLoader from "../common/BtnBeatLoader";
 import Image from "next/image";
 import { reactIcons } from "@/utils/icons";
+import axios from "axios";
+import moment from "moment";
 
 const index = () => {
   const [form, setForm] = useState({
@@ -37,20 +39,38 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfPasswordVisible, setIsConfPasswordVisible] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
+  const [resetForm, setResetForm] = useState({
+    email: "",
+    otp: "",
+    new_password: "",
+    confirm_password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [verificationResponse, setVerificationResponse] = useState();
+  const [resendTimer, setResendTimer] = useState();
 
   const router = useRouter();
   const dispatch = useDispatch();
 
   let token = Cookies.get("is_user_token");
- useEffect(() => {
-   if (token) {
-     window.location.href = "/employers-dashboard/dashboard";
-   }
- }, [token])
+  useEffect(() => {
+    if (token) {
+      window.location.href = "/employers-dashboard/dashboard";
+    }
+  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleResetChange = (e) => {
+    const { name, value } = e.target;
+    setResetForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLogin = async () => {
@@ -65,11 +85,11 @@ const index = () => {
     if (rememberMe) {
       localStorage.setItem("email", form.email);
       localStorage.setItem("password", form.password);
-      localStorage.setItem('rememberMe', rememberMe);
-    }else{
-      localStorage.setItem("email", '');
-      localStorage.setItem("password", '');
-      localStorage.setItem('rememberKey', rememberMe);
+      localStorage.setItem("rememberMe", rememberMe);
+    } else {
+      localStorage.setItem("email", "");
+      localStorage.setItem("password", "");
+      localStorage.setItem("rememberKey", rememberMe);
     }
 
     try {
@@ -102,35 +122,143 @@ const index = () => {
   useEffect(() => {
     let email = localStorage.getItem("email");
     let password = localStorage.getItem("password");
-    let rememberMe = localStorage.getItem('rememberKey');
+    let rememberMe = localStorage.getItem("rememberKey");
     if (email && password) {
       setForm((prev) => ({ ...prev, email: email, password: password }));
       setRememberMe(rememberMe);
     }
   }, []);
 
+  const handleSendOtp = async () => {
+    let data  = {
+      email:resetForm.email
+    }
+    if (!resetForm.email) {
+      setError((prev) => ({ ...prev, emailErr: "This field is required" }));
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await postReq("/send-otp/",
+        data
+      );
+      setIsLoading(false);
+      if (response.data) {
+        setVerificationResponse(response.data);
+        setResetPassword(true);
+        toast.success("OTP has been sent on email successfully");
+      }
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.response.data.email[0] || "Somting went wrong");
+    }
+  };
+
+  const handleSubmit = async () => {
+  
+    if (resetPassword) {
+      if (!resetForm.otp) {
+        setError((prev) => ({ ...prev, otpErr: "This field is required." }));
+        return;
+      } else if (!resetForm.new_password) {
+        setError((prev) => ({ ...prev, passErr: "This field is required." }));
+        return;
+      }else if(resetForm.new_password.length < 6){
+        setError((prev) => ({ ...prev, passErr: "Minimum password length must be 6 digit" }));
+        return;
+      }
+       else if (!(resetForm.confirm_password === resetForm.new_password)) {
+        setError((prev) => ({
+          ...prev,
+          confPassErr: "Password is not matched.",
+        }));
+        return;
+      }
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await postReq(
+        "/verify-otp/",
+        resetForm
+      );
+      setIsLoading(false);
+
+      if (resetPassword && response.data) {
+        setResetPassword(false);
+        setResendTimer(null);
+        setOpen(false);
+        setResetForm((prev) =>({...prev, otp:'', new_password:'', confirm_password:'', email:''}))
+        toast.success("Password has been reset successfully");
+      }
+    } catch (err) {
+      setIsLoading(false);
+      if (err.response.status == 400) {
+        toast.error(err.response.data.error || "Somthing went wrong");
+      }
+    }
+  };
+
+  useEffect(() => {
+    let resendCodeInterval;
+    if (verificationResponse) {
+      // Calculate the expiration time as a timestamp
+      const expirationTime = moment(verificationResponse.expired_otp_time);
+
+      resendCodeInterval = setInterval(() => {
+        const currentTime = moment();
+
+        // Calculate the difference in seconds between expiration and current time
+        let totalSeconds = expirationTime.diff(currentTime, "seconds");
+
+        // If time is still left before expiration
+        if (totalSeconds >= 0) {
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+
+          // Set the formatted time remaining
+          setResendTimer(
+            `${minutes < 10 ? `0${minutes}` : minutes}:${
+              seconds < 10 ? `0${seconds}` : seconds
+            }`
+          );
+        } else {
+          // Timer expired, clear the timer and allow resend
+          setResendTimer(null);
+          clearInterval(resendCodeInterval);
+        }
+      }, 1000);
+    }
+
+    if (!resetPassword && verificationResponse) {
+      setVerificationResponse(null);
+      if (resendCodeInterval) clearInterval(resendCodeInterval);
+    }
+
+    // Clear interval on unmount or when dependencies change
+    return () => {
+      if (resendCodeInterval) {
+        clearInterval(resendCodeInterval);
+      }
+    };
+  }, [resetPassword, verificationResponse]);
+
   return (
     <>
-      {/* <LoginPopup /> */}
-      {/* End Login Popup Modal */}
-
       <DefaulHeader2 />
-      {/* End Header with upload cv btn */}
-
-      {/* <MobileMenu /> */}
-      {/* End MobileMenu */}
       <div className="row">
         <div className="col-6">
           <div
             className="d-flex justify-content-center  align-items-center"
             style={{ width: "100%", height: "100vh" }}
           >
-             <Image
-                  width={1000}
-                  height={800}
-                  src="/images/home4.png"
-                  alt="brand"
-              />
+            <Image
+              width={1000}
+              height={800}
+              src="/images/home4.png"
+              alt="brand"
+            />
           </div>
         </div>
         <div className="col-6">
@@ -139,127 +267,253 @@ const index = () => {
             style={{ height: "500px" }}
           >
             <div className="w-50">
-              <div className="my-2">
-                <h3
-                  style={{
-                    color:
-                      "linear-gradient(0deg, rgba(34,193,195,1) 36%, rgba(45,253,251,1) 67%)",
-                  }}
-                >
-                  Login to KatalixAI <sub className="fs-6 fw-bold">ATS</sub>
-                </h3>
-
-                {/* <!--Login Form--> */}
-                {/* <form > */}
+              {!open && (
                 <div className="my-2">
-                  <p>Email</p>
-                  <input
-                    type="text"
-                    name="email"
-                    value={form.email}
-                    className="client-form-input"
-                    onChange={handleChange}
-                    // placeholder="Email"
-                    onKeyDown={(e) => {
-                      setError((prev) => ({ ...prev, emailErr: "" }));
-                      if (e.code == "Enter") {
-                        handleLogin();
-                      }
+                  <h3
+                    style={{
+                      color:
+                        "linear-gradient(0deg, rgba(34,193,195,1) 36%, rgba(45,253,251,1) 67%)",
                     }}
-                    required
-                  />
-                  <span className="text-danger">{error.emailErr}</span>
-                </div>
-                {/* name */}
-
-                <div className="position-relative">
-                  <p>Password</p>
-                  <input
-                    type={isPasswordVisible ? "text" : "password"}
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    className="client-form-input"
-                    // placeholder="Password"
-                    onKeyDown={(e) => {
-                      setError((prev) => ({ ...prev, passErr: "" }));
-                      if (e.code == "Enter") {
-                        handleLogin();
-                      }
-                    }}
-                    required
-                  />
-                  <span
-                    className="cursor-pointer text-primary position-absolute fs-5"
-                    style={{right:'10px'}}
-                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   >
-                    {isPasswordVisible ? reactIcons.view : reactIcons.eyeOff}
-                  </span>
-                  <span className="text-danger">{error.passErr}</span>
-                </div>
-                {/* password */}
-
-                <div className="form-group mt-3">
-                  <div className="field-outer">
-                    <div className="input-group checkboxes square">
-                      <input
-                        type="checkbox"
-                        name="remember-me"
-                        checked={rememberMe}
-                        id="remember"
-                      />
-                      <label
-                        onClick={() => setRememberMe(!rememberMe)}
-                        htmlFor="remember"
-                        className="remember"
+                    Login to KatalixAI{" "}
+                    <sub className="fs-6 fw-bold my-2">ATS</sub>
+                  </h3>
+                  <div className="my-3">
+                    <p className="fw-700 fs-6">Email</p>
+                    <input
+                      type="text"
+                      name="email"
+                      value={form.email}
+                      className="client-form-input"
+                      onChange={handleChange}
+                      onKeyDown={(e) => {
+                        setError((prev) => ({ ...prev, emailErr: "" }));
+                        if (e.code == "Enter") {
+                          handleLogin();
+                        }
+                      }}
+                      required
+                    />
+                    <span className="text-danger">{error.emailErr}</span>
+                  </div>
+                  <div className="position-relative my-2">
+                    <p className="fw-700 fs-6">Password</p>
+                    <input
+                      type={isPasswordVisible ? "text" : "password"}
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      className="client-form-input"
+                      onKeyDown={(e) => {
+                        setError((prev) => ({ ...prev, passErr: "" }));
+                        if (e.code == "Enter") {
+                          handleLogin();
+                        }
+                      }}
+                      required
+                    />
+                    <span
+                      className="cursor-pointer text-primary position-absolute fs-5"
+                      style={{ right: "10px" }}
+                      onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    >
+                      {isPasswordVisible ? reactIcons.view : reactIcons.eyeOff}
+                    </span>
+                    <span className="text-danger">{error.passErr}</span>
+                  </div>
+                  <div className="form-group mt-3">
+                    <div className="field-outer d-flex justify-content-between">
+                      <div
+                        className="input-group checkboxes square"
+                        style={{ width: "60%" }}
                       >
-                        <span className="custom-checkbox"></span> Remember me
-                      </label>
+                        <input
+                          type="checkbox"
+                          name="remember-me"
+                          checked={rememberMe}
+                          id="remember"
+                        />
+                        <label
+                          onClick={() => setRememberMe(!rememberMe)}
+                          htmlFor="remember"
+                          className="remember"
+                        >
+                          <span className="custom-checkbox"></span> Remember me
+                        </label>
+                      </div>
+                      <div>
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => setOpen(true)}
+                        >
+                          <span className="cursor-pointer">
+                            Forgot password?
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    {/* <a href="#" className="pwd">
-                      Forgot password?
-                    </a> */}
+                  </div>
+                  <div className="d-flex  my-3">
+                    <button
+                      className="theme-btn btn-style-one small"
+                      onClick={handleLogin}
+                      disabled={loading}
+                      // type="submit"
+                      // name="log-in"
+                    >
+                      {loading ? <BtnBeatLoader /> : "Log In"}
+                    </button>
                   </div>
                 </div>
-                {/* forgot password */}
-
-                <div className="d-flex  my-3">
-                  <button
-                    className="theme-btn btn-style-one small"
-                    onClick={handleLogin}
-                    disabled={loading}
-                    // type="submit"
-                    // name="log-in"
+              )}
+              {open && (
+                <div>
+                  <h3
+                    style={{
+                      color:
+                        "linear-gradient(0deg, rgba(34,193,195,1) 36%, rgba(45,253,251,1) 67%)",
+                    }}
                   >
-                    {loading ? <BtnBeatLoader /> : "Log In"}
-                  </button>
-                </div>
-                {/* login */}
-                {/* </form> */}
-                {/* End form */}
-
-                <div className="bottom-box">
-                  {/* <div className="text">
-                    Don&apos;t have an account?{" "}
-                    <Link
-                      href="#"
-                      className="call-modal signup"
-                      data-bs-toggle="modal"
-                      data-bs-target="#registerModal"
+                    {resetPassword ? "Reset Password" : "Forgot Password"}
+                  </h3>
+                  {!resetPassword ? (
+                    <div className="my-2">
+                      <p className="fw-700 fs-6">Email</p>
+                      <input
+                        type="text"
+                        name="email"
+                        value={resetForm.email}
+                        className="client-form-input"
+                        onChange={handleResetChange}
+                        onKeyDown={(e) => {
+                          setError((prev) => ({ ...prev, emailErr: "" }));
+                          if (e.code == "Enter") {
+                             handleSendOtp();
+                          }
+                        }}
+                        required
+                      />
+                      <span className="text-danger">{error.emailErr}</span>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="my-2">
+                        <p className="fw-700 fs-6">OTP</p>
+                        <input
+                          type="number"
+                          name="otp"
+                          value={form.otp}
+                          className="client-form-input"
+                          onChange={handleResetChange}
+                          onKeyDown={(e) => {
+                            setError((prev) => ({ ...prev, otpErr: "" }));
+                            // if (e.code == "Enter") {
+                            //   handleLogin();
+                            // }
+                          }}
+                          required
+                        />
+                        <div className="d-flex justify-content-end">
+                          <span
+                            onClick={() => {
+                              if (!resendTimer) {
+                                handleSendOtp()
+                              }
+                            }}
+                            className={`${
+                              resendTimer
+                                ? "text-danger"
+                                : "text-primary cursor-pointer"
+                            }`}
+                          >
+                            {resendTimer
+                              ? `Time left ${resendTimer}`
+                              : "Resend Otp ?"}{" "}
+                          </span>
+                        </div>
+                        <span className="text-danger">{error.otpErr}</span>
+                      </div>
+                      <div className="position-relative">
+                        <p className="fw-700 fs-6">New Password</p>
+                        <input
+                          type={isPasswordVisible ? "text" : "password"}
+                          name="new_password"
+                          value={resetForm.new_password}
+                          onChange={handleResetChange}
+                          className="client-form-input"
+                          onKeyDown={(e) => {
+                            setError((prev) => ({ ...prev, passErr: "" }));
+                            // if (e.code == "Enter") {
+                            //   handleLogin();
+                            // }
+                          }}
+                          required
+                        />
+                        <span
+                          className="cursor-pointer text-primary position-absolute fs-5"
+                          style={{ right: "10px" }}
+                          onClick={() =>
+                            setIsPasswordVisible(!isPasswordVisible)
+                          }
+                        >
+                          {isPasswordVisible
+                            ? reactIcons.view
+                            : reactIcons.eyeOff}
+                        </span>
+                        <span className="text-danger">{error.passErr}</span>
+                      </div>
+                      <div className="position-relative my-2">
+                        <p className="fw-700 fs-6">Confirm Password</p>
+                        <input
+                          type={isConfPasswordVisible ? "text" : "password"}
+                          name="confirm_password"
+                          value={resetForm.confirm_password}
+                          onChange={handleResetChange}
+                          className="client-form-input"
+                          onKeyDown={(e) => {
+                            setError((prev) => ({ ...prev, confPassErr: "" }));
+                            // if (e.code == "Enter") {
+                            //   handleLogin();
+                            // }
+                          }}
+                          required
+                        />
+                        <span
+                          className="cursor-pointer text-primary position-absolute fs-5"
+                          style={{ right: "10px" }}
+                          onClick={() =>
+                            setIsConfPasswordVisible(!isConfPasswordVisible)
+                          }
+                        >
+                          {isConfPasswordVisible
+                            ? reactIcons.view
+                            : reactIcons.eyeOff}
+                        </span>
+                        <span className="text-danger">{error.confPassErr}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className="d-flex justify-content-between  my-3">
+                    <button
+                      className="theme-btn btn-style-one small"
+                      onClick={!resendTimer ? handleSendOtp :  handleSubmit}
+                      disabled={isLoading}
                     >
-                      Signup
-                    </Link>
-                  </div> */}
-
-                  {/* <div className="divider">
-          <span>or</span>
-        </div> */}
-
-                  {/* <LoginWithSocial /> */}
+                      {isLoading ? <BtnBeatLoader /> : "Submit"}
+                    </button>
+                    <button
+                      className="theme-btn btn-style-three small"
+                      onClick={() => {
+                        setOpen(false);
+                        setResetPassword(false);
+                        setResetForm({});
+                      }}
+                    >
+                      Back
+                    </button>
+                  </div>
                 </div>
-                {/* End bottom-box LoginWithSocial */}
-              </div>
+              )}
             </div>
           </div>
         </div>

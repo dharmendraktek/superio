@@ -11,19 +11,24 @@ const index = () => {
       <section className="user-dashboard px-4 py-2">
       <Paper>
         <div className="dashboard-outer">
-          <BreadCrumb title="Change Password!" />
+          {/* <BreadCrumb title="Change Password!" /> */}
           {/* breadCrumb */}
 
-          <MenuToggler />
+          {/* <MenuToggler /> */}
           {/* Collapsible sidebar button */}
-
-          <div className="ls-widget">
+          <div className="row">
+            <div className="col-6">
+                 {/* change password */}
+            </div>
+            <div className="col-6">
+          <div className="">
             <div className="widget-title">
               <h4>Change Password</h4>
             </div>
-
-            <div className="widget-content">
+            <div className="">
               <Form />
+            </div>
+          </div>
             </div>
           </div>
           {/* <!-- Ls widget --> */}

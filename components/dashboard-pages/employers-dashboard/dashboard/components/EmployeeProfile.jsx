@@ -1,4 +1,5 @@
 'use client'
+import Loader from "@/components/common/Loader";
 import Paper from "@/components/common/Paper";
 import { employeeDetails } from "@/features/employer/employerSlice";
 import { getReq, postApiReq } from "@/utils/apiHandlers";
@@ -18,6 +19,7 @@ const EmployeeProfile = ({userDetails}) => {
     const [profileImg, setProfileImg] = useState();
     const userinfo = useSelector((state) => state.employer.user);
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const getUserDetails = async() => {
@@ -36,15 +38,18 @@ const EmployeeProfile = ({userDetails}) => {
     const handleUploadProfilePhoto = async() => {
         let formData = new FormData();
         formData.append('profile_photo', profileImg);
+        setIsLoading(true);
         try{
             const response = await postApiReq(`/upload-profile-photo/${userinfo.id}/`, formData)
+            setIsLoading(false);
             if(response.status){
                 toast.success('Profile image has been uploaded successfully');
                 getUserDetails();
                 setProfileImg('');
             }
         }catch(err){
-            toast.error(err.response || 'Something went wrong');
+            toast.error(err.response || 'Something went wrong');s
+            setIsLoading(false);
         }
          
     }
@@ -57,6 +62,8 @@ const EmployeeProfile = ({userDetails}) => {
 
 
     return(
+        <>
+        {isLoading && <Loader />}
         <Paper>
         <div className='container-fluid px-5'>
            <div className="d-flex">
@@ -222,6 +229,7 @@ const EmployeeProfile = ({userDetails}) => {
           } */}
         </div>
         </Paper>
+        </>
     )
 }
 

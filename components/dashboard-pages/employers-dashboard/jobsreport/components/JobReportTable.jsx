@@ -53,7 +53,7 @@ const JobReportTable = () => {
   }
 
   const handleExportExcel = async() => {
-    window.open(BASE_URL + '/job-assignment-report/report/?export=excel', '_blank', 'noopener,noreferrer');
+    window.open(BASE_URL + '/job-report/report/?export=excel', '_blank', 'noopener,noreferrer');
 
     // try{
     //   const response = await getReq('/job-assignment-report/report/?export=excel');
