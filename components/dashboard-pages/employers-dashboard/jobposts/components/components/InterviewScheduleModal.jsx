@@ -108,7 +108,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   };
 
   const handleScheduleInterview = async () => {
-    form["submission_ref"] = jobData[0]?.filteredData?.id;
+    form["submission_ref"] = jobData[0]?.id;
     try {
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
@@ -116,9 +116,11 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       if (response.status) {
         handleSubmitReminder(response.data.id);
         handleAddInterviewDocuments(response.data.id);
+        let closeBtn = document.getElmentById("closeBtnInterview");
         toast.success(
           "The applicant interview has been scheduled successfully."
         );
+        closeBtn.click();
       }
     } catch (err) {
       toast.error(err || "Something went wrong");
@@ -170,7 +172,6 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   })
 
 
-  console.log("----------------item ", filteredData);
 
   let applicantId =
     jobData.length > 0 && applicantData.length > 0
@@ -725,7 +726,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                         multiple
                       /> */}
                       {additionalDoc?.map((item) => {
-                        return <p className="text-primary">{item.name}</p>;
+                        return <p className="text-primary">{item?.name}</p>;
                       })}
                     </div>
                     <div className="col-12">

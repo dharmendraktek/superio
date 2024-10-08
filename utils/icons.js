@@ -59,6 +59,8 @@ import { IoMdTime } from "react-icons/io";
 
 import { IoMdEyeOff } from "react-icons/io";
 import { BsDownload } from "react-icons/bs";
+import { ImTable } from "react-icons/im";
+import { IoList } from "react-icons/io5";
 
 
 
@@ -116,5 +118,8 @@ export const reactIcons = {
     user:<IoPersonCircle />,
     time:<IoMdTime />,
     eyeOff: <IoMdEyeOff />,
-    downloadcover: <BsDownload />
+    downloadcover: <BsDownload />,
+    table:<ImTable/>,
+    list:<IoList />,
+    
 }

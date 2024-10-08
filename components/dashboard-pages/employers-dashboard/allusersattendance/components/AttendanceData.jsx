@@ -1,4 +1,8 @@
-import React from 'react';
+'use client'
+import AttendanceUpdateModal from '@/components/common/AttendanceUpdateModal';
+import { reactIcons } from '@/utils/icons';
+import moment from 'moment';
+import React, { useState } from 'react';
 
 const attendanceData ={
     "1002": [
@@ -249,7 +253,14 @@ const attendanceData ={
     ]
 }
 
+const viewType = [
+    {name:'Table', icon:reactIcons.table},
+    {name:'List', icon:reactIcons.list},
+]
+
 const AttendanceData = () => {
+    const [select, setSelect] = useState("Table");
+    const [selectDateData, setSelectDateData] = useState(null);
     const calculateAttendanceCounts = (data) => {
         let presentCount = 0;
         let absentCount = 0;
@@ -266,19 +277,48 @@ const AttendanceData = () => {
     };
 
     return (
-        <table>
+        <div>
+        <AttendanceUpdateModal selectDateData={selectDateData} />
+        <div className='d-flex justify-content-end'>
+        <div className='d-flex mb-2'>
+           {viewType.map((item) => {
+               return(
+                <div onClick={() => setSelect(item.name)} className={`${item.name == select ? "bg-primary text-white" : "bg-white text-primary"} d-flex gap-2 align-items-center fw-700 border cursor-pointer border-primary px-3`}>
+                    <span className='fs-6'>{item.icon}</span>
+                    <span>{item.name}</span>
+                </div>
+               )
+           })
+           }
+        </div>
+        </div>
+        {select == "Table" ?
+        <div className="table_div custom-scroll-sm">
+        <table className='default-table'>
             <thead>
                 <tr>
-                    <th>Username</th>
-                    <th>Employee Code</th>
-                    <th>Leave Balance</th>
-                    <th>Compoff</th>
-                    <th>Company Name</th>
-                    <th>Shift Time</th>
-                    {/* Date-wise columns */}
-                    {['Date', 'First Timestamp', 'Last Timestamp', 'Status', 'Duration'].map((header, index) => (
-                        <th key={index}>{header}</th>
-                    ))}
+                    <th style={{width:"150px"}}>Name</th>
+                    <th style={{width:"150px"}}>Employee Code</th>
+                     <th style={{width:"130px"}}>Leave Balance</th>
+                    <th style={{width:"130px"}}>Compoff</th>
+                    <th style={{width:"160px"}}>Company Name</th>
+                    <th style={{width:"200px"}}>Shift Time</th>
+                    {/* <th style={{width:"130px"}}>Date</th>
+                    <th style={{width:"130px"}}>Check In</th>
+                     <th style={{width:"130px"}}>Check out</th>
+                    <th style={{width:"130px"}}>Duration</th> */}
+                    {attendanceData["1002"].map((header, index) => {
+                        return(
+                            <>
+                            <th key={index} style={{width:"130px"}}>{moment(header.date_of_attendance).format("DD MMM/ddd")}</th>
+                            <th key={index} style={{width:"130px"}} >{"Check In"}</th>
+                             <th key={index} style={{width:"130px"}} >{"Check Out"}</th>
+                            <th key={index} style={{width:"130px"}} >{"Duration"}</th>
+                            </>
+                        )
+                        
+                    }
+                    )}
                 </tr>
             </thead>
             <tbody>
@@ -288,33 +328,35 @@ const AttendanceData = () => {
 
                     return (
                         <tr key={empCode}>
-                            <td>{userRecord.username}</td>
-                            <td>{empCode}</td>
-                            <td>0</td> {/* Placeholder for Leave Balance */}
-                            <td>0</td> {/* Placeholder for Compoff */}
-                            <td>Company XYZ</td> {/* Placeholder for Company Name */}
-                            <td>{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</td>
+                            <td style={{width:"150px"}}>{userRecord.username}</td>
+                            <td style={{width:"150px"}} >{empCode}</td>
+                             <td style={{width:"130px"}}>0</td> 
+                            <td style={{width:"130px"}}>0</td> 
+                            <td style={{width:"160px"}}>Company XYZ</td> 
+                            <td style={{width:"200px"}}>{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</td>
 
-                            {/* Render each record's data in sequence */}
-                            {records.map(record => (
+                           {records.map(record => (
                                 <React.Fragment key={record.id}>
-                                    <td>
-                                        {record.date_of_attendance 
+                                    <td style={{width:"130px"}}>
+                                        {/* {record.date_of_attendance 
                                             ? new Date(record.date_of_attendance).toLocaleDateString() 
-                                            : ''}
+                                            : ''} */}
+                                            <div onClick={() => setSelectDateData(record)} data-bs-target="#attendanceUpdateModal" data-bs-toggle='modal' className={`${record?.status?.type == "Present" ? 'bg-green' : record?.status?.type == "Absent" ? 'bg-red' : 'bg-yellow'} text-center rounded-1 cursor-pointer text-white fw-700`}>
+                                            {(moment(record.date_of_attendance).format('ddd') == "Sat") || (moment(record.date_of_attendance).format('ddd') == "Sun") && !record.first_timestamp  ? "Week Off" : record.status.type}
+                                            </div>
                                     </td>
-                                    <td>
+                                    <td style={{width:"130px"}} >
                                         {record.first_timestamp 
-                                            ? new Date(record.first_timestamp).toLocaleString() 
-                                            : ''}
+                                            ? moment(record.first_timestamp).utc().format('HH:mm:ss') 
+                                            : 'N/A'}
                                     </td>
-                                    <td>
+                                    <td style={{width:"130px"}}>
                                         {record.last_timestamp 
-                                            ? new Date(record.last_timestamp).toLocaleString() 
-                                            : ''}
+                                            ? moment(record.last_timestamp).utc().format('HH:mm:ss') 
+                                            : 'N/A'}
                                     </td>
-                                    <td>{record.status.type}</td>
-                                    <td>{record.duration}</td>
+                                    <td  style={{width:"130px"}}>{record.duration || "N/A"}</td> 
+                                    {/* <td >{record.status.type}</td> */}
                                 </React.Fragment>
                             ))}
                         </tr>
@@ -327,6 +369,13 @@ const AttendanceData = () => {
                 </tr> */}
             </tbody>
         </table>
+        </div>
+        :
+        <div>
+        list
+        </div>
+        }
+        </div>
     );
 };
 

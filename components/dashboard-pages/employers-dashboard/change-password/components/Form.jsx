@@ -58,7 +58,7 @@ const Form = () => {
     } catch (err) {
       console.log("-----------error ", err);
       setIsLoading(false);
-      toast.error(err.response.data.error || "Something went wrong");
+      toast.error(err.response.data.error || err.response.data.non_field_errors[0] || "Something went wrong");
     }
   };
 

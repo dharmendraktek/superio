@@ -16,7 +16,7 @@ const MultiSearch = ({
 }) => {
 
   return (
-    <div className="" style={{ width: "400px" }}>
+    <div className="" style={{ minWidth: "400px", maxWidth:'fit-content' }}>
       <div className="d-flex border border-primary rounded-1 position-relative">
         <div
           onClick={() => setOpenFields(!openFields)}
@@ -31,7 +31,8 @@ const MultiSearch = ({
             className="position-absolute border px-2 py-2 bg-white"
             style={{
               width: "390px",
-              height: "300px",
+              minHeight: "300px",
+              maxHeight:'fit-content',
               zIndex: "10000",
               top: "35px",
             }}

@@ -7,10 +7,7 @@ const index = () => {
       <section className="user-dashboard">
         <div className="dashboard-outer">
           <div className="col-lg-12 px-3 mt-4">
-            <div className="mt-5 text-center">
-              <strong>Work In progress</strong>
-            </div>
-            {/* <ClientSubmissionReport /> */}
+            <ClientSubmissionReport />
           </div>
         </div>
       </section>

@@ -47,6 +47,30 @@ export const jobReportFilterKey = [
     {name:'Priority', value:'Priority'},
 ]
 
+export const submissionReportFilterKey = [
+    {name:'Search Any', value:'search_any'},
+    {name:'Job Code', value:'job_code'},
+    {name:'Candidate Name', value:'applicant_name'},
+    {name:'Job Title', value:'job_title'},
+    {name:'Candidate Email', value:'applicant_email'},
+    {name:'Candidate Mobile', value:'applicant_mobile'},
+    {name:'Job Status', value:'job_status'},
+    {name:'Job Type', value:'job_type'},
+    {name:'LOB', value:'lob'},
+    {name:'Client', value:'client'},
+    {name:'End Client', value:'endclient'},
+    {name:'Job Location', value:'job_location'},
+    {name:'Account Manager', value:'account_manager'},
+    {name:'Head Account Manager', value:'head_account_manager'},
+    {name:'Delivery Manager', value:'delivery_manager'},
+    {name:'Candidate Source', value:'applicant_source'},
+    {name:'Work Authorization', value:'work_authorization'},
+    {name:'Submitted By', value:'submitted_by'},
+    {name:'Current Status', value:'current_status'},
+    {name:'Current Sub Status', value:'current_substatus'},
+    {name:'Pay Rate', value:'pay_rate'},
+] 
+
 
 export const  sourceData = [
     {name:'Dice', value:'Dice'},

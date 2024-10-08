@@ -25,8 +25,7 @@ const index = () => {
             <div className="col-lg-12 px-4 mt-2">
               <Paper>
                  <div>
-                  Pending
-                  {/* <AttendanceData /> */}
+                  <AttendanceData />
                  </div>
               </Paper>
             </div>

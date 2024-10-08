@@ -16,6 +16,8 @@ const menuList = [
   { name: "JOB POSTING", url: "/employers-dashboard/job-posts" },
   { name: "APPLICANTS", url: "/employers-dashboard/all-applicants" },
   { name: "MY ASSIGN JOBS", url: "/employers-dashboard/my-assign-jobs" },
+  { name: "HR", url: "/employers-dashboard/hr" },
+ 
   {
     name: "REPORTS",
     url: "",
@@ -84,19 +86,20 @@ const HeaderNavContent = () => {
     // Hide USER and CLIENT menu for specific departments
     if (
       (userDetails?.department_name === "Operation" || userDetails?.department_name === "Support" ) &&
-      (item.name === "USER" || item.name === "CLIENT")
+      (item.name === "USER" || item.name === "CLIENT" || item.name == 'HR')
     ) {
       return false;
-    } else if (
+    } else if ( 
       userDetails?.department_name === "Finance" &&
-      (item.name === "USER" || item.name === "CLIENT")
+      (item.name === "USER" || item.name === "CLIENT" || "HR")
     ) {
       return false;
     } else if (
       userDetails?.department_name === "HR" &&
       (item.name === "CLIENT" ||
         item.name === "JOB POSTING" ||
-        item.name === "APPLICANTS")
+        item.name === "APPLICANTS" || item.name == "MY ASSIGN JOBS" || item.name == "REPORTS")
+
     ) {
       return false;
     }

@@ -50,6 +50,7 @@ const JobReportTable = () => {
     setFieldName('');
     setStartDate(null);
     setEndDate(null);
+    setSearch('');
   }
 
   const handleExportExcel = async() => {

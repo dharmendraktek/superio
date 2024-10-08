@@ -767,6 +767,20 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
+                Client Job ID 
+                {/* <strong className="text-danger">*</strong> */}
+              </p>
+              <input
+                name="client_job_id"
+                value={form.client_job_id}
+                onChange={handleChange}
+                className="client-form-input"
+                type="text"
+              />
+              {/* <span className="text-danger">{error.jobTitleErr}</span> */}
+            </div>
+            <div className="col-4 my-2">
+              <p>
                 Client <strong className="text-danger">*</strong>
               </p>
               <select
