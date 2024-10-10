@@ -8,10 +8,10 @@ const index = () => {
         <div className="dashboard-outer">
           <div className="row">
             <div className="col-lg-12 px-5 mt-4">
-              <div className="text-center">
+              {/* <div className="text-center">
                  <strong>Work In Progress</strong>
-              </div>
-              {/* <InterviewScheduleTable /> */}
+              </div> */}
+              <InterviewScheduleTable />
             </div>
           </div>
         </div>

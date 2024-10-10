@@ -61,6 +61,9 @@ import { IoMdEyeOff } from "react-icons/io";
 import { BsDownload } from "react-icons/bs";
 import { ImTable } from "react-icons/im";
 import { IoList } from "react-icons/io5";
+import { MdFeedback } from "react-icons/md";
+import { BsThreeDots } from "react-icons/bs";
+
 
 
 
@@ -121,5 +124,6 @@ export const reactIcons = {
     downloadcover: <BsDownload />,
     table:<ImTable/>,
     list:<IoList />,
-    
+    feedback:<MdFeedback />,
+    horizontaldots:<BsThreeDots />,
 }

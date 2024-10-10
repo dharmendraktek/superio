@@ -5,6 +5,7 @@ import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
+import TimePickerCustom from "./TimePickerCustom";
 
 
 const AttendanceUpdateModal = ({selectDateData}) => {
@@ -19,8 +20,21 @@ const AttendanceUpdateModal = ({selectDateData}) => {
   })
   const [statusList, setStatusList] = useState([]);
   
+  useEffect(() => {
+     if(selectDateData){
+        const {status, duration, first_timestamp, last_timestamp, date_of_attendance, shift_in_time, shift_out_time} = selectDateData;
+        setForm((prev) => ({...prev, 
+            status:status.id,
+            date_of_attendance:date_of_attendance,
+            first_timestamp:first_timestamp,
+            last_timestamp:last_timestamp,
+            duration:duration,
+            shift_in_time:shift_in_time,
+            shift_out_time:shift_out_time
+        }))
+     }
+  }, [selectDateData])
 
-  console.log("-------------set select data ", selectDateData);
 
   useEffect(() =>{
     handleGetAttendanceStatus();
@@ -43,7 +57,12 @@ const AttendanceUpdateModal = ({selectDateData}) => {
     }catch(err){
     }
   } 
-  
+
+  const handleChange = (e) => {
+     const {name, value} = e.target;
+     setForm((prev) => ({...prev, [name]:value}))
+  }
+   
   
 
 
@@ -58,8 +77,8 @@ const AttendanceUpdateModal = ({selectDateData}) => {
             <div className="modal-body">
                <div>
                  <div className="my-2">
-                    <p>Type</p>
-                    <select className="client-form-input">
+                    <p>Status</p>
+                    <select value={form.status} onChange={handleChange} className="client-form-input">
                         <option>Select</option>
                         {statusList.map((item) => (
                             <option key={item.id} value={item.id}>{item?.name}</option>
@@ -71,11 +90,12 @@ const AttendanceUpdateModal = ({selectDateData}) => {
                  </div>
                  <div className="my-2">
                     <p>Date</p>
-                    <input type="text" className="client-form-input"  checked value={"30-04-2024"} />
+                    <input type="text" className="client-form-input"  checked value={form.date_of_attendance} />
                  </div>
                  <div className="my-2">
                     <p>In Time</p>
-                    <input type="text"  checked value={"30-04-2024"} className="client-form-input"  />
+                    <TimePickerCustom />
+                    {/* <input type="text"  checked value={"30-04-2024"} className="client-form-input"  /> */}
                  </div>
                  <div className="my-2">
                     <p>Out Time</p>
@@ -83,7 +103,7 @@ const AttendanceUpdateModal = ({selectDateData}) => {
                  </div>
                  <div className="my-2">
                     <p>Duration</p>
-                    <input type="text"  checked value={"30-04-2024"} className="client-form-input"  />
+                    <input type="text" onChange={handleChange}  checked value={"30-04-2024"} className="client-form-input"  />
                  </div>
                  <div className="my-2">
                     <p>Shift In Time</p>

@@ -14,7 +14,7 @@ export const noticePeriodOption = [
 
 export const documentTypes = [
 
-    {name:'Driving License', value:'Driving License'},
+    {name:'Driving License/State Id', value:'Driving License'},
     // {name:'EML File'},
     {name:'Employment Authorization Document', value:'Employment Authorization Document'},
     {name:'H1B Copy', value:'H1B Copy'},
@@ -28,7 +28,7 @@ export const documentTypes = [
     {name:"RTR Attachment", value:'RTR Attachment'},
     {name:"RTTO Attachment", value:'RTTO Attachment'},
     {name:"Visa Copy", value:'Visa Copy'},
-    {name:"State Id", value:'Driving License'},
+    // {name:"State Id", value:'Driving License'},
 ]
 
 

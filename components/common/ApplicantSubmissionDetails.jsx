@@ -556,18 +556,19 @@ const ApplicantSubmissionDetails = ({
 
   const validateDocument  = () => {
     let {subtype_taxterm, taxterm} = applicantCheck;
-    let idProof = applicantData?.documents?.some((item) => item.type == "Driving License")
-    let resume = applicantData?.documents?.some((item) => item.type == "Resume")
-    let I94 =  applicantData?.documents?.some((item) => item.type == "I94")
-    let travelHistory = applicantData?.documents?.some((item) => item.type == "Travel History")
-    let ssN = applicantData?.documents?.some((item) => item.type == "SSN")
-    let visaCopy = applicantData?.documents?.some((item) => item.type == "Visa Copy")
-    let rtR = applicantData?.documents?.some((item) => item.type == "RTR Attachment")
-    let rtto = applicantData?.documents?.some((item) => item.type == "RTTO Attachment")
-    let eAD = applicantData?.documents?.some((item) => item.type == "Employment Authorization Document")
-    let transcript = applicantData?.documents?.some((item) => item.type == "Transcripts")
-    let h1b = applicantData?.documents?.some((item) => item.type == "H1B Copy")  
+    let idProof = availableDoc?.some((item) => item.type == "Driving License")
+    let resume = availableDoc?.some((item) => item.type == "Resume")
+    let I94 =  availableDoc.some((item) => item.type == "I94")
+    let travelHistory = availableDoc?.some((item) => item.type == "Travel History")
+    let ssN = availableDoc?.some((item) => item.type == "SSN")
+    let visaCopy = availableDoc?.some((item) => item.type == "Visa Copy")
+    let rtR = availableDoc?.some((item) => item.type == "RTR Attachment")
+    let rtto = availableDoc?.some((item) => item.type == "RTTO Attachment")
+    let eAD = availableDoc?.some((item) => item.type == "Employment Authorization Document")
+    let transcript = availableDoc?.some((item) => item.type == "Transcripts")
+    let h1b = availableDoc?.some((item) => item.type == "H1B Copy")  
 
+ 
     if(taxterm == 'W2' && subtype_taxterm == 'Immigrants' && idProof && resume){
       return true;
     }else if(taxterm == 'W2' && subtype_taxterm == 'Non-Immigrants' && idProof && resume && rtR){

@@ -15,26 +15,29 @@ import { useRouter } from "next/navigation";
 import Paper from "@/components/common/Paper";
 import { isNumber } from "lodash";
 import MyCKEditor from "@/components/common/MyCkEditor";
+import { useSelector } from "react-redux";
+import AddClientModal from "@/components/common/AddClientModal";
+import AddContactManagerModal from "@/components/common/AddContactManagerModal";
 
 const initialState = {
   job_code: "",
   title: "",
-  currency: "",
+  currency: "USD",
   amount: "",
   payment_frequency: "",
   job_type: "",
-  client_taxterm:'',
+  client_taxterm: "",
   start_date: new Date(),
   end_date: new Date(),
   remote: "",
   lob: "",
   address: "",
-  country: "",
+  country: "United States",
   city: "",
   state: "",
-  job_status: "",
+  job_status: "Active",
   client: "",
-  endclient:'',
+  endclient: "",
   contact_manager: "",
   interview_mode: "",
   application_form: "",
@@ -54,6 +57,7 @@ const initialState = {
   is_active: 1,
   priority: "",
   post_on_portal: false,
+  fullfill_deadline:''
   // post_date_on_portal: "",
 };
 
@@ -110,11 +114,19 @@ const ManualCreation = ({
     assignToErr: "",
     jobDescriptionErr: "",
   });
+  const [openContact, setOpenContact] = useState(false);
+  const [contactSearch, setContactSearch] = useState('');
 
   const router = useRouter();
 
+  const employee_details = useSelector((state) => state.employer.user);
+
   // const cityList = City?.getAllCities('MP');
   // console.log("----------city list ", cityList);
+
+  useEffect(() => {
+    setForm((prev) => ({ ...prev, account_manager: employee_details.user.id, head_account_manager:employee_details.reportingmanager_details.id }));
+  }, [employee_details]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -149,8 +161,8 @@ const ManualCreation = ({
         amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
         payment_frequency: jobData.payment_frequency,
         job_type: jobType ? jobType : "",
-        client_taxterm:jobData.endclient ? jobData.endclient:'',
-        endclient:jobData.endclient?jobData.endclient: '',
+        client_taxterm: jobData.endclient ? jobData.endclient : "",
+        endclient: jobData.endclient ? jobData.endclient : "",
         start_date: jobData.start_date,
         end_date: jobData.end_date,
         remote: jobData.remote,
@@ -222,7 +234,7 @@ const ManualCreation = ({
       handleGetClientContactManagers();
       // handleGetLobs();
     }
-  }, [form.client]);
+  }, [form.client, contactSearch]);
 
   const handleGetLanguageList = async () => {
     const response = await getReq("/language/");
@@ -258,7 +270,7 @@ const ManualCreation = ({
   };
 
   const handleGetClientContactManagers = async () => {
-    const response = await getReq(`/client-details/${form.client}/`);
+    const response = await getReq(`/client-details/${form.client}/${contactSearch? `?search=${contactSearch}` : ''}`);
     if (response.status) {
       setClientManagerList(response.data.contact_manager);
       setLobList(response.data.lob);
@@ -294,6 +306,7 @@ const ManualCreation = ({
       accountManagerErr: "",
       assignToErr: "",
       jobDescriptionErr: "",
+      clientBillRateERr:""
     }));
 
     if (!form.job_code) {
@@ -305,6 +318,9 @@ const ManualCreation = ({
     if (!form.client) {
       setError((prev) => ({ ...prev, clientErr: "This field is required" }));
     }
+    if(!form.currency || !form.payment_frequency || !form.amount || !form.client_taxterm){
+      setError((prev) => ({ ...prev, clientBillRateERr: "This field is required" }));
+    }
     // if (!form.lob) {
     //   setError((prev) => ({ ...prev, lobErr: "This field is required" }));
     // }
@@ -314,12 +330,12 @@ const ManualCreation = ({
     //     contactManagerErr: "This field is required",
     //   }));
     // }
-    if (!form.state) {
+    if (!form.state && !(form.remote == 'yes')) {
       setError((prev) => ({ ...prev, stateErr: "This field is required" }));
     }
-    if (!form.city) {
-      setError((prev) => ({ ...prev, cityErr: "This field is required" }));
-    }
+    // if (!form.city) {
+    //   setError((prev) => ({ ...prev, cityErr: "This field is required" }));
+    // }
     if (!form.job_status) {
       setError((prev) => ({ ...prev, jobStatusErr: "This field is required" }));
     }
@@ -344,18 +360,18 @@ const ManualCreation = ({
     if (!form.tax_term) {
       setError((prev) => ({ ...prev, taxTermErr: "This field is required" }));
     }
-    if (!form.delivery_manager && !form.delivery_manager == "Select") {
-      setError((prev) => ({
-        ...prev,
-        deliveryManagerErr: "This field is required",
-      }));
-    }
-    if (!form.account_manager && !form.account_manager == "Select") {
-      setError((prev) => ({
-        ...prev,
-        accountManagerErr: "This field is required",
-      }));
-    }
+    // if (!form.delivery_manager && !form.delivery_manager == "Select") {
+    //   setError((prev) => ({
+    //     ...prev,
+    //     deliveryManagerErr: "This field is required",
+    //   }));
+    // }
+    // if (!form.account_manager && !form.account_manager == "Select") {
+    //   setError((prev) => ({
+    //     ...prev,
+    //     accountManagerErr: "This field is required",
+    //   }));
+    // }
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
@@ -391,16 +407,16 @@ const ManualCreation = ({
       client &&
       // lob &&
       // contact_manager &&
-      state &&
-      city &&
+      // state &&
+      // city &&
       job_status &&
       job_type &&
       experience &&
       primary_skills.length > 0 &&
       number_of_position &&
       tax_term &&
-      delivery_manager &&
-      account_manager &&
+      // delivery_manager &&
+      // account_manager &&
       // assign.length > 0 &&
       description
     ) {
@@ -466,9 +482,11 @@ const ManualCreation = ({
   };
 
   useEffect(() => {
-    if (form.country) {
+    
+    if (form.client_taxterm) {
+      setForm((prev) => ({ ...prev, tax_term: form.client_taxterm }));
     }
-  }, [form.country]);
+  }, [form.client_taxterm]);
 
   const handleRemoveSkills = (_index) => {
     setForm((prev) => ({
@@ -543,9 +561,12 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
+
   return (
     <div className="py-2">
       <LanguageModal handleGetLanguageList={handleGetLanguageList} />
+      <AddClientModal handleGetClientNames={handleGetClientNames} />
+      {/* <AddContactManagerModal handleGetClientContactManagers={handleGetClientContactManagers} /> */}
       <JobPostCommentsModal
         comments={comments}
         setComments={setComments}
@@ -595,12 +616,12 @@ const ManualCreation = ({
                 ? handleSubmit
                 : ""
             }
-            data-bs-toggle="modal"
-            data-bs-target={
-              name == "update" && !(name == "parse") && !(jobType == "Email")
-                ? "#commentsModal"
-                : ""
-            }
+            // data-bs-toggle="modal"
+            // data-bs-target={
+            //   name == "update" && !(name == "parse") && !(jobType == "Email")
+            //     ? "#commentsModal"
+            //     : ""
+            // }
           >
             {isLoading ? (
               <BtnBeatLoader />
@@ -683,7 +704,7 @@ const ManualCreation = ({
                 </select>
                 <input
                   name="amount"
-                  type="text"
+                  type="number"
                   value={form.amount}
                   placeholder="Rate"
                   onChange={handleChange}
@@ -708,25 +729,19 @@ const ManualCreation = ({
                 >
                   <option>Select</option>
                   {TaxTerms?.map((item, index) => {
-                    return(
-                      <option key={index} value={item.name}>{item.name}</option>
-                    )
-                  })
-                  }
+                    return (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
+              <span className="text-danger">{error.clientBillRateERr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>Remote Job</p>
+              <p>Job Location Type</p>
               <div className="d-flex gap-2">
-                <input
-                  onChange={handleChange}
-                  type="radio"
-                  name="remote"
-                  value="yes"
-                  checked={form.remote == "yes"}
-                />
-                <span>Yes</span> {" "}
                 <input
                   onChange={handleChange}
                   type="radio"
@@ -734,7 +749,15 @@ const ManualCreation = ({
                   value="no"
                   checked={form.remote == "no"}
                 />
-                <span>No</span> {" "}
+                <span>Onsite</span> {" "}
+                <input
+                  onChange={handleChange}
+                  type="radio"
+                  name="remote"
+                  value="yes"
+                  checked={form.remote == "yes"}
+                />
+                <span>Remote</span> {" "}
                 <input
                   onChange={handleChange}
                   type="radio"
@@ -746,6 +769,17 @@ const ManualCreation = ({
               </div>
             </div>
             <div className="col-4 my-2">
+              <p>Fulfill Deadline Date</p>
+              <DatePickerCustom
+                handleDate={(date) => {
+                  if (date) {
+                    setForm((prev) => ({ ...prev, fullfill_deadline: date }));
+                  }
+                }}
+                date={form.fullfill_deadline}
+              />
+            </div>
+            {/* <div className="col-4 my-2">
               <p>Job Start Date</p>
               <DatePickerCustom
                 handleDate={(date) => {
@@ -764,10 +798,10 @@ const ManualCreation = ({
                 }
                 date={form.end_date}
               />
-            </div>
+            </div> */}
             <div className="col-4 my-2">
               <p>
-                Client Job ID 
+                Client Job ID
                 {/* <strong className="text-danger">*</strong> */}
               </p>
               <input
@@ -779,7 +813,7 @@ const ManualCreation = ({
               />
               {/* <span className="text-danger">{error.jobTitleErr}</span> */}
             </div>
-            <div className="col-4 my-2">
+            {/* <div className="col-4 my-2">
               <p>
                 Client <strong className="text-danger">*</strong>
               </p>
@@ -790,6 +824,11 @@ const ManualCreation = ({
                 onChange={handleChange}
               >
                 <option>Select</option>
+                <option className="px-2">
+                    <div className="bg-primary py-1 text-center">
+                    <span>ADD</span>
+                    </div>
+                  </option>
                 {clientNameList.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>
@@ -799,6 +838,80 @@ const ManualCreation = ({
                 })}
               </select>
               <span className="text-danger">{error.clientErr}</span>
+            </div> */}
+            <div className="col-4 my-2">
+              <p>Client</p>
+              <div className="position-relative cursor-pointer">
+                <div
+                  className="client-form-input d-flex justify-content-between"
+                  onClick={() => setOpenLang(!openLang)}
+                  style={{ minHeight: "36px", maxHeight: "fit-content" }}
+                >
+                  <div className="d-flex flex-wrap gap-2">
+                    {form.client &&
+                      clientNameList?.find((_item) => _item.id == form.client)
+                        ?.client_name}
+                  </div>
+                  <span className=" float-end">{reactIcons.downarrow}</span>
+                </div>
+                {openLang && (
+                  <div
+                    className="position-absolute bg-white border border-1 table_div_custom w-100 px-2 custom-scroll-sm"
+                    style={{ top: "33px", zIndex: 10000, height:"400px" }}
+                  >
+                    <div className="my-2">
+                      <button
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#addClientModal"
+                        className="theme-btn btn-style-three small d-flex align-items-center"
+                        onClick={() => setOpenLang(false)}
+                        style={{ width: "100%" }}
+                      >
+                        <span>Add</span>
+                      </button>
+                    </div>
+                    {clientNameList.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setOpenLang(false);
+                            setForm((prev) => ({ ...prev, client: item.id }));
+                          }}
+                          className="hover-background-change"
+                        >
+                          {/* <input
+                            type="checkbox"
+                            checked={form?.languages?.find(
+                              (_item) => _item.name == item.name
+                            )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setForm((prev) => ({
+                                  ...prev,
+                                  languages: [
+                                    ...prev.languages,
+                                    { name: item.name },
+                                  ],
+                                }));
+                              } else {
+                                setForm((prev) => ({
+                                  ...prev,
+                                  languages: prev.languages.filter(
+                                    (_item, _index) => _item.name !== item.name
+                                  ),
+                                }));
+                              }
+                            }}
+                          /> */}
+                          <span className="mx-2">{item.client_name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="col-4 my-2">
               <p>
@@ -823,10 +936,9 @@ const ManualCreation = ({
               </select>
               <span className="text-danger">{error.lobErr}</span>
             </div>
-            <div className="col-4 my-2">
+            {/* <div className="col-4 my-2">
               <p>
                 Contact Manager
-                {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
                 value={form.contact_manager}
@@ -844,11 +956,64 @@ const ManualCreation = ({
                 })}
               </select>
               <span className="text-danger">{error.contactManagerErr}</span>
+            </div> */}
+             <div className="col-4 my-2">
+              <p>                Contact Manager              </p>
+              <div className="position-relative cursor-pointer">
+                <div
+                  className="client-form-input d-flex justify-content-between"
+                  onClick={() => setOpenContact(!openContact)}
+                  style={{ minHeight: "36px", maxHeight: "fit-content" }}
+                >
+                  <div className="d-flex flex-wrap gap-2">
+                    {form.client &&
+                      clientManagerList?.find((_item) => _item.id == form.contact_manager)
+                        ?.name}
+                  </div>
+                  <span className=" float-end">{reactIcons.downarrow}</span>
+                </div>
+                {openContact && (
+                  <div
+                    className="position-absolute bg-white border border-1 table_div_custom w-100 px-2 custom-scroll-sm"
+                    style={{ top: "33px", zIndex: 10000, height:"400px" }}
+                  >
+                    {/* <div className="my-2">
+                      <button
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#addClientModal"
+                        className="theme-btn btn-style-three small d-flex align-items-center"
+                        onClick={() => setOpenContact(false)}
+                        style={{ width: "100%" }}
+                      >
+                        <span>Add</span>
+                      </button>
+                    </div> */}
+                    {/* <div>
+                      <input type="text" className="border border-primary w-100 rounded-1 px-2" placeholder="Search here..."   onChange={(e) => setContactSearch(e.target.value)} />
+                    </div> */}
+                    {clientManagerList.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setOpenContact(false);
+                            setForm((prev) => ({ ...prev, contact_manager: item.id }));
+                          }}
+                          className="hover-background-change"
+                        >
+                          <span className="mx-2">{item.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="col-4 my-2">
               <p>
                 End Client
-                 {/* <strong className="text-danger">*</strong> */}
+                {/* <strong className="text-danger">*</strong> */}
               </p>
               <input
                 name="endclient"
@@ -880,7 +1045,7 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                State <strong className="text-danger">*</strong>
+                State <strong className="text-danger">{form.remote == 'yes' ? "" : "*"}</strong>
               </p>
               <select
                 className="client-form-input"
@@ -905,7 +1070,8 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                City <strong className="text-danger">*</strong>
+                City
+                {/* <strong className="text-danger">*</strong> */}
               </p>
               <input
                 name="city"
@@ -964,7 +1130,7 @@ const ManualCreation = ({
                 })}
               </select>
             </div>
-            <div className="col-4 my-2">
+            {/* <div className="col-4 my-2">
               <p>Application Form</p>
               <select
                 value={form.application_form}
@@ -978,7 +1144,7 @@ const ManualCreation = ({
                   Referral Portal Form
                 </option>
               </select>
-            </div>
+            </div> */}
             <div className="col-4 my-2">
               <p>Address</p>
               <textarea
@@ -1236,83 +1402,6 @@ const ManualCreation = ({
                 />
               </div>
             </div>
-            <div className="col-4 my-2">
-              <p>Languages</p>
-              <div className="position-relative cursor-pointer">
-                <div
-                  className="client-form-input d-flex justify-content-between"
-                  onClick={() => setOpenLang(!openLang)}
-                  style={{ minHeight: "36px", maxHeight: "fit-content" }}
-                >
-                  <div className="d-flex flex-wrap gap-2">
-                    {form.languages.map((item, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
-                          style={{ background: "var(--primary-2nd-color)" }}
-                        >
-                          <span>{item.name}</span>
-                          {/* <span onClick={() => handleClose(item)} className="text-black fs-6 cursor-pointer">{reactIcons.close}</span> */}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <span className=" float-end">{reactIcons.downarrow}</span>
-                </div>
-                {openLang && (
-                  <div
-                    className="position-absolute bg-white border border-1 w-100 px-2"
-                    style={{ top: "33px", zIndex: 10000 }}
-                  >
-                    <div>
-                      <button
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#languageModal"
-                        className="theme-btn btn-style-three small d-flex align-items-center"
-                        onClick={() => setOpenLang(false)}
-                        style={{ width: "100%" }}
-                      >
-                        {/* <span>{reactIcons.addcircle}</span> */}
-                        <span>Add</span>
-                      </button>
-                    </div>
-                    {languageList.map((item, index) => {
-                      return (
-                        <div key={index} className="">
-                          <input
-                            type="checkbox"
-                            checked={form?.languages?.find(
-                              (_item) => _item.name == item.name
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setForm((prev) => ({
-                                  ...prev,
-                                  languages: [
-                                    ...prev.languages,
-                                    { name: item.name },
-                                  ],
-                                }));
-                              } else {
-                                setForm((prev) => ({
-                                  ...prev,
-                                  languages: prev.languages.filter(
-                                    (_item, _index) => _item.name !== item.name
-                                  ),
-                                }));
-                              }
-                            }}
-                          />
-                          <span className="mx-2">{item.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
             <div className="col-12 my-2">
               <h4>Organizational Information</h4>
             </div>
@@ -1348,8 +1437,9 @@ const ManualCreation = ({
                 value={form.tax_term}
                 onChange={handleChange}
                 name="tax_term"
+                disabled
               >
-                <option>Select</option>
+                {/* <option>Select</option> */}
                 {TaxTerms.map((item, index) => {
                   return (
                     <option key={index} value={item.name}>
@@ -1361,7 +1451,7 @@ const ManualCreation = ({
               <span className="text-danger">{error.taxTermErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>Head Account Managers</p>
+              <p>B.U. Head</p>
               <select
                 value={form.head_account_manager}
                 className="client-form-input"
@@ -1378,7 +1468,7 @@ const ManualCreation = ({
                 })}
               </select>
             </div>
-            <div className="col-4 my-2">
+            {/* <div className="col-4 my-2">
               <p>Department</p>
               <select
                 value={form.department}
@@ -1391,10 +1481,11 @@ const ManualCreation = ({
                   return <option value={item.id}>{item.dept_name}</option>;
                 })}
               </select>
-            </div>
+            </div> */}
             <div className="col-4 my-2">
               <p>
-                Delivery Manager <strong className="text-danger">*</strong>
+                Delivery Manager
+                {/* <strong className="text-danger">*</strong> */}
               </p>
               <select
                 value={form.delivery_manager}

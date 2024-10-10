@@ -471,7 +471,7 @@ const ClientTable = () => {
                 {ownerList.map((item, index) => {
                   return (
                     <option key={index}  value={item.user.id}>
-                      {item.user.first_name} {item.user.last_name} {item.user.email}
+                      {item.user.first_name} {item.user.last_name} ({item.user.email})
                     </option>
                   );
                 })}
@@ -552,7 +552,7 @@ const ClientTable = () => {
                 setClient("");
               }}
             >
-              New
+              Reset
             </button>
             <button
               className="theme-btn btn-style-one small"
@@ -635,8 +635,8 @@ const ClientTable = () => {
                 <option>Select</option>
                 {ownerList.map((item, index) => {
                   return (
-                    <option key={index} value={item.id}>
-                      {item.user.first_name} {item.user.last_name} {item.user.email}
+                    <option key={index} value={item.user.id}>
+                      {item.user.first_name} {item.user.last_name} ({item.user.email})
                     </option>
                   );
                 })}
@@ -738,6 +738,7 @@ const ClientTable = () => {
 
           <tbody className="custom-scroll-sm" style={{height:'300px', overflow:'scroll'}}>
             {clientData?.map((item, index) => {
+              console.log("------------itme ", item);
               return (
                 <>
                   <tr key={index} className="">

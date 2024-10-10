@@ -71,6 +71,32 @@ export const submissionReportFilterKey = [
     {name:'Pay Rate', value:'pay_rate'},
 ] 
 
+export const interviewReportFilterKey = [
+    {name:'Search Any', value:'search_any'},
+    {name:'Start Time', value:'starttime'},
+    {name:'End Time', value:'endtime'},
+    {name:'Time Zone', value:'timezone'},
+    {name:'Client', value:'client'},
+    {name:'Contact Manager', value:'contact_manager'},
+    // {name:'LOB', value:'lob'},
+    {name:'Job Type', value:'job_type'},
+    {name:'LOB', value:'lob'},
+    // {name:'Client', value:'client'},
+    {name:'End Client', value:'endclient'},
+    {name:'Interview Round', value:'interview_round'},
+    {name:'Reschedule', value:'reschdule'},
+    {name:'Mode', value:'mode'},
+    {name:'Submission ID', value:'submission_id'},
+    {name:'Candidate ID', value:'applicant_id'},
+    {name:'Interview ID', value:'interview_id'},
+    {name:'Job ID', value:'job_id'},
+    {name:'Job Title', value:'job_title'},
+    {name:'Candidate Name', value:'applicant_name'},
+    {name:'Candidate Email', value:'applicant_email'},
+    {name:'Candidate Mobile', value:'applicant_mobile'},
+    {name:'Scheduled By', value:'scheduled_by'},
+] 
+
 
 export const  sourceData = [
     {name:'Dice', value:'Dice'},

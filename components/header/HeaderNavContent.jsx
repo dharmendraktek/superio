@@ -16,8 +16,7 @@ const menuList = [
   { name: "JOB POSTING", url: "/employers-dashboard/job-posts" },
   { name: "APPLICANTS", url: "/employers-dashboard/all-applicants" },
   { name: "MY ASSIGN JOBS", url: "/employers-dashboard/my-assign-jobs" },
-  { name: "HR", url: "/employers-dashboard/hr" },
- 
+  // { name: "HR", url: "/employers-dashboard/hr" }, 
   {
     name: "REPORTS",
     url: "",
@@ -40,7 +39,25 @@ const menuList = [
       },
     ],
   },
+  // { name: reactIcons.horizontaldots, url: "" },
 ];
+
+const additionalMenuData = [
+  {
+    id: 1,
+    name: "Schedule Interview",
+    icon: "la-home",
+    routePath: "/employers-dashboard/schedule-interview",
+    active: "active",
+  },
+  {
+    id: 2,
+    name: "Schedule Calander",
+    icon: "la-user-tie",
+    routePath: "/employers-dashboard/schedule-calander",
+    active: "",
+  },
+]
 
 const subMenuData = [
   {
@@ -68,7 +85,7 @@ const subMenuData = [
     id: 4,
     name: "Interview",
     icon: "la-briefcase",
-    routePath: "/employers-dashboard/manage-jobs",
+    routePath: "/employers-dashboard/interview-report",
     active: "",
   },
 ];
@@ -77,6 +94,7 @@ const HeaderNavContent = () => {
   const [openReport, setOpenReport] = useState(null); // Store the index of the open report
   const token = Cookies.get("is_user_refresh");
   const userDetails = useSelector((state) => state.employer.user);
+  const [open, setOpen] = useState(null);
 
   const handleReportToggle = (index) => {
     setOpenReport(openReport === index ? null : index); // Toggle the dropdown
@@ -121,7 +139,8 @@ const HeaderNavContent = () => {
                     item.name == "REPORTS" ? "dropdown-toggle" : ""
                   }`}
                   style={{ position: "relative !important" }}
-                  data-bs-toggle={`${item.name == "REPORTS" ? "dropdown" : ""}`}
+                  data-bs-toggle={`${item.name == "REPORTS" || typeof item.name == "object" ? "dropdown" : ""}`}
+                  onClick={() => setOpen(item.name)}
                 >
                   <Link href={item.url} passHref>
                     <span
@@ -145,8 +164,24 @@ const HeaderNavContent = () => {
                     </span>
                   </Link>
                   <div className="position-absolute">
-                    <ul className="dropdown-menu px-2">
+                    <ul className="px-2 dropdown-menu">
                       {subMenuData.map((_item) => (
+                        <li
+                          className={`${
+                            isActiveLink(_item.routePath, usePathname())
+                              ? "active"
+                              : ""
+                          } mb-1`}
+                          key={_item.id}
+                        >
+                          <Link href={_item.routePath}>{_item.name}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="position-absolute">
+                    <ul className="px-2 dropdown-menu">
+                      {additionalMenuData.map((_item) => (
                         <li
                           className={`${
                             isActiveLink(_item.routePath, usePathname())

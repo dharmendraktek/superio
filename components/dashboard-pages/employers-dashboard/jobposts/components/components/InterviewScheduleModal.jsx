@@ -38,6 +38,7 @@ const initialState = {
   comment: null,
   additional_notifiers: [],
   timezone: "(UTC-06:00) Central Time (US & Canada)",
+  reschedule:false
 };
 
 const remInitialState = {
@@ -50,7 +51,12 @@ const remInitialState = {
   interview: "",
 };
 
-const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
+const InterviewScheduleModal = ({
+  jobPostList = [],
+  applicantData = [],
+  selectedItem,
+  reschedule = false,
+}) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,15 +69,12 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
 
-  // console.log("-----------------job data and applicant data ", jobData , applicantData);
-
   useEffect(() => {
     if (jobPostList.length > 0) {
       const filteredData = jobPostList.filter((item) =>
         item.submissions.some((submission) => submission.selected === true)
       );
-      
-    console.log("-----------filtered data ----", filteredData);
+
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -82,7 +85,6 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
       const filteredData = applicantData.filter((item) =>
         item.jobs_associated.some((jobs) => jobs.selected === true)
       );
-    console.log("-----------filtered data aplicnat", filteredData);
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -108,6 +110,10 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   };
 
   const handleScheduleInterview = async () => {
+    if(reschedule){
+      form["reschedule"] = reschedule;
+      reminder["reschedule"] = reschedule;
+     }
     form["submission_ref"] = jobData[0]?.id;
     try {
       setIsLoading(true);
@@ -160,73 +166,75 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
   let jobId = jobData.length > 0 && jobData[0]?.id;
 
   let filteredData = jobData[0]?.submissions?.find((item) => {
-    if(item.selected){
+    if (item.selected) {
       return item;
     }
-  })
+  });
 
   let filterApplicantData = jobData[0]?.jobs_associated?.find((item) => {
-    if(item.selected){
+    if (item.selected) {
       return item;
     }
-  })
+  });
 
-
+  let finalFilterData = filteredData || filterApplicantData;
 
   let applicantId =
-    jobData.length > 0 && applicantData.length > 0
-      ? filterApplicantData?.applicant_details[0]?.id
-      : filteredData?.applicant_details[0]?.id;
+    // jobData.length > 0 && applicantData.length > 0
+    finalFilterData
+      ? finalFilterData?.applicant_details[0]?.id
+      : selectedItem?.applicant_details?.id;
+
+  console.log(
+    "----------------final filter data data ",
+    selectedItem
+  );
 
   let firstName =
-    jobData.length > 0 && applicantData.length > 0
-      ? filterApplicantData?.applicant_details[0]?.firstname
-      : filteredData?.applicant_details[0]?.firstname;
+    // jobData.length > 0 && applicantData.length > 0
+    finalFilterData
+      ? finalFilterData?.applicant_details[0]?.firstname
+      : selectedItem?.applicant_details?.firstname;
 
   let middleName =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.applicant_details[0]?.middlename
-      : filteredData?.applicant_details[0]?.middlename;
+    // jobData.length > 0 && applicantData?.length > 0
+    finalFilterData
+      ? finalFilterData?.applicant_details[0]?.middlename
+      : selectedItem?.applicant_details?.middlename;
 
   let lastName =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.applicant_details[0]?.lastname
-      : filteredData?.applicant_details[0]?.lastname;
+    // jobData.length > 0 && applicantData?.length > 0
+    finalFilterData
+      ? finalFilterData?.applicant_details[0]?.lastname
+      : selectedItem?.applicant_details?.lastname;
 
-  let clientName =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.job_detail?.client_name
-      : jobData[0]?.client_name;
+  let clientName = finalFilterData
+    ? finalFilterData?.job_detail?.client_name
+    : selectedItem?.client_name;
 
-  let clientId =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.job_detail?.client
-      : jobData[0]?.client;
+  let clientId = finalFilterData
+    ? finalFilterData?.job_detail?.client
+    : selectedItem?.client;
 
-  let contactManagerId =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.job_detail?.contact_manager
-      : jobData[0]?.contact_manager;
+  let contactManagerId = finalFilterData
+    ? finalFilterData?.job_detail?.contact_manager
+    : selectedItem?.contact_manager;
 
-  let jobTitle =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.job_detail?.title
-      : jobData[0]?.title;
+  let jobTitle = finalFilterData
+    ? finalFilterData?.job_detail?.title
+    : selectedItem?.job_details?.title;
 
-  let jobCode =
-    jobData.length > 0 && applicantData?.length > 0
-      ? filterApplicantData?.job_detail?.job_code
-      : jobData[0]?.job_code;
+  let jobCode = finalFilterData
+    ? finalFilterData?.job_detail?.job_code
+    : selectedItem?.job_details?.job_code;
 
-  let applicantEmail =
-    jobData.length > 0 && applicantData.length > 0
-      ? filterApplicantData?.applicant_details[0]?.email
-      : filteredData?.applicant_details[0]?.email;
+  let applicantEmail = finalFilterData
+    ? finalFilterData?.applicant_details[0]?.email
+    : selectedItem?.applicant_details?.email;
 
-  let applicantContact =
-    jobData.length > 0 && applicantData.length > 0
-      ? filterApplicantData?.applicant_details[0]?.mobile
-      : filteredData?.applicant_details[0]?.mobile;
+  let applicantContact = finalFilterData
+    ? finalFilterData?.applicant_details[0]?.mobile
+    : selectedItem?.applicant_details?.mobile;
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, additional_notifiers: selectedUsersIds }));
@@ -265,7 +273,9 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
     >
       <TimeZoneModal form={form} setForm={setForm} />
       <div className="offcanvas-header">
-        <h5 id="interviewScheduleRightLabel" className="text-primary fw-500">Schedule Interview</h5>
+        <h5 id="interviewScheduleRightLabel" className="text-primary fw-500">
+          {reschedule ? "Reschedule Interview" : "Schedule Interview"}
+        </h5>
         <button
           type="button"
           className="btn-close text-reset"
@@ -315,6 +325,31 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
           </div>
           <hr></hr>
           <div className="mt-5">
+            {reschedule &&
+          <div className="W-100 my-2">
+                <p>
+                Reschdule Reason <strong className="text-danger">*</strong>
+                </p>
+                <select
+                  name="mode"
+                  onChange={handleChange}
+                  className="client-form-input"
+                >
+                  <option>Select</option>
+                  {/* {interviewModes.map((item, index) => {
+                    return (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })} */}
+                  <option>Candidate Unavailable</option>
+                  <option>Client Unavailable</option>
+                  <option>Network issue</option>
+                  <option>Slot Booked</option>
+                </select>
+            </div>
+            }
             <div>
               <DatePickerCustom
                 date={form.startdate}
@@ -746,7 +781,7 @@ const InterviewScheduleModal = ({ jobPostList, applicantData }) => {
                 onClick={handleScheduleInterview}
                 className="theme-btn btn-style-one small"
               >
-                {isLoading ? <BtnBeatLoader /> : "Schedule"}
+                {isLoading ? <BtnBeatLoader /> : reschedule ? "Reschedule" : "Schedule"}
               </button>
               <button
                 className="theme-btn btn-style-four small"
