@@ -88,6 +88,20 @@ const subMenuData = [
     routePath: "/employers-dashboard/interview-report",
     active: "",
   },
+  {
+    id: 5,
+    name: "Confirmation & Joining",
+    icon: "la-briefcase",
+    routePath: "/employers-dashboard/confirmation-joining-report",
+    active: "",
+  },
+  // {
+  //   id: 6,
+  //   name: "Joining",
+  //   icon: "la-briefcase",
+  //   routePath: "/employers-dashboard/joining-report",
+  //   active: "",
+  // },
 ];
 
 const HeaderNavContent = () => {

@@ -42,7 +42,7 @@ const initialState = {
   linkedin: "",
   authorization: "",
   authorization_expiry: null,
-  is_clearance: "",
+  is_clearance: "no",
   clearance: "",
   relocation: "",
   current_company: "",
@@ -52,7 +52,7 @@ const initialState = {
   preferred_location: "",
   tex_terms: "",
   industry: "",
-  expect_currency: "",
+  expect_currency: "USD",
   expect_amount: "",
   expect_payment_frequency: "",
   expect_job_type: "",
@@ -282,10 +282,10 @@ const CandidateCreation = ({
       setError((prev) => ({ ...prev, mobileErr: "This Field is required" }));
       // return;
     }
-    if (!form.authorization) {
-      setError((prev) => ({ ...prev, workAuthErr: "This Field is required" }));
-      // return;
-    }
+    // if (!form.authorization) {
+    //   setError((prev) => ({ ...prev, workAuthErr: "This Field is required" }));
+    //   // return;
+    // }
     if (!form.source) {
       setError((prev) => ({ ...prev, sourceErr: "This Field is required" }));
       // return;
@@ -299,8 +299,7 @@ const CandidateCreation = ({
       form.lastname &&
       form.email &&
       form.mobile &&
-      form.authorization &&
-      form.source &&
+      // form.authorization &&
       form.source &&
       form.tax_terms
     ) {
@@ -366,7 +365,7 @@ const CandidateCreation = ({
             First Name <strong className="text-danger">*</strong>
           </p>
           <div className="d-flex gap-2">
-            <div className="w-25">
+            {/* <div className="w-25">
               <select
                 value={form.name_title}
                 name="name_title"
@@ -378,8 +377,8 @@ const CandidateCreation = ({
                 <option value="Mrs">Mrs</option>
                 <option value="Ms">Ms</option>
               </select>
-            </div>
-            <div className="w-75">
+            </div> */}
+            <div className="w-100">
               <input
                 name="firstname"
                 onChange={(e) => {
@@ -452,15 +451,14 @@ const CandidateCreation = ({
           />
           <span className="text-danger">{error.mobileErr}</span>
         </div>
-        <div className="col-4 my-1">
+        {/* <div className="col-4 my-1">
           <p>Date Of Birth</p>
           <DatePickerCustom
             handleDate={(date) => setForm((prev) => ({ ...prev, dob: date }))}
             date={form.dob}
           />
-          {/* <input type="text" className="client-form-input" /> */}
-        </div>
-        <div className="col-4 my-1">
+        </div> */}
+        {/* <div className="col-4 my-1">
           <p>Skype ID</p>
           <input
             name="skype_id"
@@ -469,7 +467,7 @@ const CandidateCreation = ({
             type="text"
             className="client-form-input"
           />
-        </div>
+        </div> */}
         <div className="col-4 my-1">
           <p>Linkedin Profile URL</p>
           <input
@@ -482,7 +480,8 @@ const CandidateCreation = ({
         </div>
         <div className="col-4 my-1">
           <p>
-            Work Authorization <strong className="text-danger">*</strong>
+            Work Authorization 
+            {/* <strong className="text-danger">*</strong> */}
           </p>
           <select
             name="authorization"
@@ -653,7 +652,7 @@ const CandidateCreation = ({
             className="client-form-input"
           />
         </div>
-        <div className="col-4 my-1">
+        {/* <div className="col-4 my-1">
           <p>Referred By</p>
           <input
             name="referred_by"
@@ -662,7 +661,7 @@ const CandidateCreation = ({
             type="text"
             className="client-form-input"
           />
-        </div>
+        </div> */}
         <div className="col-4 my-1">
           <p>Applicant Status</p>
           <select
@@ -797,7 +796,7 @@ const CandidateCreation = ({
             </select>
             <input
               name="expect_amount"
-              type="text"
+              type="number"
               value={form.expect_amount}
               placeholder="Rate"
               onChange={handleChange}
@@ -902,7 +901,7 @@ const CandidateCreation = ({
             <span
               data-bs-toggle="tooltip"
               data-bs-placement="top-right"
-              title="Please enter skills by using Enter button as separator."
+              title="Please enter skills by using Enter button or mouse click as separator."
               className="text-primary custom-tooltip w-100"
             >
               {reactIcons.info}
@@ -943,9 +942,21 @@ const CandidateCreation = ({
             </div>
             <input
               name="primary_skills"
-              placeholder="Please enter skills by using Enter button as separator."
+              placeholder="Please enter skills by using Enter button or mouse click as separator."
               className="w-100"
               value={skills}
+              onClick={() => {
+                if (skills) {
+                  setForm((prev) => ({
+                    ...prev,
+                    primary_skills: [
+                      ...prev.primary_skills,
+                      { name: skills },
+                    ],
+                  }));
+                  setSkills("");
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
                   setForm((prev) => ({
@@ -968,7 +979,7 @@ const CandidateCreation = ({
             <button
               data-bs-toggle="tooltip"
               data-bs-placement="top-right"
-              title="Please enter skills by using Enter button as separator."
+              title="Please enter skills by using Enter button or mouse click as separator."
               className="text-primary"
             >
               <span>{reactIcons.info}</span>
@@ -1007,7 +1018,19 @@ const CandidateCreation = ({
               name="secondary_skills"
               className="w-100"
               value={secondarySkills}
-              placeholder="Please enter skills by using Enter button as separator."
+              placeholder="Please enter skills by using Enter button or mouse click as separator."
+              onClick={() => {
+                if (secondarySkills) {
+                  setForm((prev) => ({
+                    ...prev,
+                    secondary_skills: [
+                      ...prev.secondary_skills,
+                      { name: secondarySkills },
+                    ],
+                  }));
+                  setSecondarySkills("");
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
                   setForm((prev) => ({
@@ -1096,7 +1119,7 @@ const CandidateCreation = ({
             <option>Hardware</option>
           </select>
         </div>
-        <div className="col-4 my-1">
+        {/* <div className="col-4 my-1">
           <p>Current CTC</p>
           <div className="d-flex gap-2">
             <select
@@ -1147,9 +1170,9 @@ const CandidateCreation = ({
               <option>Full Time</option>
             </select>
           </div>
-        </div>
+        </div> */}
 
-        <div className="col-4 my-1">
+        {/* <div className="col-4 my-1">
           <p>Pan Card Number</p>
           <input
             type="text"
@@ -1168,7 +1191,7 @@ const CandidateCreation = ({
             value={form.aadharcard}
             className="client-form-input"
           />
-        </div>
+        </div> */}
       </div>
       <div className="d-flex my-4 gap-2">
         <button

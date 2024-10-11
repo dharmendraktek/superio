@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 
 
-const JobDelegationReport = () => {
+const ConfirmationReport = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
@@ -81,13 +81,14 @@ const JobDelegationReport = () => {
   const getJobDelegationReports = async (param) => {
     setIsLoading(true);
     const response = await getReq(
-      `/job-assignment-report/report/?page=${page+1}&size=25${param ? param : ""}`
+      `/confirmation-joining-applicant-report/report/?page=${page+1}&size=25${param ? param : ""}`
     );
 
     setIsLoading(false);
 
     if (response.status) {
       setDataCount(response.data.count);
+      console.log("---------------response ", response.data)
       setJobDelegationData(response.data.results || response.data);
     }
   };
@@ -109,13 +110,13 @@ const JobDelegationReport = () => {
   const handleExportExcel = async () => {
     if(allParam){
     window.open(
-      BASE_URL + `/job-assignment-report/report/?${allParam}&export=excel`,
+      BASE_URL + `/confirmation-joining-applicant-report/report/?${allParam}&export=excel`,
       "_blank",
       "noopener,noreferrer"
     );
   }else{
     window.open(
-      BASE_URL + `/job-assignment-report/report/?export=excel`,
+      BASE_URL + `/confirmation-joining-applicant-report/report/?export=excel`,
       "_blank",
       "noopener,noreferrer"
     );
@@ -359,4 +360,4 @@ const JobDelegationReport = () => {
   );
 };
 
-export default JobDelegationReport;
+export default ConfirmationReport;

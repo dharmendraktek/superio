@@ -73,6 +73,7 @@ export const submissionReportFilterKey = [
 
 export const interviewReportFilterKey = [
     {name:'Search Any', value:'search_any'},
+    {name:'Interview Round', value:'interview_round'},
     {name:'Start Time', value:'starttime'},
     {name:'End Time', value:'endtime'},
     {name:'Time Zone', value:'timezone'},
@@ -83,7 +84,6 @@ export const interviewReportFilterKey = [
     {name:'LOB', value:'lob'},
     // {name:'Client', value:'client'},
     {name:'End Client', value:'endclient'},
-    {name:'Interview Round', value:'interview_round'},
     {name:'Reschedule', value:'reschdule'},
     {name:'Mode', value:'mode'},
     {name:'Submission ID', value:'submission_id'},

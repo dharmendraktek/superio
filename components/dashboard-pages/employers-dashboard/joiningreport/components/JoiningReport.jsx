@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 
 
-const JobDelegationReport = () => {
+const JoiningReport = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
@@ -359,4 +359,4 @@ const JobDelegationReport = () => {
   );
 };
 
-export default JobDelegationReport;
+export default JoiningReport;

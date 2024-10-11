@@ -4,7 +4,7 @@ import DatePickerCustom from "./DatePickerCustom";
 const MultiFilterSearch = ({
   openFields,
   setOpenFields,
-  keys,
+  filterKeys,
   setFilterKeys,
   search,
   setSearch,
@@ -16,8 +16,6 @@ const MultiFilterSearch = ({
   setEndDate,
 }) => {
 
-  console.log("-------------key ", keys);
-
   return (
     <div className="" style={{ minWidth: "400px", maxWidth:'fit-content' }}>
       <div className="d-flex border border-primary rounded-1 position-relative">
@@ -26,7 +24,7 @@ const MultiFilterSearch = ({
           style={{ width: "fit-content" }}
           className="px-2 rounded-start-1 border-end border-primary bg-primary text-white fw-medium  cursor-pointer"
         >
-          <span>{keys.find((item) => item.value == fieldName)?.name}</span>
+          <span>{filterKeys.find((item, index) => index == fieldName)?.name}</span>
           <span>{reactIcons.arrowfilldown}</span>
         </div>
         {openFields && (
@@ -38,11 +36,13 @@ const MultiFilterSearch = ({
               maxHeight:'fit-content',
               zIndex: "10000",
               top: "35px",
+              right:'0px'
             }}
           >
             <div className="w-100 d-flex flex-wrap rounded-1">
-              {keys.map((item, index) => {
+              {filterKeys.map((item, index) => {
                 return (
+                  <>
                   <div
                     key={index}
                     // onClick={() => {
@@ -52,18 +52,77 @@ const MultiFilterSearch = ({
                     className={`cursor-pointer d-flex gap-2 hover-bg-change my-1 px-2 rounded-1 fw-medium w-50 ${item.value == fieldName ? 'bg-primary text-white' : 'bg-white'}`}
                   >
                     <input type="checkbox" checked={item.selected} onChange={(e) => {
+                      if(item.value == "interview_round"){
+                           setOpenFields(true);
+                      }else {
+                         setOpenFields(false);
+                      }
                       if(e.target.checked){
                         setFieldName(index);
-                        keys[index]["selected"] = e.target.checked;
-                        setOpenFields(false);
+                        let update = [...filterKeys];
+                        update[index]["selected"] = e.target.checked;
+                       setFilterKeys(update);
+                        // keys[index]["selected"] = e.target.checked;
+                        // setOpenFields(false);
                       }else{
                         setOpenFields(false);
-                        keys[index]["selected"] = e.target.checked;
+                        let update = [...filterKeys];
+                        update[index]["selected"] = e.target.checked;
+                       setFilterKeys(update);
                       }
                         
                     }} />
-                    <span>{item.name}</span>
+                    <span className="fw-600">{item.name}</span>
                   </div>
+            {item.name =="Interview Round" && item?.selected &&
+            <div className="border position-absolute bg-white border-secondary rounded-1 w-50 h-30 px-2" style={{right:-195}}>
+                  <div className="d-flex gap-2">
+                    <input type="radio" name="interveiw_round" value="Client Round" checked={item.search_value == "Client" ? true : false} onClick={() => {
+                      setOpenFields(false);
+                      setFieldName(index);
+                      let update = [...filterKeys];
+                      update[index]["search_value"] = "Client";
+                     setFilterKeys(update);
+                    }} />
+                    <label>Client Round</label>
+                  </div>
+                  <div className="d-flex gap-2">
+                    <input type="radio" name="interveiw_round" value="L1" checked={item.search_value == "L1" ? true : false} onClick={() => {
+                      setOpenFields(false);
+                      setFieldName(index);
+                      let update = [...filterKeys];
+                      update[index]["search_value"] = "L1";
+                     setFilterKeys(update);
+                    }} />
+                    <label>L1 Round</label>
+                  </div>
+                  <div className="d-flex gap-2">
+                    <input type="radio"  name="interveiw_round"  value="L2" checked={item.search_value == "L2" ? true : false}
+                      onClick={() => {
+                        setFieldName(index);
+                        setOpenFields(false);
+                        let update = [...filterKeys];
+                        update[index]["search_value"] = "L2";
+                       setFilterKeys(update);
+                      }} 
+                    />
+                    <label>L2 Round</label>
+                  </div>
+                  <div className="d-flex gap-2">
+                    <input type="radio" name="interveiw_round"  value="L3" checked={item.search_value == "L3" ? true : false}
+                     onClick={() => {
+                      setFieldName(index);
+                      setOpenFields(false);
+                      let update = [...filterKeys];
+                      update[index]["search_value"] = "L3";
+                     setFilterKeys(update);
+                    }} 
+                    />
+                    <label>L3 Round</label>
+                  </div>
+            </div>
+            }
+                  </>
                 );
               })}
             </div>
@@ -72,20 +131,29 @@ const MultiFilterSearch = ({
         <input
           type="text"
           onChange={(e) =>{ 
-            // keys[fieldName]["search_value"] = e.target.value;
-            let update = [...keys];
-            update[fieldName]["search_value"] = e.target.value;
-            setFilterKeys(update);
             setSearch(e.target.value)
           }}
-          className="px-2"
+          onKeyDown={(e) => {
+            if(e.key == "Enter"){
+               let update = [...filterKeys];
+            update[fieldName]["search_value"] = search;
+            setFilterKeys(update);
+            setSearch('');
+            }
+          }}
+          className="ps-2"
           placeholder="Search..."
           style={{ width: "200px" }}
           value={search}
         />
-         {search &&
-                <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
-        }
+         {/* {search && */}
+                <span onClick={() =>{
+                   let update = [...filterKeys];
+                   update[fieldName]["search_value"] = search;
+                   setFilterKeys(update);
+                   setSearch('');
+                }} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.search}</span>
+        {/* } */}
         {/* <button className="theme-btn btn-style-one small">Search</button> */}
       </div>
       {(fieldName == "created" || fieldName == "updated") && (

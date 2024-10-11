@@ -63,6 +63,8 @@ import { ImTable } from "react-icons/im";
 import { IoList } from "react-icons/io5";
 import { MdFeedback } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
+import { IoMdClose } from "react-icons/io";
+
 
 
 
@@ -126,4 +128,5 @@ export const reactIcons = {
     list:<IoList />,
     feedback:<MdFeedback />,
     horizontaldots:<BsThreeDots />,
+    normalclose:<IoMdClose />
 }

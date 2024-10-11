@@ -2,6 +2,7 @@
 
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
+import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getReq } from "@/utils/apiHandlers";
@@ -23,26 +24,59 @@ const ClientSubmissionReport = () => {
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
   const [expand, setExpand] = useState(null);
+  const [filterKeys, setFilterKeys] = useState(submissionReportFilterKey)
+  const [allParam, setAllParam] = useState('');
+
+  // useEffect(() => {
+  //   let param;
+  //   if (startDate && endDate) {
+  //     setPage(0);
+  //     param = `&submission_start=${moment(startDate).format(
+  //       "yyyy-MM-DD"
+  //     )}&submission_end=${moment(endDate).format("yyyy-MM-DD")}`;
+  //   }
+
+  //   if (fieldName && search) {
+  //     setPage(0);
+  //     param = param ? param + `&${fieldName}=${search}` : `&${fieldName}=${search}`;
+  //   }
+  //   if (fieldName == "assigned_today") {
+  //     setPage(0);
+  //     param = `&${fieldName}=""`;
+  //   }
+  //   getClientSubmissionList(param);
+  // }, [search, startDate, endDate, page, fieldName]);
+
 
   useEffect(() => {
-    let param;
+    let param = '';
+  
+    // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
       setPage(0);
-      param = `&submission_start=${moment(startDate).format(
-        "yyyy-MM-DD"
-      )}&submission_end=${moment(endDate).format("yyyy-MM-DD")}`;
+      param += `&interview_schedule_start=${moment(startDate).format("YYYY-MM-DD")}&interview_schedule_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
-
-    if (fieldName && search) {
-      setPage(0);
-      param = param ? param + `&${fieldName}=${search}` : `&${fieldName}=${search}`;
+  
+    // Include filtered keys
+    const filterParams = filterKeys
+      .filter((item) => item.selected && item.search_value) // Filter items with selected: true and search_value present
+      .map((item) => `&${item.value}=${item.search_value}`) // Create the string in the format &value=search_value
+      .join(""); // Join them together to form the final string
+  
+    param += filterParams; // Combine date and filter parameters
+    console.log("----------param value ", param);
+  
+    if (param) {
+      setAllParam(param);
+      setPage(page || 0); // Set page to 0 if it's falsy
+      getClientSubmissionList(param);
+    } else if (page) {
+      getClientSubmissionList(param);
+    }else {
+      getClientSubmissionList(param);
     }
-    if (fieldName == "assigned_today") {
-      setPage(0);
-      param = `&${fieldName}=""`;
-    }
-    getClientSubmissionList(param);
-  }, [search, startDate, endDate, page, fieldName]);
+  }, [startDate, endDate, page, filterKeys]);
+  
 
 
   const getClientSubmissionList = async (param) => {
@@ -56,25 +90,44 @@ const ClientSubmissionReport = () => {
   };
 
   const handleClear = () => {
-    setFieldName('search_any');
+    let update = [...filterKeys]
+    update.map((item) => {
+      delete item['selected'];
+      delete item['search_value'];
+      return item;
+    })
+    setFilterKeys(update);
     setStartDate(null);
     setEndDate(null);
     setSearch('');
   }
 
-  const handleExportExcel = async() => {
-    window.open(BASE_URL + '/submission-report/report/?export=excel', '_blank', 'noopener,noreferrer')
+  const handleExportExcel = async () => {
+    if(allParam){
+    window.open(
+      BASE_URL + `/submission-report/report/?${allParam}&export=excel`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }else{
+    window.open(
+      BASE_URL + `/submission-report/report/?export=excel`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
+};
 
   return (
     <div className="theme-background">
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-2">
-        <MultiSearch
+        <MultiFilterSearch
           openFields={openFields}
           setOpenFields={setOpenFields}
-          keys={submissionReportFilterKey}
+          filterKeys={filterKeys}
+          setFilterKeys={setFilterKeys}
           search={search}
           fieldName={fieldName}
           setFieldName={setFieldName}
@@ -109,6 +162,51 @@ const ClientSubmissionReport = () => {
         <div>
           <button className="theme-btn btn-style-one small d-flex align-items-center gap-2" onClick={() => handleExportExcel()}><span className="fw-600 fs-6">Excel</span><span>{reactIcons.download}</span></button>
         </div>
+      </div>
+      <div className="d-flex me-2 my-2">
+         { filterKeys.map((item, index) => {
+            return(
+              <div className="">
+                {item.selected &&
+                <div
+                  key={item.value}
+                  className="border d-flex me-2 justify-content-between border-secondary"
+                >
+                  <div onClick={() =>{ 
+                    setFieldName(index)
+                    setFilterKeys(prevKeys => {
+                      const update = [...prevKeys];
+                      update[index] = { ...update[index], search_value:'' };
+                      return update;
+                    });
+                    }} className="bg-gray text-white px-2 cursor-pointer" htmlFor={item.value}>
+                    {item.name} 
+                  </div>
+                  {item.search_value &&
+                    <div className="px-2 bg-secondary fw-600">
+                    {item.search_value || ""}
+                    {/* <input type="text" placeholder="Search..." /> */}
+                    </div>
+                  }
+                  <div className="px-1 bg-secondary cursor-pointer">
+                  <span
+                    onClick={() => {
+                       setFieldName(0);
+                       setFilterKeys(prevKeys => {
+                        const update = [...prevKeys];
+                        update[index] = { ...update[index], selected: false, search_value:'' };
+                        return update;
+                      });
+                    }}
+                  >
+                    {reactIcons.normalclose}
+                  </span>
+                  </div>
+                </div>
+                }
+              </div>
+            )
+          })}
       </div>
       <div className="mt-2">
         <div className="table_div custom-scroll-sm">

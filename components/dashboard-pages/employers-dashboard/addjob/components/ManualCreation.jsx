@@ -157,7 +157,7 @@ const ManualCreation = ({
         ...prev,
         job_code: jobData.job_code,
         title: jobData.title,
-        currency: jobData.currency,
+        currency: jobData.currency || "USD",
         amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
         payment_frequency: jobData.payment_frequency,
         job_type: jobType ? jobType : "",
@@ -168,10 +168,10 @@ const ManualCreation = ({
         remote: jobData.remote,
         lob: isNumber(jobData.lob) ? jobData.lob : "",
         address: jobData.address,
-        country: country ? country?.name : "",
+        country: country ? country?.name : "United States",
         state: jobData.state,
         city: jobData.city,
-        job_status: jobNewStatus ? jobNewStatus : "",
+        job_status: jobNewStatus ? jobNewStatus : "Active",
         client: isNumber(jobData.client) ? jobData.client : "",
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
@@ -195,8 +195,8 @@ const ManualCreation = ({
         languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
-        head_account_manager: jobData.head_account_manager,
-        account_manager: jobData.account_manager,
+        head_account_manager: jobData.head_account_manager || employee_details?.reportingmanager_details?.id,
+        account_manager: jobData.account_manager || employee_details?.user?.id,
         delivery_manager: jobData.delivery_manager,
         assign: jobData.assign ? jobData.assign : [],
         tax_term: jobData.tax_term ? jobData.tax_term : "",
@@ -1382,6 +1382,18 @@ const ManualCreation = ({
                   placeholder="Please enter skills by using Enter button or mouse click as separator."
                   name="secondary_skills"
                   value={secondarySkills}
+                  onClick={() => {
+                    if (secondarySkills) {
+                      setForm((prev) => ({
+                        ...prev,
+                        secondary_skills: [
+                          ...prev.secondary_skills,
+                          { name: secondarySkills },
+                        ],
+                      }));
+                      setSecondarySkills("");
+                    }
+                  }}
                   onKeyDown={(e) => {
                     if (e.key == "Enter") {
                       setForm((prev) => ({
@@ -1451,7 +1463,7 @@ const ManualCreation = ({
               <span className="text-danger">{error.taxTermErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>B.U. Head</p>
+              <p>Business Unit Head</p>
               <select
                 value={form.head_account_manager}
                 className="client-form-input"
