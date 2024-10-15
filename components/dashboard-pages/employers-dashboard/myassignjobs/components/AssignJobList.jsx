@@ -14,6 +14,7 @@ import { jobPostsTableField } from "../../jobposts/components/components/constan
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 import NotesModal from "@/components/common/NotesModal";
+import { useSelector } from "react-redux";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -31,17 +32,20 @@ const AssignJobList = () => {
   const [submissionDetails, setSubmissionDetails] = useState();
   const [isSelected, setIsSelected] = useState([]);
   const [jobDetails, setJobDetails] = useState();
+  const employee_details = useSelector((state) => state.employer.user);
+
+  console.log("---------------employeee details ", employee_details);
 
   useEffect(() => {
-    getJobpostsList();
-  }, []);
+    if(employee_details){
+      getJobpostsList();
+    }
+  }, [employee_details]);
 
   const getJobpostsList = async () => {
     setIsLoading(true);
     const response = await getReq(
-      `/jobs/?page=${page + 1}&active=${active == 1 ? true : false}${
-        search ? `&search=${search}` : ""
-      }`
+      `/user-assigned-jobs/${employee_details?.id}/`
     );
     setIsLoading(false);
     if (response.status) {

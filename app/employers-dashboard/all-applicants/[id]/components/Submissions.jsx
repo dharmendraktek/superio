@@ -1,17 +1,17 @@
-import Stepper from "@/app/employers-dashboard/job-posts/[id]/components/Stepper";
 import { useEffect, useState } from "react";
+import Stepper from "./Stepper";
 
 const { default: Paper } = require("@/components/common/Paper")
 
 
 const tabsName = [
-    { id: 1, name: "Tagged" },
-    { id: 2, name: "All" },
-    { id: 3, name: "Client Submissions" },
-    { id: 4, name: "Interviews" },
-    { id: 5, name: "Confirmations" },
-    { id: 6, name: "Placements" },
-    { id: 7, name: "Not Joined" },
+  { id: 1, name: "Tagged", value:'submission'},
+  { id: 2, name: "All", value:'' },
+  { id: 3, name: "Client Submissions", value:'client_submission' },
+  { id: 4, name: "Interviews", value:'interview' },
+  { id: 5, name: "Confirmations", value:'confirmation' },
+  { id: 6, name: "Joined", value:'joined' },
+  { id: 7, name: "Not Joined", value:'not_joined' },
   ];
 
 const Submissions = ({applicantData}) => {

@@ -4,7 +4,7 @@ import { getReq, patchReq } from "@/utils/apiHandlers";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const ClientSubmissionModal = ({ submissionDetails, side }) => {
+const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails }) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     new_status: "",
@@ -12,7 +12,6 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
     comment:''
   });
   const [submissionId, setSubmissionId] = useState();
-  console.log("-------------submission detail s--------", submissionDetails);
 
   useEffect(() => {
     if (submissionDetails?.length > 0 && side == "applicant") {
@@ -24,6 +23,7 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
           return { ...item, submissions: selectedSubmissions };
         })
         .filter((item) => item.submissions.length > 0);
+
 
       setSubmissionId(filteredData[0]?.jobs_associated[0]?.id);
     }else if(Object.values(submissionDetails)?.length > 0 && side == "job"){
@@ -66,17 +66,23 @@ const ClientSubmissionModal = ({ submissionDetails, side }) => {
   const handleUpdateStatus = async () => {
     try {
       const response = await patchReq(
-        `/submissions/${submissionId}/update-status/`,
+        `/submissions/${submissionDetails?.id}/update-status/`,
         form
       );
       if (response.status) {
         toast.success("Status has been changed successfully");
+        setForm({
+          new_status: "",
+          comment:''
+        })
+        if(side=="job"){
+          handleGetJobDetails();
+        }
       }
     } catch (err) {
     }
   };
 
-  console.log("------------status list ",  statusList);
 
   return (
     <div

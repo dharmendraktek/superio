@@ -75,6 +75,8 @@ const InterviewScheduleModal = ({
         item.submissions.some((submission) => submission.selected === true)
       );
 
+      console.log("--------------filter data ", filteredData);
+
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -85,6 +87,7 @@ const InterviewScheduleModal = ({
       const filteredData = applicantData.filter((item) =>
         item.jobs_associated.some((jobs) => jobs.selected === true)
       );
+      console.log("--------------applicant data ", filteredData);
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -110,11 +113,12 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
+    console.log('--------------final filter data inside of func ', finalFilterData);
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
      }
-    form["submission_ref"] = jobData[0]?.id;
+    form["submission_ref"] = finalFilterData?.id;
     try {
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
@@ -122,10 +126,10 @@ const InterviewScheduleModal = ({
       if (response.status) {
         handleSubmitReminder(response.data.id);
         handleAddInterviewDocuments(response.data.id);
-        let closeBtn = document.getElmentById("closeBtnInterview");
         toast.success(
           "The applicant interview has been scheduled successfully."
         );
+        let closeBtn = document.getElmentById("closeBtnInterview");
         closeBtn.click();
       }
     } catch (err) {
@@ -184,11 +188,6 @@ const InterviewScheduleModal = ({
     finalFilterData
       ? finalFilterData?.applicant_details[0]?.id
       : selectedItem?.applicant_details?.id;
-
-  console.log(
-    "----------------final filter data data ",
-    selectedItem
-  );
 
   let firstName =
     // jobData.length > 0 && applicantData.length > 0
@@ -262,6 +261,12 @@ const InterviewScheduleModal = ({
       job: jobId,
     }));
   }, [clientId, applicantContact]);
+
+  console.log(
+    "----------------final filter data data ",
+    finalFilterData
+  );
+
 
   return (
     <div

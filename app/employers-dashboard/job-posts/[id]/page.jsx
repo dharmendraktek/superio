@@ -174,7 +174,7 @@ const Index = () => {
             </div>
           )}
           <div className="row mx-3">
-            <div className={`${open ? "col-lg-9" : "col-12"}`}>
+            <div className={`${open ? "col-lg-12" : "col-12"}`}>
               <JobAssignModal jobId={id} />
               {open ? (
                 <>
@@ -313,7 +313,7 @@ const Index = () => {
                     </div>
                   </Paper>
                   <div className="my-2">
-                    <Submissions jobData={jobData} />
+                    <Submissions jobData={jobData} handleGetJobDetails={handleGetJobDetails} />
                   </div>
                   <div className="my-2">
                     <Notes
@@ -340,14 +340,14 @@ const Index = () => {
                 />
               )}
             </div>
-            {open && (
+            {/* {open && (
               <div className="col-3">
                 <JobSearchBoard
                   searchString={searchString}
                   setSearchString={setSearchString}
                 />
               </div>
-            )}
+            )} */}
           </div>
           {/* End .row */}
         </div>

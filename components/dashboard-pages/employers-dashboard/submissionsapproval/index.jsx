@@ -1,5 +1,5 @@
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
-import ConfirmationReport from "./components/ConfirmationReport";
+import SubmissionApprovalReport from "./components/SubmissionApproval";
 
 const index = () => {
   return (
@@ -10,7 +10,7 @@ const index = () => {
           {/* <div className="mt-5 text-center">
                  <strong>Work In progress</strong>
              </div> */}
-              <ConfirmationReport />
+              <SubmissionApprovalReport />
           </div>
         </div>
       </section>

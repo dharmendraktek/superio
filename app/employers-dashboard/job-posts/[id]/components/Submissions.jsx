@@ -5,17 +5,17 @@ import Stepper from "./Stepper";
 import Paper from "@/components/common/Paper";
 
 const tabsName = [
-    { id: 1, name: "Tagged" },
-    { id: 2, name: "All" },
-    { id: 3, name: "Client Submissions" },
-    { id: 4, name: "Interviews" },
-    { id: 5, name: "Confirmations" },
-    { id: 6, name: "Placements" },
-    { id: 7, name: "Not Joined" },
+    { id: 1, name: "Tagged", value:'submission'},
+    { id: 2, name: "All", value:'' },
+    { id: 3, name: "Client Submissions", value:'client_submission' },
+    { id: 4, name: "Interviews", value:'interview' },
+    { id: 5, name: "Confirmations", value:'confirmation' },
+    { id: 6, name: "Joined", value:'joined' },
+    { id: 7, name: "Not Joined", value:'not_joined' },
   ];
 
 
-const Submissions = ({jobData}) => {
+const Submissions = ({jobData, handleGetJobDetails}) => {
     const [tab, setTab] = useState(2);
     const [submissionData, setSubmissionData] = useState([]);
 
@@ -37,7 +37,7 @@ const Submissions = ({jobData}) => {
           <h4>Submissions</h4>
           <div className="submissions d-flex gap-2">
             {tabsName.map((item, index) => {
-              let filtered = jobData?.submissions.filter((_item) => _item.current_status == item.id)?.length;
+              let filtered = jobData?.submissions.filter((_item) => _item.current_status_details.name == item.value)?.length;
               return (
                 <div
                   key={index}
@@ -83,7 +83,7 @@ const Submissions = ({jobData}) => {
                 {submissionData?.map((item) => {
                   return(
                 <div className="py-2">
-                  <Stepper submissionDetails={item} />
+                  <Stepper submissionDetails={item} handleGetJobDetails={handleGetJobDetails} />
                 </div>
                   )
                 })

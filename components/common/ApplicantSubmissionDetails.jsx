@@ -599,8 +599,9 @@ const ApplicantSubmissionDetails = ({
       applicantCheck.vendor_employees_strength &&
       applicantCheck.vendor_glassdoor &&
       applicantCheck.app_technical_questionaire &&
-      applicantCheck.vendor_followers && 
-      validateDocument()
+      applicantCheck.vendor_followers 
+      // && 
+      // validateDocument()
     ) {
       const response = await postApiReq(
         "/linkedin-manual-check/",

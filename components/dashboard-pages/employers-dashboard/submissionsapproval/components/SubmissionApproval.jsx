@@ -3,50 +3,39 @@
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
+import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
+import SubmissionDetailsPreviewModal from "@/components/common/SubmissionDetailsPreviewModal";
 import { getReq } from "@/utils/apiHandlers";
-import { confirmationFilterKeys } from "@/utils/constant";
+import { jobDelegationFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-const ConfirmationReport = () => {
+const SubmissionApproval = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
-  const [confirmationData, setConfirmationData] = useState([]);
+  const [submissionApprovalData, setSubmissionApprovalData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
   const [fieldName, setFieldName] = useState("search_any");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [filterKeys, setFilterKeys] = useState(confirmationFilterKeys);
+  const [filterKeys, setFilterKeys] = useState(jobDelegationFilterKey);
   const [allParam, setAllParam] = useState("");
-  const [type, setType] = useState();
+  const [submissionDetail, setSubmissionDetail] = useState();
 
   useEffect(() => {
     let param = "";
 
     // Include date parameters if both startDate and endDate are present
-    if (startDate && endDate && type == "confirmation") {
+    if (startDate && endDate) {
       setPage(0);
-      param += `&confirmation_date_start=${moment(startDate).format(
+      param += `&assigned_date_start=${moment(startDate).format(
         "YYYY-MM-DD"
-      )}&confirmation_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
-    } else if (startDate && endDate && type == "submission") {
-      setPage(0);
-      param += `&submission_start=${moment(startDate).format(
-        "YYYY-MM-DD"
-      )}&submission_end=${moment(endDate).format("YYYY-MM-DD")}`;
-    } else if (type == "all") {
-      param += `&confirmation_date_start=${moment(startDate).format(
-        "YYYY-MM-DD"
-      )}&confirmation_date_end=${moment(endDate).format(
-        "YYYY-MM-DD"
-      )}&submission_start=${moment(startDate).format(
-        "YYYY-MM-DD"
-      )}&submission_end=${moment(endDate).format("YYYY-MM-DD")}`;
+      )}&assigned_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
 
     // Include filtered keys
@@ -66,22 +55,22 @@ const ConfirmationReport = () => {
     } else {
       getJobDelegationReports(param);
     }
-  }, [startDate, endDate, page, filterKeys, type]);
+  }, [startDate, endDate, page, filterKeys]);
 
   const getJobDelegationReports = async (param) => {
     setIsLoading(true);
     const response = await getReq(
-      `/confirmation-joining-applicant-report/report/?page=${page + 1}&size=25${
+      `/pending-approval-submissions/?page=${page + 1}&size=25${
         param ? param : ""
       }`
     );
 
+    console.log("------------------response --------------", response);
     setIsLoading(false);
 
     if (response.status) {
       setDataCount(response.data.count);
-      console.log("---------------response ", response.data);
-      setConfirmationData(response.data.results || response.data);
+      setSubmissionApprovalData(response.data.results || response.data);
     }
   };
 
@@ -99,27 +88,26 @@ const ConfirmationReport = () => {
     setSearch("");
   };
 
-  const handleExportExcel = async () => {
-    if (allParam) {
-      window.open(
-        BASE_URL +
-          `/confirmation-joining-applicant-report/report/?${allParam}&export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    } else {
-      window.open(
-        BASE_URL +
-          `/confirmation-joining-applicant-report/report/?export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }
-  };
+  //   const handleExportExcel = async () => {
+  //     if(allParam){
+  //     window.open(
+  //       BASE_URL + `/job-assignment-report/report/?${allParam}&export=excel`,
+  //       "_blank",
+  //       "noopener,noreferrer"
+  //     );
+  //   }else{
+  //     window.open(
+  //       BASE_URL + `/job-assignment-report/report/?export=excel`,
+  //       "_blank",
+  //       "noopener,noreferrer"
+  //     );
+  //   }
+  // };
 
   return (
     <div>
       {isLoading && <Loader />}
+      <SubmissionDetailsPreviewModal />
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
           <MultiFilterSearch
@@ -136,20 +124,8 @@ const ConfirmationReport = () => {
             endDate={endDate}
             setEndDate={setEndDate}
           />
-          <div className="d-flex gap-2 justify-content-end align-items-center">
+          {/* <div className="d-flex gap-2 justify-content-end align-items-center">
             <div className="d-flex gap-2 mt-1">
-              <div className="d-flex gap-2 align-items-center">
-                <label className="fw-700">Type</label>
-                <select
-                  onChange={(e) => setType(e.target.value)}
-                  className="cursor-pointer border p-1 border-black"
-                >
-                  <option>Select</option>
-                  <option value={"confirmation"}>Confirmation</option>
-                  <option value="submission">Submission</option>
-                  <option value={"all"}>All</option>
-                </select>
-              </div>
               <div className="" style={{ width: "200px" }}>
                 <DatePickerCustom
                   date={startDate}
@@ -173,9 +149,9 @@ const ConfirmationReport = () => {
                 Clear
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
-        <div>
+        {/* <div>
           <button
             className="theme-btn btn-style-one small d-flex gap-2"
             onClick={() => handleExportExcel()}
@@ -183,7 +159,7 @@ const ConfirmationReport = () => {
             <span>Excel</span>
             <span>{reactIcons.download}</span>
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="d-flex me-2 my-2">
         {filterKeys.map((item, index) => {
@@ -244,117 +220,136 @@ const ConfirmationReport = () => {
             <thead className="position-sticky">
               <tr>
                 <th className="" style={{ width: "200px" }}>
-                  Confirmation Date
+                  Submission On
                 </th>
-                <th style={{ width: "200px" }}>Submission Date</th>
-                <th style={{ width: "200px" }}>Submission ID</th>
-                <th style={{ width: "200px" }}>Candidate ID</th>
-                <th style={{ width: "250px" }}>Candidate Name</th>
-                <th style={{ width: "250px" }}>Job Title</th>
+                <th style={{ width: "100px" }}>Job Code</th>
+                <th style={{ width: "200px" }}>Job Title</th>
+                <th style={{ width: "300px" }}>Job Location</th>
+                <th style={{ width: "200px" }}>Client</th>
+                <th style={{ width: "250px" }}>Contact Manager Name</th>
+                <th style={{ width: "200px" }}>LOB</th>
+                <th style={{ width: "200px" }}>Candidate Name</th>
                 <th style={{ width: "250px" }}>Candidate Email</th>
-                <th style={{ width: "200px" }}>Candidate Mobile</th>
-                <th style={{ width: "300px" }}>Client</th>
-                <th style={{ width: "200px" }}>Current Status</th>
-                <th style={{ width: "200px" }}>Joining Status Date</th>
-                <th style={{ width: "150px" }} className="">
-                  Join Status
+                <th style={{ width: "200px" }}>Experience</th>
+                <th style={{ width: "200px" }}>Submitted By</th>
+                 <th style={{ width: "200px" }}>Action</th>
+               {/* <th style={{ width: "150px" }} className="">
+                  Position
                 </th>
+                <th style={{ width: "150px" }} className="">
+                  Submission
+                </th>
+                <th style={{ width: "150px" }}>Tagged</th>
+                <th style={{ width: "150px" }}>Created Date</th> */}
               </tr>
             </thead>
             <tbody>
-              {confirmationData?.map((item, index) => {
+              {submissionApprovalData?.map((item, index) => {
                 const {
-                  submission_id,
-                  client,
-                  job_title,
-                  job_id,
-                  applicant_id,
-                  applicant_name,
-                  applicant_email,
-                  applicant_mobile,
-                  current_status,
-                  confirmation_date,
-                  joining_status_change_date,
-                  submission_date,
-                  joined_status,
+                  id,
+                  submitted_by_name,
+                  submission_on,
+                  job_details,
+                  client_details,
+                  applicant_details,
                 } = item;
 
+                const {
+                  job_code,
+                  client_job_id,
+                  title,
+                  location,
+                  lob,
+                  contact_manager,
+                  number_of_position,
+                  priority,
+                } = job_details;
+                const {name, email, mobile, experience} = applicant_details[0];
+                const {client_name} = client_details;
                 return (
                   <>
                     <tr key={index}>
                       <td className="" style={{ width: "200px" }}>
-                        {moment(confirmation_date).format(
-                          "DD-MM-YYYY  hh:mm A"
-                        )}
+                        {moment(submission_on).format("DD-MM-YYYY  hh:mm A")}
                       </td>
-                      <td className="" style={{ width: "200px" }}>
-                        {moment(submission_date).format("DD-MM-YYYY  hh:mm A")}
+                      <td className="" style={{ width: "100px" }}>
+                        {job_code}
                       </td>
                       <td
                         className="text-capitalize"
                         style={{ width: "200px" }}
                       >
-                        {submission_id}
-                      </td>
-                      <td
-                        className="text-capitalize"
-                        style={{ width: "200px" }}
-                      >
-                        {applicant_id || "N/A"}
-                      </td>
-                      <td
-                        className="text-capitalize"
-                        style={{ width: "250px" }}
-                      >
-                        {applicant_name || "N/A"}
-                      </td>
-                      <td
-                        style={{ width: "250px" }}
-                        className="text-capitalize"
-                      >
-                        {job_title || "N/A"}
-                      </td>
-                      <td
-                        style={{ width: "250px" }}
-                        className="text-capitalize"
-                      >
-                        {applicant_email || "N/A"}
-                      </td>
-                      <td
-                        className="text-capitalize"
-                        style={{ width: "200px" }}
-                      >
-                        {applicant_mobile || "N/A"}
+                        {title}
                       </td>
                       <td
                         className="text-capitalize"
                         style={{ width: "300px" }}
                       >
-                        {client || "N/A"}
+                        {location || "N/A"}
                       </td>
                       <td
                         className="text-capitalize"
                         style={{ width: "200px" }}
                       >
-                        {current_status || "N/A"}
+                        {client_name || "N/A"}
+                      </td>
+                      <td
+                        style={{ width: "250px" }}
+                        className="text-capitalize"
+                      >
+                        {contact_manager || "N/A"}
+                      </td>
+                      <td
+                        style={{ width: "200px" }}
+                        className="text-capitalize"
+                      >
+                        {lob || "N/A"}
                       </td>
                       <td
                         className="text-capitalize"
                         style={{ width: "200px" }}
                       >
-                        {moment(joining_status_change_date).format(
-                          "DD-MM-yyyy hh:mm A"
-                        ) || "N/A"}
+                        { name || "N/A"}
+                      </td>
+                       <td
+                        className="text-capitalize"
+                        style={{ width: "250px" }}
+                      >
+                        {email || "N/A"}
+                      </td>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
+                        {experience || "N/A"}
+                      </td>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
+                        {submitted_by_name || "N/A"}
+                      </td>
+                       <td className="" style={{ width: "200px" }}>
+                          <button data-bs-target="#submissionPreview" data-bs-toggle="modal" onClick={() => setSubmissionDetail(item)} className="theme-btn btn-style-four small">APPROVE</button>
+                      </td>
+                     {/* <td
+                        className="d-flex flex-wrap gap-2"
+                        style={{ width: "150px" }}
+                      >
+                        {submissions_done || "N/A"}
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        {joined_status || "N/A"}
+                        {tagged_count || "N/A"}
                       </td>
+                      <td className="" style={{ width: "150px" }}>
+                        {job_create_date || "N/A"}
+                      </td> */}
                     </tr>
                   </>
                 );
               })}
               {/* End tr */}
-              {confirmationData?.length == 0 && (
+              {submissionApprovalData?.length == 0 && (
                 <tr className="mt-5 ">
                   <td colSpan={4} className="text-center">
                     No data found
@@ -372,4 +367,4 @@ const ConfirmationReport = () => {
   );
 };
 
-export default ConfirmationReport;
+export default SubmissionApproval;

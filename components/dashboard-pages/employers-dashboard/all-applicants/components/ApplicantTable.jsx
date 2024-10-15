@@ -287,7 +287,7 @@ const ApplicantTable = () => {
                         </div>
                       </td>
                       <td className="text-capitalize" style={{ width: "250px" }}>
-                        {item.job_title || "N/A"}
+                        {(item.job_title == "undefined" || item.job_title) ? "N/A" : item.job_title }
                       </td>
                       <td className="" style={{ width: "300px" }}>
                         {item.email || "N/A"}
@@ -618,7 +618,7 @@ const ApplicantTable = () => {
                                           <Link
                                             href={`/employers-dashboard/job-posts/${id}`}
                                           >
-                                            {title ? title : "N/A"}
+                                            { title || "N/A"}
                                           </Link>
                                         </td>
                                         <td className="cursor-pointer">

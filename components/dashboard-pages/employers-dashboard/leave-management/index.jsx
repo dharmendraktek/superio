@@ -12,6 +12,7 @@ const Index = () => {
     <InnerLayout>
     <section className="px-4">
     <Paper>
+      <div className="row">
       {openForm ? (
         <LeaveRequestForm setOpenForm={setOpenForm} />
       ) : (
@@ -131,6 +132,7 @@ const Index = () => {
           }
         </div>
       )}
+      </div>
     </Paper>
     </section>
     </InnerLayout>

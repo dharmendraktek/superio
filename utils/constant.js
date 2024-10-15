@@ -97,6 +97,15 @@ export const interviewReportFilterKey = [
     {name:'Scheduled By', value:'scheduled_by'},
 ] 
 
+export const confirmationFilterKeys =  [
+    {name:'Search Any', value:'search_any'},
+    {name:'Job Title', value:'job-title'},
+    {name:'Candidate Name', value:'applicant_name'},
+    {name:'Candidate Email', value:'applicant_email'},
+    {name:'Status', value:'current_status'},
+    {name:'Client', value:'client'},
+]
+
 
 export const  sourceData = [
     {name:'Dice', value:'Dice'},

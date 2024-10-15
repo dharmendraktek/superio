@@ -7,13 +7,14 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 
-const StatusModal = ({currentStatus, subStatus, submissionId}) => {
+const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetails}) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     // new_status:'',
     new_substatus:'',
     comment:''
   });
+
 
 
   useEffect(() =>{
@@ -36,6 +37,11 @@ const StatusModal = ({currentStatus, subStatus, submissionId}) => {
        const response = await patchReq(`/submissions/${submissionId}/update-status/`, form)
        if(response.status){
         toast.success('Status has been changed successfully');
+        handleGetJobDetails();
+        setForm({
+          new_status: "",
+          comment:''
+        })
        }
     }catch(err){
     }

@@ -33,6 +33,7 @@ const InterviewReportsTable = () => {
 
   const [filterKeys, setFilterKeys] = useState(interviewReportFilterKey);
   const [allParam, setAllParam] = useState('');
+  const [type, setType] = useState('');
 
   // useEffect(() => {
   //   let param;
@@ -64,9 +65,12 @@ const InterviewReportsTable = () => {
     let param = '';
   
     // Include date parameters if both startDate and endDate are present
-    if (startDate && endDate) {
+    if (startDate && endDate && type == "schedule") {
       setPage(0);
       param += `&interview_schedule_start=${moment(startDate).format("YYYY-MM-DD")}&interview_schedule_end=${moment(endDate).format("YYYY-MM-DD")}`;
+    }else if(startDate && endDate && type == "happen"){
+      setPage(0);
+      param += `&interview_happen_start=${moment(startDate).format("YYYY-MM-DD")}&interview_happen_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
   
     // Include filtered keys
@@ -87,7 +91,7 @@ const InterviewReportsTable = () => {
     }else {
       getInterviewReportList(param);
     }
-  }, [startDate, endDate, page, filterKeys]);
+  }, [startDate, endDate, page, filterKeys, type]);
   
   const handleClear = () => {
     let update = [...filterKeys]
@@ -153,6 +157,14 @@ const InterviewReportsTable = () => {
           />
           <div className="d-flex gap-2 justify-content-end align-items-center">
             <div className="d-flex gap-2 mt-1">
+            <div className="d-flex gap-2 align-items-center">
+                  <label className="fw-700">Type</label>
+                  <select onChange={(e) => setType(e.target.value)} className="cursor-pointer border p-1 border-black">
+                    <option>Select</option>
+                    <option value={"schedule"}>Schedule</option>
+                    <option value="happen">Scheduled Done</option>
+                  </select>
+              </div>
               <div className="" style={{ width: "200px" }}>
                 <DatePickerCustom
                   date={startDate}
@@ -189,8 +201,6 @@ const InterviewReportsTable = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-2">
-        {/* {filterKeys
-          .filter((item) => item.selected && item.search_value) // Only render the items with selected: true */}
          { filterKeys.map((item, index) => {
             return(
               <div className="">
@@ -243,7 +253,7 @@ const InterviewReportsTable = () => {
                 <th className="" style={{ width: "200px" }}>
                   Interview Schedule
                 </th>
-                <th style={{ width: "150px" }}>Happen Date</th>
+                <th style={{ width: "150px" }}>Scheduled Done</th>
                 <th style={{ width: "150px" }}>Start Time </th>
                 <th style={{ width: "150px" }}>End Time</th>
                 <th style={{ width: "300px" }}>Time zone</th>

@@ -1,7 +1,7 @@
 'use client'
-import { reactIcons } from "@/utils/icons";
-import StatusModal from "./StatusModal";
+import StatusModal from "@/app/employers-dashboard/job-posts/[id]/components/StatusModal";
 import ClientSubmissionModal from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/ClientSubmissionModal";
+import { reactIcons } from "@/utils/icons";
 import { useEffect, useState } from "react";
 
 // const stepsData = [
@@ -191,7 +191,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
               <div className="d-flex align-items-center">
                 <div
                   style={{
-                    width: "105px",
+                    width: "70px",
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id >= item.id
@@ -242,7 +242,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                 </div>
                 <div
                   style={{
-                    width: "80px",
+                    width: "65px",
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id > item.id
