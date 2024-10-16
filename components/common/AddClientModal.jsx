@@ -2,6 +2,9 @@
 import { getReq, postApiReq } from "@/utils/apiHandlers";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
+import BtnBeatLoader from "./BtnBeatLoader";
+import { toast } from "react-toastify";
+import SelectWithSearch from "./SelectWithSearch";
 
 const initialState = {
     client_name: "",
@@ -12,7 +15,7 @@ const initialState = {
     client_owner: "",
     is_client_active: 1,
     status: "",
-    client_country: "",
+    client_country: "United States",
     client_state: "",
     client_city: "",
   };
@@ -23,7 +26,67 @@ const AddClientModal = ({handleGetClientNames}) => {
     const [ownerList, setOwnerList] = useState([]);
     const [countryCode, setCountryCode] = useState("AF");
     const countryList = Country.getAllCountries();
-    const stateList = State.getStatesOfCountry(countryCode);
+    const stateList = State.getStatesOfCountry(countryCode); 
+    const [error, setError] = useState({
+      client_name: "",
+      client_email: "",
+      client_cont: "",
+      client_website: "",
+      client_address: "",
+      client_owner: "",
+      is_client_active: "",
+      status: "Active",
+      client_country: "",
+      client_state: "",
+      client_city: "",
+    });
+    
+
+
+    
+  const handleValidation = () => {
+    setError((prev) => ({
+      ...prev,
+      client_name: "",
+      client_email: "",
+      client_cont: "",
+      client_website: "",
+      client_address: "",
+      client_owner: "",
+      is_client_active: 1,
+      status: "",
+      client_country: "",
+      client_state: "",
+      client_city: "",
+    }));
+
+    if (!form.client_name) {
+      setError((prev) => ({ ...prev, client_name: "This field is required" }));
+    }
+    if (!form.client_email) {
+      setError((prev) => ({ ...prev, client_email: "This field is required" }));
+    }
+    if (!form.client_cont) {
+      setError((prev) => ({ ...prev, client_cont: "This field is required" }));
+    }
+  
+
+    let {
+       client_name,
+       client_email,
+       client_cont
+     
+    } = form;
+    if (
+      client_name &&
+      client_email &&
+      client_cont 
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
 
     const getOwnerList = async () => {
@@ -50,6 +113,10 @@ const AddClientModal = ({handleGetClientNames}) => {
       };
 
     const handleCreateClient = async () => {
+      if (!handleValidation()) {
+        return;
+      }
+      console.log("----------this is working ", handleValidation());
         try {
           setLoading(true);
           const response = await postApiReq("/create-client/", form);
@@ -73,7 +140,7 @@ const AddClientModal = ({handleGetClientNames}) => {
 
 return(
     <div
-    style={{ width: "800px !important" }}
+    style={{ width: "1200px !important" }}
     className="offcanvas offcanvas-end"
     tabindex="-1"
     id="addClientModal"
@@ -104,11 +171,11 @@ return(
         <button
           className="theme-btn btn-style-one small"
           onClick={() => {
-            if (client.client_name) {
-            //   handleUpdateClient(client.id);
-            } else {
+            // if (client.client_name) {
+            // //   handleUpdateClient(client.id);
+            // } else {
               handleCreateClient();
-            }
+            // }
           }}
           disabled={loading}
         >
@@ -122,7 +189,7 @@ return(
 
       <div className="row">
         <div className="col-6 my-1">
-          <p>Client Name</p>
+          <p>Client Name <strong className="text-danger">*</strong></p>
           <input
             name="client_name"
             value={form.client_name}
@@ -130,9 +197,10 @@ return(
             className="client-form-input"
             type="text"
           />
+          <span className="text-danger">{error.client_name}</span>
         </div>
         <div className="col-6 my-1">
-          <p>Email</p>
+          <p>Email <strong className="text-danger">*</strong></p>
           <input
             name="client_email"
             value={form.client_email}
@@ -140,9 +208,10 @@ return(
             className="client-form-input"
             type="text"
           />
+          <span className="text-danger">{error.client_email}</span>
         </div>
         <div className="col-6 my-1">
-          <p>Contact</p>
+          <p>Contact <strong className="text-danger">*</strong></p>
           <input
             name="client_cont"
             value={form.client_cont}
@@ -150,6 +219,7 @@ return(
             className="client-form-input"
             type="number"
           />
+          <span className="text-danger">{error.client_cont}</span>
         </div>
         <div className="col-6 my-1">
           <p>Website</p>
@@ -173,7 +243,7 @@ return(
         </div>
         <div className="col-6 my-1">
           <p>Ownership</p>
-          <select
+          {/* <select
             value={form.client_owner}
             className="client-form-input"
             name="client_owner"
@@ -187,7 +257,13 @@ return(
                 </option>
               );
             })}
-          </select>
+          </select> */}
+          <SelectWithSearch 
+            setForm={setForm}
+            form={form}
+            name="client_owner"
+            email={false}
+          />
         </div>
         <div className="col-6 my-1">
           <p>Status</p>

@@ -68,6 +68,8 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [jobData, setJobData] = useState();
 
+  // const router = useRouter();
+
   //   const handleGetApplicantDetails = async () => {
   //     setloading(true);
   //     const response = await getReq(`/applicants/${id}/`);
@@ -179,6 +181,7 @@ const Index = () => {
     if (response.status) {
       toast.success("Applicant submitted to job successfully");
       setOpen(false);
+      // router.push(`/employers-dashboard/job-posts/${jobData.id}`);
       setMultiSubmissionForm([])
     }
   };
@@ -190,7 +193,7 @@ const Index = () => {
       <div className="px-4 theme-background">
         <div className="mt-2 d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
-            <Link href={`/employers-dashboard/all-applicants/${id}`}>
+            <Link href={`/employers-dashboard/job-posts/${jobData?.id}`}>
               <span className="fs-1 text-primary">{reactIcons.backarrow}</span>
             </Link>
             {jobData ?

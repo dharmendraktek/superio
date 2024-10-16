@@ -328,6 +328,7 @@ const JobPostsTable = () => {
                       </div>
                     </td>
                     <td className="">{item.client_name || "N/A"}</td>
+                    <td className="">{item.client_job_id || "N/A"}</td>
                     <td>{item.city || "N/A"}</td>
                     <td className="">{item.state || "N/A"}</td>
                     <td className="">{item.job_status || "N/A"}</td>

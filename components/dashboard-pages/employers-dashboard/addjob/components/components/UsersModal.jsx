@@ -4,10 +4,13 @@ import { getReq } from "@/utils/apiHandlers"
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux";
 
 
 const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, handleGetUsersList, setAssignList, assignList, search, setSearch, handleClose}) => {
   const [teamList, setTeamList] = useState([]);
+  const employee_details = useSelector((state) => state.employer.user);
+
 
   useEffect(() =>{
     
@@ -15,10 +18,23 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
   }, [])
 
   useEffect(() => {
-    if(teamId)
-    handleGetTeamMamber();
-    else if(!teamId)
+    if(employee_details?.team_id){
+      setTeamId(employee_details.team_id);
+    }
+  }, [employee_details])
+
+  useEffect(() => {
+    if(teamId){
+      console.log("--------teami id ", teamId);
+      handleGetTeamMamber();
+    }
+    else if(!teamId){
+      console.log("-----------my tema ",employee_details?.team_id)
     handleGetUsersList()
+    }
+    // else if(employee_details?.team_id)    
+    //   handleGetTeamMamber();
+
 
   }, [teamId, search])
 
@@ -68,6 +84,10 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
                      <h5 className="text-primary cursor-pointer" onClick={() => setTeamId(null)}>All Users</h5>
                      <h5>Teams</h5>
                      <div className="custom-scroll-sm" style={{minHeight:"250px",maxHeight:'300px', overflowY:'scroll'}}>
+                     <li className={`d-flex gap-2 cursor-pointer ${employee_details?.team_id == teamId ? 'text-primary' : ''}`} onClick={() => setTeamId(employee_details?.team_id)}>
+                          <span className="fs-5">{reactIcons.team}</span>
+                          <span className="fs-6 fw-semibold">{"My Team"}</span>
+                        </li>
                   {teamList.map((item) => {
                       return(
                         <li className={`d-flex gap-2 cursor-pointer ${item.id == teamId ? 'text-primary' : ''}`} onClick={() => setTeamId(item.id)}>

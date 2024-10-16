@@ -18,13 +18,15 @@ import MyCKEditor from "@/components/common/MyCkEditor";
 import { useSelector } from "react-redux";
 import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
+import UsersListDropdown from "@/components/common/UsersListDropdown";
+import SelectWithSearch from "@/components/common/SelectWithSearch";
 
 const initialState = {
   job_code: "",
   title: "",
   currency: "USD",
   amount: "",
-  payment_frequency: "",
+  payment_frequency: "Hourly",
   job_type: "",
   client_taxterm: "",
   start_date: new Date(),
@@ -52,12 +54,13 @@ const initialState = {
   assign: [],
   tax_term: "",
   department: "",
-  description: "<p></p>",
+  description: "",
   post_on_portal: new Date(),
   is_active: 1,
   priority: "",
   post_on_portal: false,
-  fullfill_deadline:''
+  fullfill_deadline: null,
+  reason_of_priority:''
   // post_date_on_portal: "",
 };
 
@@ -71,6 +74,7 @@ const ManualCreation = ({
   name,
   jobType,
   setJobData,
+
 }) => {
   const [form, setForm] = useState(initialState);
   const [countryCode, setCountryCode] = useState("AF");
@@ -86,7 +90,7 @@ const ManualCreation = ({
   const [skills, setSkills] = useState("");
   const [secondarySkills, setSecondarySkills] = useState();
   const [openLang, setOpenLang] = useState(false);
-  const [descriptionData, setDescriptionData] = useState();
+  const [descriptionData, setDescriptionData] = useState("");
   const [languageList, setLanguageList] = useState([]);
   const [teamId, setTeamId] = useState();
   const [assignList, setAssignList] = useState([]);
@@ -115,17 +119,23 @@ const ManualCreation = ({
     jobDescriptionErr: "",
   });
   const [openContact, setOpenContact] = useState(false);
-  const [contactSearch, setContactSearch] = useState('');
+  const [contactSearch, setContactSearch] = useState("");
+  const [clientSearch, setClientSearch] = useState("");
 
   const router = useRouter();
 
   const employee_details = useSelector((state) => state.employer.user);
 
-  // const cityList = City?.getAllCities('MP');
-  // console.log("----------city list ", cityList);
+
 
   useEffect(() => {
-    setForm((prev) => ({ ...prev, account_manager: employee_details.user.id, head_account_manager:employee_details.reportingmanager_details.id }));
+    if(employee_details){
+      setForm((prev) => ({
+        ...prev,
+        account_manager: employee_details.user.id,
+        head_account_manager: employee_details.reportingmanager_details.id,
+      }));
+    }
   }, [employee_details]);
 
   const handleChange = (e) => {
@@ -159,9 +169,10 @@ const ManualCreation = ({
         title: jobData.title,
         currency: jobData.currency || "USD",
         amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
-        payment_frequency: jobData.payment_frequency,
+        payment_frequency: jobData.payment_frequency || "Hourly",
         job_type: jobType ? jobType : "",
-        client_taxterm: jobData.endclient ? jobData.endclient : "",
+        client_taxterm: jobData.client_taxterm ? jobData.client_taxterm : "",
+        fullfill_deadline: jobData.fullfill_deadline || null,
         endclient: jobData.endclient ? jobData.endclient : "",
         start_date: jobData.start_date,
         end_date: jobData.end_date,
@@ -192,20 +203,23 @@ const ManualCreation = ({
             : typeof jobData.secondary_skills == "string"
             ? jobData.secondary_skills.split(",").map((name) => ({ name }))
             : [],
-        languages: jobData?.languages ? jobData?.languages : [],
+        // languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
-        head_account_manager: jobData.head_account_manager || employee_details?.reportingmanager_details?.id,
+        head_account_manager:
+          jobData.head_account_manager ||
+          employee_details?.reportingmanager_details?.id,
         account_manager: jobData.account_manager || employee_details?.user?.id,
         delivery_manager: jobData.delivery_manager,
         assign: jobData.assign ? jobData.assign : [],
         tax_term: jobData.tax_term ? jobData.tax_term : "",
-        department: jobData.department,
+        // department: jobData.department,
         description: jobData.description ? jobData.description : "<p></p>",
         is_active: 1,
         post_on_portal: true,
         // post_date_on_portal:form.post_date_on_portal,
         priority: jobData.priority,
+        reason_of_priority:jobData.reason_of_priority ? jobData.reason_of_priority : ""
       }));
     }
   }, [jobData]);
@@ -236,6 +250,10 @@ const ManualCreation = ({
     }
   }, [form.client, contactSearch]);
 
+  useEffect(() => {
+    handleGetClientNames();
+  }, [clientSearch]);
+
   const handleGetLanguageList = async () => {
     const response = await getReq("/language/");
     setLanguageList(response.data);
@@ -263,14 +281,20 @@ const ManualCreation = ({
   };
 
   const handleGetClientNames = async () => {
-    const response = await getReq("/clients-dropdown/");
+    const response = await getReq(
+      `/clients-dropdown/${clientSearch ? `?name=${clientSearch}` : ""}`
+    );
     if (response.status) {
       setClientNameList(response.data);
     }
   };
 
   const handleGetClientContactManagers = async () => {
-    const response = await getReq(`/client-details/${form.client}/${contactSearch? `?search=${contactSearch}` : ''}`);
+    const response = await getReq(
+      `/client-details/${form.client}/${
+        contactSearch ? `?contact_manager_name=${contactSearch}` : ""
+      }`
+    );
     if (response.status) {
       setClientManagerList(response.data.contact_manager);
       setLobList(response.data.lob);
@@ -283,6 +307,16 @@ const ManualCreation = ({
     );
     if (response.status) {
       setUsersList(response.data);
+      let filterTeamUser = response.data.filter((item) => item.team_id == employee_details?.team_id);
+      console.log("-------------user list ",filterTeamUser);
+    
+     if(filterTeamUser.length <= 5){
+       setAssignList(filterTeamUser)
+      let userIds =  filterTeamUser.map((item) => item.id )
+     
+      setForm((prev) => ({...prev, assign:userIds}))
+     }
+      
     }
   };
 
@@ -306,7 +340,7 @@ const ManualCreation = ({
       accountManagerErr: "",
       assignToErr: "",
       jobDescriptionErr: "",
-      clientBillRateERr:""
+      clientBillRateERr: "",
     }));
 
     if (!form.job_code) {
@@ -318,8 +352,16 @@ const ManualCreation = ({
     if (!form.client) {
       setError((prev) => ({ ...prev, clientErr: "This field is required" }));
     }
-    if(!form.currency || !form.payment_frequency || !form.amount || !form.client_taxterm){
-      setError((prev) => ({ ...prev, clientBillRateERr: "This field is required" }));
+    if (
+      !form.currency ||
+      !form.payment_frequency ||
+      !form.amount ||
+      !form.client_taxterm
+    ) {
+      setError((prev) => ({
+        ...prev,
+        clientBillRateERr: "This field is required",
+      }));
     }
     // if (!form.lob) {
     //   setError((prev) => ({ ...prev, lobErr: "This field is required" }));
@@ -330,7 +372,7 @@ const ManualCreation = ({
     //     contactManagerErr: "This field is required",
     //   }));
     // }
-    if (!form.state && !(form.remote == 'yes')) {
+    if (!form.state && !(form.remote == "yes")) {
       setError((prev) => ({ ...prev, stateErr: "This field is required" }));
     }
     // if (!form.city) {
@@ -427,6 +469,7 @@ const ManualCreation = ({
   };
 
   const handleSubmit = async () => {
+
     if (handleValidation()) {
       if (name == "update" && !comments && !jobType == "Email") {
         setCommentsErr("This field is required");
@@ -454,13 +497,13 @@ const ManualCreation = ({
             }
             setOpen(true);
             toast.success("Job post updated successfully !");
+            router.push(
+              `/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`
+            );
             handleGetJobDetails();
             let btnModal = document.getElementById("commentModalClose");
             btnModal.click();
             setTab(null);
-            router.push(
-              `/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`
-            );
           } else {
             if (documents.length > 0) {
               handleSaveDocuments(response.data.id);
@@ -482,7 +525,6 @@ const ManualCreation = ({
   };
 
   useEffect(() => {
-    
     if (form.client_taxterm) {
       setForm((prev) => ({ ...prev, tax_term: form.client_taxterm }));
     }
@@ -561,12 +603,11 @@ const ManualCreation = ({
     setDocuments(filtered);
   };
 
-
   return (
     <div className="py-2">
       <LanguageModal handleGetLanguageList={handleGetLanguageList} />
       <AddClientModal handleGetClientNames={handleGetClientNames} />
-      {/* <AddContactManagerModal handleGetClientContactManagers={handleGetClientContactManagers} /> */}
+      <AddContactManagerModal handleGetClientContactManagers={handleGetClientContactManagers} />
       <JobPostCommentsModal
         comments={comments}
         setComments={setComments}
@@ -616,12 +657,12 @@ const ManualCreation = ({
                 ? handleSubmit
                 : ""
             }
-            // data-bs-toggle="modal"
-            // data-bs-target={
-            //   name == "update" && !(name == "parse") && !(jobType == "Email")
-            //     ? "#commentsModal"
-            //     : ""
-            // }
+            data-bs-toggle="modal"
+            data-bs-target={
+              name == "update" && !(name == "parse") && !(jobType == "Email")
+                ? "#commentsModal"
+                : ""
+            }
           >
             {isLoading ? (
               <BtnBeatLoader />
@@ -684,7 +725,9 @@ const ManualCreation = ({
               <span className="text-danger">{error.jobTitleErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>Client Bill/Rate</p>
+              <p>
+                Client Bill/Rate <strong className="text-danger">*</strong>
+              </p>
               <div className="d-flex gap-3">
                 <select
                   name="currency"
@@ -716,10 +759,10 @@ const ManualCreation = ({
                   onChange={handleChange}
                   className="client-input-style form-mult-box"
                 >
-                  <option>Select</option>
-                  <option>Hourly</option>
-                  <option>Monthly</option>
-                  <option>Annually</option>
+                  <option value={""}>Select</option>
+                  <option value={"Hourly"}>Hourly</option>
+                  <option value={"Monthly"}>Monthly</option>
+                  <option value={"Annually"}>Annually</option>
                 </select>
                 <select
                   value={form.client_taxterm}
@@ -762,8 +805,8 @@ const ManualCreation = ({
                   onChange={handleChange}
                   type="radio"
                   name="remote"
-                  value="Hybrid"
-                  checked={form.remote == "Hybrid"}
+                  value="hybrid"
+                  checked={form.remote == "hybrid"}
                 />
                 <span>Hybrid</span>
               </div>
@@ -800,10 +843,7 @@ const ManualCreation = ({
               />
             </div> */}
             <div className="col-4 my-2">
-              <p>
-                Client Job ID
-                {/* <strong className="text-danger">*</strong> */}
-              </p>
+              <p>Client Job ID</p>
               <input
                 name="client_job_id"
                 value={form.client_job_id}
@@ -811,40 +851,21 @@ const ManualCreation = ({
                 className="client-form-input"
                 type="text"
               />
-              {/* <span className="text-danger">{error.jobTitleErr}</span> */}
             </div>
-            {/* <div className="col-4 my-2">
+            <div className="col-4 my-2">
               <p>
                 Client <strong className="text-danger">*</strong>
               </p>
-              <select
-                value={form.client}
-                className="client-form-input"
-                name="client"
-                onChange={handleChange}
+              <div
+                className="position-relative cursor-pointer"
+                onMouseLeave={() => setOpenLang(false)}
               >
-                <option>Select</option>
-                <option className="px-2">
-                    <div className="bg-primary py-1 text-center">
-                    <span>ADD</span>
-                    </div>
-                  </option>
-                {clientNameList.map((item, index) => {
-                  return (
-                    <option key={index} value={item.id}>
-                      {item.client_name}
-                    </option>
-                  );
-                })}
-              </select>
-              <span className="text-danger">{error.clientErr}</span>
-            </div> */}
-            <div className="col-4 my-2">
-              <p>Client</p>
-              <div className="position-relative cursor-pointer">
                 <div
                   className="client-form-input d-flex justify-content-between"
-                  onClick={() => setOpenLang(!openLang)}
+                  onClick={() => {
+                    setClientSearch("");
+                    setOpenLang(!openLang);
+                  }}
                   style={{ minHeight: "36px", maxHeight: "fit-content" }}
                 >
                   <div className="d-flex flex-wrap gap-2">
@@ -856,8 +877,9 @@ const ManualCreation = ({
                 </div>
                 {openLang && (
                   <div
-                    className="position-absolute bg-white border border-1 table_div_custom w-100 px-2 custom-scroll-sm"
-                    style={{ top: "33px", zIndex: 10000, height:"400px" }}
+                    className="position-absolute bg-white border border-1 table_div_custom w-100 px-2 custom-scroll-sm "
+                    style={{ top: "33px", zIndex: 10000, height: "350px" }}
+                    onMouseLeave={() => setOpenLang(false)}
                   >
                     <div className="my-2">
                       <button
@@ -871,6 +893,14 @@ const ManualCreation = ({
                         <span>Add</span>
                       </button>
                     </div>
+                    <div>
+                      <input
+                        type="text"
+                        className="border border-primary w-100 rounded-1 px-2"
+                        placeholder="Search here..."
+                        onChange={(e) => setClientSearch(e.target.value)}
+                      />
+                    </div>
                     {clientNameList.map((item, index) => {
                       return (
                         <div
@@ -878,33 +908,10 @@ const ManualCreation = ({
                           onClick={() => {
                             setOpenLang(false);
                             setForm((prev) => ({ ...prev, client: item.id }));
+                            setClientSearch("");
                           }}
-                          className="hover-background-change"
+                          className="hover-bg-change"
                         >
-                          {/* <input
-                            type="checkbox"
-                            checked={form?.languages?.find(
-                              (_item) => _item.name == item.name
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setForm((prev) => ({
-                                  ...prev,
-                                  languages: [
-                                    ...prev.languages,
-                                    { name: item.name },
-                                  ],
-                                }));
-                              } else {
-                                setForm((prev) => ({
-                                  ...prev,
-                                  languages: prev.languages.filter(
-                                    (_item, _index) => _item.name !== item.name
-                                  ),
-                                }));
-                              }
-                            }}
-                          /> */}
                           <span className="mx-2">{item.client_name}</span>
                         </div>
                       );
@@ -912,20 +919,17 @@ const ManualCreation = ({
                   </div>
                 )}
               </div>
+              <span className="text-danger">{error.clientErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>
-                Names of LOB
-                {/* <strong className="text-danger">*</strong> */}
-              </p>
+              <p>Names of LOB</p>
               <select
                 value={form.lob}
                 className="client-form-input"
                 name="lob"
                 onChange={handleChange}
-                // disabled={contactDetails}
               >
-                <option>Select</option>
+                <option value="">Select</option>
                 {lobList.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>
@@ -936,30 +940,12 @@ const ManualCreation = ({
               </select>
               <span className="text-danger">{error.lobErr}</span>
             </div>
-            {/* <div className="col-4 my-2">
-              <p>
-                Contact Manager
-              </p>
-              <select
-                value={form.contact_manager}
-                className="client-form-input"
-                name="contact_manager"
-                onChange={handleChange}
+            <div className="col-4 my-2">
+              <p> Contact Manager </p>
+              <div
+                className="position-relative cursor-pointer"
+                onMouseLeave={() => setOpenContact(false)}
               >
-                <option>Select</option>
-                {clientManagerList?.map((item) => {
-                  return (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <span className="text-danger">{error.contactManagerErr}</span>
-            </div> */}
-             <div className="col-4 my-2">
-              <p>                Contact Manager              </p>
-              <div className="position-relative cursor-pointer">
                 <div
                   className="client-form-input d-flex justify-content-between"
                   onClick={() => setOpenContact(!openContact)}
@@ -967,45 +953,62 @@ const ManualCreation = ({
                 >
                   <div className="d-flex flex-wrap gap-2">
                     {form.client &&
-                      clientManagerList?.find((_item) => _item.id == form.contact_manager)
-                        ?.name}
+                      clientManagerList?.find(
+                        (_item) => _item.id == form.contact_manager
+                      )?.name}
                   </div>
                   <span className=" float-end">{reactIcons.downarrow}</span>
                 </div>
                 {openContact && (
                   <div
                     className="position-absolute bg-white border border-1 table_div_custom w-100 px-2 custom-scroll-sm"
-                    style={{ top: "33px", zIndex: 10000, height:"400px" }}
+                    style={{ top: "33px", zIndex: 10000, height: "350px" }}
+                    onMouseLeave={() => setOpenContact(false)}
                   >
-                    {/* <div className="my-2">
+                    <div className="my-2">
                       <button
                         type="button"
                         data-bs-toggle="offcanvas"
-                        data-bs-target="#addClientModal"
+                        data-bs-target="#addContactModal"
                         className="theme-btn btn-style-three small d-flex align-items-center"
                         onClick={() => setOpenContact(false)}
                         style={{ width: "100%" }}
                       >
                         <span>Add</span>
                       </button>
-                    </div> */}
-                    {/* <div>
-                      <input type="text" className="border border-primary w-100 rounded-1 px-2" placeholder="Search here..."   onChange={(e) => setContactSearch(e.target.value)} />
-                    </div> */}
+                    </div>
+
+                    <div>
+                      <input
+                        type="text"
+                        className="border border-primary w-100 rounded-1 px-2"
+                        placeholder="Search here..."
+                        onChange={(e) => setContactSearch(e.target.value)}
+                      />
+                    </div>
                     {clientManagerList.map((item, index) => {
                       return (
                         <div
                           key={index}
                           onClick={() => {
                             setOpenContact(false);
-                            setForm((prev) => ({ ...prev, contact_manager: item.id }));
+                            setForm((prev) => ({
+                              ...prev,
+                              contact_manager: item.id,
+                            }));
+                            setContactSearch("");
                           }}
-                          className="hover-background-change"
+                          className="hover-bg-change"
                         >
                           <span className="mx-2">{item.name}</span>
                         </div>
                       );
                     })}
+                    {clientManagerList.length == 0 && (
+                      <div className="text-center my-5">
+                        <strong>No data found</strong>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1045,7 +1048,10 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>
-                State <strong className="text-danger">{form.remote == 'yes' ? "" : "*"}</strong>
+                State{" "}
+                <strong className="text-danger">
+                  {form.remote == "yes" ? "" : "*"}
+                </strong>
               </p>
               <select
                 className="client-form-input"
@@ -1130,6 +1136,20 @@ const ManualCreation = ({
                 })}
               </select>
             </div>
+            <div className="col-4 my-2">
+              <p>
+                Reason of Priority
+                {/* <strong className="text-danger">*</strong> */}
+              </p>
+              <input
+                name="reason_of_priority"
+                value={form.reason_of_priority}
+                onChange={handleChange}
+                className="client-form-input"
+                type="text"
+              />
+              {/* <span className="text-danger">{error.cityErr}</span> */}
+            </div>
             {/* <div className="col-4 my-2">
               <p>Application Form</p>
               <select
@@ -1150,6 +1170,7 @@ const ManualCreation = ({
               <textarea
                 name="address"
                 onChange={handleChange}
+                placeholder="Address..."
                 value={form.address}
                 className="client-form-input"
                 style={{ height: "65px" }}
@@ -1449,10 +1470,11 @@ const ManualCreation = ({
                 value={form.tax_term}
                 onChange={handleChange}
                 name="tax_term"
-                disabled
+                // disabled
               >
                 {/* <option>Select</option> */}
                 {TaxTerms.map((item, index) => {
+                  <select value="">Select</select>
                   return (
                     <option key={index} value={item.name}>
                       {item.name}
@@ -1464,7 +1486,7 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>Business Unit Head</p>
-              <select
+              {/* <select
                 value={form.head_account_manager}
                 className="client-form-input"
                 name="head_account_manager"
@@ -1478,7 +1500,12 @@ const ManualCreation = ({
                     </option>
                   );
                 })}
-              </select>
+              </select> */}
+              <SelectWithSearch
+                setForm={setForm}
+                form={form}
+                name="head_account_manager"
+              />
             </div>
             {/* <div className="col-4 my-2">
               <p>Department</p>
@@ -1499,7 +1526,12 @@ const ManualCreation = ({
                 Delivery Manager
                 {/* <strong className="text-danger">*</strong> */}
               </p>
-              <select
+              <SelectWithSearch
+                setForm={setForm}
+                form={form}
+                name="delivery_manager"
+              />
+              {/* <select
                 value={form.delivery_manager}
                 onChange={handleChange}
                 className="client-form-input"
@@ -1513,14 +1545,19 @@ const ManualCreation = ({
                     </option>
                   );
                 })}
-              </select>
+              </select> */}
               <span className="text-danger">{error.deliveryManagerErr}</span>
             </div>
             <div className="col-4 my-2">
               <p>
                 Account Manager <strong className="text-danger">*</strong>
               </p>
-              <select
+              <SelectWithSearch
+                setForm={setForm}
+                form={form}
+                name="account_manager"
+              />
+              {/* <select
                 value={form.account_manager}
                 onChange={handleChange}
                 className="client-form-input"
@@ -1534,7 +1571,8 @@ const ManualCreation = ({
                     </option>
                   );
                 })}
-              </select>
+              </select> */}
+
               <span className="text-danger">{error.accountManagerErr}</span>
             </div>
             {!jobType && (
@@ -1602,7 +1640,7 @@ const ManualCreation = ({
                 <span className="text-danger">{error.assignToErr}</span>
               </div>
             )}
-            {!jobType && form.post_on_portal && (
+            {/* {!jobType && form.post_on_portal && (
               <div className="col-4 my-2">
                 <p>Career Portal Published Date</p>
                 <DatePickerCustom
@@ -1612,7 +1650,7 @@ const ManualCreation = ({
                   date={form.post_date_on_portal}
                 />
               </div>
-            )}
+            )} */}
             {/* <div className="col-4 my-2">
               <p>Job Delegation</p>
               <SelectWithSearch 
@@ -1629,6 +1667,7 @@ const ManualCreation = ({
                 <MyCKEditor
                   setDescriptionData={setDescriptionData}
                   form={form}
+                  name={name}
                   wrapperStyle={{
                     border: "1px solid gray",
                     minHeight: "250px",
@@ -1636,9 +1675,10 @@ const ManualCreation = ({
                   }}
                 />
               )}
-              {name == "create" && form.description && (
+              {name == "create" &&  (
                 <MyCKEditor
                   setDescriptionData={setDescriptionData}
+                  name={name}
                   form={form}
                   wrapperStyle={{
                     border: "1px solid gray",

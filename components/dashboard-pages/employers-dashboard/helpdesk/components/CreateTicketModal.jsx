@@ -10,9 +10,11 @@ import { toast } from "react-toastify";
 const CreateTicketModal = () => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
-    // new_status:'',
-    new_substatus:'',
-    comment:''
+    department:'',
+    subject:'',
+    description_of_issue:'',
+    priority:'',
+    image:'',
   });
   const [departmentList, setDepartmentList] = useState([])
   const [subjectList, setSubjectList] = useState([]);
@@ -72,7 +74,7 @@ const CreateTicketModal = () => {
             <div className="modal-body">
                <div>
                <p>Department</p>
-               <select className="client-form-input" onChange={(e) => setForm((prev) => ({...prev, new_substatus:e.target.value}))}>
+               <select className="client-form-input" name="" onChange={(e) => setForm((prev) => ({...prev, new_substatus:e.target.value}))}>
                  <option>Select</option>
                 {departmentList.map((item, index) => {
                     return(

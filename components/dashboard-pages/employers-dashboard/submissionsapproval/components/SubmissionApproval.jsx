@@ -6,7 +6,7 @@ import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import SubmissionDetailsPreviewModal from "@/components/common/SubmissionDetailsPreviewModal";
-import { getReq } from "@/utils/apiHandlers";
+import { getReq, patchReq } from "@/utils/apiHandlers";
 import { jobDelegationFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
@@ -26,6 +26,11 @@ const SubmissionApproval = () => {
   const [filterKeys, setFilterKeys] = useState(jobDelegationFilterKey);
   const [allParam, setAllParam] = useState("");
   const [submissionDetail, setSubmissionDetail] = useState();
+  const [form, setForm] = useState({
+    new_status: 2,
+    // new_substatus:''
+    comment:'Manger Approved'
+  });
 
   useEffect(() => {
     let param = "";
@@ -87,6 +92,28 @@ const SubmissionApproval = () => {
     setEndDate(null);
     setSearch("");
   };
+
+
+  const handleUpdateStatus = async (id) => {
+    try {
+      const response = await patchReq(
+        `/submissions/${id}/update-status/`,
+        form
+      );
+      if (response.status) {
+        toast.success("Submission  has been approved successfully");
+        setForm({
+          new_status: "",
+          comment:''
+        })
+        // if(side=="job"){
+        //   handleGetJobDetails();
+        // }
+      }
+    } catch (err) {
+    }
+  };
+
 
   //   const handleExportExcel = async () => {
   //     if(allParam){
@@ -330,7 +357,10 @@ const SubmissionApproval = () => {
                         {submitted_by_name || "N/A"}
                       </td>
                        <td className="" style={{ width: "200px" }}>
-                          <button data-bs-target="#submissionPreview" data-bs-toggle="modal" onClick={() => setSubmissionDetail(item)} className="theme-btn btn-style-four small">APPROVE</button>
+                          <button 
+                          // data-bs-target="#submissionPreview" 
+                          // data-bs-toggle="modal" 
+                          onClick={() => handleUpdateStatus(item.id)} className="theme-btn btn-style-four small">APPROVE</button>
                       </td>
                      {/* <td
                         className="d-flex flex-wrap gap-2"

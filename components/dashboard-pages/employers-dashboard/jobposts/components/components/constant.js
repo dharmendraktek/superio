@@ -6,7 +6,9 @@ export const jobPostsTableField = [
   {title:'Job Title',style:{width:'250px'}},
   // {title:'Business Unit'},
   {title:'Client',style:{width:'200px'}},
-  // {title:'Client Job ID'},
+  {title:'Client Job ID',style:{width:'200px'}},
+
+   // {title:'Client Job ID'},
   {title:'Location',style:{width:'200px'}},
   {title:'States',style:{width:'200px'}},
   {title:'Job Status',style:{width:'150px'}},

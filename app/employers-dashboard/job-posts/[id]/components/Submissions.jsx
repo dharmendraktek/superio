@@ -5,13 +5,7 @@ import Stepper from "./Stepper";
 import Paper from "@/components/common/Paper";
 
 const tabsName = [
-    { id: 1, name: "Tagged", value:'submission'},
-    { id: 2, name: "All", value:'' },
-    { id: 3, name: "Client Submissions", value:'client_submission' },
-    { id: 4, name: "Interviews", value:'interview' },
-    { id: 5, name: "Confirmations", value:'confirmation' },
-    { id: 6, name: "Joined", value:'joined' },
-    { id: 7, name: "Not Joined", value:'not_joined' },
+   
   ];
 
 
