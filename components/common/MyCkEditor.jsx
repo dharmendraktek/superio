@@ -78,7 +78,7 @@ const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   
   useEffect(() => {
-    if (form.description && (name == "update")) {
+    if (form.description && (name == "update" || name=="parse")) {
       const blocksFromHTML = convertFromHTML(form.description);
       const contentState = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks,
