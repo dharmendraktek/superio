@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 
-const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetails}) => {
+const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetails, submissionTable = false}) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     // new_status:'',
@@ -15,11 +15,12 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
     comment:''
   });
 
+  console.log("----------------submission details ", submissionId, currentStatus)
 
 
   useEffect(() =>{
     handleGetStatus();
-  }, [])
+  }, [submissionId])
 
 
   const handleGetStatus = async() => {
@@ -27,8 +28,15 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
 
     if(response.status){
         let nextStatus = currentStatus;
-        let subStatusData = response.data.find((item) => item.id == nextStatus);
-      setStatusList(subStatusData.substatus);
+        console.log("----------next status ",response.data);
+        if(submissionTable){
+         let  subStatusData = response.data.find((item) => item.display_name == nextStatus);
+          setStatusList(subStatusData.substatus);
+        }else{
+          let subStatusData = response.data.find((item) => item.id == nextStatus);
+          setStatusList(subStatusData.substatus);
+        }
+        // console.log("--------------sub status data ", subStatusData);
     }
   }
 

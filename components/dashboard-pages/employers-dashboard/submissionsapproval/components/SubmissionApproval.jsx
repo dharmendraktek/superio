@@ -1,17 +1,19 @@
 "use client";
 
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import SubmissionDetailsPreviewModal from "@/components/common/SubmissionDetailsPreviewModal";
-import { getReq, patchReq } from "@/utils/apiHandlers";
+import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
 import { jobDelegationFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const SubmissionApproval = () => {
   const [search, setSearch] = useState("");
@@ -27,42 +29,48 @@ const SubmissionApproval = () => {
   const [allParam, setAllParam] = useState("");
   const [submissionDetail, setSubmissionDetail] = useState();
   const [form, setForm] = useState({
-    new_status: 2,
+    // new_status: 2,
     // new_substatus:''
     comment:'Manger Approved'
   });
+  const [loading, setLoading] = useState(false);
+  const [rejLoading, setRejLoading] = useState(false);
+  const [submissionId, setSubmissionId] = useState(null);
 
-  useEffect(() => {
-    let param = "";
 
-    // Include date parameters if both startDate and endDate are present
-    if (startDate && endDate) {
-      setPage(0);
-      param += `&assigned_date_start=${moment(startDate).format(
-        "YYYY-MM-DD"
-      )}&assigned_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
-    }
 
-    // Include filtered keys
-    const filterParams = filterKeys
-      .filter((item) => item.selected && item.search_value) // Filter items with selected: true and search_value present
-      .map((item) => `&${item.value}=${item.search_value}`) // Create the string in the format &value=search_value
-      .join(""); // Join them together to form the final string
+  // useEffect(() => {
+  //   let param = "";
 
-    param += filterParams; // Combine date and filter parameters
+  //   // Include date parameters if both startDate and endDate are present
+  //   if (startDate && endDate) {
+  //     setPage(0);
+  //     param += `&assigned_date_start=${moment(startDate).format(
+  //       "YYYY-MM-DD"
+  //     )}&assigned_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
+  //   }
 
-    if (param) {
-      setAllParam(param);
-      setPage(page || 0); // Set page to 0 if it's falsy
-      getJobDelegationReports(param);
-    } else if (page) {
-      getJobDelegationReports(param);
-    } else {
-      getJobDelegationReports(param);
-    }
-  }, [startDate, endDate, page, filterKeys]);
+  //   // Include filtered keys
+  //   const filterParams = filterKeys
+  //     .filter((item) => item.selected && item.search_value) // Filter items with selected: true and search_value present
+  //     .map((item) => `&${item.value}=${item.search_value}`) // Create the string in the format &value=search_value
+  //     .join(""); // Join them together to form the final string
 
-  const getJobDelegationReports = async (param) => {
+  //   param += filterParams; // Combine date and filter parameters
+
+  //   if (param) {
+  //     setAllParam(param);
+  //     setPage(page || 0); // Set page to 0 if it's falsy
+  //     getPendingSubmission(param);
+  //   } else if (page) {
+  //     getPendingSubmission(param);
+  //   } else {
+  //     getPendingSubmission(param);
+  //   }
+  // }, [startDate, endDate, page, filterKeys]);
+
+  const getPendingSubmission = async (param) => {
+    
     setIsLoading(true);
     const response = await getReq(
       `/pending-approval-submissions/?page=${page + 1}&size=25${
@@ -70,7 +78,6 @@ const SubmissionApproval = () => {
       }`
     );
 
-    console.log("------------------response --------------", response);
     setIsLoading(false);
 
     if (response.status) {
@@ -79,40 +86,40 @@ const SubmissionApproval = () => {
     }
   };
 
-  const handleClear = () => {
-    let update = [...filterKeys];
-    update.map((item) => {
-      delete item["selected"];
-      delete item["search_value"];
-      return item;
-    });
-    setFilterKeys(update);
-    setFieldName("");
-    setStartDate(null);
-    setEndDate(null);
-    setSearch("");
-  };
+  
+useState(() =>{
+     getPendingSubmission();
+ }, [])
 
-
-  const handleUpdateStatus = async (id) => {
+  const handleUpdateStatus = async (id, type) => {
     try {
-      const response = await patchReq(
-        `/submissions/${id}/update-status/`,
+      if(type == "approve"){
+        setLoading(true);
+      }else{
+        setRejLoading(true);
+      }
+      const response = await postApiReq(
+        `/submission/${id}/${type}/`,
         form
       );
+      if(type == "approve"){
+        setLoading(false);
+      }else{
+        setRejLoading(false);
+      }
       if (response.status) {
-        toast.success("Submission  has been approved successfully");
-        setForm({
-          new_status: "",
-          comment:''
-        })
-        // if(side=="job"){
-        //   handleGetJobDetails();
-        // }
+        toast.success(`Submission  has been ${type} successfully`);
+        // setForm({
+        //   // new_status: "",
+        //   comment:''
+        // })
+        getPendingSubmission()
       }
     } catch (err) {
     }
   };
+
+
 
 
   //   const handleExportExcel = async () => {
@@ -137,7 +144,8 @@ const SubmissionApproval = () => {
       <SubmissionDetailsPreviewModal />
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
-          <MultiFilterSearch
+          <h4>Submission List</h4>
+          {/* <MultiFilterSearch
             openFields={openFields}
             setOpenFields={setOpenFields}
             filterKeys={filterKeys}
@@ -150,7 +158,7 @@ const SubmissionApproval = () => {
             setStartDate={setStartDate}
             endDate={endDate}
             setEndDate={setEndDate}
-          />
+          /> */}
           {/* <div className="d-flex gap-2 justify-content-end align-items-center">
             <div className="d-flex gap-2 mt-1">
               <div className="" style={{ width: "200px" }}>
@@ -357,10 +365,24 @@ const SubmissionApproval = () => {
                         {submitted_by_name || "N/A"}
                       </td>
                        <td className="" style={{ width: "200px" }}>
+                        <div className="d-flex gap-2">
                           <button 
                           // data-bs-target="#submissionPreview" 
                           // data-bs-toggle="modal" 
-                          onClick={() => handleUpdateStatus(item.id)} className="theme-btn btn-style-four small">APPROVE</button>
+                          disabled={loading}
+                          onClick={() =>{ 
+                            setSubmissionId(item.id)
+                            handleUpdateStatus(item.id, "approve")
+                            }} className="theme-btn btn-style-three small">{loading && item.id == submissionId ? <BtnBeatLoader /> :"APPROVE"}</button>
+                           <button 
+                          // data-bs-target="#submissionPreview" 
+                          // data-bs-toggle="modal"
+                          disabled={rejLoading} 
+                          onClick={() =>{
+                            setSubmissionId(item.id)
+                             handleUpdateStatus(item.id, "disapprove")
+                             }} className="theme-btn btn-style-four small">{rejLoading && item.id == submissionId ? <BtnBeatLoader /> :"Reject"}</button>
+                        </div>
                       </td>
                      {/* <td
                         className="d-flex flex-wrap gap-2"

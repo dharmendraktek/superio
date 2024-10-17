@@ -63,24 +63,24 @@ const AddClientModal = ({handleGetClientNames}) => {
     if (!form.client_name) {
       setError((prev) => ({ ...prev, client_name: "This field is required" }));
     }
-    if (!form.client_email) {
-      setError((prev) => ({ ...prev, client_email: "This field is required" }));
-    }
-    if (!form.client_cont) {
-      setError((prev) => ({ ...prev, client_cont: "This field is required" }));
-    }
+    // if (!form.client_email) {
+    //   setError((prev) => ({ ...prev, client_email: "This field is required" }));
+    // }
+    // if (!form.client_cont) {
+    //   setError((prev) => ({ ...prev, client_cont: "This field is required" }));
+    // }
   
 
     let {
        client_name,
-       client_email,
-       client_cont
+      //  client_email,
+      //  client_cont
      
     } = form;
     if (
-      client_name &&
-      client_email &&
-      client_cont 
+      client_name
+      // client_email &&
+      // client_cont 
     ) {
       return true;
     } else {

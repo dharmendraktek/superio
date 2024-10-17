@@ -4,11 +4,12 @@ import { getReq, postApiReq } from "@/utils/apiHandlers"
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import { assign } from "lodash";
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { toast } from "react-toastify";
+import BtnBeatLoader from "./BtnBeatLoader";
 
 
-const JobAssignModal = ({jobId}) => {
+const JobAssignModal = ({jobId, handleReload}) => {
   const [teamList, setTeamList] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [form, setForm] = useState({
@@ -17,6 +18,7 @@ const JobAssignModal = ({jobId}) => {
   const [teamId, setTeamId] = useState();
   const [assignList, setAssignList] = useState([]);
   const [search, setSearch] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleGetUsersList = async () => {
     const response = await getReq(
@@ -80,16 +82,20 @@ const JobAssignModal = ({jobId}) => {
    
   const handleAssingJob = async () => {
     try{
+      setIsLoading(true);
       const response = await postApiReq(`/jobs/${jobId}/assign/`, form);
+      setIsLoading(false);
       if (response.status) {
         toast.success('Job has been assigned successfully')
         setForm((prev) => ({...prev, assign:[]}))
+        handleReload();
         setAssignList([]);
         let btn = document.getElementById('btnClose');
         btn.click();
       }
     }catch(err){
        toast.error(err.response || 'Somthing went wrong')
+       setIsLoading(false);
     }
   };
   
@@ -180,7 +186,7 @@ const JobAssignModal = ({jobId}) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button  type="button" className="theme-btn btn-style-one small"  onClick={handleAssingJob}>Save</button>
+              <button  type="button" className="theme-btn btn-style-one small"  onClick={handleAssingJob} disabled={isLoading}>{isLoading ? <BtnBeatLoader /> : "Save"}</button>
               <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal" onClick={handleClear}>Close</button>
             </div>
           </div>

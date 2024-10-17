@@ -10,7 +10,7 @@ import { processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
-import { jobPostsTableField } from "../../jobposts/components/components/constant";
+import { assignJobTableField, jobPostsTableField } from "../../jobposts/components/components/constant";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 import NotesModal from "@/components/common/NotesModal";
@@ -34,7 +34,6 @@ const AssignJobList = () => {
   const [jobDetails, setJobDetails] = useState();
   const employee_details = useSelector((state) => state.employer.user);
 
-  console.log("---------------employeee details ", employee_details);
 
   useEffect(() => {
     if(employee_details){
@@ -45,7 +44,9 @@ const AssignJobList = () => {
   const getJobpostsList = async () => {
     setIsLoading(true);
     const response = await getReq(
-      `/user-assigned-jobs/${employee_details?.id}/`
+      `/user-assigned-jobs/?page=${page + 1}&active=${active == 1 ? true : false}${
+        search ? `&search=${search}` : ""
+      }`
     );
     setIsLoading(false);
     if (response.status) {
@@ -61,31 +62,31 @@ const AssignJobList = () => {
     getJobpostsList(search);
   }, [search, page, active]);
 
-  const handleInactiveJobPost = async (id) => {
-    const response = await deleteReq(`/jobs/${id}/`);
-    if (response.status) {
-      toast.success("Job post Inactivated successfully");
-      getJobpostsList();
-    }
-  };
+  // const handleInactiveJobPost = async (id) => {
+  //   const response = await deleteReq(`/jobs/${id}/`);
+  //   if (response.status) {
+  //     toast.success("Job post Inactivated successfully");
+  //     getJobpostsList();
+  //   }
+  // };
 
-  const handleActivateJobPost = async (id) => {
-    const response = await postApiReq(
-      `/jobs/${id}/job-activate/?activate=true`
-    );
-    if (response.status) {
-      toast.success("Job post activated successfully");
-      getJobpostsList();
-    }
-  };
+  // const handleActivateJobPost = async (id) => {
+  //   const response = await postApiReq(
+  //     `/jobs/${id}/job-activate/?activate=true`
+  //   );
+  //   if (response.status) {
+  //     toast.success("Job post activated successfully");
+  //     getJobpostsList();
+  //   }
+  // };
 
-  const handleDeleteJobPost = async (id) => {
-    const response = await deleteReq(`/jobs/${id}/?permanent_delete=true`);
-    if (response.status) {
-      toast.success("Job post has been deleted successfully");
-      getJobpostsList();
-    }
-  };
+  // const handleDeleteJobPost = async (id) => {
+  //   const response = await deleteReq(`/jobs/${id}/?permanent_delete=true`);
+  //   if (response.status) {
+  //     toast.success("Job post has been deleted successfully");
+  //     getJobpostsList();
+  //   }
+  // };
 
   useEffect(() => {
     if (jobPostList.length > 0) {
@@ -166,7 +167,7 @@ const AssignJobList = () => {
         <table className="default-table ">
           <thead className="">
             <tr>
-              {jobPostsTableField.map((item, index) => {
+              {assignJobTableField.map((item, index) => {
                 return (
                   <>
                     {/* {item.title == "input" ? (
@@ -225,7 +226,11 @@ const AssignJobList = () => {
                       </td>
                     )} */}
                     <td
-                      className="d-flex align-items-center justify-content-between"
+                      className={`d-flex align-items-center ${
+                        item.submissions.length == 0
+                          ? "justify-content-end"
+                          : "justify-content-between"
+                      }`}
                       style={{ width: "130px" }}
                     >
                       {/* <input type="checkbox" /> */}
@@ -277,6 +282,23 @@ const AssignJobList = () => {
                           </div>
                         </>
                       )}
+                      {/* <div className="position-relative">
+                      <span
+                        data-bs-toggle="modal"
+                        data-bs-target="#jobAssignModal"
+                        onClick={() => setJobId(item.id)}
+                        className="cursor-pointer"
+                        onMouseEnter={() => setOpen(item.id)}
+                        onMouseLeave={() => setOpen(null)}
+                      >
+                        {reactIcons.settings}
+                      </span>
+                      {item.id == open &&
+                      <div className="position-absolute  px-2 py-1 rounded-1" style={{width:'90px', height:"35px", zIndex:'3', background:"rgb(77 82 129 / 54%)"}}>
+                       <span className="text-white">Assign Job</span> 
+                      </div>
+                      }
+                      </div> */}
                     </td>
                     <td>
                       <Link
@@ -291,36 +313,39 @@ const AssignJobList = () => {
                     {/* <td className="trans-id">{item.empcode}</td>   */}
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                      {jobDetails?.id == item.id &&
-                      <span
-                          data-bs-toggle="modal"
-                          data-bs-target="#jobDetailsPreviewModal"
-                          className="cursor-pointer text-primary fs-5"
-                          id="jobDetailsPreview"
-                          onMouseEnter={() => {
-                            setJobDetails(item);
-                           let previewBtn= document.getElementById('jobDetailsPreview');
-                           previewBtn.click();
-                          }}
-                        >
-                          {reactIcons.view}
-                        </span>
-                      }
-                    <Link
+                        {jobDetails?.id == item.id && (
+                          <span
+                            data-bs-toggle="modal"
+                            data-bs-target="#jobDetailsPreviewModal"
+                            className="cursor-pointer text-primary fs-5"
+                            id="jobDetailsPreview"
+                            onMouseEnter={() => {
+                              setJobDetails(item);
+                              let previewBtn =
+                                document.getElementById("jobDetailsPreview");
+                              previewBtn.click();
+                            }}
+                          >
+                            {reactIcons.view}
+                          </span>
+                        )}
+                        <Link
                           href="/employers-dashboard/job-posts/[id]"
-                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                          target="_blank" 
+                          as={`/employers-dashboard/job-posts/${item.id}`}
+                          target="_blank"
                           onMouseEnter={() => {
                             setJobDetails(item);
-                          //  let previewBtn= document.getElementById('jobDetailsPreview');
-                          //  previewBtn.click();
+                            //  let previewBtn= document.getElementById('jobDetailsPreview');
+                            //  previewBtn.click();
                           }}
+                          className="text-capitalize"
                         >
                           {item?.title}
                         </Link>
                       </div>
                     </td>
                     <td className="">{item.client_name || "N/A"}</td>
+                    <td className="">{item.client_job_id || "N/A"}</td>
                     <td>{item.city || "N/A"}</td>
                     <td className="">{item.state || "N/A"}</td>
                     <td className="">{item.job_status || "N/A"}</td>
@@ -330,13 +355,24 @@ const AssignJobList = () => {
                       {item.amount || "N.A"}
                       {item.amount ? "/" : "/"}
                       {item.payment_frequency || "N.A"}
+                      {item.client_taxterm ? "/" : "/"}
+                      {item.client_taxterm || "N.A"}
                     </td>
-                    <td className="">{item.delivery_manager_name || "N/A"}</td>
-                    <td className="">{item.contact_manager_name || "N/A"}</td>
+                    <td className="text-capitalize">
+                      {item.delivery_manager_name || "N/A"}
+                    </td>
+                    <td className="text-capitalize">
+                      {item.contact_manager_name || "N/A"}
+                    </td>
                     <td className="">
-                      <div className="d-flex flex-wrap">
+                      <div className="d-flex flex-wrap gap-1">
                         {item.assign_details.map((item) => {
-                          return <span>{item.first_name},</span>;
+                          return(
+                            <div className="rounded-1 border border-primary px-1">
+                              <span>{item.first_name} {item.last_name}</span>
+                            </div>
+                          )
+                        
                         })}
                         {item.assign_details.length == 0 && "N/A"}
                       </div>
@@ -354,71 +390,6 @@ const AssignJobList = () => {
                     </td>
                     <td className="">
                       {item.head_account_manager_name || "N/A"}
-                    </td>
-                    <td>
-                      <div className="option-box">
-                        <ul className="option-list">
-                          <li>
-                            <Link
-                              href="/employers-dashboard/job-posts/[id]"
-                              as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}
-                            >
-                              <button
-                                // data-bs-toggle="modal"
-                                // data-bs-target="#clientUpdateModal"
-                                data-text="Edit User"
-                              >
-                                {/* <a
-                            href="#"
-                            className="theme-btn btn-style-three call-modal"
-                            data-bs-toggle="modal"
-                            data-bs-target="#userUpdateModal"
-                          > */}
-                                <span className="las la-edit"></span>
-                                {/* </a> */}
-                              </button>
-                            </Link>
-                          </li>
-                          <li>
-                            <button
-                              // data-bs-toggle="modal"
-                              // data-bs-target="#clientDeleteModal"
-                              data-text={`${
-                                active == 1
-                                  ? "Inactivate Job Post"
-                                  : "Activate Job Post"
-                              }`}
-                              onClick={() => {
-                                if (active == 1) {
-                                  handleInactiveJobPost(item.id);
-                                } else {
-                                  handleActivateJobPost(item.id);
-                                }
-                              }}
-                            >
-                              <span
-                                className={`${
-                                  active == 1
-                                    ? "la la-window-close"
-                                    : "las la-check-square"
-                                }`}
-                              ></span>
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              // data-bs-toggle="modal"
-                              // data-bs-target="#clientDeleteModal"
-                              data-text="Delete Job Post"
-                              onClick={() => {
-                                handleDeleteJobPost(item.id);
-                              }}
-                            >
-                              <span className="la la-trash"></span>
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
                     </td>
                   </tr>
                   {item.id == expand && (
@@ -534,15 +505,54 @@ const AssignJobList = () => {
                                         type="checkbox"
                                         onChange={(e) => {
                                           let update = [...jobPostList];
+
+                                          update.map((applicant) => {
+                                            // Check if the applicant has a 'jobs_associated' array
+                                            if (
+                                              Array.isArray(
+                                                applicant.submissions
+                                              )
+                                            ) {
+                                              // Iterate over each job and set the 'selected' field to false
+                                              applicant.submissions =
+                                                applicant.submissions.map(
+                                                  (job) => {
+                                                    return {
+                                                      ...job,
+                                                      selected: false, // Set selected to false
+                                                    };
+                                                  }
+                                                );
+                                            }
+                                            return applicant;
+                                          });
+
+                                          // If the new checkbox is checked
                                           if (e.target.checked) {
-                                            update[index]["submissions"][
-                                              _index
-                                            ]["selected"] = e.target.checked;
+                                            // Loop through all submissions and set 'selected' to false
+                                            update[index]["submissions"] =
+                                              update[index]["submissions"].map(
+                                                (
+                                                  submission,
+                                                  submissionIndex
+                                                ) => {
+                                                  // Set selected to false for all except the newly selected one
+                                                  return {
+                                                    ...submission,
+                                                    selected:
+                                                      submissionIndex === _index
+                                                        ? true
+                                                        : false,
+                                                  };
+                                                }
+                                              );
                                           } else {
+                                            // If the checkbox is unchecked, just uncheck it
                                             update[index]["submissions"][
                                               _index
-                                            ]["selected"] = e.target.checked;
+                                            ]["selected"] = false;
                                           }
+
                                           setJobPostList(update);
                                         }}
                                         checked={_item?.selected}
@@ -554,10 +564,11 @@ const AssignJobList = () => {
                                         href={`/employers-dashboard/all-applicants/${id}`}
                                         target="_blank"
                                       >
-                                        {(firstname ||
-                                          "") + " " + (middlename ||
-                                          "") + " " + (lastname ||
-                                          "")}
+                                        {(firstname || "") +
+                                          " " +
+                                          (middlename || "") +
+                                          " " +
+                                          (lastname || "")}
                                       </Link>
                                     </td>
                                     <td>{authorization || "N/A"}</td>

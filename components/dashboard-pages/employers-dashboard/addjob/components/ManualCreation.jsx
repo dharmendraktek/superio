@@ -31,7 +31,7 @@ const initialState = {
   client_taxterm: "",
   start_date: new Date(),
   end_date: new Date(),
-  remote: "",
+  remote: "no",
   lob: "",
   address: "",
   country: "United States",
@@ -176,7 +176,7 @@ const ManualCreation = ({
         endclient: jobData.endclient ? jobData.endclient : "",
         start_date: jobData.start_date,
         end_date: jobData.end_date,
-        remote: jobData.remote,
+        remote: jobData.remote ? jobData.remote : "no" ,
         lob: isNumber(jobData.lob) ? jobData.lob : "",
         address: jobData.address,
         country: country ? country?.name : "United States",
@@ -188,7 +188,7 @@ const ManualCreation = ({
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
         primary_skills:
-          jobData.secondary_skills == "Not specified"
+          jobData.secondary_skills == jobData.primary_skills ? [] : jobData.primary_skills ==  "Not specified"
             ? []
             : typeof jobData.primary_skills == "object"
             ? jobData.primary_skills
@@ -1300,7 +1300,7 @@ const ManualCreation = ({
                 }}
               >
                 <div className="d-flex flex-wrap mt-1">
-                  {form.primary_skills.map((item, index) => {
+                  {typeof form.primary_skills == "object" && form.primary_skills?.length > 0  && form.primary_skills.map((item, index) => {
                     return (
                       <div
                         key={index}
@@ -1379,7 +1379,7 @@ const ManualCreation = ({
                 }}
               >
                 <div className="d-flex   flex-wrap mt-1">
-                  {form.secondary_skills.map((item, index) => {
+                  {typeof form.secondary_skills == "object" && form.secondary_skills?.length > 0 && form.secondary_skills.map((item, index) => {
                     return (
                       <div
                         key={index}

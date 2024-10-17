@@ -239,8 +239,9 @@ const AttendanceCalendar = () => {
   const getEmployeeAttendanceDetails = async () => {
     try {
       const response = await getReq(`/attendance-details/?emp_code=${userDetails.empcode}`);
-      if (response.status === 200) {
-        const transformed = transformEvents(response.data.results);
+      console.log("---------------resposne ", response );
+      if (response.status) {
+        const transformed = transformEvents(response.data);
         setEvents(transformed);
       }
     } catch (error) {
@@ -278,9 +279,9 @@ const AttendanceCalendar = () => {
         
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-            <p className=" text-white fs-5">{event.late_status == "NOLATE" ? "Present" : "Late"}</p>
+            <p className=" text-white fs-5">{event.late_status  ? "" : event.late_status == "NOLATE" ? "Late" : ""}</p>
             <p className="text-white">
-              Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : ''}</span>  <br />
+              Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : '00:00'}</span>  <br />
               (Duration {event.duration})
             </p>
           </div>

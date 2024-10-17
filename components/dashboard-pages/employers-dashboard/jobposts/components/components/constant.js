@@ -28,6 +28,37 @@ export const jobPostsTableField = [
   
 ]
 
+
+export const assignJobTableField = [
+  
+  {title:'Submission', style:{width:'150px'}},
+  {title:'Job Code',style:{width:'150px'}},
+  {title:'Job Title',style:{width:'250px'}},
+  // {title:'Business Unit'},
+  {title:'Client',style:{width:'200px'}},
+  {title:'Client Job ID',style:{width:'200px'}},
+
+   // {title:'Client Job ID'},
+  {title:'Location',style:{width:'200px'}},
+  {title:'States',style:{width:'200px'}},
+  {title:'Job Status',style:{width:'150px'}},
+  {title:'Client Bill Rate/Salary',style:{width:'250px'}},
+  // {title:'Pay Rate/Salary'},
+  {title:'Delivery Manager',style:{width:'250px'}},
+  {title:'Contact Manager',style:{width:'250px'}},
+  {title:'Assigned To',style:{width:'350px'}},
+  {title:'Job Created By',style:{width:'200px'}},
+  {title:'Job Created',style:{width:'200px'}},
+  {title:'Job Modified On',style:{width:'250px'}},
+  // {title:'Min Salary'},
+  // {title:'Max Salary'},
+  // {title:'Average Salary'},
+  {title:'Account Manager',style:{width:'200px'}},
+  // {title:'Action',style:{width:'150px'}},
+  
+]
+
+
 export const clientData = [
     {
       "select":'input',

@@ -175,7 +175,7 @@ const Index = () => {
           )}
           <div className="row mx-3">
             <div className={`${open ? "col-lg-12" : "col-12"}`}>
-              <JobAssignModal jobId={id} />
+              <JobAssignModal jobId={id} handleReload={handleGetJobDetails} />
               {open ? (
                 <>
                   <Paper>

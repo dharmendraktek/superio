@@ -532,7 +532,7 @@ const ApplicantTable = () => {
                                       payment_frequency,
                                     } = job_detail;
                                     let { first_name, last_name } =
-                                      delivery_manager;
+                                      delivery_manager || {};
                                     let deliverManagerName =
                                       (first_name || "") +
                                       " " +

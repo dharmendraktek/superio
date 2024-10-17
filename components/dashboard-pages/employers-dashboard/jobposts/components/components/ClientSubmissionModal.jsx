@@ -4,7 +4,7 @@ import { getReq, patchReq } from "@/utils/apiHandlers";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails }) => {
+const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails, statusId=''  }) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     new_status: "",
@@ -113,9 +113,10 @@ const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails })
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, new_status: e.target.value }))
                 }
-                // value={value}
+                value={statusId || form.new_status}
+                disabled={statusId ? true : false}
               >
-                <option>Select</option>
+                <option value={""}>Select</option>
                 {statusList.map((item, index) => {
                   return (
                     <option key={index} value={item.id}>

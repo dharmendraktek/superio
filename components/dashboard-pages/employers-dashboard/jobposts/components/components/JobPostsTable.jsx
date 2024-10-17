@@ -20,6 +20,7 @@ import ClientSubmissionModal from "./ClientSubmissionModal";
 import { useCallback } from "react";
 import NotesModal from "@/components/common/NotesModal";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
+import JobAssignModal from "@/components/common/JobAssignModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -37,6 +38,9 @@ const JobPostsTable = () => {
   const [submissionDetails, setSubmissionDetails] = useState();
   const [isSelected, setIsSelected] = useState([]);
   const [jobDetails, setJobDetails] = useState();
+  const [jobId, setJobId] = useState("");
+  const [open, setOpen] = useState(false);
+  const [skillOpen, setSkillOpen] = useState(null);
 
   useEffect(() => {
     getJobpostsList();
@@ -106,6 +110,7 @@ const JobPostsTable = () => {
         jobDetails={jobDetails}
         setJobDetails={setJobDetails}
       />
+      <JobAssignModal jobId={jobId}  handleReload={getJobpostsList}  />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           <div
@@ -230,7 +235,11 @@ const JobPostsTable = () => {
                       </td>
                     )} */}
                     <td
-                      className="d-flex align-items-center justify-content-between"
+                      className={`d-flex align-items-center ${
+                        item.submissions.length == 0
+                          ? "justify-content-end"
+                          : "justify-content-between"
+                      }`}
                       style={{ width: "130px" }}
                     >
                       {/* <input type="checkbox" /> */}
@@ -282,6 +291,31 @@ const JobPostsTable = () => {
                           </div>
                         </>
                       )}
+                      <div className="position-relative">
+                        <span
+                          data-bs-toggle="modal"
+                          data-bs-target="#jobAssignModal"
+                          onClick={() => setJobId(item.id)}
+                          className="cursor-pointer"
+                          onMouseEnter={() => setOpen(item.id)}
+                          onMouseLeave={() => setOpen(null)}
+                        >
+                          {reactIcons.settings}
+                        </span>
+                        {item.id == open && (
+                          <div
+                            className="position-absolute  px-2 py-1 rounded-1"
+                            style={{
+                              width: "90px",
+                              height: "35px",
+                              zIndex: "3",
+                              background: "rgb(77 82 129 / 54%)",
+                            }}
+                          >
+                            <span className="text-white">Assign Job</span>
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td>
                       <Link
@@ -348,9 +382,13 @@ const JobPostsTable = () => {
                       {item.contact_manager_name || "N/A"}
                     </td>
                     <td className="">
-                      <div className="d-flex flex-wrap">
+                      <div className="d-flex flex-wrap gap-1">
                         {item.assign_details.map((item) => {
-                          return <span>{item.first_name},</span>;
+                          return (
+                            <div className="rounded-1 border border-primary px-1">
+                              <span>{item.first_name} {item.last_name}</span>
+                            </div>
+                          );
                         })}
                         {item.assign_details.length == 0 && "N/A"}
                       </div>
@@ -551,14 +589,21 @@ const JobPostsTable = () => {
 
                                           update.map((applicant) => {
                                             // Check if the applicant has a 'jobs_associated' array
-                                            if (Array.isArray(applicant.submissions)) {
+                                            if (
+                                              Array.isArray(
+                                                applicant.submissions
+                                              )
+                                            ) {
                                               // Iterate over each job and set the 'selected' field to false
-                                              applicant.submissions = applicant.submissions.map((job) => {
-                                                return {
-                                                  ...job,
-                                                  selected: false, // Set selected to false
-                                                };
-                                              });
+                                              applicant.submissions =
+                                                applicant.submissions.map(
+                                                  (job) => {
+                                                    return {
+                                                      ...job,
+                                                      selected: false, // Set selected to false
+                                                    };
+                                                  }
+                                                );
                                             }
                                             return applicant;
                                           });

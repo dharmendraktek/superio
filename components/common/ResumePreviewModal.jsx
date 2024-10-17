@@ -20,7 +20,7 @@ const ResumePreviewModal = ({applicantDetails, setApplicantDetails}) => {
             <div className="modal-header border border-bottom-primary">
               <h5 className="modal-title" id="resumePreviewModalLabel">Preview</h5>
               {/* <h6>{applicantDetails?.firstname}</h6> */}
-              <button type="button" onClick={() =>   etails(null)} className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" onClick={() =>   setApplicantDetails(null)} className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <iframe src={resume?.file_url} style={{width:'100%', height:'800px'}} />

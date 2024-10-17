@@ -29,6 +29,7 @@ const stepsData = [
 ];
 
 const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
+  const [statusId, setStatusId] = useState();
   
   console.log("------------submission deetaisl in stepper ", submissionDetails);
  
@@ -85,7 +86,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         submissionDetails={submissionDetails}
         handleGetJobDetails={handleGetJobDetails}
       />
-      <ClientSubmissionModal submissionDetails={submissionDetails} handleGetJobDetails={handleGetJobDetails}  side="job" />
+      <ClientSubmissionModal submissionDetails={submissionDetails} handleGetJobDetails={handleGetJobDetails} statusId={statusId}  side="job" />
 
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
         <div className="" style={{ width: "250px" }}>
@@ -157,13 +158,23 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                 </span>
                 <ul className="dropdown-menu">
                   <li>
-                    <span class="dropdown-item"  data-bs-toggle='modal' data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission" >
+                    <span class="dropdown-item" onClick={() => setStatusId(2)}  data-bs-toggle='modal' data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission" >
                       Submit To Client
                     </span>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle='modal'  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
-                     Update Status
+                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(9)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
+                     Turbo Check
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(10)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
+                     T3 Check
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(5)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
+                     Confirmation
                     </a>
                   </li>
                   {/* <li>
