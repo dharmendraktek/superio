@@ -10,7 +10,10 @@ import { processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
-import { assignJobTableField, jobPostsTableField } from "../../jobposts/components/components/constant";
+import {
+  assignJobTableField,
+  jobPostsTableField,
+} from "../../jobposts/components/components/constant";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 import NotesModal from "@/components/common/NotesModal";
@@ -29,14 +32,13 @@ const AssignJobList = () => {
   const [dataCount, setDataCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [active, setActive] = useState(true);
-  const [submissionDetails, setSubmissionDetails] = useState();
   const [isSelected, setIsSelected] = useState([]);
   const [jobDetails, setJobDetails] = useState();
+  const [openAssign, setOpenAssign] = useState(null);
   const employee_details = useSelector((state) => state.employer.user);
 
-
   useEffect(() => {
-    if(employee_details){
+    if (employee_details) {
       getJobpostsList();
     }
   }, [employee_details]);
@@ -44,9 +46,9 @@ const AssignJobList = () => {
   const getJobpostsList = async () => {
     setIsLoading(true);
     const response = await getReq(
-      `/user-assigned-jobs/?page=${page + 1}&active=${active == 1 ? true : false}${
-        search ? `&search=${search}` : ""
-      }`
+      `/user-assigned-jobs/?page=${page + 1}&active=${
+        active == 1 ? true : false
+      }${search ? `&search=${search}` : ""}`
     );
     setIsLoading(false);
     if (response.status) {
@@ -101,7 +103,10 @@ const AssignJobList = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <JobDetailsPreviewModal jobDetails={jobDetails} setJobDetails={setJobDetails} />
+      <JobDetailsPreviewModal
+        jobDetails={jobDetails}
+        setJobDetails={setJobDetails}
+      />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           {/* <div
@@ -225,63 +230,64 @@ const AssignJobList = () => {
                         </div>
                       </td>
                     )} */}
-                    <td
-                      className={`d-flex align-items-center ${
-                        item.submissions.length == 0
-                          ? "justify-content-end"
-                          : "justify-content-between"
-                      }`}
-                      style={{ width: "130px" }}
-                    >
+                    <td>
                       {/* <input type="checkbox" /> */}
-                      {item.submissions.length > 0 && (
-                        <>
-                          <div
-                            onClick={() => {
-                              if (expand == item.id) {
-                                setExpand(null);
-                                // setClientData((prev) => {
-                                //   const update = [...prev];
-                                //   update[index]["open"] = false;
-                                //   return update;
-                                // });
-                              } else {
-                                setExpand(item.id);
-                                // setClientData((prev) => {
-                                //   const update = [...prev];
-                                //   update[index]["open"] = true;
-                                //   return update;
-                                // });
-                              }
-                            }}
-                            className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                            style={{ background: "var(--primary-2nd-color)" }}
-                          >
+                      <div
+                        className={`d-flex align-items-center ${
+                          item.submissions.length == 0
+                            ? "justify-content-end"
+                            : "justify-content-between"
+                        }`}
+                      >
+                        {item.submissions.length > 0 && (
+                          <>
                             <div
-                              className="text-white "
-                              style={{
-                                width: "24px",
-                                height: "24px",
-                                fontSize: "12px",
-                                borderRadius: "3px",
-                                background: "var(--primary-2nd-color)",
+                              onClick={() => {
+                                if (expand == item.id) {
+                                  setExpand(null);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = false;
+                                  //   return update;
+                                  // });
+                                } else {
+                                  setExpand(item.id);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = true;
+                                  //   return update;
+                                  // });
+                                }
                               }}
+                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
+                              style={{ background: "var(--primary-2nd-color)" }}
                             >
-                              <p
-                                className="text-white fw-medium"
-                                style={{ fontSize: "15px" }}
+                              <div
+                                className="text-white "
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  fontSize: "12px",
+                                  borderRadius: "3px",
+                                  background: "var(--primary-2nd-color)",
+                                }}
                               >
-                                {item.submissions.length}
-                              </p>
+                                <p
+                                  className="text-white fw-medium"
+                                  style={{ fontSize: "15px" }}
+                                >
+                                  {item.submissions.length}
+                                </p>
+                              </div>
+                              <span className="cursor-pointer text-white fs-4">
+                                {item.id == expand
+                                  ? reactIcons.arrowfillup
+                                  : reactIcons.arrowfilldown}
+                              </span>
                             </div>
-                            <span className="cursor-pointer text-white fs-4">
-                              {item.id == expand
-                                ? reactIcons.arrowfillup
-                                : reactIcons.arrowfilldown}
-                            </span>
-                          </div>
-                        </>
-                      )}
+                          </>
+                        )}
+                      </div>
                       {/* <div className="position-relative">
                       <span
                         data-bs-toggle="modal"
@@ -364,17 +370,42 @@ const AssignJobList = () => {
                     <td className="text-capitalize">
                       {item.contact_manager_name || "N/A"}
                     </td>
-                    <td className="">
-                      <div className="d-flex flex-wrap gap-1">
-                        {item.assign_details.map((item) => {
-                          return(
+                    <td
+                      className=""
+                      onMouseEnter={() => setOpenAssign(item.id)}
+                      onMouseLeave={() => setOpenAssign(null)}
+                    >
+                      <div className="d-flex flex-wrap gap-1 position-relative">
+                        {item.assign_details?.slice(0, 2).map((item) => {
+                          return (
                             <div className="rounded-1 border border-primary px-1">
-                              <span>{item.first_name} {item.last_name}</span>
+                              <span>
+                                {item.first_name} {item.last_name}
+                              </span>
                             </div>
-                          )
-                        
+                          );
                         })}
                         {item.assign_details.length == 0 && "N/A"}
+                        {openAssign == item.id && (
+                          <div
+                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                            style={{
+                              width: "250px",
+                              minHeight: "30px",
+                              maxHeight: "fit-content",
+                              zIndex: "5",
+                            }}
+                          >
+                            {item.assign_details.map((item) => {
+                              return (
+                                <span className="text-white">
+                                  {item.first_name} {item.last_name}
+                                </span>
+                              );
+                            })}
+                            {item.assign_details.length == 0 && "N/A"}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="">

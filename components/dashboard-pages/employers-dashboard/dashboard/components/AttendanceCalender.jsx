@@ -274,12 +274,12 @@ const AttendanceCalendar = () => {
          </div>
      backgroundColor='red';
      }
-     else if (event.first_timestamp) {
+     else if (event.first_timestamp && event.last_timestamp) {
         // const isLate = moment(checkInTime).isAfter(moment.utc(`${event.date_of_attendance}T${shiftInTime}Z`));
         
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-            <p className=" text-white fs-5">{event.late_status  ? "" : event.late_status == "NOLATE" ? "Late" : ""}</p>
+            <p className=" text-white fs-5">{event.late_status  ? "Present" : event.late_status == "NOLATE" ? "Present" : event.late_status}</p>
             <p className="text-white">
               Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : '00:00'}</span>  <br />
               (Duration {event.duration})
@@ -287,11 +287,18 @@ const AttendanceCalendar = () => {
           </div>
         );
         backgroundColor = event.late_status == 'NOLATE' ? "green" : "gray";
-      } else if (event.status.type === "Absent") {
+      } else if (event.status_details.type === "Absent") {
         title = (
-          <div className="d-flex justify-content-center align-items-center text-center" style={{ height: "100px" }}>
-            <p className="text-white fs-5">Absent</p>
-          </div>
+          <div className="text-white text-center" style={{ height: "100px" }}>
+          <p className=" text-white fs-5">{event.status_details.type}</p>
+          <p className="text-white">
+            Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : 'Missing'}</span>  <br />
+            (Duration {event.duration})
+          </p>
+        </div>
+          // <div className="d-flex justify-content-center align-items-center text-center" style={{ height: "100px" }}>
+          //   <p className="text-white fs-5">Absent</p>
+          // </div>
         );
         backgroundColor = "red";
       } else {

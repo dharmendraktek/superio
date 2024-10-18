@@ -45,6 +45,8 @@ const ApplicantTable = () => {
   const [expand, setExpand] = useState(null);
   const [isSelected, setIsSelected] = useState([]);
   const [applicantDetails, setApplicantDetails] = useState(null);
+  const [openPrimarySkill, setOpenPrimarySkill] = useState(null);
+  const [openSecondarySkill, setOpenSecondarySkill] = useState(null);
 
   useEffect(() => {
     let param;
@@ -92,7 +94,6 @@ const ApplicantTable = () => {
       // setJobData(filteredData);
     }
   }, [applicantData]);
-
 
   return (
     <div>
@@ -217,7 +218,7 @@ const ApplicantTable = () => {
                                 className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
                                 style={{
                                   background: "var(--primary-2nd-color)",
-                                  width:'100% !important'
+                                  width: "100% !important",
                                 }}
                               >
                                 <div
@@ -258,7 +259,7 @@ const ApplicantTable = () => {
                       </td>
                       <td className="" style={{ width: "200px" }}>
                         <div className="d-flex gap-2 align-items-center">
-                          {applicantDetails?.id == item.id && 
+                          {applicantDetails?.id == item.id && (
                             <span
                               data-bs-toggle="modal"
                               data-bs-target="#resumePreviewModal"
@@ -272,7 +273,7 @@ const ApplicantTable = () => {
                             >
                               {reactIcons.view}
                             </span>
-                          }
+                          )}
                           <Link
                             href="/employers-dashboard/all-applicants/[id]"
                             as={`/employers-dashboard/all-applicants/${item.id}`}
@@ -286,8 +287,13 @@ const ApplicantTable = () => {
                           </Link>
                         </div>
                       </td>
-                      <td className="text-capitalize" style={{ width: "250px" }}>
-                        {(item.job_title == "undefined" || item.job_title) ? "N/A" : item.job_title }
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "250px" }}
+                      >
+                        {item.job_title == "undefined" || item.job_title
+                          ? "N/A"
+                          : item.job_title}
                       </td>
                       <td className="" style={{ width: "300px" }}>
                         {item.email || "N/A"}
@@ -296,9 +302,13 @@ const ApplicantTable = () => {
                         {item.mobile || "N/A"}
                       </td>
                       <td style={{ width: "300px" }}>
-                        <div className="d-flex flex-wrap gap-1">
+                        <div
+                          className="d-flex flex-wrap gap-1 position-relative"
+                          onMouseLeave={() => setOpenPrimarySkill(null)}
+                          onMouseEnter={() => setOpenPrimarySkill(item.id)}
+                        >
                           {item.primary_skills
-                            ?.slice(0, 3)
+                            ?.slice(0, 2)
                             .map((_item, index) => {
                               return (
                                 <div
@@ -318,12 +328,44 @@ const ApplicantTable = () => {
                               );
                             })}
                           {item.primary_skills.length == 0 && "N/A"}
+                          {openPrimarySkill == item.id && (
+                            <div
+                              className="position-absolute bg-lightestblue text-white rounded-1 px-2 d-flex flex-wrap gap-1"
+                              style={{
+                                width: "300px",
+                                minHeight: "30px",
+                                maxHeight: "fit-content",
+                                zIndex: "5",
+                              }}
+                            >
+                              {item.primary_skills?.map((_item, index) => {
+                                return (
+                                  <span
+                                    className="fw-medium text-capitalize text-white"
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    {_item.name}
+                                    {item.primary_skills.length - 1 > index
+                                      ? ""
+                                      : ""}
+                                    ,
+                                  </span>
+                                );
+                              })}
+                              {item.primary_skills.length == 0 &&
+                                "Not Available"}
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td style={{ width: "300px" }}>
-                        <div className="d-flex flex-wrap gap-1">
+                      <div
+                          className="d-flex flex-wrap gap-1 position-relative"
+                          onMouseLeave={() => setOpenSecondarySkill(null)}
+                          onMouseEnter={() => setOpenSecondarySkill(item.id)}
+                        >
                           {item.secondary_skills
-                            ?.slice(0, 3)
+                            ?.slice(0, 2)
                             .map((_item, index) => {
                               return (
                                 <div
@@ -342,19 +384,59 @@ const ApplicantTable = () => {
                                 </div>
                               );
                             })}
-                          {item?.secondary_skills?.length == 0 && "N/A"}
+                          {item.secondary_skills.length == 0 && "N/A"}
+                          {openSecondarySkill == item.id && (
+                            <div
+                              className="position-absolute bg-lightestblue text-white rounded-1 px-2 d-flex flex-wrap gap-1"
+                              style={{
+                                width: "300px",
+                                minHeight: "30px",
+                                maxHeight: "fit-content",
+                                zIndex: "5",
+                              }}
+                            >
+                              {item.secondary_skills?.map((_item, index) => {
+                                return (
+                                  <span
+                                    className="fw-medium text-capitalize text-white"
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    {_item.name}
+                                    {item.secondary_skills.length - 1 > index
+                                      ? ""
+                                      : ""}
+                                    ,
+                                  </span>
+                                );
+                              })}
+                              {item.secondary_skills.length == 0 &&
+                                "Not Available"}
+                            </div>
+                          )}
                         </div>
                       </td>
-                      <td className="text-capitalize" style={{ width: "150px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "150px" }}
+                      >
                         {item.city || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {item.source || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {item.state || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {item.status || "N/A"}
                       </td>
                       <td
@@ -519,7 +601,7 @@ const ApplicantTable = () => {
                                       job_detail,
                                       submitted_by_details,
                                       submission_on,
-                                    } = _item;
+                                    } = _item || {};
 
                                     let {
                                       id,
@@ -534,7 +616,7 @@ const ApplicantTable = () => {
                                     let { first_name, last_name } =
                                       delivery_manager || {};
                                     let deliverManagerName =
-                                      (first_name || "") +
+                                      (first_name || "N/A") +
                                       " " +
                                       (last_name || "");
                                     let clientRate =
@@ -560,65 +642,82 @@ const ApplicantTable = () => {
                                         profesionalism +
                                         technical) /
                                       4;
+
+                                    console.log("--------------submitteb by details ", submitted_by_details?.last_name);
                                     return (
-                                      <tr style={{background:"white !important"}}>
-                                        <td style={{ width: "60px" }}>
-                                      <input
-                                        type="checkbox"
-                                        onChange={(e) => {
-                                          let update = [...applicantData];
-
-                                          update.map((applicant) => {
-                                            // Check if the applicant has a 'jobs_associated' array
-                                            if (Array.isArray(applicant.jobs_associated)) {
-                                              // Iterate over each job and set the 'selected' field to false
-                                              applicant.jobs_associated = applicant.jobs_associated.map((job) => {
-                                                return {
-                                                  ...job,
-                                                  selected: false, // Set selected to false
-                                                };
-                                              });
-                                            }
-                                            return applicant;
-                                          });
-
-                                          // If the new checkbox is checked
-                                          if (e.target.checked) {
-                                            // Loop through all submissions and set 'selected' to false
-                                            update[index]["jobs_associated"] =
-                                              update[index]["jobs_associated"].map(
-                                                (
-                                                  submission,
-                                                  submissionIndex
-                                                ) => {
-                                                  // Set selected to false for all except the newly selected one
-                                                  return {
-                                                    ...submission,
-                                                    selected:
-                                                      submissionIndex === _index
-                                                        ? true
-                                                        : false,
-                                                  };
-                                                }
-                                              );
-                                          } else {
-                                            // If the checkbox is unchecked, just uncheck it
-                                            update[index]["jobs_associated"][
-                                              _index
-                                            ]["selected"] = false;
-                                          }
-
-                                          setApplicantData(update);
+                                      <tr
+                                        style={{
+                                          background: "white !important",
                                         }}
-                                        checked={_item?.selected}
-                                      />
+                                      >
+                                        <td style={{ width: "60px" }}>
+                                          <input
+                                            type="checkbox"
+                                            onChange={(e) => {
+                                              let update = [...applicantData];
+
+                                              update.map((applicant) => {
+                                                // Check if the applicant has a 'jobs_associated' array
+                                                if (
+                                                  Array.isArray(
+                                                    applicant.jobs_associated
+                                                  )
+                                                ) {
+                                                  // Iterate over each job and set the 'selected' field to false
+                                                  applicant.jobs_associated =
+                                                    applicant.jobs_associated.map(
+                                                      (job) => {
+                                                        return {
+                                                          ...job,
+                                                          selected: false, // Set selected to false
+                                                        };
+                                                      }
+                                                    );
+                                                }
+                                                return applicant;
+                                              });
+
+                                              // If the new checkbox is checked
+                                              if (e.target.checked) {
+                                                // Loop through all submissions and set 'selected' to false
+                                                update[index][
+                                                  "jobs_associated"
+                                                ] = update[index][
+                                                  "jobs_associated"
+                                                ].map(
+                                                  (
+                                                    submission,
+                                                    submissionIndex
+                                                  ) => {
+                                                    // Set selected to false for all except the newly selected one
+                                                    return {
+                                                      ...submission,
+                                                      selected:
+                                                        submissionIndex ===
+                                                        _index
+                                                          ? true
+                                                          : false,
+                                                    };
+                                                  }
+                                                );
+                                              } else {
+                                                // If the checkbox is unchecked, just uncheck it
+                                                update[index][
+                                                  "jobs_associated"
+                                                ][_index]["selected"] = false;
+                                              }
+
+                                              setApplicantData(update);
+                                            }}
+                                            checked={_item?.selected}
+                                          />
                                         </td>
                                         <td>{job_code ? job_code : "N/A"}</td>
                                         <td>
                                           <Link
                                             href={`/employers-dashboard/job-posts/${id}`}
                                           >
-                                            { title || "N/A"}
+                                            {title || "N/A"}
                                           </Link>
                                         </td>
                                         <td className="cursor-pointer">
@@ -631,7 +730,7 @@ const ApplicantTable = () => {
                                             </span>
                                           </Link>
                                         </td>
-                                        <td>{deliverManagerName}</td>
+                                        <td>{deliverManagerName || "N/A"}</td>
                                         <td>
                                           <span
                                             onClick={() => {
@@ -646,7 +745,7 @@ const ApplicantTable = () => {
                                           </span>
                                         </td>
                                         <td>
-                                          {current_status_details?.display_name}
+                                          {current_status_details?.display_name || "N/A"}
                                         </td>
                                         {/* <th>Outlook MSG</th> */}
                                         <td>{overallRating}</td>
@@ -667,9 +766,7 @@ const ApplicantTable = () => {
                                         </td>
                                         {/* <td>Employer Name</td> */}
                                         <td>
-                                          {submitted_by_details?.first_name +
-                                            " " +
-                                            submitted_by_details?.last_name}
+                                          {submitted_by_details?.first_name || "N.A"}  {submitted_by_details?.last_name || ""}
                                         </td>
                                         <td>
                                           {moment(submission_on).format(

@@ -1,7 +1,7 @@
 
 export const jobPostsTableField = [
   
-  {title:'Submission', style:{width:'150px'}},
+  {title:'Submission', style:{width:'100px'}},
   {title:'Job Code',style:{width:'150px'}},
   {title:'Job Title',style:{width:'250px'}},
   // {title:'Business Unit'},

@@ -41,6 +41,7 @@ const JobPostsTable = () => {
   const [jobId, setJobId] = useState("");
   const [open, setOpen] = useState(false);
   const [skillOpen, setSkillOpen] = useState(null);
+  const [openAssign, setOpenAssign] = useState(null);
 
   useEffect(() => {
     getJobpostsList();
@@ -110,7 +111,7 @@ const JobPostsTable = () => {
         jobDetails={jobDetails}
         setJobDetails={setJobDetails}
       />
-      <JobAssignModal jobId={jobId}  handleReload={getJobpostsList}  />
+      <JobAssignModal jobId={jobId} handleReload={getJobpostsList} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           <div
@@ -235,86 +236,100 @@ const JobPostsTable = () => {
                       </td>
                     )} */}
                     <td
-                      className={`d-flex align-items-center ${
-                        item.submissions.length == 0
-                          ? "justify-content-end"
-                          : "justify-content-between"
-                      }`}
-                      style={{ width: "130px" }}
+                    // style={{ width: "130px" }}
                     >
                       {/* <input type="checkbox" /> */}
-                      {item.submissions.length > 0 && (
-                        <>
-                          <div
-                            onClick={() => {
-                              if (expand == item.id) {
-                                setExpand(null);
-                                // setClientData((prev) => {
-                                //   const update = [...prev];
-                                //   update[index]["open"] = false;
-                                //   return update;
-                                // });
-                              } else {
-                                setExpand(item.id);
-                                // setClientData((prev) => {
-                                //   const update = [...prev];
-                                //   update[index]["open"] = true;
-                                //   return update;
-                                // });
-                              }
-                            }}
-                            className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                            style={{ background: "var(--primary-2nd-color)" }}
-                          >
+                      <div
+                        className={`d-flex gap-2 align-items-center ${
+                          item.submissions.length == 0
+                            ? "justify-content-start"
+                            : "justify-content-start"
+                        }`}
+                      >
+                        {item.submissions.length > 0 && (
+                          <>
                             <div
-                              className="text-white "
+                              onClick={() => {
+                                if (expand == item.id) {
+                                  setExpand(null);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = false;
+                                  //   return update;
+                                  // });
+                                } else {
+                                  setExpand(item.id);
+                                  // setClientData((prev) => {
+                                  //   const update = [...prev];
+                                  //   update[index]["open"] = true;
+                                  //   return update;
+                                  // });
+                                }
+                              }}
+                              className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
+                              style={{ background: "var(--primary-2nd-color)" }}
+                            >
+                              <div
+                                className="text-white "
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  fontSize: "12px",
+                                  borderRadius: "3px",
+                                  background: "var(--primary-2nd-color)",
+                                }}
+                              >
+                                <p
+                                  className="text-white fw-medium"
+                                  style={{ fontSize: "15px" }}
+                                >
+                                  {item.submissions.length}
+                                </p>
+                              </div>
+                              <span className="cursor-pointer text-white fs-4">
+                                {item.id == expand
+                                  ? reactIcons.arrowfillup
+                                  : reactIcons.arrowfilldown}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                        {item.submissions.length == 0 && (
+                          <div
+                            className="text-white "
+                            style={{
+                              width: "73px",
+                              height: "24px",
+                              fontSize: "12px",
+                              borderRadius: "3px",
+                            }}
+                          ></div>
+                        )}
+                        <div className="position-relative">
+                          <span
+                            data-bs-toggle="modal"
+                            data-bs-target="#jobAssignModal"
+                            onClick={() => setJobId(item.id)}
+                            className="cursor-pointer"
+                            onMouseEnter={() => setOpen(item.id)}
+                            onMouseLeave={() => setOpen(null)}
+                          >
+                            {reactIcons.settings}
+                          </span>
+                          {item.id == open && (
+                            <div
+                              className="position-absolute  px-2 py-1 rounded-1"
                               style={{
-                                width: "24px",
-                                height: "24px",
-                                fontSize: "12px",
-                                borderRadius: "3px",
-                                background: "var(--primary-2nd-color)",
+                                width: "90px",
+                                height: "35px",
+                                zIndex: "3",
+                                background: "rgb(77 82 129 / 54%)",
                               }}
                             >
-                              <p
-                                className="text-white fw-medium"
-                                style={{ fontSize: "15px" }}
-                              >
-                                {item.submissions.length}
-                              </p>
+                              <span className="text-white">Assign Job</span>
                             </div>
-                            <span className="cursor-pointer text-white fs-4">
-                              {item.id == expand
-                                ? reactIcons.arrowfillup
-                                : reactIcons.arrowfilldown}
-                            </span>
-                          </div>
-                        </>
-                      )}
-                      <div className="position-relative">
-                        <span
-                          data-bs-toggle="modal"
-                          data-bs-target="#jobAssignModal"
-                          onClick={() => setJobId(item.id)}
-                          className="cursor-pointer"
-                          onMouseEnter={() => setOpen(item.id)}
-                          onMouseLeave={() => setOpen(null)}
-                        >
-                          {reactIcons.settings}
-                        </span>
-                        {item.id == open && (
-                          <div
-                            className="position-absolute  px-2 py-1 rounded-1"
-                            style={{
-                              width: "90px",
-                              height: "35px",
-                              zIndex: "3",
-                              background: "rgb(77 82 129 / 54%)",
-                            }}
-                          >
-                            <span className="text-white">Assign Job</span>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -381,16 +396,42 @@ const JobPostsTable = () => {
                     <td className="text-capitalize">
                       {item.contact_manager_name || "N/A"}
                     </td>
-                    <td className="">
-                      <div className="d-flex flex-wrap gap-1">
-                        {item.assign_details.map((item) => {
+                    <td
+                      className=""
+                      onMouseEnter={() => setOpenAssign(item.id)}
+                      onMouseLeave={() => setOpenAssign(null)}
+                    >
+                      <div className="d-flex flex-wrap gap-1 position-relative">
+                        {item.assign_details?.slice(0, 2).map((item) => {
                           return (
                             <div className="rounded-1 border border-primary px-1">
-                              <span>{item.first_name} {item.last_name}</span>
+                              <span>
+                                {item.first_name} {item.last_name}
+                              </span>
                             </div>
                           );
                         })}
                         {item.assign_details.length == 0 && "N/A"}
+                        {openAssign == item.id && (
+                          <div
+                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                            style={{
+                              width: "250px",
+                              minHeight: "30px",
+                              maxHeight: "fit-content",
+                              zIndex: "5",
+                            }}
+                          >
+                            {item.assign_details.map((item) => {
+                              return (
+                                <span className="text-white">
+                                  {item.first_name} {item.last_name}
+                                </span>
+                              );
+                            })}
+                            {item.assign_details.length == 0 && "N/A"}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="">

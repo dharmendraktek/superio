@@ -7,16 +7,7 @@ import AttendanceData from "./components/AttendanceData";
 
 const index = () => {
 
-  const getAllUsersAttendance = async() => {
-    const response = await axios.get('http://10.10.105.228:8000/attendance-details/admin_panel/')
-    if(response.status){
-      console.log("------------------response data ", response);
-    }
-  }
-
-  useEffect(() => {
-       getAllUsersAttendance();
-  }, [])
+  
   return (
     <InnerLayout>
       <section className="user-dashboard">

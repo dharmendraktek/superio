@@ -75,6 +75,16 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
      }
   }, [submissionDetails])
 
+  const filteredSteps = stepsData.filter((item) => {
+    if (
+      !(submissionDetails?.job_detail?.client_name === "Mphasis") &&
+      (item.name === "Turbo Check" || item.name === "T3 Check")
+    ) {
+      return false;
+    }
+    return true;
+  });
+
 
   return (
     <>
@@ -184,14 +194,14 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         </div>
       </div>
       <div className="d-flex align-items-center">
-        {submissionDetails && stepsData.map((item) => {
+        {submissionDetails && filteredSteps.map((item) => {
           return (
           
             <div>
               <div className="d-flex align-items-center">
                 <div
                   style={{
-                    width: "70px",
+                    width: (submissionDetails?.job_detail?.client_name === "Mphasis") ? "70px" : "100px",
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id >= item.id
@@ -242,7 +252,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                 </div>
                 <div
                   style={{
-                    width: "65px",
+                    width: (submissionDetails?.job_detail?.client_name === "Mphasis") ?  "65px" : "80px",
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id > item.id
@@ -257,7 +267,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         })}
       </div>
       <div className="px-1 d-flex justify-content-between ">
-        <div className="w-20 text-center">
+        <div className=" text-center">
           <p>Tagged</p>
         </div>
         <div className="text-center">
@@ -266,19 +276,23 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         <div className="text-center">
           <p>Client Submission</p>
         </div>
+        {(submissionDetails?.job_detail?.client_name === "Mphasis") &&
+          <>
         <div className="text-center">
           <p>Turbo</p>
         </div>
         <div className="text-center">
           <p>T3</p>
         </div>
+          </>
+        }
         <div className="text-center">
           <p>Interview</p>
         </div>
         <div className="">
           <p>Confirmation</p>
         </div>
-        <div className="w-20 text-center">
+        <div className="text-center">
           <p>Joined</p>
         </div>
         <div className="">

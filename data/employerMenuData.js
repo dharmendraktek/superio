@@ -48,13 +48,13 @@ module.exports = [
     routePath: "/employers-dashboard/all-users-attendance",
     active: "",
   },
-  // {
-  //   id: 8,
-  //   name: "Messages",
-  //   icon: "la-comment-o",
-  //   routePath: "/employers-dashboard/messages",
-  //   active: "",
-  // },
+  {
+    id: 8,
+    name: "Employees Helpdesk Tickets",
+    icon: "la-comment-o",
+    routePath: "/employers-dashboard/users-help-tickets",
+    active: "",
+  },
   // {
   //   id: 9,
   //   name: "Resume Alerts",

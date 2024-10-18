@@ -64,6 +64,7 @@ const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails, s
   };
 
   const handleUpdateStatus = async () => {
+    form["new_status"] = form.new_status ? form.new_status : statusId;
     try {
       const response = await patchReq(
         `/submissions/${submissionDetails?.id}/update-status/`,

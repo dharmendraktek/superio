@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import {  clientTableField } from "./constant";
 import { reactIcons } from "@/utils/icons";
-import { Country, State, City } from "country-state-city";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Pagination from "@/components/common/Pagination";
-import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers";
+import { getReq, patchReq,  } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
-import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import AddClientModal from "@/components/common/AddClientModal";
+import AddContactManagerModal from "@/components/common/AddContactManagerModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE CLIENT" },
@@ -29,77 +29,23 @@ const initialState = {
   client_city: "",
 };
 
-const initialStateContact = {
-  name: "",
-  designation: "",
-  client_ref: "",
-  contact: "",
-  off_cont: "",
-  email: "",
-  ownership: "",
-  status: "",
-  is_active: 1,
-};
+
 
 const ClientTable = () => {
   const [expand, setExpand] = useState(null);
-  const [form, setForm] = useState(initialState);
   const [client, setClient] = useState();
   const [open, setOpen] = useState(false);
-  const [countryCode, setCountryCode] = useState("AF");
-  const countryList = Country.getAllCountries();
-  const stateList = State.getStatesOfCountry(countryCode);
   const [search, setSearch] = useState();
-  const [loading, setLoading] = useState(false);
-  const [ownerList, setOwnerList] = useState([]);
   const [clientData, setClientData] = useState([]);
   const [active, setActive] = useState(1);
   const [clientNameList, setClientNameList] = useState([]);
-  const [contactData, setContactData] = useState(initialStateContact);
   const [contactDetails, setContactDetails] = useState();
-  const [contLoading, setContLoading] = useState(false);
-  const [contactSearch, setContactSearch] = useState();
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (client) {
-      setForm((...prev) => ({
-        ...prev,
-        client_name: client.client_name,
-        client_email: client.client_email,
-        client_cont: client.client_cont,
-        client_website: client.client_website,
-        client_address: client.client_address,
-        client_owner: client.client_owner,
-        is_client_active: 1,
-        status: client.status,
-        client_country: client.client_country,
-        client_state: client.client_state,
-        client_city: client.client_city,
-      }));
-    }
-  }, [client]);
 
-  useEffect(() => {
-    getClientNameList();
-    if (contactDetails) {
-      setContactData((...prev) => ({
-        ...prev,
-        name: contactDetails.name,
-        email: contactDetails.email,
-        contact: contactDetails.contact,
-        ownership: contactDetails.ownership,
-        // is_client_active: 1,
-        status: contactDetails.status,
-        designation: contactDetails.designation,
-        client_ref: contactDetails.client_ref,
-        off_cont: contactDetails.off_cont,
-        is_active: 1,
-      }));
-    }
-  }, [contactDetails]);
+
 
   const getClientList = async (search) => {
     setIsLoading(true);
@@ -115,14 +61,7 @@ const ClientTable = () => {
     }
   };
 
-  const getOwnerList = async () => {
-    const response = await getReq("/operations-users/");
-    setOwnerList(response.data ? response.data : []);
-  };
-
-  useEffect(() => {
-    getOwnerList();
-  }, []);
+ 
 
   useEffect(() => {
     if(search){
@@ -133,54 +72,6 @@ const ClientTable = () => {
     }
   }, [search, active, page]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCreateClient = async () => {
-    try {
-      setLoading(true);
-      const response = await postApiReq("/create-client/", form);
-      if (response.status) {
-        const closeBtn = document.getElementById('closeBtnClient');
-        closeBtn.click();
-        setLoading(false);
-        setForm(initialState);
-        toast.success("Client has been created successfully!");
-        getClientList();
-      }
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.response || "Something went wrong!");
-    }
-  };
-
-  const handleUpdateClient = async () => {
-    try {
-      setLoading(true);
-      const response = await patchReq(`/update-client/${client.id}/`, form);
-      if (response.status) {
-        const closeBtn = document.getElementById('closeBtnClient');
-        closeBtn.click();
-        setLoading(false);
-        toast.success("Client has been updated successfully!");
-        getClientList();
-      }
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.response || "Something went wrong!");
-    }
-  };
-
-  useEffect(() => {
-    if (form.client_country) {
-      let country = countryList.find(
-        (item) => item.name == form.client_country
-      );
-      setCountryCode(country?.isoCode);
-    }
-  }, [form.client_country]);
 
   const handleActiveClient = async (id) => {
     // const response = await patchReq(`/activate-client/${id}/`);
@@ -209,56 +100,13 @@ const ClientTable = () => {
     }
   };
 
-  const handleContactChange = (e) => {
-    const { name, value } = e.target;
-    setContactData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCreateClientContact = async () => {
-    try {
-      setContLoading(true);
-      const response = await postApiReq("/contact-manager/", contactData);
-      if (response.status) {
-        const closeBtn = document.getElementById('closeBtnContact');
-        closeBtn.click();
-        setContLoading(false);
-        toast.success("Client contact has been created successfully!");
-        getClientList();
-        setContactData(initialStateContact);
-      }
-      if (response.error) {
-        setContLoading(false);
-      }
-    } catch (err) {
-      setContLoading(false);
-      toast.error(err.response || "Something went wrong!");
-    }
-  };
-
-  const handleUpdateClientContact = async (id) => {
-    try {
-      setContLoading(true);
-      const response = await patchReq(
-        `/contact-manager/${id}/`,
-        contactData
-      );
-      setContLoading(false);
-      if (response.status) {
-        const closeBtn = document.getElementById('closeBtnContact');
-        closeBtn.click();
-        setContLoading(false);
-        toast.success("Client contact has been updated successfully!");
-        getClientList();
-      }
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.response || "Something went wrong!");
-    }
-  };
+ 
 
   return (
     <>
       {isLoading && <Loader />}
+      <AddClientModal handleGetClientNames={getClientNameList} client={client} setClient={setClient} />
+      <AddContactManagerModal handleGetClientContactManagers={getClientNameList} contactDetails={contactDetails} setContactDetails={setContactDetails} />
       <div className="d-flex justify-content-between mt-3">
         <div className="d-flex">
           <div
@@ -334,7 +182,7 @@ const ClientTable = () => {
               >
                 <li
                   data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasRight"
+                  data-bs-target="#addClientModal"
                   aria-controls="offcanvasRight"
                   className="cursor-pointer text-black hover-bg-gray px-2"
                   onClick={() => {
@@ -346,7 +194,7 @@ const ClientTable = () => {
                 </li>
                 <li
                   data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvasLeft"
+                  data-bs-target="#addContactModal"
                   aria-controls="offcanvasLeft"
                   className="cursor-pointer  text-black hover-bg-gray px-2"
                   onClick={() => setOpen(!open)}
@@ -355,361 +203,6 @@ const ClientTable = () => {
                 </li>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-      <div
-        style={{ width: "800px !important", background: "light-gray" }}
-        className="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasLeft"
-        aria-labelledby="offcanvasLeftLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 id="offcanvasLeftLabel">Contact Info</h5>
-          <div className="d-flex justify-content-end">
-            {/* <button className="theme-btn btn-style-one small">New</button>
-            <button className="theme-btn btn-style-two mx-2 small">Save</button> */}
-            <button
-              type="button"
-              className="btn-close text-reset"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-              id="closeBtnContact"
-              onClick={() => {
-                setContactDetails("");
-                setContactData(initialStateContact);
-              }}
-            >
-              {/* Cancel */}
-            </button>
-          </div>
-        </div>
-        <div className="offcanvas-body">
-          <div className="d-flex justify-content-end">
-            <button
-              className="theme-btn btn-style-two small"
-              onClick={() => {
-                setContactData(initialStateContact);
-                setContactDetails("");
-              }}
-            >
-              New
-            </button>
-            <button
-              className="theme-btn btn-style-one mx-2 small"
-              onClick={() => {
-                if (contactDetails) {
-                  handleUpdateClientContact(contactDetails.id);
-                } else {
-                  handleCreateClientContact();
-                }
-              }}
-              disabled={contLoading}
-            >
-              {contLoading ? (
-                <BtnBeatLoader />
-              ) : (
-                "Save"
-              )}
-            </button>
-          </div>
-          <div className="row">
-            <div className="col-6 my-1">
-              <p>Client</p>
-              <select
-                value={contactData.client_ref}
-                className="client-form-input"
-                name="client_ref"
-                onChange={handleContactChange}
-                disabled={contactDetails}
-              >
-                <option>Select</option>
-                {clientNameList?.map((item, index) => {
-                  return (
-                    <option key={index} value={item.id}>
-                      {item.client_name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>Contact Name</p>
-              <input
-                name="name"
-                value={contactData.name}
-                onChange={handleContactChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Email</p>
-              <input
-                name="email"
-                value={contactData.email}
-                onChange={handleContactChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Ownership</p>
-              <select
-                value={contactData.ownership}
-                className="client-form-input"
-                name="ownership "
-                onChange={(e) =>
-                  setContactData((prev) => ({
-                    ...prev,
-                    ownership: e.target.value,
-                  }))
-                }
-              >
-                <option>Select</option>
-                {ownerList.map((item, index) => {
-                  return (
-                    <option key={index}  value={item.user.id}>
-                      {item.user.first_name} {item.user.last_name} ({item.user.email})
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>Designation</p>
-              <input
-                name="designation"
-                value={contactData.designation}
-                onChange={handleContactChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Office Number</p>
-              <input
-                name="off_cont"
-                value={contactData.off_cont}
-                onChange={handleContactChange}
-                className="client-form-input"
-                type="number"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Mobile Number</p>
-              <input
-                name="contact"
-                value={contactData.contact}
-                onChange={handleContactChange}
-                className="client-form-input"
-                type="number"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Status</p>
-              <select
-                value={contactData.status}
-                className="client-form-input"
-                name="status"
-                onChange={handleContactChange}
-              >
-                <option>Select</option>
-
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{ width: "800px !important" }}
-        className="offcanvas offcanvas-end"
-        tabindex="-1"
-        id="offcanvasRight"
-        aria-labelledby="offcanvasRightLabel"
-      >
-        <div className="offcanvas-header">
-          <h5 id="offcanvasRightLabel">Client Info</h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-            id="closeBtnClient"
-            onClick={() => setForm(initialState)}
-          ></button>
-        </div>
-        <div className="offcanvas-body">
-          <div className="d-flex justify-content-end">
-            <button
-              className="theme-btn btn-style-two mx-2 small"
-              onClick={() => {
-                setForm(initialState);
-                setClient("");
-              }}
-            >
-              Reset
-            </button>
-            <button
-              className="theme-btn btn-style-one small"
-              onClick={() => {
-                if (client.client_name) {
-                  handleUpdateClient(client.id);
-                } else {
-                  handleCreateClient();
-                }
-              }}
-              disabled={loading}
-            >
-              {loading ? (
-                <BtnBeatLoader />
-              ) : (
-                "Save"
-              )}
-            </button>
-          </div>
-
-          <div className="row">
-            <div className="col-6 my-1">
-              <p>Client Name</p>
-              <input
-                name="client_name"
-                value={form.client_name}
-                onChange={handleChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Email</p>
-              <input
-                name="client_email"
-                value={form.client_email}
-                onChange={handleChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Contact</p>
-              <input
-                name="client_cont"
-                value={form.client_cont}
-                onChange={handleChange}
-                className="client-form-input"
-                type="number"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Website</p>
-              <input
-                name="client_website"
-                value={form.client_website}
-                onChange={handleChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Address</p>
-              <input
-                name="client_address"
-                value={form.client_address}
-                onChange={handleChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
-            <div className="col-6 my-1">
-              <p>Ownership</p>
-              <select
-                value={form.client_owner}
-                className="client-form-input"
-                name="client_owner"
-                onChange={handleChange}
-              >
-                <option>Select</option>
-                {ownerList.map((item, index) => {
-                  return (
-                    <option key={index} value={item.user.id}>
-                      {item.user.first_name} {item.user.last_name} ({item.user.email})
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>Status</p>
-              <select
-                value={form.status}
-                className="client-form-input"
-                name="status"
-                onChange={handleChange}
-              >
-                <option>Select</option>
-
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>Country</p>
-
-              <select
-                className="client-form-input"
-                name="client_country"
-                onChange={handleChange}
-                value={form.client_country}
-              >
-                <option>Select</option>
-
-                {countryList.map((item, index) => {
-                  return (
-                    <option key={index} value={item.name}>
-                      {item.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>State</p>
-              <select
-                className="client-form-input"
-                name="client_state"
-                onChange={handleChange}
-                value={form.client_state}
-              >
-                <option>Select</option>
-                {stateList.length > 0 ? (
-                  stateList.map((item, index) => {
-                    return (
-                      <option key={index} value={item.name}>
-                        {item.name}
-                      </option>
-                    );
-                  })
-                ) : (
-                  <option value={form.client_country}>
-                    {form.client_country}
-                  </option>
-                )}
-              </select>
-            </div>
-            <div className="col-6 my-1">
-              <p>City</p>
-              <input
-                name="client_city"
-                value={form.client_city}
-                onChange={handleChange}
-                className="client-form-input"
-                type="text"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -738,7 +231,6 @@ const ClientTable = () => {
 
           <tbody className="custom-scroll-sm" style={{height:'300px', overflow:'scroll'}}>
             {clientData?.map((item, index) => {
-              console.log("------------itme ", item);
               return (
                 <>
                   <tr key={index} className="">
@@ -797,7 +289,7 @@ const ClientTable = () => {
                      style={{width:"250px"}}
                       className=" hover-overlay cursor-pointer text-primary"
                       data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasRight"
+                      data-bs-target="#addClientModal"
                       aria-controls="offcanvasRight"
                       onClick={() => setClient(item)}
                     >
@@ -877,7 +369,7 @@ const ClientTable = () => {
                   {item.id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={7}>
-                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"  style={{ width: "1500px", height:'400px', overflow:'auto' }}>
+                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"  style={{ height:'400px', overflow:'auto' }}>
                           <div></div>
                           <table>
                             <thead className="table-inner-thead">
@@ -917,7 +409,7 @@ const ClientTable = () => {
                                     <td
                                       onClick={() => setContactDetails(contact)}
                                       data-bs-toggle="offcanvas"
-                                      data-bs-target="#offcanvasLeft"
+                                      data-bs-target="#addContactModal"
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
                                     >

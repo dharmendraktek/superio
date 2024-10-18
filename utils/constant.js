@@ -4,6 +4,7 @@ export const removeSpecialChar = (item) => {
 }
 
 
+
 export const  candidateSearchKey = [
     {name:'Search Any', value:'search-any'},
     {name:'Applicant Id', value:'app-code'},

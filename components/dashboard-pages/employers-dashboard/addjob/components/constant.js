@@ -54,9 +54,9 @@ export const documentsList = [
       { name: "SSN" },
       { name: "Visa Copy" },
       { name: "RTR" },
-      {
-        name: "Education details documents related (like Masters/Bachlors completed year)",
-      },
+      // {
+      //   name: "Education details documents related (like Masters/Bachlors completed year)",
+      // },
     ],
   },
   {
@@ -65,9 +65,9 @@ export const documentsList = [
       { name: "All fields of LinkedIn is mandatory" },
       { name: "(DL or State Id) for DOB Proof" },
       { name: "RTR" },
-      {
-        name: "Education details documents related (like Masters/Bachlors completed year)",
-      },
+      // {
+      //   name: "Education details documents related (like Masters/Bachlors completed year)",
+      // },
     ],
   },
   {
@@ -76,9 +76,9 @@ export const documentsList = [
       { name: "All fields of LinkedIn is mandatory" },
       { name: "(DL or State Id) for DOB Proof" },
       // { name: "RTR" },
-      {
-        name: "Education details documents related (like Masters/Bachlors completed year)",
-      },
+      // {
+      //   name: "Education details documents related (like Masters/Bachlors completed year)",
+      // },
     ],
   },
   {
@@ -87,9 +87,9 @@ export const documentsList = [
       { name: "All fields of LinkedIn is mandatory" },
       { name: "(DL or State Id) for DOB Proof" },
       { name: "Employee RTR" },
-      {
-        name: "Education details documents related (like Masters/Bachlors completed year)",
-      },
+      // {
+      //   name: "Education details documents related (like Masters/Bachlors completed year)",
+      // },
     ],
   },
 ];

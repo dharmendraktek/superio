@@ -290,18 +290,19 @@ const CandidateCreation = ({
       setError((prev) => ({ ...prev, sourceErr: "This Field is required" }));
       // return;
     }
-    if (!form.tax_terms) {
-      setError((prev) => ({ ...prev, taxTermErr: "This Field is required" }));
-      return;
-    }
+    // if (!form.tax_terms) {
+    //   setError((prev) => ({ ...prev, taxTermErr: "This Field is required" }));
+    //   return;
+    // }
     if (
       form.firstname &&
       form.lastname &&
       form.email &&
       form.mobile &&
       // form.authorization &&
-      form.source &&
-      form.tax_terms
+      form.source 
+      // &&
+      // form.tax_terms
     ) {
       try {
         setIsLoading(true);
@@ -1062,7 +1063,8 @@ const CandidateCreation = ({
         </div>
         <div className="col-4 my-1">
           <p>
-            Tax Terms <strong className="text-danger">*</strong>
+            Tax Terms 
+            {/* <strong className="text-danger">*</strong> */}
           </p>
           <select
             name="tax_terms"

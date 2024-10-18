@@ -18,10 +18,10 @@ const initialStateContact = {
   is_active: 1,
 };
 
-const AddContactManagerModal = ({ handleGetClientContactManagers }) => {
+const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails, setContactDetails }) => {
   const [contactData, setContactData] = useState(initialStateContact);
   const [contLoading, setContLoading] = useState(false);
-  const [contactDetails, setContactDetails] = useState("");
+  // const [contactDetails, setContactDetails] = useState("");
   const [clientNameList, setClientNameList] = useState([]);
   const [error, setError] = useState({
     name: "",
@@ -31,7 +31,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers }) => {
     off_cont: "",
     email: "",
     ownership: "",
-    status: "",
+    status: "Active",
   });
 
   useEffect(() => {
@@ -93,30 +93,75 @@ const AddContactManagerModal = ({ handleGetClientContactManagers }) => {
       setContLoading(true);
       const response = await postApiReq("/contact-manager/", contactData);
       if (response.status) {
+        setContactData(initialStateContact);  
         const closeBtn = document.getElementById("closeBtnContact");
         closeBtn.click();
         setContLoading(false);
         toast.success("Client contact has been created successfully!");
-        getClientList();
-        setContactData(initialStateContact);
         handleGetClientContactManagers();
       }
       if (response.error) {
         setContLoading(false);
       }
     } catch (err) {
+      console.log("=---------------error s", err);
       setContLoading(false);
       toast.error(err.response || "Something went wrong!");
     }
   };
 
+
+  useEffect(() => {
+    // getClientNameList();
+    if (contactDetails) {
+      setContactData((...prev) => ({
+        ...prev,
+        name: contactDetails.name,
+        email: contactDetails.email,
+        contact: contactDetails.contact,
+        ownership: contactDetails.ownership,
+        // is_client_active: 1,
+        status: contactDetails.status,
+        designation: contactDetails.designation,
+        client_ref: contactDetails.client_ref,
+        off_cont: contactDetails.off_cont,
+        is_active: 1,
+      }));
+    }
+  }, [contactDetails]);
+
+  
+  const handleUpdateClientContact = async (id) => {
+    try {
+      setContLoading(true);
+      const response = await patchReq(
+        `/contact-manager/${id}/`,
+        contactData
+      );
+      setContLoading(false);
+      if (response.status) {
+        handleGetClientContactManagers();
+        const closeBtn = document.getElementById('closeBtnContact');
+        closeBtn.click();
+        setContLoading(false);
+        toast.success("Client contact has been updated successfully!");
+      }
+    } catch (err) {
+      setLoading(false);
+      toast.error(err.response || "Something went wrong!");
+    }
+  };
+
+
+
+
   return (
     <div
       style={{ width: "800px !important" }}
-      className="offcanvas offcanvas-end"
+      className="offcanvas offcanvas-start"
       tabindex="-1"
       id="addContactModal"
-      aria-labelledby="offcanvasRightLabel"
+      aria-labelledby="offcanvasLeftLabel"
     >
       <div className="offcanvas-header">
         <h5 id="offcanvasLeftLabel">Contact Info</h5>
@@ -150,18 +195,22 @@ const AddContactManagerModal = ({ handleGetClientContactManagers }) => {
             New
           </button>
           <button
-            className="theme-btn btn-style-one mx-2 small"
-            onClick={() => {
-              // if (contactDetails) {
-              //   handleUpdateClientContact(contactDetails.id);
-              // } else {
-              handleCreateClientContact();
-              // }
-            }}
-            disabled={contLoading}
-          >
-            {contLoading ? <BtnBeatLoader /> : "Save"}
-          </button>
+              className="theme-btn btn-style-one mx-2 small"
+              onClick={() => {
+                if (contactDetails) {
+                  handleUpdateClientContact(contactDetails.id);
+                } else {
+                  handleCreateClientContact();
+                }
+              }}
+              disabled={contLoading}
+            >
+              {contLoading ? (
+                <BtnBeatLoader />
+              ) : (
+                "Save"
+              )}
+            </button>
         </div>
         <div className="row">
           <div className="col-6 my-1">

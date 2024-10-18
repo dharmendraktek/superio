@@ -300,7 +300,7 @@ const pendingTaskData = [
 const additionalMenuData = [
   {
     id: 1,
-    name: "Schedule Interview",
+    name: "Scheduled Interview",
     icon: "la-home",
     routePath: "/employers-dashboard/manage-jobs",
     active: "active",
@@ -362,30 +362,30 @@ const HeaderNavContent = () => {
     setOpenDropdown(openDropdown === menuId ? null : menuId); // Toggle specific dropdown
   };
 
-  const filteredMenuList = menuList.filter((item) => {
-    if (
-      (userDetails?.department_name === "Operation" ||
-        userDetails?.department_name === "Support") &&
-      (item.name === "USER" || item.name === "CLIENT" || item.name === "HR")
-    ) {
-      return false;
-    } else if (
-      userDetails?.department_name === "Finance" &&
-      (item.name === "USER" || item.name === "CLIENT" || "HR")
-    ) {
-      return false;
-    } else if (
-      userDetails?.department_name === "HR" &&
-      (item.name === "CLIENT" ||
-        item.name === "JOB POSTING" ||
-        item.name === "APPLICANTS" ||
-        item.name === "MY ASSIGN JOBS" ||
-        item.name === "REPORTS")
-    ) {
-      return false;
-    }
-    return true;
-  });
+    const filteredMenuList = menuList.filter((item) => {
+      if (
+        (userDetails?.department_name === "Operation" ||
+          userDetails?.department_name === "Support") &&
+        (item.name === "USER" || item.name === "CLIENT" || item.name === "HR")
+      ) {
+        return false;
+      } else if (
+        userDetails?.department_name === "Finance" &&
+        (item.name === "USER" || item.name === "CLIENT" || "HR")
+      ) {
+        return false;
+      } else if (
+        userDetails?.department_name === "HR" &&
+        (item.name === "CLIENT" ||
+          item.name === "JOB POSTING" ||
+          item.name === "APPLICANTS" ||
+          item.name === "MY ASSIGN JOBS" ||
+          item.name === "REPORTS")
+      ) {
+        return false;
+      }
+      return true;
+    });
 
   return (
     <>
@@ -449,6 +449,7 @@ const HeaderNavContent = () => {
                     className={`dropdown-menu ${
                       openDropdown === item.id ? "show" : ""
                     }`}
+                    style={{width:"100% !important"}}
                   >
                     {additionalMenuData.map((option) => (
                       <li key={option.id}>

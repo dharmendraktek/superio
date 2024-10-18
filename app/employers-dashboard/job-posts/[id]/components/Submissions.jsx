@@ -77,7 +77,7 @@ const Submissions = ({jobData, handleGetJobDetails}) => {
                 {submissionData?.map((item) => {
                   return(
                 <div className="py-2">
-                  <Stepper submissionDetails={item} handleGetJobDetails={handleGetJobDetails} />
+                  <Stepper submissionDetails={item} handleGetJobDetails={handleGetJobDetails} jobData={jobData} />
                 </div>
                   )
                 })

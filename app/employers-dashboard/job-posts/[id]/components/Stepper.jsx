@@ -3,6 +3,7 @@ import { reactIcons } from "@/utils/icons";
 import StatusModal from "./StatusModal";
 import ClientSubmissionModal from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/ClientSubmissionModal";
 import { useEffect, useState } from "react";
+import InterviewScheduleModal from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/InterviewScheduleModal";
 
 // const stepsData = [
 //   { id: 0, name: "Tagged" },
@@ -28,10 +29,11 @@ const stepsData = [
   { id: 8, name: "Back Out", value:'not_joined' },
 ];
 
-const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
+const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
   const [statusId, setStatusId] = useState();
+  const [selectedSubmission, setSelectedSubmission] = useState({});
   
-  console.log("------------submission deetaisl in stepper ", submissionDetails);
+  console.log("------------submission deetaisl in stepper ", submissionDetails?.job_detail?.client_name);
  
   let {
     mobile,
@@ -77,6 +79,18 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
   }, [submissionDetails])
 
 
+  const filteredSteps = stepsData.filter((item) => {
+    if (
+      !(submissionDetails?.job_detail?.client_name === "Mphasis") &&
+      (item.name === "Turbo Check" || item.name === "T3 Check")
+    ) {
+      return false;
+    }
+    return true;
+  });
+
+
+
   return (
     <>
       <StatusModal
@@ -87,6 +101,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         handleGetJobDetails={handleGetJobDetails}
       />
       <ClientSubmissionModal submissionDetails={submissionDetails} handleGetJobDetails={handleGetJobDetails} statusId={statusId}  side="job" />
+      <InterviewScheduleModal selectedItem={submissionDetails} jobPostList={[]}  />
 
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
         <div className="" style={{ width: "250px" }}>
@@ -162,6 +177,8 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                       Submit To Client
                     </span>
                   </li>
+                  {(submissionDetails?.job_detail?.client_name === "Mphasis") &&
+                  <>
                   <li>
                     <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(9)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
                      Turbo Check
@@ -172,6 +189,13 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                      T3 Check
                     </a>
                   </li>
+                  </>
+                  }
+                   {/* <li>
+                    <a class="dropdown-item" href="#" onClick={() => setSelectedSubmission(submissionDetails)}    data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">
+                     Interview
+                    </a>
+                  </li> */}
                   <li>
                     <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(5)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
                      Confirmation
@@ -195,14 +219,13 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         </div>
       </div>
       <div className="d-flex align-items-center">
-        {submissionDetails && stepsData.map((item) => {
+        {submissionDetails && filteredSteps.map((item) => {
           return (
-          
             <div>
               <div className="d-flex align-items-center">
                 <div
                   style={{
-                    width: "105px",
+                    width:submissionDetails?.job_detail?.client_name === "Mphasis" ? "105px" : "130px" ,
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id >= item.id
@@ -253,7 +276,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
                 </div>
                 <div
                   style={{
-                    width: "80px",
+                    width: submissionDetails?.job_detail?.client_name === "Mphasis" ?  "80px": "110px",
                     height: "3px",
                     background: `${
                       stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id > item.id
@@ -277,12 +300,16 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
         <div className="text-center">
           <p>Client Submission</p>
         </div>
+        {(submissionDetails?.job_detail?.client_name === "Mphasis") &&
+        <>
         <div className="text-center">
           <p>Turbo</p>
         </div>
         <div className="text-center">
           <p>T3</p>
         </div>
+          </>
+        }
         <div className="text-center">
           <p>Interview</p>
         </div>

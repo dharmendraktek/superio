@@ -4,7 +4,6 @@ import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
 import Pagination from "@/components/common/Pagination";
 import { useEffect, useState } from "react";
 import { getReq } from "@/utils/apiHandlers";
-import CreateTicketModal from "./components/CreateTicketModal";
 
 const tabsName = [
   {name:'Pending'},
@@ -19,7 +18,7 @@ const Index = () => {
   const [tab, setTab] = useState("Pending");
 
   const handleGetTickets = async() => {
-    const response = await getReq('/tickets/');
+    const response = await getReq('/tickets/all_ticket/');
     if(response.status){
       setDataCount(response.data.count)
       setTicketData(response.data.results && response.data);  
@@ -34,9 +33,8 @@ const Index = () => {
     <InnerLayout>
     <section className="px-4">
     <Paper>
-      <CreateTicketModal />
       <div className="">
-        <h4>Helpdesk Ticket</h4>
+        <h4>Employees Helpdesk Tickets</h4>
       </div>
       <div className="d-flex my-2 justify-content-between">
         <div className="d-flex">
@@ -49,9 +47,9 @@ const Index = () => {
         })
          }
         </div>
-        <div>
+        {/* <div>
           <button data-bs-target="#createTicketModal" data-bs-toggle="modal" className="theme-btn btn-style-one small">Create</button>
-        </div>
+        </div> */}
         </div>
         <div>
         <div className="table_div custom-scroll-sm">

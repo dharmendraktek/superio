@@ -1,6 +1,6 @@
 'use client'
 
-import { getReq, patchReq } from "@/utils/apiHandlers"
+import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers"
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import { useEffect, useState } from "react"
@@ -8,17 +8,41 @@ import { toast } from "react-toastify";
 
 
 const CreateTicketModal = () => {
-  const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     department:'',
     subject:'',
     description_of_issue:'',
     priority:'',
     image:'',
+    // department_head:[38,39]
   });
   const [departmentList, setDepartmentList] = useState([])
   const [subjectList, setSubjectList] = useState([]);
+  const [deptHead, setDeptHead] = useState([]);
+  const [error, setError] = useState({
+    department_head:'',
+    subject:'',
+  })
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleValidation = () => {
+    setError((prev) => ({
+      ...prev, 
+    department_head:'',
+    subject:'',
+    }))
+    if(!form.department){
+      setError((prev) => ({...prev, department:"This field is required"}))
+    }
+    if(!form.subject){
+      setError((prev) => ({...prev, subject:"This field is required"}))
+    }
+    if(form.department && form.subject){
+      return true
+    }else{
+      return false
+    }
+  }
 
   useEffect(() =>{
     // handleGetSubject();
@@ -37,28 +61,53 @@ const CreateTicketModal = () => {
 
   useEffect(() => {
      if(form.department){
+        let filterDept = departmentList.find((item) => item.id == form.department);
+        console.log("----------dept ", filterDept);
+        setSubjectList(filterDept?.department_subject);
+        setDeptHead(filterDept?.department_head)
 
      }
   }, [form.department])
 
-//   const handleGetSubject = async() => {
-//     const response = await axios.get(`http://10.10.105.228:8000/api/subjects/`);
-//     console.log("------------subject s------", response.data);
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+  
+    setForm((prev) => ({...prev, [name]:value}))
+  }
+ 
 
-//     if(response.status){
-//       setSubjectList(response.data);
-//     }
-//   }
+  const handleCreateTicket = async () => {
 
-//   const handleUpdateStatus = async() => {
-//     try{
-//        const response = await patchReq(`/submissions/${submissionId}/update-status/`, form)
-//        if(response.status){
-//         toast.success('Status has been changed successfully');
-//        }
-//     }catch(err){
-//     }
-//   } 
+    if(!handleValidation()){
+      return;
+    }
+    const formData = new FormData();
+    formData.append("department", form.department);
+    // formData.append("department_head", form.department_head);
+    formData.append("subject", form.subject);
+    formData.append("priority", form.priority);
+    formData.append("description_of_issue", form.description_of_issue);
+    formData.append("image", form.image);
+
+    try{
+      setIsLoading(true);
+      const response  = await axios.post('http://10.10.105.228:8000/api/tickets/', 
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDY0NzM4LCJpYXQiOjE3MjkyNTUxMzgsImp0aSI6ImZlNmZkN2I0Nzc5NzRjMGE4M2YxNDI0Yzk3MDE0ZjA1IiwidXNlcl9pZCI6NTE0fQ.vAj03z7_A5aoTByabRLEZCdCaFMrwSaFdrFMdhY8XNk`,
+          },
+        }
+      );
+      setIsLoading(false);
+      if(response.status){
+           console.log("-----------response ", response.data);
+      }
+    }catch(err){
+      console.log("-------------error -------", err);
+    }
+  }
+
   
   
 
@@ -68,13 +117,13 @@ const CreateTicketModal = () => {
         <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header border border-bottom-primary">
-              <h5 className="modal-title" id="createTicketModalLabel">Applicant Status</h5>
+              <h5 className="modal-title" id="createTicketModalLabel">Create Ticket</h5>
               <button type="button" className="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
                <div>
                <p>Department</p>
-               <select className="client-form-input" name="" onChange={(e) => setForm((prev) => ({...prev, new_substatus:e.target.value}))}>
+               <select className="client-form-input" name="department" onChange={handleChange}>
                  <option>Select</option>
                 {departmentList.map((item, index) => {
                     return(
@@ -83,30 +132,35 @@ const CreateTicketModal = () => {
                 })
                 }
                </select>
+               <span className="text-danger">{error.department}</span>
                </div>
                <div className="my-2">
                 <p>Subject</p>
-                <select className="client-form-input">
+                <select className="client-form-input" name="subject" onChange={handleChange}  >
                 <option>Select</option>
-                {statusList.map((item, index) => {
+                {subjectList?.map((item, index) => {
                     return(
-                        <option key={index} value={item.id}>{item.display_name}</option>
+                        <option key={index} value={item.id}>{item.name}</option>
                     )
                 })
                 }
                 </select>
+                <span className="text-danger">{error.subject}</span>
                </div>
                <div className="my-2">
                 <p>Emails To</p>
-                <textarea 
-                  onChange={(e) => setForm((prev) => ({...prev, comment:e.target.value}))}
-                  className="border border-secondary px-2 py-1 w-100 rounded-1"
-                  disabled
-                />
+                <div className="border-bottom border-secondary d-flex flex-wrap  px-2" style={{minHeight:"30px", maxHeight:"fit-content"}}>
+                  {deptHead?.map((item) => {
+                    return(
+                      <span>{item.email}</span>
+                    )
+                  })
+                  }
+                </div>
                </div>
                <div>
                 <p>Priority</p>
-                <select className="client-form-input">
+                <select name="priority" className="client-form-input" onChange={handleChange}>
                 <option>Select</option>
                 <option>Low</option>
                 <option>High</option>
@@ -116,7 +170,8 @@ const CreateTicketModal = () => {
                <div className="my-2">
                 <p>Description</p>
                 <textarea 
-                  onChange={(e) => setForm((prev) => ({...prev, comment:e.target.value}))}
+                  name="description_of_issue" 
+                  onChange={handleChange}
                   className="border border-secondary px-2 py-1 w-100 rounded-1"
                 />
                </div>
@@ -124,15 +179,15 @@ const CreateTicketModal = () => {
                 <p>Upload Image</p>
                 <input
                   type="file"
-                  onChange={(e) => setForm((prev) => ({...prev, comment:e.target.value}))}
+                  onChange={(e) => setForm((prev) => ({...prev, image:e.target.files[0]}))}
                   className="border border-secondary px-2 py-1 w-100 rounded-1"
                 />
                </div>
                
             </div>
             <div className="modal-footer">
-              <button  type="button" className="theme-btn btn-style-one small" data-bs-dismiss="modal"  >Save</button>
-              <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Close</button>
+              <button  type="button" className="theme-btn btn-style-one small" onClick={handleCreateTicket} >Create</button>
+              <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Cancel</button>
             </div>
           </div>
         </div>

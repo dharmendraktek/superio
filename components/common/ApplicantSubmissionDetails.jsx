@@ -535,12 +535,39 @@ const ApplicantSubmissionDetails = ({
     setApplicantCheck((prev) => ({ ...prev, [name]: value }));
   };
 
+  // const validateApplicantCheck = () => {
+  //   // Create a new error object
+  //   const newErrors = {};
+
+  //   // Iterate through each key in applicantCheck
+  //   for (const key in applicantCheck) {
+  //     // If the value is empty, set an error message for that key
+  //     if (!applicantCheck[key]) {
+  //       newErrors[key] = "This field is required";
+  //     } else {
+  //       // Otherwise, clear any previous error message for that key
+  //       newErrors[key] = "";
+  //     }
+  //   }
+  //   // Update the applicantCheckErr state with the new errors
+  //   setApplicantCheckErr(newErrors);
+  // };
+
   const validateApplicantCheck = () => {
     // Create a new error object
     const newErrors = {};
-
+  
     // Iterate through each key in applicantCheck
     for (const key in applicantCheck) {
+      // Skip validation for the 'comment' key
+      if (key === "comment") {
+        continue;
+      }
+
+      if((applicantCheck.taxterm == "W2") && ((key == "vendor_employees_strength") || (key == "vendor_followers") || (key == "vendor_glassdoor"))){
+        continue;
+      }
+  
       // If the value is empty, set an error message for that key
       if (!applicantCheck[key]) {
         newErrors[key] = "This field is required";
@@ -549,10 +576,12 @@ const ApplicantSubmissionDetails = ({
         newErrors[key] = "";
       }
     }
+  
     // Update the applicantCheckErr state with the new errors
+  
     setApplicantCheckErr(newErrors);
   };
-
+  
 
   const validateDocument  = () => {
     let {subtype_taxterm, taxterm} = applicantCheck;
@@ -587,6 +616,7 @@ const ApplicantSubmissionDetails = ({
   const handleSubmitManualRating = async () => {
     applicantCheck['job_id'] = jobData?.id;
     // validateDocument();
+    console.log("-----------validate applicant check  ", validateApplicantCheck());
     validateApplicantCheck();
     if (
       applicantCheck.app_active_offer &&
@@ -597,9 +627,9 @@ const ApplicantSubmissionDetails = ({
       applicantCheck.app_skill_matrix &&
       applicantCheck.reference_check &&
       applicantCheck.vendor_employees_strength &&
-      applicantCheck.vendor_glassdoor &&
-      applicantCheck.app_technical_questionaire &&
-      applicantCheck.vendor_followers 
+      (applicantCheck.taxterm == "W2" || applicantCheck.vendor_glassdoor) &&
+      (applicantCheck.taxterm == "W2" || applicantCheck.app_technical_questionaire) && 
+      (applicantCheck.taxterm == "W2" || applicantCheck.vendor_followers  )
       // && 
       // validateDocument()
     ) {
@@ -1442,6 +1472,8 @@ const ApplicantSubmissionDetails = ({
                               )?.type?.source1  
                             }
                             // className="client-form-input"
+                             data-bs-toggle="modal"
+                        data-bs-target="#documentListModal"
                           />
                           <label>
                             {
@@ -1465,6 +1497,8 @@ const ApplicantSubmissionDetails = ({
                               )?.type?.source2
                             }
                             // className="client-form-input"
+                             data-bs-toggle="modal"
+                        data-bs-target="#documentListModal"
                           />
                           <label>
                             {
@@ -1480,7 +1514,7 @@ const ApplicantSubmissionDetails = ({
                       </span>
                     </div>
                   )}
-                  {!(applicantCheck.taxterm == "Select") && applicantCheck.taxterm && applicantCheck.subtype_taxterm && (
+                  {/* {!(applicantCheck.taxterm == "Select") && applicantCheck.taxterm && applicantCheck.subtype_taxterm && (
                     <div className="col-4">
                       <p>Mandatory Documents</p>
                       <span
@@ -1491,7 +1525,7 @@ const ApplicantSubmissionDetails = ({
                         View List
                       </span>
                     </div>
-                  )}
+                  )} */}
                    <div className="col-4 my-1">
                     <p>
                       Relocation{" "}
@@ -1616,7 +1650,7 @@ const ApplicantSubmissionDetails = ({
                    <div className="col-4 my-2">
                     <p>
                       Comment{" "}
-                      <strong className="text-danger">*</strong>
+                      {/* <strong className="text-danger">*</strong> */}
                     </p>
                     <textarea
                       name="comment"
@@ -1768,6 +1802,7 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.app_creation_date}
                     </span>
                   </div>
+                  {!(applicantCheck.taxterm == 'W2') &&
                   <div className="col-4 my-2">
                     <p>
                       Vendor Company Strength{" "}
@@ -1793,6 +1828,8 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.vendor_employees_strength}
                     </span>
                   </div>
+                  }
+                  {!(applicantCheck.taxterm == 'W2') &&
                   <div className="col-4 my-2">
                     <p>
                       Vendor Company LinkendIn Followers{" "}
@@ -1818,6 +1855,8 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.vendor_followers}
                     </span>
                   </div>
+                  }
+                  {!(applicantCheck.taxterm == 'W2') &&
                   <div className="col-4 my-2">
                     <p>
                       Glassdor review about Vendor
@@ -1859,6 +1898,7 @@ const ApplicantSubmissionDetails = ({
                       {applicantCheckErr?.vendor_glassdoor}
                     </span>
                   </div>
+                  }
                   <div className="col-4 my-2">
                     <p>
                       Applicant Skilled Matrix

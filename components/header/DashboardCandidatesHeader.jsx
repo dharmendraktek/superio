@@ -60,6 +60,17 @@ const DashboardCandidatesHeader = () => {
        }
     }
 
+    const filteredMenuList = employerMenuData.filter((item) => {
+        if (
+          !(employeeInfo?.access_role_details?.access_id == 102) &&
+          (item.name === "All Users Attendance" || item.name === "Employees Helpdesk Tickets")
+        ) {
+          return false;
+        }
+        return true;
+      });
+  
+
 
     return (
         // <!-- Main Header-->
@@ -127,7 +138,7 @@ const DashboardCandidatesHeader = () => {
                             </a>
 
                             <ul className="dropdown-menu">
-                                {employerMenuData.map((item) => (
+                                {filteredMenuList.map((item) => (
                                     <li
                                         className={`${
                                             isActiveLink(

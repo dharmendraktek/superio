@@ -52,10 +52,10 @@ const remInitialState = {
 };
 
 const InterviewScheduleModal = ({
-  jobPostList = [],
-  applicantData = [],
-  selectedItem,
-  reschedule = false,
+    jobPostList = [],
+    applicantData = [],
+    selectedItem,
+    reschedule = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(initialState);
@@ -74,9 +74,6 @@ const InterviewScheduleModal = ({
       const filteredData = jobPostList.filter((item) =>
         item.submissions.some((submission) => submission.selected === true)
       );
-
-      console.log("--------------filter data ", filteredData);
-
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -87,7 +84,6 @@ const InterviewScheduleModal = ({
       const filteredData = applicantData.filter((item) =>
         item.jobs_associated.some((jobs) => jobs.selected === true)
       );
-      console.log("--------------applicant data ", filteredData);
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
@@ -113,7 +109,6 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
-    console.log('--------------final filter data inside of func ', finalFilterData);
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
@@ -193,7 +188,7 @@ const InterviewScheduleModal = ({
     // jobData.length > 0 && applicantData.length > 0
     finalFilterData
       ? finalFilterData?.applicant_details[0]?.firstname
-      : selectedItem?.applicant_details?.firstname;
+      : selectedItem?.applicant_details?.firstname ? selectedItem?.applicant_details?.firstname : selectedItem?.applicant_details[0]?.firstname;
 
   let middleName =
     // jobData.length > 0 && applicantData?.length > 0
@@ -262,10 +257,7 @@ const InterviewScheduleModal = ({
     }));
   }, [clientId, applicantContact]);
 
-  console.log(
-    "----------------final filter data data ",
-    finalFilterData
-  );
+  console.log("--------------select  data ", selectedItem?.applicant_details[0]?.firstname, firstName);
 
 
   return (
