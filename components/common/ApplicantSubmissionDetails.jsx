@@ -582,7 +582,10 @@ const ApplicantSubmissionDetails = ({
     setApplicantCheckErr(newErrors);
   };
   
-  console.log("----------------applicant check error ", applicantCheckErr);
+  
+  const handleDownloadDoc = async(id) => {
+    window.open(BASE_URL + `/applicant-documents/${id}/download/`);
+  }
 
   const validateDocument  = () => {
     let {subtype_taxterm, taxterm} = applicantCheck;
@@ -676,9 +679,10 @@ const ApplicantSubmissionDetails = ({
     if (response.status) {
       toast.success("Document deleted successfully");
       handleGetApplicantDetails();
+      getApplicantDocuments();
     } else if (response.error) {
       toast.error(response.error.error);
-      getApplicantDocuments();
+      // getApplicantDocuments();
     }
   };
 
@@ -1384,7 +1388,7 @@ const ApplicantSubmissionDetails = ({
                           </td>
                           <td>
                             <div className="d-flex gap-2">
-                              <span className="text-primary cursor-pointer">
+                              <span onClick={() => handleDownloadDoc(item.id)} className="text-primary cursor-pointer">
                                 {reactIcons.download}
                               </span>
                               <span

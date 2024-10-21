@@ -321,6 +321,7 @@ const ManualCreation = ({
   };
 
   const handleValidation = () => {
+    console.log("---------------form ", form);
     setError((prev) => ({
       ...prev,
       jobCodeErr: "",
@@ -417,7 +418,8 @@ const ManualCreation = ({
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
-    if (form.description == "<p></p>") {
+    console.log("---------------job description erro ", form.description);
+    if (!form.description) {
       setError((prev) => ({
         ...prev,
         jobDescriptionErr: "This field is required",
@@ -456,7 +458,8 @@ const ManualCreation = ({
       experience &&
       primary_skills.length > 0 &&
       number_of_position &&
-      tax_term &&
+      tax_term 
+      &&
       // delivery_manager &&
       // account_manager &&
       // assign.length > 0 &&
@@ -1662,6 +1665,7 @@ const ManualCreation = ({
             <div className="col-12 my-1">
               <p>
                 Job Description <strong className="text-danger">*</strong>{" "}
+                <span className="text-danger">{error.jobDescriptionErr}</span>
               </p>
               {(name == "update" || name == "parse") && form.description && (
                 <MyCKEditor
@@ -1687,7 +1691,6 @@ const ManualCreation = ({
                   }}
                 />
               )}
-              <span className="text-danger">{error.jobDescriptionErr}</span>
               {/* {!jobType && (
                 <div className="mt-4 d-flex gap-2 ">
                   <input
