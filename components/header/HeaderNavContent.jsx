@@ -282,20 +282,15 @@ const menuList = [
         name: "Submissions Approval",
         url: "/employers-dashboard/submissions-approval",
       },
+      {
+        name: "Client Approval",
+        url: "/employers-dashboard/client-approval",
+      },
     ],
   },
   { name: "MORE", url: "", id: "moreOption", options:[] },
 ];
 
-const pendingTaskData = [
-  {
-    id: 1,
-    name: "Pending Submission",
-    icon: "la-home",
-    routePath: "/employers-dashboard/schedule-interview",
-    active: "active",
-  },
-];
 
 const additionalMenuData = [
   {
@@ -358,8 +353,7 @@ const HeaderNavContent = () => {
   const userDetails = useSelector((state) => state.employer.user);
 
   const handleDropdownToggle = (menuId) => {
-    console.log("---------------menui id ", menuId);
-    setOpenDropdown(openDropdown === menuId ? null : menuId); // Toggle specific dropdown
+      setOpenDropdown(openDropdown === menuId ? null : menuId); // Toggle specific dropdown
   };
 
     const filteredMenuList = menuList.filter((item) => {
@@ -380,7 +374,7 @@ const HeaderNavContent = () => {
           item.name === "JOB POSTING" ||
           item.name === "APPLICANTS" ||
           item.name === "MY ASSIGN JOBS" ||
-          item.name === "REPORTS")
+          item.name === "REPORTS" || item.name === "PENDING TASK" )
       ) {
         return false;
       }

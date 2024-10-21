@@ -13,13 +13,13 @@ module.exports = [
     routePath: "/employers-dashboard/my-profile",
     active: "",
   },
-  {
-    id: 3,
-    name: "Attendance",
-    icon: "la-paper-plane",
-    routePath: "/employers-dashboard/attendance",
-    active: "",
-  },
+  // {
+  //   id: 3,
+  //   name: "Attendance",
+  //   icon: "la-paper-plane",
+  //   routePath: "/employers-dashboard/attendance",
+  //   active: "",
+  // },
   {
     id: 4,
     name: "Leave Management",
@@ -52,7 +52,7 @@ module.exports = [
     id: 8,
     name: "Employees Helpdesk Tickets",
     icon: "la-comment-o",
-    routePath: "/employers-dashboard/users-help-tickets",
+    routePath: "/employers-dashboard/employees-help-tickets",
     active: "",
   },
   // {

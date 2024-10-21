@@ -42,8 +42,8 @@ const manualRatingInitialState = {
     app_connections: "",
     app_linkedin_match_with_resume: "true",
     app_creation_date: "",
-    vendor_followers: "",
-    vendor_employees_strength: "",
+    vendor_followers: null,
+    vendor_employees_strength: null,
     vendor_glassdoor: "",
     app_skill_matrix: "",
     app_active_offer: "",
@@ -560,7 +560,7 @@ const ApplicantSubmissionDetails = ({
     // Iterate through each key in applicantCheck
     for (const key in applicantCheck) {
       // Skip validation for the 'comment' key
-      if (key === "comment") {
+      if (key === "comment" || key == "reference_check") {
         continue;
       }
 
@@ -582,6 +582,7 @@ const ApplicantSubmissionDetails = ({
     setApplicantCheckErr(newErrors);
   };
   
+  console.log("----------------applicant check error ", applicantCheckErr);
 
   const validateDocument  = () => {
     let {subtype_taxterm, taxterm} = applicantCheck;
@@ -616,8 +617,8 @@ const ApplicantSubmissionDetails = ({
   const handleSubmitManualRating = async () => {
     applicantCheck['job_id'] = jobData?.id;
     // validateDocument();
-    console.log("-----------validate applicant check  ", validateApplicantCheck());
     validateApplicantCheck();
+    console.log("-----------validate applicant data  ", applicantCheck);
     if (
       applicantCheck.app_active_offer &&
       applicantCheck.app_connections &&
@@ -625,14 +626,16 @@ const ApplicantSubmissionDetails = ({
       applicantCheck.app_linkedin_match_with_resume &&
       applicantCheck?.app_profile_picture &&
       applicantCheck.app_skill_matrix &&
-      applicantCheck.reference_check &&
-      applicantCheck.vendor_employees_strength &&
-      (applicantCheck.taxterm == "W2" || applicantCheck.vendor_glassdoor) &&
-      (applicantCheck.taxterm == "W2" || applicantCheck.app_technical_questionaire) && 
-      (applicantCheck.taxterm == "W2" || applicantCheck.vendor_followers  )
-      // && 
+      // applicantCheck.reference_check &&
+      applicantCheck.app_technical_questionaire
+        &&
+       (applicantCheck.taxterm == "W2" || applicantCheck.vendor_glassdoor) &&
+      (applicantCheck.taxterm == "W2" || applicantCheck.vendor_employees_strength) && 
+       (applicantCheck.taxterm == "W2" || applicantCheck.vendor_followers  )
+      
       // validateDocument()
     ) {
+      console.log("----------comming here")
       const response = await postApiReq(
         "/linkedin-manual-check/",
         applicantCheck
@@ -2024,7 +2027,8 @@ const ApplicantSubmissionDetails = ({
                   </div>
                   <div className="col-4 my-2">
                     <p>
-                      Reference Check <strong className="text-danger">*</strong>
+                      Reference Check 
+                      {/* <strong className="text-danger">*</strong> */}
                     </p>
                     <div className="d-flex gap-2 mt-3">
                       <div className="d-flex gap-2">

@@ -126,6 +126,9 @@ const JobDelegationReport = () => {
   return (
     <div>
       {isLoading && <Loader />}
+        {/* <div className="mb-1">
+          <h4 className="">JOB DELEGATION REPORT</h4>
+        </div> */}
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
           <MultiFilterSearch
@@ -179,7 +182,7 @@ const JobDelegationReport = () => {
           </button>
         </div>
       </div>
-      <div className="d-flex me-2 my-2">
+      <div className="d-flex me-2 my-1">
          { filterKeys.map((item, index) => {
             return(
               <div className="">
@@ -224,7 +227,7 @@ const JobDelegationReport = () => {
             )
           })}
       </div>
-      <div className="mt-2">
+      <div className="">
         <div className="table_div custom-scroll-sm">
           <table className="default-table ">
             <thead className="position-sticky">

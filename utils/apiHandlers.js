@@ -132,8 +132,10 @@ export const postReq = async (endpoint, data) => {
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
+      console.log("----------------erro ", err);
       if (err.response.status == 401) {
-        handleGenerateToken();
+        // handleGenerateToken();
+        toast.error(err.response.data.non_field_errors[0])
         return handleApiError(err);
       } else {
         return handleApiError(err);

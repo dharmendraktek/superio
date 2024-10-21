@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { employeeDetails } from "@/features/employer/employerSlice";
 import employerMenuData from "@/data/employerMenuData";
+import { accessRoles } from "@/utils/constant";
 
 
 const DashboardCandidatesHeader = () => {
@@ -62,7 +63,7 @@ const DashboardCandidatesHeader = () => {
 
     const filteredMenuList = employerMenuData.filter((item) => {
         if (
-          !(employeeInfo?.access_role_details?.access_id == 102) &&
+          !(employeeInfo?.access_role_details?.access_id == accessRoles.ADMIN) &&
           (item.name === "All Users Attendance" || item.name === "Employees Helpdesk Tickets")
         ) {
           return false;

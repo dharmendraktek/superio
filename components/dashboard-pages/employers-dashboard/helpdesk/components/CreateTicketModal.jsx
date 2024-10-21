@@ -1,8 +1,6 @@
 'use client'
 
-import { getReq, patchReq, postApiReq } from "@/utils/apiHandlers"
-import { reactIcons } from "@/utils/icons";
-import axios from "axios";
+import { getReq, postApiReq } from "@/utils/apiHandlers"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
@@ -14,7 +12,6 @@ const CreateTicketModal = () => {
     description_of_issue:'',
     priority:'',
     image:'',
-    // department_head:[38,39]
   });
   const [departmentList, setDepartmentList] = useState([])
   const [subjectList, setSubjectList] = useState([]);
@@ -51,10 +48,9 @@ const CreateTicketModal = () => {
   }, [])
 
   const handleGetDepartmentList = async() => {
-    const response = await axios.get('http://10.10.105.228:8000/api/ticket-departments/')
+    const response = await getReq('/ticket-departments/')
     if(response.status){
         setDepartmentList(response.data);
-        console.log("--------------department list ", response.data);
     }
   }
 
@@ -62,7 +58,6 @@ const CreateTicketModal = () => {
   useEffect(() => {
      if(form.department){
         let filterDept = departmentList.find((item) => item.id == form.department);
-        console.log("----------dept ", filterDept);
         setSubjectList(filterDept?.department_subject);
         setDeptHead(filterDept?.department_head)
 
@@ -91,17 +86,11 @@ const CreateTicketModal = () => {
 
     try{
       setIsLoading(true);
-      const response  = await axios.post('http://10.10.105.228:8000/api/tickets/', 
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDY0NzM4LCJpYXQiOjE3MjkyNTUxMzgsImp0aSI6ImZlNmZkN2I0Nzc5NzRjMGE4M2YxNDI0Yzk3MDE0ZjA1IiwidXNlcl9pZCI6NTE0fQ.vAj03z7_A5aoTByabRLEZCdCaFMrwSaFdrFMdhY8XNk`,
-          },
-        }
-      );
+      const response  = await postApiReq('/tickets/', formData);
       setIsLoading(false);
       if(response.status){
            console.log("-----------response ", response.data);
+          toast.success("Ticke has been successfully created")
       }
     }catch(err){
       console.log("-------------error -------", err);

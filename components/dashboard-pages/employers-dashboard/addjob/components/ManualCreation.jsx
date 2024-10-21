@@ -310,7 +310,7 @@ const ManualCreation = ({
       let filterTeamUser = response.data.filter((item) => item.team_id == employee_details?.team_id);
       console.log("-------------user list ",filterTeamUser);
     
-     if(filterTeamUser.length <= 5){
+     if(filterTeamUser.length <= 7){
        setAssignList(filterTeamUser)
       let userIds =  filterTeamUser.map((item) => item.id )
      
@@ -1580,8 +1580,8 @@ const ManualCreation = ({
                 <p>
                   Assigned To <strong className="text-danger">*</strong>
                 </p>
-                <div className="client-form-input d-flex justify-content-between">
-                  <div className="d-flex flex-wrap gap-2">
+                <div className="d-flex justify-content-between" style={{borderBottom:"1px solid black", padding:"0px 5px" , minHeight:'30px', maxHeight:"fit-content"}}>
+                  <div className="d-flex flex-wrap gap-2" >
                     {assignList.map((item) => {
                       return (
                         <div

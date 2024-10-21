@@ -42,6 +42,7 @@ const FormContent = () => {
     try { 
       setLoading(true);
       const response = await postReq("/login/", form);
+      console.log("----------------response ", response );
       setLoading(false);
       if (response.status) {
         Cookies.set('is_user_token',  response.data.access, { expires: 1 });
@@ -61,6 +62,7 @@ const FormContent = () => {
         );
       }
     } catch (err) {
+      console.log("-------------error ", err);
       setLoading(false);
       toast.error(
         err.response.data.non_field_errors[0] || "Something went wrong"

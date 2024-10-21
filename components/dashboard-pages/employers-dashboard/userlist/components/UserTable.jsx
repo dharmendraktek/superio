@@ -57,7 +57,7 @@ const UserTable = () => {
   const handleDeleteUser = async (id) => {
     const response = await deleteReq(`/usersprofile/${id}/`);
     if (response.status) {
-      toast.success("User has been inactivated successfully!");
+      toast.success("User has been successfully inactivated");
       fetchUserList();
     }
   };
@@ -65,7 +65,7 @@ const UserTable = () => {
   const handleActiveUser = async (id) => {
     const response = await postApiReq(`/usersprofile/${id}/activate=true/`);
     if (response.status) {
-      toast.success("User has been activated successfully!");
+      toast.success("User has been successfully activated");
       fetchUserList();
     }
   };
@@ -87,7 +87,7 @@ const UserTable = () => {
     try {
       const response = await postApiReq("/upload-csv/", formData);
       if (response.status) {
-        toast.success("CSV file has been uploaded successfully.");
+        toast.success("CSV file has been successfully uploaded");
         fetchUserList();
       }
     } catch (err) {
@@ -100,19 +100,19 @@ const UserTable = () => {
     () =>
       userData.map((item, index) => (
         <tr key={index}>
-          <td style={{ width: "100px" }}>{item.empcode}</td>
+          <td style={{ width: "100px" }}>{item.empcode || "N/A"}</td>
           <td style={{ width: "200px" }}>
-            {item.user.first_name} {item.user.last_name}
+            {item.user.first_name} {item.user.last_name || "N/A"}
           </td>
-          <td style={{ width: "300px" }}>{item.user.email}</td>
-          <td style={{ width: "300px" }}>{item.user_skype_id}</td>
-          <td style={{ width: "300px" }}>{item.role_name}</td>
-          <td style={{ width: "150px" }}>{item.team}</td>
+          <td style={{ width: "300px" }}>{item.user.email || "N/A"}</td>
+          <td style={{ width: "300px" }}>{item.user_skype_id || "N/A"}</td>
+          <td style={{ width: "300px" }}>{item.role_name || "N/A"}</td>
+          <td style={{ width: "150px" }}>{item.team || "N/A"}</td>
           <td style={{ width: "100px" }}>
             {item.user_branch === 1 ? "INDIA" : "USA"}
           </td>
-          <td style={{ width: "100px" }}>{item.department_name}</td>
-          <td style={{ width: "200px" }}>{item.reportingmanager_name}</td>
+          <td style={{ width: "100px" }}>{item.department_name || "N/A"}</td>
+          <td style={{ width: "200px" }}>{item.reportingmanager_name || "N/A"}</td>
           <td className="text-left" style={{ width: "100px" }}>
             <div className="option-box text-center">
               <ul className="option-list">

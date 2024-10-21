@@ -3,6 +3,16 @@ export const removeSpecialChar = (item) => {
     return modifiedString;
 }
 
+export const accessRoles = {
+    BU_HEAD:104,
+    MANAGER:103,
+    RECRUITER:105,
+    ADMIN:102,
+    SUPPORT:109,
+    FINANCE:106,
+    IND_HR:107,
+    US_HR:108
+}
 
 
 export const  candidateSearchKey = [

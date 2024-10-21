@@ -291,9 +291,9 @@ const ApplicantTable = () => {
                         className="text-capitalize"
                         style={{ width: "250px" }}
                       >
-                        {item.job_title == "undefined" || item.job_title
+                        {item.job_title == "undefined" 
                           ? "N/A"
-                          : item.job_title}
+                          : item.job_title ? item.job_title : "N/A"}
                       </td>
                       <td className="" style={{ width: "300px" }}>
                         {item.email || "N/A"}

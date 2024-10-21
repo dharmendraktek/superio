@@ -28,7 +28,9 @@ const Profile = ({ setTab, applicantData, setApplicantData }) => {
                     {applicantData?.firstname || 'N/A'}  {applicantData?.middlename || ''}  {applicantData?.lastname || ''}
                   </h5>
                 </div>
-                <span>{applicantData?.job_title}</span>
+                <span>{applicantData.job_title == "undefined" 
+                          ? "N/A"
+                          : applicantData.job_title ? applicantData.job_title : "N/A"}</span>
               </div>
               <div className="d-flex my-2 gap-2">
                 <div className="d-flex align-items-center gap-1">

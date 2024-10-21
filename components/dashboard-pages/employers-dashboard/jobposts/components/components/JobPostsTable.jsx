@@ -459,7 +459,7 @@ const JobPostsTable = () => {
                               <button
                                 // data-bs-toggle="modal"
                                 // data-bs-target="#clientUpdateModal"
-                                data-text="Edit User"
+                                data-text="Edit Job"
                               >
                                 {/* <a
                             href="#"
