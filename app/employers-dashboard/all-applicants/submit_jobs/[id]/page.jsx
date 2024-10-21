@@ -207,6 +207,7 @@ const Index = () => {
                     <ApplicantSubmissionDetails
                       applicantData={applicantData}
                       item={item}
+                      jobData={item}
                       multiSubmissionForm={multiSubmissionForm}
                       index={index}
                       setMultiSubmissionForm={setMultiSubmissionForm}

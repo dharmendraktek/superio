@@ -618,6 +618,7 @@ const ApplicantSubmissionDetails = ({
 
 
   const handleSubmitManualRating = async () => {
+    console.log("----------------job data for applicant side  ", jobData);
     applicantCheck['job_id'] = jobData?.id;
     // validateDocument();
     validateApplicantCheck();

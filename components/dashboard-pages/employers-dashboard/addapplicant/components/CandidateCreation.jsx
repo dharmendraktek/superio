@@ -310,6 +310,7 @@ const CandidateCreation = ({
           ? await patchReq(`/applicants/${applicantData?.id}/`, form)
           : await postApiReq("/applicants/", form);
         setIsLoading(false);
+        console.log("-------------response ", response);
         if (response.status) {
           let message = applicantData.id
             ? "Applicant updated successfully"
@@ -323,12 +324,16 @@ const CandidateCreation = ({
             // router.push('/employers-dashboard/all-applicants/{}')
           }
         }
-        if (response.error) {
-          toast.error(response.error.detail);
+        if (!response.status) {
+          if(response?.error?.mobile[0])
+          toast.error(response?.error?.mobile[0]);
+        }else if(response?.error?.email[0]){
+          toast.error(response?.error?.mobile[0]);
         }
       } catch (err) {
+        console.log("------------------error ------", err);
         setIsLoading(false);
-        toast.error();
+        toast.error(err.response || "Somthing went wrong");
       }
     }
   };

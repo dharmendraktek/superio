@@ -1327,7 +1327,7 @@ const ManualCreation = ({
                   value={skills}
                   placeholder="Please enter skills by using Enter button or mouse click as separator."
                   onClick={() => {
-                    if (skills) {
+                    if (skills.trim()) {
                       setForm((prev) => ({
                         ...prev,
                         primary_skills: [
@@ -1339,7 +1339,7 @@ const ManualCreation = ({
                     }
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if (skills.trim() && e.key === "Enter") {
                       setForm((prev) => ({
                         ...prev,
                         primary_skills: [
@@ -1407,7 +1407,7 @@ const ManualCreation = ({
                   name="secondary_skills"
                   value={secondarySkills}
                   onClick={() => {
-                    if (secondarySkills) {
+                    if (secondarySkills.trim()) {
                       setForm((prev) => ({
                         ...prev,
                         secondary_skills: [
@@ -1419,7 +1419,7 @@ const ManualCreation = ({
                     }
                   }}
                   onKeyDown={(e) => {
-                    if (e.key == "Enter") {
+                    if (secondarySkills.trim() && e.key == "Enter") {
                       setForm((prev) => ({
                         ...prev,
                         secondary_skills: [
