@@ -4,7 +4,7 @@ import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Pagination from "@/components/common/Pagination";
-import { getReq, patchReq,  } from "@/utils/apiHandlers";
+import { deleteReq, getReq, patchReq,  } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
@@ -47,7 +47,7 @@ const ClientApproval = () => {
   const [loading, setLoading] = useState(false);
   const [rejLoading, setRejLoading] = useState(false);
   const [clientId, setClientId] = useState(null);
-
+  const [delLoading, setDelLoading] = useState(false);
 
 
 
@@ -108,9 +108,22 @@ const ClientApproval = () => {
         }
       }
     }catch(err){
-      console.log("---------erro ", err);
         setRejLoading(false);
       setLoading(false);
+    }
+  }
+
+  const handleDeleteClient = async(id) => {
+    try{
+      setDelLoading(true);
+      const response = await deleteReq(`/delete-client/${id}/`);
+      setDelLoading(false);
+      if(response.status){
+        toast.success('Client has been successfully deleted');
+      }
+    }catch(err){
+      toast.error(err.response || "Somthing went wrong");
+      setDelLoading(false);
     }
   }
 
@@ -225,10 +238,11 @@ const ClientApproval = () => {
                     <td className="" style={{ width: "250px" }}>
                       {item.updated_at ? moment(item.updated_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
                     </td>
-                    <td style={{width:"250px"}}>
-                       <div className="d-flex gap-2">
+                    <td style={{width:"260px"}}>
+                       <div className="d-flex gap-1">
                         <button className="theme-btn btn-style-four small" onClick={() => handleApproval(item.id, 'approve')}>{loading && item.id == clientId ? <BtnBeatLoader /> :"APPROVE"}</button>
                         <button className="theme-btn btn-style-four small" onClick={() => handleApproval(item.id, 'disapprove')}>{rejLoading && item.id == clientId ? <BtnBeatLoader /> :"REJECT"}</button>
+                        <button className="theme-btn btn-style-four small" onClick={() => handleDeleteClient(item.id)}>{rejLoading && item.id == clientId ? <BtnBeatLoader /> :"DELETE"}</button>
                        </div>
                     </td>
                   </tr>

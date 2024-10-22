@@ -312,7 +312,7 @@ const ClientTable = () => {
                     <td className="" style={{ width: "250px" }}>
                       {item.updated_at ? moment(item.updated_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
                     </td>
-                    <td style={{width:"150px"}}>
+                    <td style={{width:"260px"}}>
                       <div className="option-box">
                         <ul className="d-flex justify-content-start option-list">
                           <li>

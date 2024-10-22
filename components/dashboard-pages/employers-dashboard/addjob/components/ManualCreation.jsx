@@ -209,7 +209,7 @@ const ManualCreation = ({
         assign: jobData.assign ? jobData.assign : [],
         tax_term: jobData.tax_term ? jobData.tax_term : "",
         // department: jobData.department,
-        description: jobData.description ? jobData.description : "<p></p>",
+        description: jobData.description ? jobData.description : "",
         is_active: 1,
         post_on_portal: true,
         // post_date_on_portal:form.post_date_on_portal,
@@ -304,10 +304,10 @@ const ManualCreation = ({
       setUsersList(response.data);
       let filterTeamUser = response.data.filter((item) => item.team_id == employee_details?.team_id);
     
-     if(filterTeamUser.length <= 7){
+      console.log("--------assign function is working -------", assignList);  
+     if(filterTeamUser.length <= 7 && assignList.length == 0 && !(name =="update") ){
        setAssignList(filterTeamUser)
       let userIds =  filterTeamUser.map((item) => item.id )
-     
       setForm((prev) => ({...prev, assign:userIds}))
      }
       
@@ -1673,6 +1673,11 @@ const ManualCreation = ({
                   form={form}
                   name={name}
                   height="400px"
+                  wrapperStyle={{
+                    border: "1px solid gray",
+                    minHeight: "300px",
+                    borderRadius: "3px",
+                  }}
                 />
               )}
               {name == "create" &&  (

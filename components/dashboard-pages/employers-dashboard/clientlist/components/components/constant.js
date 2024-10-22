@@ -15,7 +15,7 @@ export const clientTableField = [
   // {title:'Created by'},
   {title:'Created On', size:'250px'},
   {title:'Modified On', size:'250px'},
-  {title:'Action', size:'250px'},
+  {title:'Action', size:'260px'},
 ]
 
 export const clientData = [

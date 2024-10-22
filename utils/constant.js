@@ -11,7 +11,7 @@ export const accessRoles = {
     SUPPORT:109,
     FINANCE:106,
     IND_HR:107,
-    US_HR:108
+US_HR:108
 }
 
 

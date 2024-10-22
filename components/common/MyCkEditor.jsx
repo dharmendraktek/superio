@@ -114,7 +114,7 @@ const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name, height }) =>
         background: "white",
         height: height || "400px", // default height
         overflowY: "scroll",
-        lineHeight: "0.9",
+        lineHeight: "1.1",
       }}
       editorState={editorState}
       toolbarClassName="toolbarClassName"
