@@ -66,7 +66,8 @@ const ApplicantSubmissionDetails = ({
   index,
   applicantData,
   clearAll,
-  jobData
+  jobData,
+  side="applicant"
 }) => {
   const [refrenceDetails, setRefrenceDetails] = useState({
     name: "",
@@ -490,8 +491,8 @@ const ApplicantSubmissionDetails = ({
     if (documents.length > 0) {
       const response = await postApiReq(`/applicant-documents/`, formData);
       setIsLoading(false);
+      getApplicantDocuments();
       if (response.status) {
-        getApplicantDocuments();
         setDocuments([]);
         setDocDetail((prev) => ({ ...prev, title: "", type: "", comment: "" }));
         setAddDoc(false);
@@ -618,11 +619,9 @@ const ApplicantSubmissionDetails = ({
 
 
   const handleSubmitManualRating = async () => {
-    console.log("----------------job data for applicant side  ", jobData);
     applicantCheck['job_id'] = jobData?.id;
     // validateDocument();
     validateApplicantCheck();
-    console.log("-----------validate applicant data  ", applicantCheck);
     if (
       applicantCheck.app_active_offer &&
       applicantCheck.app_connections &&
@@ -639,7 +638,6 @@ const ApplicantSubmissionDetails = ({
       
       // validateDocument()
     ) {
-      console.log("----------comming here")
       const response = await postApiReq(
         "/linkedin-manual-check/",
         applicantCheck
@@ -679,14 +677,11 @@ const ApplicantSubmissionDetails = ({
     const response = await deleteReq(`/applicant-documents/${id}/`);
     if (response.status) {
       toast.success("Document deleted successfully");
-      handleGetApplicantDetails();
       getApplicantDocuments();
     } else if (response.error) {
       toast.error(response.error.error);
-      // getApplicantDocuments();
     }
   };
-
 
 
   return (
@@ -696,6 +691,11 @@ const ApplicantSubmissionDetails = ({
         className="d-flex justify-content-between px-2 py-1 text-white rounded-1 mb-3"
         style={{ backgroundColor: "var(--primary-2nd-color)" }}
       >
+        {side == "applicant" ?
+          <h4 className="fw-medium fs-4">
+           {jobData?.title || "N/A"}
+        </h4>
+        :
         <h4 className="fw-medium fs-4">
           {(applicantDetails?.firstname || "") +
             " " +
@@ -703,6 +703,7 @@ const ApplicantSubmissionDetails = ({
             " " +
             (applicantDetails?.lastname || "")}
         </h4>
+        }
         <span
           onClick={() => {
             if (openForm == index) {
@@ -913,7 +914,7 @@ const ApplicantSubmissionDetails = ({
               </div>
             </div>
           </div>
-          <div className="my-2 px-2 ">
+          {/* <div className="my-2 px-2 ">
             <div
               className="d-flex  justify-content-between px-2 py-1"
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
@@ -1129,8 +1130,8 @@ const ApplicantSubmissionDetails = ({
                 </div>
               )}
             </div>
-          </div>
-          <div className="my-2 px-2 ">
+          </div> */}
+          {/* <div className="my-2 px-2 ">
             <div
               className="d-flex px-2 py-1 justify-content-between"
               style={{ backgroundColor: "rgb(240 248 255 / 98%)" }}
@@ -1228,7 +1229,7 @@ const ApplicantSubmissionDetails = ({
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
           <div className="my-2 px-2 ">
             <div
               className="d-flex justify-content-between px-2 py-1"
@@ -1351,7 +1352,17 @@ const ApplicantSubmissionDetails = ({
                         {isLoading ? <BtnBeatLoader /> : "Save"}
                       </button>
                       <button
-                        onClick={() => setAddDoc(false)}
+                        onClick={() => {
+                          setAddDoc(false)
+                          setDocDetail({
+                            title: "",
+                            type: "Select",
+                            comment: "",
+                            applicant: "",
+                            is_default: "true",
+                          });
+                          setDocuments([]);
+                        }}
                         className="theme-btn btn-style-four small"
                         id="btnCancel"
                       >

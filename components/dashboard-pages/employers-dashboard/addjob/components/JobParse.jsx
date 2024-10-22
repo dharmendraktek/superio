@@ -52,11 +52,12 @@ const JobParse = ({setTab, tab}) => {
           <MyCKEditor 
             setDescriptionData={setDescriptionData}
             form={form}
-            // wrapperStyle={{
-            //   // border: "1px solid lightgray",
-            //   minHeight: "620px",
-            //   borderRadius: "3px",
-            // }}
+            height="620px"
+            wrapperStyle={{
+              // border: "1px solid lightgray",
+              minHeight: "620px",
+              borderRadius: "3px",
+            }}
           
           /> 
         </div>

@@ -121,10 +121,13 @@ const ManualCreation = ({
   const [openContact, setOpenContact] = useState(false);
   const [contactSearch, setContactSearch] = useState("");
   const [clientSearch, setClientSearch] = useState("");
+  const [openPrim, setOpenPrim] = useState(false);
+  const [openSecond, setOpenSecond] = useState(false);
 
   const router = useRouter();
 
   const employee_details = useSelector((state) => state.employer.user);
+
 
 
 
@@ -150,6 +153,7 @@ const ManualCreation = ({
   //       })
   //   }
   // }, [jobData.languages])\
+
 
   useEffect(() => {
     if (jobData) {
@@ -187,22 +191,13 @@ const ManualCreation = ({
         contact_manager: jobData.contact_manager,
         interview_mode: jobData.interview_mode,
         application_form: jobData.application_form,
-        primary_skills:
-          jobData.secondary_skills == jobData.primary_skills ? [] : jobData.primary_skills ==  "Not specified"
-            ? []
-            : typeof jobData.primary_skills == "object"
-            ? jobData.primary_skills
-            : typeof jobData.primary_skills == "string"
-            ? jobData.primary_skills.split(",").map((name) => ({ name }))
-            : [],
-        secondary_skills:
-          jobData.secondary_skills == "Not specified"
-            ? []
-            : typeof jobData.secondary_skills == "object"
-            ? jobData.secondary_skills
-            : typeof jobData.secondary_skills == "string"
-            ? jobData.secondary_skills.split(",").map((name) => ({ name }))
-            : [],
+        primary_skills:typeof jobData.primary_skills == "string"
+        ? jobData.primary_skills.split(",").map((name) => ({ name }))
+        : jobData.primary_skills == "Not specified" ? [] :jobData.primary_skills ? jobData.primary_skills : [],
+
+        secondary_skills:typeof jobData.secondary_skills == "string"
+          ? jobData.secondary_skills.split(",").map((name) => ({ name }))
+          : jobData.secondary_skills == "Not specified" ? [] :jobData.secondary_skills ? jobData.secondary_skills : [],
         // languages: jobData?.languages ? jobData?.languages : [],
         experience: jobData.experience,
         number_of_position: jobData.number_of_position,
@@ -308,7 +303,6 @@ const ManualCreation = ({
     if (response.status) {
       setUsersList(response.data);
       let filterTeamUser = response.data.filter((item) => item.team_id == employee_details?.team_id);
-      console.log("-------------user list ",filterTeamUser);
     
      if(filterTeamUser.length <= 7){
        setAssignList(filterTeamUser)
@@ -321,7 +315,6 @@ const ManualCreation = ({
   };
 
   const handleValidation = () => {
-    console.log("---------------form ", form);
     setError((prev) => ({
       ...prev,
       jobCodeErr: "",
@@ -344,9 +337,9 @@ const ManualCreation = ({
       clientBillRateERr: "",
     }));
 
-    if (!form.job_code) {
-      setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
-    }
+    // if (!form.job_code) {
+    //   setError((prev) => ({ ...prev, jobCodeErr: "This field is required" }));
+    // }
     if (!form.title) {
       setError((prev) => ({ ...prev, jobTitleErr: "This field is required" }));
     }
@@ -418,7 +411,6 @@ const ManualCreation = ({
     if (form.assign.length == 0) {
       setError((prev) => ({ ...prev, assignToErr: "This field is required" }));
     }
-    console.log("---------------job description erro ", form.description);
     if (!form.description) {
       setError((prev) => ({
         ...prev,
@@ -480,9 +472,9 @@ const ManualCreation = ({
       } else if (!jobType == "Email") {
         form["comment"] = comments;
       }
-      if (name == "create") {
+      // if (name == "create" || name == "parse" || name == "email") {
         delete form["job_code"];
-      }
+      // }
       try {
         setIsLoading(true);
         const response =
@@ -1284,12 +1276,16 @@ const ManualCreation = ({
               <p>
                 Primary Skills <strong className="text-danger">*</strong>{" "}
                 <button
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="bottom" // Ensure the tooltip appears below
-                  title="Please enter skills by using Enter button or mouse click as separator."
-                  className="text-primary"
+                  className="text-primary position-relative"
+                  onMouseEnter={() => setOpenPrim(true)}
+                  onMouseLeave={() => setOpenPrim(false)}
                 >
                   {reactIcons.info}
+                  {openPrim &&
+                  <div className="position-absolute bg-lightestblue rounded-1 p-1" style={{zIndex:5, width:"400px", top:"-10", minHeight:"40px", maxHeight:"fit-content"}}>
+                      <span className="text-white">Please enter skills by using Enter button or mouse click as separator.</span>
+                  </div> 
+                  }
                 </button>
               </p>
               <div
@@ -1362,14 +1358,18 @@ const ManualCreation = ({
             <div className="col-4 my-2">
               <p>
                 Secondary Skills{" "}
-                <button
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top-right"
-                  title="Please enter skills by using Enter button or mouse click as separator."
-                  className="text-primary"
-                >
-                  <span>{reactIcons.info}</span>
-                </button>
+              <button
+                className="text-primary position-relative"
+                onMouseEnter={() => setOpenSecond(true)}
+                onMouseLeave={() => setOpenSecond(false)}
+              >
+                {reactIcons.info}
+                {openSecond &&
+                <div className="position-absolute bg-lightestblue rounded-1 p-1" style={{zIndex:5, width:"400px", top:"-10", minHeight:"40px", maxHeight:"fit-content"}}>
+                    <span className="text-white">Please enter skills by using Enter button or mouse click as separator.</span>
+                </div> 
+                }
+              </button>
               </p>
               <div
                 className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
@@ -1672,11 +1672,7 @@ const ManualCreation = ({
                   setDescriptionData={setDescriptionData}
                   form={form}
                   name={name}
-                  wrapperStyle={{
-                    border: "1px solid gray",
-                    minHeight: "250px",
-                    borderRadius: "3px",
-                  }}
+                  height="400px"
                 />
               )}
               {name == "create" &&  (
@@ -1684,9 +1680,10 @@ const ManualCreation = ({
                   setDescriptionData={setDescriptionData}
                   name={name}
                   form={form}
+                  height="300px"
                   wrapperStyle={{
                     border: "1px solid gray",
-                    minHeight: "250px",
+                    minHeight: "300px",
                     borderRadius: "3px",
                   }}
                 />

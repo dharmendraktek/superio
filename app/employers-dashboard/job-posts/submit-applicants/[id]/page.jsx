@@ -67,6 +67,8 @@ const Index = () => {
   const [multiSubmissionForm, setMultiSubmissionForm] = useState([]);
   const [open, setOpen] = useState(false);
   const [jobData, setJobData] = useState();
+  const [submissionLoading, setSubmissionLoading] = useState(false);
+
 
   // const router = useRouter();
 
@@ -103,15 +105,18 @@ const Index = () => {
     handleGetApplicantList();
   }, [search, page, active]);
 
-  const handleAddIsSelected = (index, e) => {
-    // Create a new array with the updated item
-    const updatedItems = applicantData.map((item, i) =>
-      i === index ? { ...item, isSelected: e.target.checked } : item
-    );
 
+
+  const handleAddIsSelected = (index, e) => {
+    // Create a new array where all items have isSelected: false, except the current one
+    const updatedItems = applicantData.map((item, i) =>
+      i === index ? { ...item, isSelected: e.target.checked } : { ...item, isSelected: false }
+    );
+  
     // Update state with the new array
-    setApplicantData(updatedItems);
+    setApplicantData  (updatedItems);
   };
+  
 
   const handleGetJobDetails = async () => {
     const response = await getReq(`/jobs/${id}/`);
@@ -177,12 +182,19 @@ const Index = () => {
   };
 
   const handleSubmitApplicant = async () => {
-    const response = await postApiReq("/submission/", multiSubmissionForm);
-    if (response.status) {
-      toast.success("Applicant submitted to job successfully");
-      setOpen(false);
-      // router.push(`/employers-dashboard/job-posts/${jobData.id}`);
-      setMultiSubmissionForm([])
+    try{
+      setSubmissionLoading(true);
+      const response = await postApiReq("/submission/", multiSubmissionForm);
+      setSubmissionLoading(false);
+      if (response.status) {
+        toast.success("Applicant submitted to job successfully");
+        setOpen(false);
+        // router.push(`/employers-dashboard/job-posts/${jobData.id}`);
+        setMultiSubmissionForm([])
+      }
+    }catch(err){
+      console.log("-----------error ", err);
+      toast.error(err.response || "Somthing went wrong");
     }
   };
 
@@ -207,6 +219,7 @@ const Index = () => {
               <button
                 onClick={handleSubmitApplicant}
                 className="theme-btn btn-style-one small"
+                disabled={submissionLoading}
               >
                 Submit
               </button>

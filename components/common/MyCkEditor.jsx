@@ -74,11 +74,12 @@ import {
   convertToRaw,
 } from "draft-js";
 
-const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name }) => {
+const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name, height }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  
+
+  // Initialize editor content when form.description changes
   useEffect(() => {
-    if (form.description && (name == "update" || name=="parse")) {
+    if (form.description && (name === "update" || name === "parse")) {
       const blocksFromHTML = convertFromHTML(form.description);
       const contentState = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks,
@@ -87,28 +88,23 @@ const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name }) => {
       const newEditorState = EditorState.createWithContent(contentState);
       setEditorState(newEditorState);
     }
-  }, [form.description]);
+  }, [form.description, name]);
 
+  // Handle editor state changes
   const onEditorStateChange = useCallback((newEditorState) => {
     setEditorState(newEditorState);
-    
+  }, []);
+
+  // Handle editor blur and convert content to HTML
+  const handleEditorBlur = useCallback(() => {
     const content = draftToHtml(
-      convertToRaw(newEditorState.getCurrentContent())
+      convertToRaw(editorState.getCurrentContent())
     );
     
-    if (content !== "<p></p>\n") {
-      setDescriptionData(content);
+    if (content) {
+      setDescriptionData(content); // Update the parent component with HTML content
     }
-  }, [setDescriptionData]);
-
-  const toolbarOptions = {
-    fontFamily: {
-      options: ["Arial", "Georgia", "Impact", "Tahoma", "Verdana"],
-    },
-    fontSize: {
-      options: [8, 10, 12, 14, 18, 24, 36],
-    },
-  };
+  }, [editorState, setDescriptionData]);
 
   return (
     <Editor
@@ -116,17 +112,18 @@ const MyCKEditor = ({ setDescriptionData, form, wrapperStyle, name }) => {
       editorStyle={{
         padding: "0px 10px",
         background: "white",
-        height: "100%",
+        height: height || "400px", // default height
+        overflowY: "scroll",
+        lineHeight: "0.9",
       }}
-      toolbar={toolbarOptions}
       editorState={editorState}
       toolbarClassName="toolbarClassName"
       wrapperClassName="wrapperClassName"
       editorClassName="editorClassName"
       onEditorStateChange={onEditorStateChange}
+      onBlur={handleEditorBlur} // Convert to HTML when the editor loses focus
     />
   );
 };
 
 export default MyCKEditor;
-

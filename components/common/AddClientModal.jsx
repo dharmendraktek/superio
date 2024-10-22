@@ -119,6 +119,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
       // toast.error(err.response || "Something went wrong!");
     }
   };
+  console.log("000000========= client ", client)
 
   return (
     <div
@@ -153,7 +154,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
           <button
             className="theme-btn btn-style-one small"
             onClick={() => {
-              if (client && client.client_name) {
+              if (client?.id && client.client_name) {
                 handleUpdateClient(client.id);
               } else {
                 handleCreateClient();
@@ -161,7 +162,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
             }}
             disabled={loading}
           >
-            {loading ? <BtnBeatLoader /> : client ? "Update" : "Save"}
+            {loading ? <BtnBeatLoader /> : client?.id ? "Update" : "Save"}
           </button>
         </div>
 

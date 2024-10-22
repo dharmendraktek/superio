@@ -94,7 +94,9 @@ const CandidateCreation = ({
     sourceErr: "",
     taxTermErr: "",
   });
-
+  
+  const [openPrim, setOpenPrim] = useState(false);
+  const [openSecond, setOpenSecond] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -186,22 +188,12 @@ const CandidateCreation = ({
         ownership: applicantData.ownership ? applicantData.ownership : [],
         job_title: applicantData.job_title ? applicantData.job_title : "",
         relocation: applicantData.relocation ? applicantData.relocation : "",
-        primary_skills:
-          typeof applicantData.primary_skills == "object"
-            ? applicantData.primary_skills
-            : applicantData.primary_skills
-            ? applicantData.primary_skills.split(",").map((item) => {
-                return { name: item };
-              })
-            : [],
-        secondary_skills:
-          typeof applicantData.secondary_skills == "object"
-            ? applicantData.secondary_skills
-            : applicantData.secondary_skills
-            ? applicantData.secondary_skills.split(",").map((item) => {
-                return { name: item };
-              })
-            : [],
+        primary_skills:typeof applicantData.primary_skills == "string"
+        ? applicantData.primary_skills.split(",").map((name) => ({ name }))
+        : applicantData.primary_skills == "Not specified" ? [] :applicantData.primary_skills ? applicantData.primary_skills : [],
+        secondary_skills: typeof applicantData.secondary_skills == "string"
+        ? applicantData.secondary_skills.split(",").map((name) => ({ name }))
+        : applicantData.secondary_skills == "Not specified" ? [] :applicantData.secondary_skills ? applicantData.secondary_skills : [],
         notice_period: applicantData.notice_period
           ? applicantData.notice_period
           : "",
@@ -310,8 +302,8 @@ const CandidateCreation = ({
           ? await patchReq(`/applicants/${applicantData?.id}/`, form)
           : await postApiReq("/applicants/", form);
         setIsLoading(false);
-        console.log("-------------response ", response);
         if (response.status) {
+          setForm(initialState);
           let message = applicantData.id
             ? "Applicant updated successfully"
             : "Applicant created successfully";
@@ -331,7 +323,6 @@ const CandidateCreation = ({
           toast.error(response?.error?.mobile[0]);
         }
       } catch (err) {
-        console.log("------------------error ------", err);
         setIsLoading(false);
         toast.error(err.response || "Somthing went wrong");
       }
@@ -904,18 +895,18 @@ const CandidateCreation = ({
         <div className="col-4 my-2">
           <p>
             Primary Skills{" "}
-            <span
-              data-bs-toggle="tooltip"
-              data-bs-placement="top-right"
-              title="Please enter skills by using Enter button or mouse click as separator."
-              className="text-primary custom-tooltip w-100"
-            >
-              {reactIcons.info}
-            </span>
-            {/* <button type="button" className="btn custom-tooltip " data-toggle="tooltip" data-placement="top" title="Please enter skills enter button as seprator">
-              {reactIcons.info}
-</button>
-           */}
+            <button
+                  className="text-primary position-relative"
+                  onMouseEnter={() => setOpenPrim(true)}
+                  onMouseLeave={() => setOpenPrim(false)}
+                >
+                  {reactIcons.info}
+                  {openPrim &&
+                  <div className="position-absolute bg-lightestblue rounded-1 p-1" style={{zIndex:5, width:"400px", top:"-10", minHeight:"40px", maxHeight:"fit-content"}}>
+                      <span className="text-white">Please enter skills by using Enter button or mouse click as separator.</span>
+                  </div> 
+                  }
+                </button>
           </p>
           <div
             className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
@@ -952,7 +943,7 @@ const CandidateCreation = ({
               className="w-100"
               value={skills}
               onClick={() => {
-                if (skills) {
+                if (skills.trim()) {
                   setForm((prev) => ({
                     ...prev,
                     primary_skills: [
@@ -964,7 +955,7 @@ const CandidateCreation = ({
                 }
               }}
               onKeyDown={(e) => {
-                if (e.key == "Enter") {
+                if (skills.trim() && e.key == "Enter") {
                   setForm((prev) => ({
                     ...prev,
                     primary_skills: [...prev.primary_skills, { name: skills }],
@@ -983,13 +974,17 @@ const CandidateCreation = ({
           <p>
             Secondary Skills{" "}
             <button
-              data-bs-toggle="tooltip"
-              data-bs-placement="top-right"
-              title="Please enter skills by using Enter button or mouse click as separator."
-              className="text-primary"
-            >
-              <span>{reactIcons.info}</span>
-            </button>
+                  className="text-primary position-relative"
+                  onMouseEnter={() => setOpenSecond(true)}
+                  onMouseLeave={() => setOpenSecond(false)}
+                >
+                  {reactIcons.info}
+                  {openSecond &&
+                  <div className="position-absolute bg-lightestblue rounded-1 p-1" style={{zIndex:5, width:"400px", top:"-10", minHeight:"40px", maxHeight:"fit-content"}}>
+                      <span className="text-white">Please enter skills by using Enter button or mouse click as separator.</span>
+                  </div> 
+                  }
+                </button>
           </p>
           <div
             className="d-flex flex-wrap position-relative custom-scroll-sm  px-2"
@@ -1026,7 +1021,7 @@ const CandidateCreation = ({
               value={secondarySkills}
               placeholder="Please enter skills by using Enter button or mouse click as separator."
               onClick={() => {
-                if (secondarySkills) {
+                if (secondarySkills.trim()) {
                   setForm((prev) => ({
                     ...prev,
                     secondary_skills: [
@@ -1038,7 +1033,7 @@ const CandidateCreation = ({
                 }
               }}
               onKeyDown={(e) => {
-                if (e.key == "Enter") {
+                if (secondarySkills.trim() && e.key == "Enter") {
                   setForm((prev) => ({
                     ...prev,
                     secondary_skills: [

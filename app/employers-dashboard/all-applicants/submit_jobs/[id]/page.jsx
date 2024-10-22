@@ -16,6 +16,7 @@ import { reactIcons } from "@/utils/icons";
 import ApplicantSubmissionDetails from "../../../../../components/common/ApplicantSubmissionDetails";
 import { toast } from "react-toastify";
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const initialState = {
   job: "",
@@ -65,6 +66,7 @@ const Index = () => {
   const [multiSubmissionForm, setMultiSubmissionForm] = useState([]);
   const [open, setOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
+  const [submissionLoading, setSubmissionLoading] = useState(false);
 
   const handleGetApplicantDetails = async () => {
     setloading(true);
@@ -104,14 +106,15 @@ const Index = () => {
   }, [search, page, active]);
 
   const handleAddIsSelected = (index, e) => {
-    // Create a new array with the updated item
+    // Create a new array where all items have isSelected: false, except the current one
     const updatedItems = jobPostList.map((item, i) =>
-      i === index ? { ...item, isSelected: e.target.checked } : item
+      i === index ? { ...item, isSelected: e.target.checked } : { ...item, isSelected: false }
     );
-
+  
     // Update state with the new array
     setJobPostList(updatedItems);
   };
+  
 
   const handleAddMultiForm = (jobId) => {
     let applicant = [];
@@ -162,12 +165,20 @@ const Index = () => {
   };
 
   const handleSubmitApplicant = async () => {
-    const response = await postApiReq("/submission/", multiSubmissionForm);
-    if (response.status) {
-      setClearAll(true);
-      toast.success("Applicant submitted to job successfully");
+    try{
+      setSubmissionLoading(true);
+      const response = await postApiReq("/submission/", multiSubmissionForm);
+      setSubmissionLoading(false);
+      if (response.status) {
+        setClearAll(true);
+        toast.success("Applicant submitted to job successfully");
+      }
+    }catch(err){
+        toast.error(err.response || "Somthing went wrong")
+        setSubmissionLoading(false);
     }
   };
+
 
   return (
     <>
@@ -186,8 +197,9 @@ const Index = () => {
               <button
                 onClick={handleSubmitApplicant}
                 className="theme-btn btn-style-one small"
+                disabled={submissionLoading}
               >
-                Submit
+                {submissionLoading ? <BtnBeatLoader /> : "Submit"}
               </button>
               <button
                 onClick={() => setOpen(false)}
@@ -276,7 +288,7 @@ const Index = () => {
                 );
               })} */}
                           <th style={{ width: "60px" }}>
-                            <input type="checkbox" />
+                            {/* <input type="checkbox" /> */}
                           </th>
                           <th style={{ width: "150px" }}>Job Code</th>
                           <th style={{ width: "200px" }}>Job Title</th>
@@ -298,6 +310,7 @@ const Index = () => {
                                       onChange={(e) =>
                                         handleAddIsSelected(index, e)
                                       }
+                                      checked={item.isSelected ? item.isSelected : false}
                                     />
                                   </td>
                                 )}

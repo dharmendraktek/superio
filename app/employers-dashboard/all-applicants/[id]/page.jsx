@@ -142,16 +142,16 @@ const Index = () => {
                       </span>
                     </Link>
                     </div>
-                    <div className="hover-bg-change px-2">
-                    <p
-                      className="cursor-pointer text-black fw-600 "
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#tagToJobApplicantModal"
-                      aria-controls="tagToJobApplicantModalLabel"
-                    >
-                      Tag to job
-                    </p>
-                    </div>
+                  {/* <div className="hover-bg-change px-2">
+                  <p
+                    className="cursor-pointer text-black fw-600 "
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#tagToJobApplicantModal"
+                    aria-controls="tagToJobApplicantModalLabel"
+                  >
+                    Tag to job
+                  </p>
+                  </div> */}
 
                     {/* <p className="cursor-pointer">Quick Submit</p> */}
                   </div>
