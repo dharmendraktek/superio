@@ -118,7 +118,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails }) => {
             </div>
           )}
         </div>
-        {side == "applicant" && <div className="w-20">Record</div>}
+        {side == "applicant" && <div className="w-20"></div>}
         <div className="" style={{ width: "250px" }}>
           <strong>{(first_name || "N/A") + " " + (last_name || "")}</strong>
         </div>

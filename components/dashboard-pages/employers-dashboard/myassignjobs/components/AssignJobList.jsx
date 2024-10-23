@@ -375,8 +375,8 @@ const AssignJobList = () => {
                       onMouseEnter={() => setOpenAssign(item.id)}
                       onMouseLeave={() => setOpenAssign(null)}
                     >
-                      <div className="d-flex flex-wrap gap-1 position-relative">
-                        {item.assign_details?.slice(0, 2).map((item) => {
+                      <div className="d-flex px-5 position-relative">
+                        {/* {item.assign_details?.slice(0, 2).map((item) => {
                           return (
                             <div className="rounded-1 border border-primary px-1">
                               <span>
@@ -385,7 +385,14 @@ const AssignJobList = () => {
                             </div>
                           );
                         })}
-                        {item.assign_details.length == 0 && "N/A"}
+                        {item.assign_details.length == 0 && "N/A"} */}
+                        <span
+                          onMouseEnter={() => setOpenAssign(item.id)}
+                          onMouseLeave={() => setOpenAssign(null)}
+                          className="cursor-pointer text-primary fs-5"
+                        >
+                          {reactIcons.peoplegroup}
+                        </span>
                         {openAssign == item.id && (
                           <div
                             className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
@@ -403,7 +410,9 @@ const AssignJobList = () => {
                                 </span>
                               );
                             })}
-                            {item.assign_details.length == 0 && "N/A"}
+                            <span className="text-white">
+                              {item.assign_details.length == 0 && "Not Available"}
+                            </span>
                           </div>
                         )}
                       </div>

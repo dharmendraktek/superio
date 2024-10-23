@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getReq, postApiReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
@@ -67,6 +67,8 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
   const [submissionLoading, setSubmissionLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleGetApplicantDetails = async () => {
     setloading(true);
@@ -172,6 +174,7 @@ const Index = () => {
       if (response.status) {
         setClearAll(true);
         toast.success("Applicant submitted to job successfully");
+        router.push(`/employers-dashboard/all-applicants/${id}`)
       }
     }catch(err){
         toast.error(err.response || "Somthing went wrong")

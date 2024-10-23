@@ -9,6 +9,7 @@ import { getReq, patchReq,  } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
+import Link from "next/link";
 
 const tabsName = [
   { id: 1, name: "ACTIVE CLIENT" },
@@ -85,10 +86,10 @@ const ClientTable = () => {
   const handleInactiveClient = async (id) => {
     console;
     // const response = await patchReq(`/delete-client/${id}/`);
-    const response = await patchReq(`/delete-client/${id}/`);
+    const response = await patchReq(`/soft-delete-client/${id}/`);
 
     if (response.status) {
-      toast.success("Client status has been updated successfully !");
+      toast.success("Client status has been successfully updated");
       getClientList();
     }
   };
@@ -297,7 +298,11 @@ const ClientTable = () => {
                     </td>
                     <td style={{width:"300px"}}>{item.client_email || 'N/A'}</td>
                     <td style={{width:"300px"}}>{item.client_cont || 'N/A'}</td>
-                    <td style={{width:"300px"}}>{item.client_website || 'N/A'}</td>
+                    <td style={{width:"300px"}}>
+                      <Link href={item.client_website ? item.client_website : "#"} target="_blank" >
+                      {item.client_website || 'N/A'}
+                      </Link>
+                      </td>
                     <td style={{width:"150px"}}>{item.status || 'N/A'}</td>
                     {/* <td className="remaining">{item.category}</td> */}
                     <td style={{width:"200px"}}>{item.owner_name || 'N/A'}</td>
@@ -350,7 +355,7 @@ const ClientTable = () => {
                               //     data-bs-target="#userDeleteModal"
 
                               data-text={`${
-                                active == 1 ? "Inactive User" : "Active User"
+                                active == 1 ? "Inactive Client" : "Active Client"
                               }`}
                             >
                               <span

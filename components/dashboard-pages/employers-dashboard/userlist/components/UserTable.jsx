@@ -234,6 +234,7 @@ const UserTable = () => {
                 />
               </label>
             </div>
+              {/* <button onClick={handleDownloadExcel} className="theme-btn btn-style-one small">CSV Format</button> */}
           </div>
         </div>
       </div>

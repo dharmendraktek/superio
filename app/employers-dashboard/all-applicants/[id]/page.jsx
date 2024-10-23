@@ -62,6 +62,8 @@ const Index = () => {
     handleGetApplicantDetails();
   }, [id]);
 
+ 
+
   return (
     <InnerLayout>
       {isLoading && <Loader />}

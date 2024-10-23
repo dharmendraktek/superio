@@ -408,7 +408,7 @@ const ClientSubmissionReport = () => {
                       <td style={{ width: "200px" }}>{lob || "N/A"}</td>
                       <td style={{ width: "200px" }}>
                         {contact_manager || "N/A"}
-                      </td>
+                      </td> 
                       <td style={{ width: "150px" }}>
                         {account_manager || "N/A"}
                       </td>

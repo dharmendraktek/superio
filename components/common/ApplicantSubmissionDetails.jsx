@@ -135,6 +135,8 @@ const ApplicantSubmissionDetails = ({
     getApplicantDocuments();
   }, []);
 
+  console.log("-----------------multi submissio form ", multiSubmissionForm[index]);
+
   // this function handle the skills
 
   const handleSkillChange = (index, name, value) => {

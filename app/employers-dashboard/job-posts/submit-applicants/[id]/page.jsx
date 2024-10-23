@@ -1,17 +1,13 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getReq, postApiReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
-import LoginPopup from "@/components/common/form/login/LoginPopup";
-import DashboardCandidatesHeader from "@/components/header/DashboardCandidatesHeader";
-import MobileMenu from "@/components/header/MobileMenu";
+
 
 import Paper from "@/components/common/Paper";
 import Pagination from "@/components/common/Pagination";
-import { jobPostsTableField } from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/constant";
-import { removeSpecialChar } from "@/utils/constant";
 import Link from "next/link";
 import moment from "moment";
 import { reactIcons } from "@/utils/icons";
@@ -70,7 +66,8 @@ const Index = () => {
   const [submissionLoading, setSubmissionLoading] = useState(false);
 
 
-  // const router = useRouter();
+
+  const router = useRouter();
 
   //   const handleGetApplicantDetails = async () => {
   //     setloading(true);
@@ -188,8 +185,8 @@ const Index = () => {
       setSubmissionLoading(false);
       if (response.status) {
         toast.success("Applicant submitted to job successfully");
-        setOpen(false);
-        // router.push(`/employers-dashboard/job-posts/${jobData.id}`);
+        router.push(`/employers-dashboard/job-posts/${jobData.id}`);
+        // setOpen(false);
         setMultiSubmissionForm([])
       }
     }catch(err){

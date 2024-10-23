@@ -9,10 +9,9 @@ import { getReq } from "@/utils/apiHandlers";
 import { jobDelegationFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import { cleanString } from "@/utils/regex";
 import moment from "moment";
 import { useEffect, useState } from "react";
-
-
 
 const JobDelegationReport = () => {
   const [search, setSearch] = useState("");
@@ -25,7 +24,8 @@ const JobDelegationReport = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filterKeys, setFilterKeys] = useState(jobDelegationFilterKey);
-  const [allParam, setAllParam] = useState('');
+  const [allParam, setAllParam] = useState("");
+  const [openAssign, setOpenAssign] = useState(null);
 
   // useEffect(() => {
   //   let param;
@@ -50,38 +50,41 @@ const JobDelegationReport = () => {
   // }, [search, startDate, endDate, page, fieldName]);
 
   useEffect(() => {
-    let param = '';
-  
+    let param = "";
+
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
       setPage(0);
-      param += `&assigned_date_start=${moment(startDate).format("YYYY-MM-DD")}&assigned_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
+      param += `&assigned_date_start=${moment(startDate).format(
+        "YYYY-MM-DD"
+      )}&assigned_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
-  
+
     // Include filtered keys
     const filterParams = filterKeys
       .filter((item) => item.selected && item.search_value) // Filter items with selected: true and search_value present
       .map((item) => `&${item.value}=${item.search_value}`) // Create the string in the format &value=search_value
       .join(""); // Join them together to form the final string
-  
+
     param += filterParams; // Combine date and filter parameters
-  
+
     if (param) {
       setAllParam(param);
       setPage(page || 0); // Set page to 0 if it's falsy
       getJobDelegationReports(param);
     } else if (page) {
       getJobDelegationReports(param);
-    }else {
+    } else {
       getJobDelegationReports(param);
     }
   }, [startDate, endDate, page, filterKeys]);
 
-
   const getJobDelegationReports = async (param) => {
     setIsLoading(true);
     const response = await getReq(
-      `/job-assignment-report/report/?page=${page+1}&size=25${param ? param : ""}`
+      `/job-assignment-report/report/?page=${page + 1}&size=25${
+        param ? param : ""
+      }`
     );
 
     setIsLoading(false);
@@ -93,40 +96,134 @@ const JobDelegationReport = () => {
   };
 
   const handleClear = () => {
-    let update = [...filterKeys]
+    let update = [...filterKeys];
     update.map((item) => {
-      delete item['selected'];
-      delete item['search_value'];
+      delete item["selected"];
+      delete item["search_value"];
       return item;
-    })
+    });
     setFilterKeys(update);
     setFieldName("");
     setStartDate(null);
     setEndDate(null);
-    setSearch('');
+    setSearch("");
   };
 
-  const handleExportExcel = async () => {
-    if(allParam){
-    window.open(
-      BASE_URL + `/job-assignment-report/report/?${allParam}&export=excel`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }else{
-    window.open(
-      BASE_URL + `/job-assignment-report/report/?export=excel`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }
-};
+  // const handleExportExcel = async () => {
+  //   const response = await getReq(
+  //     `/job-assignment-report/report/?export=excel`
+  //   );
+  //   console.log("------------------respone r", response);
+  //   if (response.status) {
+  //     console.log("------------------respone r", response);
+  //     const url = window.URL.createObjectURL(response.data);
+  //     console.log("-------------url of the ", url);
+
+  //     // Create a link element to trigger the download
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = "submission_report.xlsx"; // The file name you want to use
+  //     document.body.appendChild(a);
+  //     a.click(); // Simulate a click to download the file
+  //     a.remove(); // Remove the link after triggering
+  //   }
+  //   if (allParam) {
+  //     window.open(
+  //       BASE_URL + `/job-assignment-report/report/?${allParam}&export=excel`,
+  //       "_blank",
+  //       "noopener,noreferrer"
+  //     );
+  //   } else {
+  //     window.open(
+  //       BASE_URL + `/job-assignment-report/report/?export=excel`,
+  //       "_blank",
+  //       "noopener,noreferrer"
+  //     );
+  //   }
+  // };
+
+  // const handleExportExcel = async () => {
+  //   try {
+  //     // Ensure 'getReq' is called with responseType 'blob'
+  //     const response = await getReq(`/job-assignment-report/report/?export=excel`, {
+  //       responseType: 'blob'  // Important for downloading files
+  //     });
+
+  //     // Check if the response status is 200 (OK)
+  //     if (response && response.status) {
+  //       console.log("Response received:", response);
+
+  //       // Create a URL for the blob data
+  //       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  //       const url = window.URL.createObjectURL(blob);
+  //       console.log("Generated URL for the blob:", url);
+
+  //       // Create a link element to trigger the download
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = "job_delegation.xlsx";  // Set the desired file name
+  //       document.body.appendChild(a);
+  //       a.click();  // Simulate a click to trigger the download
+  //       a.remove();  // Remove the link after the download is triggered
+  //     } else {
+  //       console.error("Failed to download the file, status:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error while exporting Excel:", error);
+  //   }
+  // };
  
+  const handleExportExcel = async () => {
+    try {
+        
+        // Ensure 'getReq' is called with responseType 'blob'
+        const response = await getReq(`/job-assignment-report/report/?export=excel`)
+
+        // Check if the response status is 200 (OK)
+        if (response && response.status) {
+            console.log("Response received:", response);
+
+            // Create a URL for the blob data
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            console.log("Blob size:", blob.size, "bytes");
+
+            const url = window.URL.createObjectURL(blob);
+
+            console.log("Generated URL for the blob:", url);
+
+            // Create a link element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "job_assignment_report.xlsx";  // Set the desired file name
+            document.body.appendChild(a);
+            a.click();  // Simulate a click to trigger the download
+            a.remove();  // Remove the link after the download is triggered
+
+            // Revoke the object URL after the download
+            window.URL.revokeObjectURL(url);
+
+        } else {
+            console.error("Failed to download the file, status:", response.status);
+        }
+    } catch (error) {
+        console.error("Error while exporting Excel:", error);
+
+        // Attempt to decode the response in case of an error for better diagnostics
+        if (error.response && error.response.data) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                console.log("Error response content:", reader.result);
+            };
+            reader.readAsText(error.response.data);
+        }
+    }
+};
 
   return (
     <div>
       {isLoading && <Loader />}
-        {/* <div className="mb-1">
+      {/* <div className="mb-1">
           <h4 className="">JOB DELEGATION REPORT</h4>
         </div> */}
       <div className="d-flex justify-content-between align-items-center">
@@ -183,49 +280,57 @@ const JobDelegationReport = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-1">
-         { filterKeys.map((item, index) => {
-            return(
-              <div className="">
-                {item.selected &&
+        {filterKeys.map((item, index) => {
+          return (
+            <div className="">
+              {item.selected && (
                 <div
                   key={item.value}
                   className="border d-flex me-2 justify-content-between border-secondary"
                 >
-                  <div onClick={() =>{ 
-                    setFieldName(index)
-                    setFilterKeys(prevKeys => {
-                      const update = [...prevKeys];
-                      update[index] = { ...update[index], search_value:'' };
-                      return update;
-                    });
-                    }} className="bg-gray text-white px-2 cursor-pointer" htmlFor={item.value}>
-                    {item.name} 
-                  </div>
-                  {item.search_value &&
-                    <div className="px-2 bg-secondary fw-600">
-                    {item.search_value || ""}
-                    {/* <input type="text" placeholder="Search..." /> */}
-                    </div>
-                  }
-                  <div className="px-1 bg-secondary cursor-pointer">
-                  <span
+                  <div
                     onClick={() => {
-                       setFieldName(0);
-                       setFilterKeys(prevKeys => {
+                      setFieldName(index);
+                      setFilterKeys((prevKeys) => {
                         const update = [...prevKeys];
-                        update[index] = { ...update[index], selected: false, search_value:'' };
+                        update[index] = { ...update[index], search_value: "" };
                         return update;
                       });
                     }}
+                    className="bg-gray text-white px-2 cursor-pointer"
+                    htmlFor={item.value}
                   >
-                    {reactIcons.normalclose}
-                  </span>
+                    {item.name}
+                  </div>
+                  {item.search_value && (
+                    <div className="px-2 bg-secondary fw-600">
+                      {item.search_value || ""}
+                      {/* <input type="text" placeholder="Search..." /> */}
+                    </div>
+                  )}
+                  <div className="px-1 bg-secondary cursor-pointer">
+                    <span
+                      onClick={() => {
+                        setFieldName(0);
+                        setFilterKeys((prevKeys) => {
+                          const update = [...prevKeys];
+                          update[index] = {
+                            ...update[index],
+                            selected: false,
+                            search_value: "",
+                          };
+                          return update;
+                        });
+                      }}
+                    >
+                      {reactIcons.normalclose}
+                    </span>
                   </div>
                 </div>
-                }
-              </div>
-            )
-          })}
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="">
         <div className="table_div custom-scroll-sm">
@@ -236,16 +341,16 @@ const JobDelegationReport = () => {
                   Assign On
                 </th>
                 <th style={{ width: "100px" }}>Job Code</th>
-                <th style={{ width: "200px" }}>Job Title</th>
+                <th style={{ width: "250px" }}>Job Title</th>
                 <th style={{ width: "200px" }}>Client</th>
                 <th style={{ width: "250px" }}>Contact Manager Name</th>
                 <th style={{ width: "200px" }}>End Client </th>
-                <th style={{ width: "150px" }}>LOB</th>
+                <th style={{ width: "250px" }}>LOB</th>
                 <th style={{ width: "160px" }}>Job Type</th>
                 <th style={{ width: "300px" }}>Job Location</th>
                 <th style={{ width: "200px" }}>Job Status</th>
                 <th style={{ width: "200px" }}>Account Manager</th>
-                <th style={{ width: "350px" }}>Assigned To</th>
+                <th style={{ width: "150px" }}>Assigned To</th>
                 <th style={{ width: "150px" }} className="">
                   Position
                 </th>
@@ -287,41 +392,104 @@ const JobDelegationReport = () => {
                       <td className="" style={{ width: "100px" }}>
                         {job_code}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "250px" }}
+                      >
                         {job_title}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {client || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "250px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "250px" }}
+                      >
                         {contact_manager || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }} className="text-capitalize">{end_client || "N/A"}</td>
-                      <td style={{ width: "150px" }} className="text-capitalize">{lob_name || "N/A"}</td>
-                      <td className="text-capitalize" style={{ width: "160px" }}>
+                      <td
+                        style={{ width: "200px" }}
+                        className="text-capitalize"
+                      >
+                        {end_client || "N/A"}
+                      </td>
+                      <td
+                        style={{ width: "250px" }}
+                        className="text-capitalize"
+                      >
+                        {lob_name || "N/A"}
+                      </td>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "160px" }}
+                      >
                         {job_type || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "300px" }}>
-                        {job_location || "N/A"}
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "300px" }}
+                      >
+                        {job_location ? cleanString(job_location) : "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {job_status || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "200px" }}>
+                      <td
+                        className="text-capitalize"
+                        style={{ width: "200px" }}
+                      >
                         {account_manager || "N/A"}
                       </td>
-                      <td className="text-capitalize" style={{ width: "350px" }}>
-                        <div className="d-flex gap-2">
-                          {assigned_to?.map((_item, index) => {
-                            return (
-                              <span
-                                className="border px-1 rounded-1 border-primary"
-                                key={index}
-                              >
+                      <td
+                        className="text-capitalize"
+                        onMouseEnter={() => setOpenAssign(job_code)}
+                        onMouseLeave={() => setOpenAssign(null)}
+                        style={{ width: "150px" }}
+                      >
+                        <div className="d-flex justify-content-center position-relative">
+                          {/* {assigned_to?.slice(0, 2).map((_item, index) => {
+                          return (
+                            <div className="rounded-1 border border-primary px-1">
+                              <span key={index}>
                                 {_item}
                               </span>
-                            );
-                          })}
+                            </div>
+                          );
+                        })} */}
+                          <span
+                            onMouseEnter={() => setOpenAssign(job_code)}
+                            onMouseLeave={() => setOpenAssign(null)}
+                            className="cursor-pointer text-primary fs-5"
+                          >
+                            {reactIcons.peoplegroup}
+                          </span>
+                          {/* {assigned_to.length == 0 && "N/A"} */}
+                          {openAssign == job_code && (
+                            <div
+                              className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                              style={{
+                                width: "250px",
+                                minHeight: "30px",
+                                maxHeight: "fit-content",
+                                zIndex: "5",
+                              }}
+                            >
+                              {assigned_to.map((_item, index) => {
+                                return (
+                                  <span key={index} className="text-white">
+                                    {_item}
+                                  </span>
+                                );
+                              })}
+                              {assigned_to.length == 0 && "N/A"}
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="" style={{ width: "150px" }}>

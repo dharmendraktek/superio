@@ -64,11 +64,7 @@ import { IoList } from "react-icons/io5";
 import { MdFeedback } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
-
-
-
-
-
+import { FaPeopleGroup } from "react-icons/fa6";
 
 
 
@@ -128,5 +124,6 @@ export const reactIcons = {
     list:<IoList />,
     feedback:<MdFeedback />,
     horizontaldots:<BsThreeDots />,
-    normalclose:<IoMdClose />
+    normalclose:<IoMdClose />,
+    peoplegroup:<FaPeopleGroup />,
 }

@@ -20,6 +20,7 @@ import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
 import UsersListDropdown from "@/components/common/UsersListDropdown";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
+import  { capitalizeFirstLetter, cleanString, convertToUppercase, extractNumericalValue } from "@/utils/regex";
 
 const initialState = {
   job_code: "",
@@ -172,17 +173,17 @@ const ManualCreation = ({
         job_code: jobData.job_code,
         title: jobData.title,
         currency: jobData.currency || "USD",
-        amount: jobData.amount !== "Not specified" ? jobData.amount : 0,
-        payment_frequency: jobData.payment_frequency || "Hourly",
+        amount: jobData.amount !== "Not specified" ? "" :isNumber(jobData.amount) ?jobData.amount : jobData.amount ? extractNumericalValue(jobData.amount) : 0,
+        payment_frequency: jobData.payment_frequency ? capitalizeFirstLetter(jobData.payment_frequency) : "Hourly",
         job_type: jobType ? jobType : "",
-        client_taxterm: jobData.client_taxterm ? jobData.client_taxterm : "",
+        client_taxterm: jobData.client_taxterm ? convertToUppercase(jobData.client_taxterm) : "",
         fullfill_deadline: jobData.fullfill_deadline || null,
         endclient: jobData.endclient ? jobData.endclient : "",
         start_date: jobData.start_date,
         end_date: jobData.end_date,
         remote: jobData.remote ? jobData.remote : "no" ,
         lob: isNumber(jobData.lob) ? jobData.lob : "",
-        address: jobData.address,
+        address: jobData.address ? cleanString(jobData.address) : "",
         country: country ? country?.name : "United States",
         state: jobData.state,
         city: jobData.city,
@@ -199,8 +200,8 @@ const ManualCreation = ({
           ? jobData.secondary_skills.split(",").map((name) => ({ name }))
           : jobData.secondary_skills == "Not specified" ? [] :jobData.secondary_skills ? jobData.secondary_skills : [],
         // languages: jobData?.languages ? jobData?.languages : [],
-        experience: jobData.experience,
-        number_of_position: jobData.number_of_position,
+        experience:isNumber(jobData.experience) ? jobData.experience : jobData.experience ? extractNumericalValue(jobData.experience) : "",
+        number_of_position: jobData.number_of_position ? extractNumericalValue(jobData.number_of_position) : "",
         head_account_manager:
           jobData.head_account_manager ||
           employee_details?.reportingmanager_details?.id,
@@ -219,6 +220,7 @@ const ManualCreation = ({
     }
   }, [jobData]);
 
+  console.log("-----------form ------", form);
   useEffect(() => {
     if (form.country) {
       let country = countryList.find((item) => item.name == form.country);
@@ -304,7 +306,6 @@ const ManualCreation = ({
       setUsersList(response.data);
       let filterTeamUser = response.data.filter((item) => item.team_id == employee_details?.team_id);
     
-      console.log("--------assign function is working -------", assignList);  
      if(filterTeamUser.length <= 7 && assignList.length == 0 && !(name =="update") ){
        setAssignList(filterTeamUser)
       let userIds =  filterTeamUser.map((item) => item.id )
@@ -349,7 +350,7 @@ const ManualCreation = ({
     if (
       !form.currency ||
       !form.payment_frequency ||
-      !form.amount ||
+      (!form.amount || !isNumber(form.amount)) ||
       !form.client_taxterm
     ) {
       setError((prev) => ({
@@ -357,15 +358,15 @@ const ManualCreation = ({
         clientBillRateERr: "This field is required",
       }));
     }
-    // if (!form.lob) {
-    //   setError((prev) => ({ ...prev, lobErr: "This field is required" }));
-    // }
-    // if (!form.contact_manager) {
-    //   setError((prev) => ({
-    //     ...prev,
-    //     contactManagerErr: "This field is required",
-    //   }));
-    // }
+    if (!form.lob) {
+      setError((prev) => ({ ...prev, lobErr: "This field is required" }));
+    }
+    if (!form.contact_manager) {
+      setError((prev) => ({
+        ...prev,
+        contactManagerErr: "This field is required",
+      }));
+    }
     if (!form.state && !(form.remote == "yes")) {
       setError((prev) => ({ ...prev, stateErr: "This field is required" }));
     }
@@ -441,8 +442,8 @@ const ManualCreation = ({
       // job_code &&
       title &&
       client &&
-      // lob &&
-      // contact_manager &&
+      lob &&
+      contact_manager &&
       // state &&
       // city &&
       job_status &&
@@ -491,7 +492,7 @@ const ManualCreation = ({
               handleSaveDocuments(jobData.id);
             }
             setOpen(true);
-            toast.success("Job post updated successfully !");
+            toast.success("Job post has been successfully updated");
             router.push(
               `/employers-dashboard/job-posts/${jobData.id}?jobId=${jobData.id}`
             );
@@ -917,7 +918,7 @@ const ManualCreation = ({
               <span className="text-danger">{error.clientErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p>Names of LOB</p>
+              <p>Names of LOB <strong className="text-danger">*</strong></p>
               <select
                 value={form.lob}
                 className="client-form-input"
@@ -936,7 +937,7 @@ const ManualCreation = ({
               <span className="text-danger">{error.lobErr}</span>
             </div>
             <div className="col-4 my-2">
-              <p> Contact Manager </p>
+              <p> Contact Manager <strong className="text-danger">*</strong></p>
               <div
                 className="position-relative cursor-pointer"
                 onMouseLeave={() => setOpenContact(false)}
@@ -1007,6 +1008,7 @@ const ManualCreation = ({
                   </div>
                 )}
               </div>
+              <span className="text-danger">{error.contactManagerErr}</span>
             </div>
             <div className="col-4 my-2">
               <p>

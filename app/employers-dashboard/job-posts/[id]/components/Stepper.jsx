@@ -101,7 +101,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
         handleGetJobDetails={handleGetJobDetails}
       />
       <ClientSubmissionModal submissionDetails={submissionDetails} handleGetJobDetails={handleGetJobDetails} statusId={statusId}  side="job" />
-      <InterviewScheduleModal selectedItem={submissionDetails} jobPostList={[]}  />
+      <InterviewScheduleModal selectedItem={submissionDetails} jobPostList={[]}   handleGetJobDetails={handleGetJobDetails} />
 
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
         <div className="" style={{ width: "250px" }}>
@@ -191,11 +191,11 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
                   </li>
                   </>
                   }
-                   {/* <li>
+                   <li>
                     <a class="dropdown-item" href="#" onClick={() => setSelectedSubmission(submissionDetails)}    data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">
                      Interview
                     </a>
-                  </li> */}
+                  </li>
                   <li>
                     <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(5)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
                      Confirmation

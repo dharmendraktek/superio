@@ -16,7 +16,7 @@ export const jobPostsTableField = [
   // {title:'Pay Rate/Salary'},
   {title:'Delivery Manager',style:{width:'250px'}},
   {title:'Contact Manager',style:{width:'250px'}},
-  {title:'Assigned To',style:{width:'300px'}},
+  {title:'Assigned To',style:{width:'150px'}},
   {title:'Job Created By',style:{width:'200px'}},
   {title:'Job Created',style:{width:'200px'}},
   {title:'Job Modified On',style:{width:'250px'}},

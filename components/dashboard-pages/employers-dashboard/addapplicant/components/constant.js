@@ -53,8 +53,8 @@ export const sourceTypes = [
     {name:'Manual Creation'},
     {name:'Dice'},
     {name:'Dice Posting'},
-    {name:'Monester'},
-    {name:'Monester Posting'},
+    {name:'Monster'},
+    {name:'Monster Posting'},
     {name:'LinkedIn'},
     {name:'LinkedIn Posting'},
 ]

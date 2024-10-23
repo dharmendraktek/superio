@@ -124,14 +124,20 @@ const DashboardCandidatesHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
+                                {employeeInfo?.profile_photo ?
                                 <img
                                     alt="avatar"
                                     className="thumb"
-                                    src={employeeInfo?.profile_photo ? employeeInfo?.profile_photo : "/images/resource/candidate-1.png"}
+                                    src={employeeInfo?.profile_photo}
                                     // width={50}
                                     // height={50}
                                     style={{width:'50px', height:'50px'}}
                                 />
+                                :
+                                <div className="d-flex justify-content-center align-items-center" style={{width:'50px', height:'50px', background:"gray", borderRadius:"50%"}}>
+                                    <span className="text-capitalize fw-600 text-white">{(employeeInfo?.user?.first_name?.slice(0, 1) || '')+ " " + (employeeInfo?.user?.last_name?.slice(0,1) || '')}</span>
+                                </div>
+                                }
                                 <div className="ms-2">
                                 <h5 className="text-capitalize">{(employeeInfo?.user?.first_name || '')+ " " + (employeeInfo?.user?.last_name || '')}</h5>
                                 <span className="text-black fw-normal">{employeeInfo?.role_name}</span>

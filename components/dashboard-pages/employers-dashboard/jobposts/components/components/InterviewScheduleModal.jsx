@@ -56,6 +56,7 @@ const InterviewScheduleModal = ({
     applicantData = [],
     selectedItem,
     reschedule = false,
+    handleGetJobDetails,
 }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(initialState);
@@ -69,15 +70,20 @@ const InterviewScheduleModal = ({
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
 
+  // console.log("-------------------job post slist ", jobPostList);
+  // console.log("--------------applicant data ----", applicantData);
+  // console.log("----------------selected item ---------", selectedItem);
+
   useEffect(() => {
-    if (jobPostList.length > 0) {
+    if (jobPostList.length > 0 || selectedItem) {
       const filteredData = jobPostList.filter((item) =>
         item.submissions.some((submission) => submission.selected === true)
       );
       setJobData(filteredData);
       handleGetInterviewRoundList();
     }
-  }, [jobPostList]);
+    
+  }, [jobPostList, selectedItem]);
 
   useEffect(() => {
     if (applicantData.length > 0) {
@@ -121,11 +127,12 @@ const InterviewScheduleModal = ({
       if (response.status) {
         handleSubmitReminder(response.data.id);
         handleAddInterviewDocuments(response.data.id);
-        toast.success(
-          "The applicant interview has been scheduled successfully."
-        );
+        handleGetJobDetails();
         let closeBtn = document.getElmentById("closeBtnInterview");
         closeBtn.click();
+        toast.success(
+          "Applicant interview has been successfully scheduled"
+        );
       }
     } catch (err) {
       toast.error(err || "Something went wrong");
@@ -162,7 +169,8 @@ const InterviewScheduleModal = ({
     }
   };
 
-  let jobId = jobData.length > 0 && jobData[0]?.id;
+
+  let jobId = jobData.length > 0 ? jobData[0]?.id : selectedItem?.job_detail?.id;
 
   let filteredData = jobData[0]?.submissions?.find((item) => {
     if (item.selected) {
@@ -176,7 +184,7 @@ const InterviewScheduleModal = ({
     }
   });
 
-  let finalFilterData = filteredData || filterApplicantData;
+  let finalFilterData = filteredData || filterApplicantData || selectedItem;
 
   let applicantId =
     // jobData.length > 0 && applicantData.length > 0
@@ -188,35 +196,35 @@ const InterviewScheduleModal = ({
     // jobData.length > 0 && applicantData.length > 0
     finalFilterData
       ? finalFilterData?.applicant_details[0]?.firstname
-      : selectedItem?.applicant_details?.firstname ? selectedItem?.applicant_details?.firstname : selectedItem?.applicant_details[0]?.firstname;
+      : selectedItem?.applicant_details?.firstname 
 
   let middleName =
     // jobData.length > 0 && applicantData?.length > 0
     finalFilterData
       ? finalFilterData?.applicant_details[0]?.middlename
-      : selectedItem?.applicant_details?.middlename;
+      : selectedItem?.applicant_details?.middlename
 
   let lastName =
     // jobData.length > 0 && applicantData?.length > 0
     finalFilterData
       ? finalFilterData?.applicant_details[0]?.lastname
-      : selectedItem?.applicant_details?.lastname;
+      : selectedItem?.applicant_details?.lastname 
 
   let clientName = finalFilterData
     ? finalFilterData?.job_detail?.client_name
-    : selectedItem?.client_name;
+    : selectedItem?.client_name 
 
   let clientId = finalFilterData
     ? finalFilterData?.job_detail?.client
-    : selectedItem?.client;
+    : selectedItem?.client 
 
   let contactManagerId = finalFilterData
     ? finalFilterData?.job_detail?.contact_manager
-    : selectedItem?.contact_manager;
+    : selectedItem?.contact_manager 
 
   let jobTitle = finalFilterData
     ? finalFilterData?.job_detail?.title
-    : selectedItem?.job_details?.title;
+    : selectedItem?.job_details?.title 
 
   let jobCode = finalFilterData
     ? finalFilterData?.job_detail?.job_code
@@ -257,7 +265,6 @@ const InterviewScheduleModal = ({
     }));
   }, [clientId, applicantContact]);
 
-  console.log("--------------select  data ", selectedItem?.applicant_details[0]?.firstname, firstName);
 
 
   return (

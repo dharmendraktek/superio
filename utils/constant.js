@@ -120,7 +120,7 @@ export const confirmationFilterKeys =  [
 
 export const  sourceData = [
     {name:'Dice', value:'Dice'},
-    {name:'Monester', value:'Monester'},
+    {name:'Monster', value:'Monster'},
 ]
 
 export const LinkendInConnection = [

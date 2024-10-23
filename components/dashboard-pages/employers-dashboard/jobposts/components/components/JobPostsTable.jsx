@@ -21,6 +21,7 @@ import { useCallback } from "react";
 import NotesModal from "@/components/common/NotesModal";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
 import JobAssignModal from "@/components/common/JobAssignModal";
+import { cleanString } from "@/utils/regex";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -185,7 +186,7 @@ const JobPostsTable = () => {
                         <input className="cursor-pointer" type="checkbox" />
                       </th>
                     ) : ( */}
-                    <th style={{ width: "250px" }} key={index}>
+                    <th style={{ width: `250px` }} key={index}>
                       {removeSpecialChar(item.title)}
                     </th>
                     {/* )} */}
@@ -401,8 +402,8 @@ const JobPostsTable = () => {
                       onMouseEnter={() => setOpenAssign(item.id)}
                       onMouseLeave={() => setOpenAssign(null)}
                     >
-                      <div className="d-flex flex-wrap gap-1 position-relative">
-                        {item.assign_details?.slice(0, 2).map((item) => {
+                      <div className="d-flex px-5 position-relative">
+                        {/* {item.assign_details?.slice(0, 2).map((item) => {
                           return (
                             <div className="rounded-1 border border-primary px-1">
                               <span>
@@ -410,8 +411,11 @@ const JobPostsTable = () => {
                               </span>
                             </div>
                           );
-                        })}
-                        {item.assign_details.length == 0 && "N/A"}
+                        })} */}
+                        {/* {item.assign_details.length == 0 && "N/A"} */}
+                        <span className="cursor-pointer text-primary fs-5">
+                          {reactIcons.peoplegroup}
+                        </span>
                         {openAssign == item.id && (
                           <div
                             className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
@@ -429,7 +433,10 @@ const JobPostsTable = () => {
                                 </span>
                               );
                             })}
-                            {item.assign_details.length == 0 && "N/A"}
+                            <span className="text-white">
+                              {item.assign_details.length == 0 &&
+                                "Not available"}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -695,7 +702,7 @@ const JobPostsTable = () => {
                                     </td>
                                     <td>{authorization || "N/A"}</td>
                                     <td>{mobile || "N/A"}</td>
-                                    <td>{address || "N.A"}</td>
+                                    <td>{address ? cleanString(address) : "N.A"}</td>
                                     <td>{country || "N/A"}</td>
                                     <td>{experience || "N/A"}</td>
                                     <td>{source || "N/A"}</td>
