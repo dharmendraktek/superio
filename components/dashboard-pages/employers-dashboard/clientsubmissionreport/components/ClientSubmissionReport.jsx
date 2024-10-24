@@ -6,10 +6,11 @@ import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
-import { getReq } from "@/utils/apiHandlers";
+import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { submissionReportFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import FileSaver from "file-saver";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -56,9 +57,9 @@ const ClientSubmissionReport = () => {
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
       setPage(0);
-      param += `&interview_schedule_start=${moment(startDate).format(
+      param += `&submission_start=${moment(startDate).format(
         "YYYY-MM-DD"
-      )}&interview_schedule_end=${moment(endDate).format("YYYY-MM-DD")}`;
+      )}&submission_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
 
     // Include filtered keys
@@ -105,21 +106,16 @@ const ClientSubmissionReport = () => {
     setSearch("");
   };
 
+ 
+
   const handleExportExcel = async () => {
-    if (allParam) {
-      window.open(
-        BASE_URL + `/submission-report/report/?${allParam}&export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    } else {
-      window.open(
-        BASE_URL + `/submission-report/report/?export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
+    const response = await getApiReq(`${allParam ? `/submission-report/report/?${allParam}&export=excel`:'/submission-report/report/?export=excel'}`);
+    if(response.status){
+     var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+     FileSaver.saveAs(blob, 'submission-report.xlsx');   
     }
   };
+  
 
   return (
     <div className="theme-background">
@@ -280,7 +276,7 @@ const ClientSubmissionReport = () => {
               </tr>
             </thead>
             <tbody>
-              {clientSubmissionData?.map((item, index) => {
+              {clientSubmissionData.length > 0 && clientSubmissionData?.map((item, index) => {
                 const {
                   submission_date,
                   submission_time,

@@ -14,7 +14,7 @@ const initialState = {
   client_address: "",
   client_owner: "",
   is_client_active: 1,
-  status: "",
+  status: "active",
   client_country: "United States",
   client_state: "",
   client_city: "",
@@ -119,7 +119,6 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
       // toast.error(err.response || "Something went wrong!");
     }
   };
-  console.log("000000========= client ", client)
 
   return (
     <div
@@ -231,7 +230,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
               email={false}
             />
           </div>
-          <div className="col-6 my-1">
+          {/* <div className="col-6 my-1">
             <p>Status</p>
             <select
               value={form.status}
@@ -243,7 +242,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-          </div>
+          </div> */}
           <div className="col-6 my-1">
             <p>Country</p>
 

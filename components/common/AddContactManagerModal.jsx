@@ -14,7 +14,7 @@ const initialStateContact = {
   off_cont: "",
   email: "",
   ownership: "",
-  status: "Active",
+  status: "active",
   is_active: 1,
 };
 
@@ -372,7 +372,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
             />
             <span className="text-danger">{error.contact}</span>
           </div>
-          <div className="col-6 my-1">
+          {/* <div className="col-6 my-1">
             <p>Status</p>
             <select
               value={contactData.status}
@@ -385,7 +385,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -135,7 +135,6 @@ const ApplicantSubmissionDetails = ({
     getApplicantDocuments();
   }, []);
 
-  console.log("-----------------multi submissio form ", multiSubmissionForm[index]);
 
   // this function handle the skills
 
@@ -2146,7 +2145,7 @@ const ApplicantSubmissionDetails = ({
                           availabilityErr: "",
                         }));
                       }}
-                      value={multiSubmissionForm[index].availability}
+                      value={multiSubmissionForm[index]?.availability}
                       type="text"
                       className="client-form-input"
                     />
@@ -2161,7 +2160,7 @@ const ApplicantSubmissionDetails = ({
                     <div className="d-flex gap-3">
                       <select
                         name="pay_rate_currency"
-                        value={multiSubmissionForm[index].pay_rate_currency}
+                        value={multiSubmissionForm[index]?.pay_rate_currency}
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
                       >
@@ -2179,13 +2178,13 @@ const ApplicantSubmissionDetails = ({
                         name="pay_rate_amount"
                         onChange={(e) => handleSubmissionChange(e, index)}
                         type="text"
-                        value={multiSubmissionForm[index].pay_rate_amount}
+                        value={multiSubmissionForm[index]?.pay_rate_amount}
                         placeholder="Rate"
                         className="px-2 client-input-style form-mult-box form-mult-box"
                       />
                       <select
                         name="pay_rate_type"
-                        value={multiSubmissionForm[index].pay_rate_type}
+                        value={multiSubmissionForm[index]?.pay_rate_type}
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
                       >
@@ -2199,7 +2198,7 @@ const ApplicantSubmissionDetails = ({
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
                         value={
-                          multiSubmissionForm[index].pay_rate_contract_type
+                          multiSubmissionForm[index]?.pay_rate_contract_type
                         }
                       >
                         <option>Select</option>

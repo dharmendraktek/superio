@@ -5,13 +5,15 @@ import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
-import { getReq } from "@/utils/apiHandlers";
+import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { jobDelegationFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { cleanString } from "@/utils/regex";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import FileSaver from 'file-saver';
+
 
 const JobDelegationReport = () => {
   const [search, setSearch] = useState("");
@@ -109,117 +111,15 @@ const JobDelegationReport = () => {
     setSearch("");
   };
 
-  // const handleExportExcel = async () => {
-  //   const response = await getReq(
-  //     `/job-assignment-report/report/?export=excel`
-  //   );
-  //   console.log("------------------respone r", response);
-  //   if (response.status) {
-  //     console.log("------------------respone r", response);
-  //     const url = window.URL.createObjectURL(response.data);
-  //     console.log("-------------url of the ", url);
-
-  //     // Create a link element to trigger the download
-  //     const a = document.createElement("a");
-  //     a.href = url;
-  //     a.download = "submission_report.xlsx"; // The file name you want to use
-  //     document.body.appendChild(a);
-  //     a.click(); // Simulate a click to download the file
-  //     a.remove(); // Remove the link after triggering
-  //   }
-  //   if (allParam) {
-  //     window.open(
-  //       BASE_URL + `/job-assignment-report/report/?${allParam}&export=excel`,
-  //       "_blank",
-  //       "noopener,noreferrer"
-  //     );
-  //   } else {
-  //     window.open(
-  //       BASE_URL + `/job-assignment-report/report/?export=excel`,
-  //       "_blank",
-  //       "noopener,noreferrer"
-  //     );
-  //   }
-  // };
-
-  // const handleExportExcel = async () => {
-  //   try {
-  //     // Ensure 'getReq' is called with responseType 'blob'
-  //     const response = await getReq(`/job-assignment-report/report/?export=excel`, {
-  //       responseType: 'blob'  // Important for downloading files
-  //     });
-
-  //     // Check if the response status is 200 (OK)
-  //     if (response && response.status) {
-  //       console.log("Response received:", response);
-
-  //       // Create a URL for the blob data
-  //       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //       const url = window.URL.createObjectURL(blob);
-  //       console.log("Generated URL for the blob:", url);
-
-  //       // Create a link element to trigger the download
-  //       const a = document.createElement('a');
-  //       a.href = url;
-  //       a.download = "job_delegation.xlsx";  // Set the desired file name
-  //       document.body.appendChild(a);
-  //       a.click();  // Simulate a click to trigger the download
-  //       a.remove();  // Remove the link after the download is triggered
-  //     } else {
-  //       console.error("Failed to download the file, status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error while exporting Excel:", error);
-  //   }
-  // };
- 
   const handleExportExcel = async () => {
-    try {
-        
-        // Ensure 'getReq' is called with responseType 'blob'
-        const response = await getReq(`/job-assignment-report/report/?export=excel`)
-
-        // Check if the response status is 200 (OK)
-        if (response && response.status) {
-            console.log("Response received:", response);
-
-            // Create a URL for the blob data
-            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-            console.log("Blob size:", blob.size, "bytes");
-
-            const url = window.URL.createObjectURL(blob);
-
-            console.log("Generated URL for the blob:", url);
-
-            // Create a link element to trigger the download
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "job_assignment_report.xlsx";  // Set the desired file name
-            document.body.appendChild(a);
-            a.click();  // Simulate a click to trigger the download
-            a.remove();  // Remove the link after the download is triggered
-
-            // Revoke the object URL after the download
-            window.URL.revokeObjectURL(url);
-
-        } else {
-            console.error("Failed to download the file, status:", response.status);
-        }
-    } catch (error) {
-        console.error("Error while exporting Excel:", error);
-
-        // Attempt to decode the response in case of an error for better diagnostics
-        if (error.response && error.response.data) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                console.log("Error response content:", reader.result);
-            };
-            reader.readAsText(error.response.data);
-        }
-    }
-};
-
+     const response = await getApiReq(`${allParam ? `/job-assignment-report/report/${allParam}&export=excel`:'/job-assignment-report/report/?export=excel'}`);
+     if(response.status){
+      var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      FileSaver.saveAs(blob, 'job-assignment-report.xlsx');   
+     }
+  };
+  
+  
   return (
     <div>
       {isLoading && <Loader />}

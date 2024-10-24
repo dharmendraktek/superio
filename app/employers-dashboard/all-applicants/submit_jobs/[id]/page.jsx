@@ -171,9 +171,15 @@ const Index = () => {
       setSubmissionLoading(true);
       const response = await postApiReq("/submission/", multiSubmissionForm);
       setSubmissionLoading(false);
+      console.log("-------------responser subtmi appi ", response);
       if (response.status) {
-        setClearAll(true);
+        // setClearAll(true);
+        router.push(`/employers-dashboard/all-applicants/${id}`)
         toast.success("Applicant submitted to job successfully");
+        setMultiSubmissionForm([initialState])
+      }
+      if(!response.status){
+        toast.error(response.error.message || "Somthing went wrong")
         router.push(`/employers-dashboard/all-applicants/${id}`)
       }
     }catch(err){
@@ -193,7 +199,7 @@ const Index = () => {
             <Link href={`/employers-dashboard/all-applicants/${id}`}>
               <span className="fs-1 text-primary">{reactIcons.backarrow}</span>
             </Link>
-            <h5>{applicantData?.firstname + " " + applicantData?.lastname}</h5>
+            <h5>{applicantData?.firstname + " " + (applicantData?.middlename || "") + " " + applicantData?.lastname}</h5>
           </div>
           {open && (
             <div className="d-flex gap-2">

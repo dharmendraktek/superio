@@ -168,6 +168,7 @@ const ManualCreation = ({
         (item) => item.name == jobData?.job_status
       )?.name;
 
+
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
@@ -220,7 +221,6 @@ const ManualCreation = ({
     }
   }, [jobData]);
 
-  console.log("-----------form ------", form);
   useEffect(() => {
     if (form.country) {
       let country = countryList.find((item) => item.name == form.country);

@@ -104,6 +104,8 @@ const handleApiError = (err) => {
 
 export const postApiReq = async (endpoint ,data) => {
   const url = BASE_URL + endpoint;
+  delete header["responseType"]; 
+
 
   return await axios
     .post(url, data, header)
@@ -118,6 +120,7 @@ export const postApiReq = async (endpoint ,data) => {
         window.location.href = '/';
         return handleApiError(err);
       } else {
+        console.log("---------------error submit ", err);
         return handleApiError(err);
       }
     });
@@ -125,19 +128,23 @@ export const postApiReq = async (endpoint ,data) => {
 
 export const postReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
+  delete header["responseType"]; 
+
 
   return await axios
     .post(url, data)
     .then((response) => {
+      console.log("----------------response ",response);
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
-      console.log("----------------erro ", err);
       if (err.response.status == 401) {
         // handleGenerateToken();
-        toast.error(err.response.data.non_field_errors[0])
+        // toast.error(err.response.data.non_field_errors[0])
         return handleApiError(err);
       } else {
+      console.log("------------erro ", err)
+
         return handleApiError(err);
       }
     });
@@ -145,6 +152,8 @@ export const postReq = async (endpoint, data) => {
 
 export const patchReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
+  delete header["responseType"]; 
+
 
   return await axios.patch(url,data, header)
     .then((response) => {
@@ -162,7 +171,7 @@ export const patchReq = async (endpoint, data) => {
 
 export const getReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
-
+  delete header["responseType"]; 
   return await axios
     .get(url, header)
     .then((response) => {
@@ -181,6 +190,7 @@ export const getReq = async(endpoint) => {
 
 export const deleteReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
+  delete header["responseType"]; 
 
   return await axios
     .delete(url, header)
@@ -190,6 +200,26 @@ export const deleteReq = async(endpoint) => {
     .catch((err) => {
       if (err.response.status == 401) {
         handleGenerateToken();
+      } else {
+        return handleApiError(err);
+      }
+    });
+    
+};
+
+
+export const getApiReq = async(endpoint) => {
+  const url = BASE_URL + endpoint;
+  header["responseType"] = 'arraybuffer'; 
+  return await axios
+    .get(url, header)
+    .then((response) => {
+      return responseFormatter(true, response.data, null);
+    })
+    .catch((err) => {
+      if (err?.response?.status == 401) {
+        handleGenerateToken();
+        window.location.href ='/';
       } else {
         return handleApiError(err);
       }

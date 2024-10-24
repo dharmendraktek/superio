@@ -25,11 +25,9 @@ const UsersModal = ({usersList, form, setForm, setUsersList, setTeamId, teamId, 
 
   useEffect(() => {
     if(teamId){
-      console.log("--------teami id ", teamId);
       handleGetTeamMamber();
     }
     else if(!teamId){
-      console.log("-----------my tema ",employee_details?.team_id)
     handleGetUsersList()
     }
     // else if(employee_details?.team_id)    

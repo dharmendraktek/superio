@@ -56,10 +56,8 @@ const FormContent = () => {
         // router.push('/employers-dashboard/dashboard');
         window.location.href = "/employers-dashboard/dashboard";
       }
-      if(response.error){
-        toast.error(
-          response.error.detail[0] || "Something went wrong"
-        );
+      if(!response.status){
+        
       }
     } catch (err) {
       console.log("-------------error ", err);

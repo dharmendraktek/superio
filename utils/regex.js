@@ -1,8 +1,34 @@
 export function extractNumericalValue(input) {
-    // Regular expression to match integers or decimal numbers
-    const match = input && input?.match(/-?\d+(\.\d+)?/);
-    return match ? parseFloat(match[0]) : null; // Return the number as a float or null if no match
+    // If the input is already a number, return it directly
+    if (typeof input === 'number') {
+        return input;
+    }
+
+    // If the input is a string, apply the regular expression to extract the number
+    if (typeof input === 'string') {
+        const match = input.match(/-?\d+(\.\d+)?/); // Match integers or decimal numbers
+        console.log("--------match -------", match);
+        return match ? parseFloat(match[0]) : null; // Return the number as a float or null if no match
+    }
+
+    // If the input is neither a string nor a number, return null
+    return null;
 }
+
+
+
+// export function extractNumericalValue(input) {
+//     console.log("----------input ", input , typeof input);
+//     if (typeof input !== 'string') {
+//         return null; // If the input is not a string, return null
+//     }
+
+//     // Regular expression to match integers or decimal numbers (including negative numbers)
+//     const match = input.match(/-?\d+(\.\d+)?/);
+    
+//     return match ? parseFloat(match[0]) : null; // Return the number as a float or null if no match
+// }
+
 
 export const cleanString = (input) =>  {
     return input

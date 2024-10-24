@@ -4,10 +4,11 @@ import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import Pagination from "@/components/common/Pagination";
-import { getReq } from "@/utils/apiHandlers";
+import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { confirmationFilterKeys } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import FileSaver from "file-saver";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -80,7 +81,6 @@ const ConfirmationReport = () => {
 
     if (response.status) {
       setDataCount(response.data.count);
-      console.log("---------------response ", response.data);
       setConfirmationData(response.data.results || response.data);
     }
   };
@@ -99,21 +99,13 @@ const ConfirmationReport = () => {
     setSearch("");
   };
 
+
+
   const handleExportExcel = async () => {
-    if (allParam) {
-      window.open(
-        BASE_URL +
-          `/confirmation-joining-applicant-report/report/?${allParam}&export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    } else {
-      window.open(
-        BASE_URL +
-          `/confirmation-joining-applicant-report/report/?export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
+    const response = await getApiReq(`${allParam ? `/confirmation-joining-applicant-report/report/?${allParam}&export=excel`:'/confirmation-joining-applicant-report/report/?export=excel'}`);
+    if(response.status){
+     var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+     FileSaver.saveAs(blob, 'confirmation-joining-report.xlsx');   
     }
   };
 
@@ -262,7 +254,7 @@ const ConfirmationReport = () => {
               </tr>
             </thead>
             <tbody>
-              {confirmationData?.map((item, index) => {
+              { confirmationData.length > 0  && confirmationData?.map((item, index) => {
                 const {
                   submission_id,
                   client,

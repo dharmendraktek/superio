@@ -405,7 +405,7 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
           return (
             <div className="d-flex px-2 justify-content-between">
               <div style={{ width: "200px" }}>
-                <strong>{item.updated_by.first_name + " " +item.updated_by.last_name}</strong>
+                <strong>{(item?.updated_by?.first_name || "N/A") + " " + (item?.updated_by?.last_name || "N/A")}</strong>
                 <p>{moment(item.updated_at).format('DD-MM-YYYY hh:mm A')}</p>
               </div>
               <div style={{ width: "150px" }}>

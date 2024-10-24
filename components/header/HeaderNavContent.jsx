@@ -282,10 +282,14 @@ const menuList = [
         name: "Submissions Approval",
         url: "/employers-dashboard/submissions-approval",
       },
-      {
-        name: "Client Approval",
-        url: "/employers-dashboard/client-approval",
-      },
+      // {
+      //   name: "Client Approval",
+      //   url: "/employers-dashboard/client-approval",
+      // },
+      // {
+      //   name: "Contact Manager Approval",
+      //   url: "/employers-dashboard/contact-manager-approval",
+      // },
     ],
   },
   { name: "MORE", url: "", id: "moreOption", options:[] },

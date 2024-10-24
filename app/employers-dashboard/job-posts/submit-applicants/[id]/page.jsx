@@ -196,6 +196,7 @@ const Index = () => {
   };
 
 
+
   return (
     <InnerLayout>
       {isLoading && <Loader />}
@@ -242,6 +243,7 @@ const Index = () => {
                       multiSubmissionForm={multiSubmissionForm}
                       index={index}
                       setMultiSubmissionForm={setMultiSubmissionForm}
+                      side="job"
                     />
                   </div>
                 );

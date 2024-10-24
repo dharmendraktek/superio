@@ -108,13 +108,13 @@ const index = () => {
         // router.push('/employers-dashboard/dashboard');
         window.location.href = "/employers-dashboard/dashboard";
       }
-      if (response.error) {
-        toast.error(response.error.detail[0] || "Something went wrong");
+      if (!response.status) {
+        toast.error(response.error.message[0] || "Something went wrong");
       }
     } catch (err) {
       setLoading(false);
       toast.error(
-        err.response.data.non_field_errors[0] || "Something went wrong"
+        err.response.message[0] || "Something went wrong"
       );
     }
   };
@@ -149,9 +149,12 @@ const index = () => {
         setResetPassword(true);
         toast.success("OTP has been sent on email successfully");
       }
+      if(!response.status){
+          toast.error(response.error.email[0] || "Somthing went wrong")
+      }
     } catch (err) {
       setIsLoading(false);
-      toast.error(err.response.data.email[0] || "Somting went wrong");
+    
     }
   };
 

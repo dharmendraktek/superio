@@ -5,10 +5,11 @@ import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
-import { getReq } from "@/utils/apiHandlers";
+import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { interviewReportFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import FileSaver from "file-saver";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -107,19 +108,13 @@ const InterviewReportsTable = () => {
     setSearch("");
   };
 
+  
+
   const handleExportExcel = async () => {
-      if(allParam){
-      window.open(
-        BASE_URL + `/interview-report/report/?${allParam}&export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }else{
-      window.open(
-        BASE_URL + `/interview-report/report/?export=excel`,
-        "_blank",
-        "noopener,noreferrer"
-      );
+    const response = await getApiReq(`${allParam ? `/interview-report/report/?${allParam}&export=excel`:'/interview-report/report/?export=excel'}`);
+    if(response.status){
+     var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+     FileSaver.saveAs(blob, 'interview-report.xlsx');   
     }
   };
 
@@ -279,7 +274,7 @@ const InterviewReportsTable = () => {
               </tr>
             </thead>
             <tbody>
-              {InterviewReportData?.map((item, index) => {
+              { InterviewReportData.length > 0 && InterviewReportData?.map((item, index) => {
                 const {
                   interview_schedule_date,
                   interview_happen_date,
