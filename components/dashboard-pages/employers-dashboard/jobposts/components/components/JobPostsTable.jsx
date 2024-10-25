@@ -43,6 +43,7 @@ const JobPostsTable = () => {
   const [open, setOpen] = useState(false);
   const [skillOpen, setSkillOpen] = useState(null);
   const [openAssign, setOpenAssign] = useState(null);
+  const [firstSearch, setFirstSearch] = useState(true);
 
   useEffect(() => {
     getJobpostsList();
@@ -62,8 +63,10 @@ const JobPostsTable = () => {
     }
   };
 
+
   useEffect(() => {
-    if (search) {
+    if (search !== firstSearch) {
+      setFirstSearch(search);
       setPage(0);
     }
     getJobpostsList(search);

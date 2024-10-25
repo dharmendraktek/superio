@@ -21,7 +21,7 @@ const JobReportTable = () => {
   const [jobReportData, setJobReportData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
-  const [fieldName, setFieldName] = useState("search_any");
+  const [fieldName, setFieldName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
@@ -70,7 +70,7 @@ const JobReportTable = () => {
 
     if (param) {
       setAllParam(param);
-      setPage(page || 0); // Set page to 0 if it's falsy
+      setPage(0); // Set page to 0 if it's falsy
       getJobReportList(param);
     } else if (page) {
       getJobReportList(param);
@@ -90,6 +90,7 @@ const JobReportTable = () => {
     setStartDate(null);
     setEndDate(null);
     setSearch("");
+    setPage(0);
   };
 
   const handleExportExcel = async () => {
@@ -119,6 +120,7 @@ const JobReportTable = () => {
       setJobReportData(response.data.results || response.data);
     }
   };
+  
 
   return (
     <div>
@@ -158,7 +160,14 @@ const JobReportTable = () => {
             </div>
             <div className="d-flex gap-2">
               <button
-                className="theme-btn btn-style-three small"
+                className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
                 onClick={() => {
                   setStartDate(new Date());
                   setEndDate(new Date());
@@ -167,16 +176,22 @@ const JobReportTable = () => {
                 Today
               </button>
               <button
-                className="theme-btn btn-style-three small"
+                className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ===
+                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ===
+                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
                 onClick={() => {
                   const today = new Date();
                   const yesterday = new Date();
                   yesterday.setDate(today.getDate() - 1); // Set yesterday's date
-                  
-                  setStartDate(yesterday);  // Setting yesterday's date
-                  setEndDate(yesterday);        // Setting today's date
+
+                  setStartDate(yesterday); // Setting yesterday's date
+                  setEndDate(yesterday); // Setting today's date
                 }}
-                
               >
                 Yesterday
               </button>
@@ -231,7 +246,7 @@ const JobReportTable = () => {
                   <div className="px-1 bg-secondary cursor-pointer">
                     <span
                       onClick={() => {
-                        setFieldName(0);
+                        setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
                           update[index] = {
@@ -297,7 +312,7 @@ const JobReportTable = () => {
                 </th>
                 <th style={{ width: "150px" }}>Job Code</th>
                 <th style={{ width: "250px" }}>Job Title</th>
-                <th style={{ width: "150px" }}>Client</th>
+                <th style={{ width: "200px" }}>Client</th>
                 <th style={{ width: "250px" }}>Contact Manager</th>
                 <th style={{ width: "300px" }}>Job Location</th>
                 <th style={{ width: "150px" }}>Job Status</th>
@@ -306,20 +321,20 @@ const JobReportTable = () => {
                 <th style={{ width: "200px" }}>Account Manager</th>
                 <th style={{ width: "200px" }}>Head Account Manager</th>
                 <th style={{ width: "150px" }}>Job Type</th>
-                <th style={{ width: "200px" }}>Tagged Count</th>
+                <th style={{ width: "150px" }}>Tagged Count</th>
                 <th style={{ width: "200px" }} className="">
                   Submission Count
                 </th>
                 <th style={{ width: "250px" }}>Submission Count Done</th>
                 <th style={{ width: "250px" }}>Client Interview Count</th>
                 <th style={{ width: "300px" }}>Client Interview Count Done</th>
-                <th style={{ width: "250px" }}>L1 Interview Count</th>
+                <th style={{ width: "200px" }}>L1 Interview Count</th>
                 <th style={{ width: "250px" }}>L1 Interview Count Done</th>
-                <th style={{ width: "250px" }}>L2 Interview Count</th>
+                <th style={{ width: "200px" }}>L2 Interview Count</th>
                 <th style={{ width: "250px" }}>L2 Interview Count Done</th>
-                <th style={{ width: "250px" }}>L3 Interview Count</th>
+                <th style={{ width: "200px" }}>L3 Interview Count</th>
                 <th style={{ width: "250px" }}>L3 Interview Count Done</th>
-                <th style={{ width: "250px" }}>Confirmation Count</th>
+                <th style={{ width: "200px" }}>Confirmation Count</th>
                 {/*<th style={{ width: "200px" }}>Work Authoriztion</th>
                 <th style={{ width: "150px" }}>Action</th> */}
               </tr>
@@ -389,7 +404,7 @@ const JobReportTable = () => {
                         </td>
                         <td
                           className="text-capitalize"
-                          style={{ width: "150px" }}
+                          style={{ width: "200px" }}
                         >
                           {client || "N/A"}
                         </td>
@@ -432,42 +447,30 @@ const JobReportTable = () => {
                         >
                           {job_type || "N/A"}
                         </td>
-                        <td className="" style={{ width: "200px" }}>
-                          {tagged_count || "N/A"}
+                        <td className="" style={{ width: "150px" }}>
+                          {tagged_count}
                         </td>
-                        <td style={{ width: "200px" }}>
-                          {submission_count || "N/A"}
-                        </td>
+                        <td style={{ width: "200px" }}>{submission_count}</td>
+                        <td style={{ width: "250px" }}>{submissions_done}</td>
                         <td style={{ width: "250px" }}>
-                          {submissions_done || "N/A"}
-                        </td>
-                        <td style={{ width: "250px" }}>
-                          {client_interview_count || "N/A"}
+                          {client_interview_count}
                         </td>
                         <td style={{ width: "300px" }}>
-                          {client_interview_done_count || "N/A"}
+                          {client_interview_done_count}
                         </td>
+                        <td style={{ width: "200px" }}>{l1_interview_count}</td>
                         <td style={{ width: "250px" }}>
-                          {l1_interview_count || "N/A"}
+                          {l1_interview_done_count}
                         </td>
+                        <td style={{ width: "200px" }}>{l2_interview_count}</td>
                         <td style={{ width: "250px" }}>
-                          {l1_interview_done_count || "N/A"}
+                          {l2_interview_done_count}
                         </td>
+                        <td style={{ width: "200px" }}>{l3_interview_count}</td>
                         <td style={{ width: "250px" }}>
-                          {l2_interview_count || "N/A"}
+                          {l3_interview_done_count}
                         </td>
-                        <td style={{ width: "250px" }}>
-                          {l2_interview_done_count || "N/A"}
-                        </td>
-                        <td style={{ width: "250px" }}>
-                          {l3_interview_count || "N/A"}
-                        </td>
-                        <td style={{ width: "250px" }}>
-                          {l3_interview_done_count || "N/A"}
-                        </td>
-                        <td style={{ width: "250px" }}>
-                          {confirmation_count || "N/A"}
-                        </td>
+                        <td style={{ width: "200px" }}>{confirmation_count}</td>
                         {/*<td style={{ width: "150px" }}>
                         'Action'    
                       </td> */}

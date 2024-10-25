@@ -1,8 +1,6 @@
 'use client'
 
 import { getReq, patchReq } from "@/utils/apiHandlers"
-import { reactIcons } from "@/utils/icons";
-import axios from "axios";
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
@@ -15,7 +13,6 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
     comment:''
   });
 
-  console.log("----------------submission details ", submissionId, currentStatus)
 
 
   useEffect(() =>{
@@ -28,7 +25,6 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
 
     if(response.status){
         let nextStatus = currentStatus;
-        console.log("----------next status ",response.data);
         if(submissionTable){
          let  subStatusData = response.data.find((item) => item.display_name == nextStatus);
           setStatusList(subStatusData.substatus);
@@ -36,7 +32,6 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
           let subStatusData = response.data.find((item) => item.id == nextStatus);
           setStatusList(subStatusData.substatus);
         }
-        // console.log("--------------sub status data ", subStatusData);
     }
   }
 

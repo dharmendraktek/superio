@@ -22,7 +22,7 @@ const JobDelegationReport = () => {
   const [jobDelegationData, setJobDelegationData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
-  const [fieldName, setFieldName] = useState("search_any");
+  const [fieldName, setFieldName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [filterKeys, setFilterKeys] = useState(jobDelegationFilterKey);
@@ -109,10 +109,11 @@ const JobDelegationReport = () => {
     setStartDate(null);
     setEndDate(null);
     setSearch("");
+    setPage(0);
   };
 
   const handleExportExcel = async () => {
-     const response = await getApiReq(`${allParam ? `/job-assignment-report/report/${allParam}&export=excel`:'/job-assignment-report/report/?export=excel'}`);
+     const response = await getApiReq(`${allParam ? `/job-assignment-report/report/?${allParam}&export=excel`:'/job-assignment-report/report/?export=excel'}`);
      if(response.status){
       var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
       FileSaver.saveAs(blob, 'job-assignment-report.xlsx');   
@@ -159,7 +160,44 @@ const JobDelegationReport = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className="d-flex gap-2">
+            <button
+                 className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
+                onClick={() => {
+                  setStartDate(new Date());
+                  setEndDate(new Date());
+                }}
+              >
+                Today
+              </button>
+              <button
+                className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ===
+                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ===
+                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
+                onClick={() => {
+                  const today = new Date();
+                  const yesterday = new Date();
+                  yesterday.setDate(today.getDate() - 1); // Set yesterday's date
+                  
+                  setStartDate(yesterday);  // Setting yesterday's date
+                  setEndDate(yesterday);        // Setting today's date
+                }}
+                
+              >
+                Yesterday
+              </button>
               <button
                 className="theme-btn btn-style-two small"
                 onClick={handleClear}
@@ -211,7 +249,7 @@ const JobDelegationReport = () => {
                   <div className="px-1 bg-secondary cursor-pointer">
                     <span
                       onClick={() => {
-                        setFieldName(0);
+                        setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
                           update[index] = {
@@ -402,7 +440,7 @@ const JobDelegationReport = () => {
                         {submissions_done || "N/A"}
                       </td>
                       <td className="" style={{ width: "150px" }}>
-                        {tagged_count || "N/A"}
+                        {tagged_count}
                       </td>
                       <td className="" style={{ width: "150px" }}>
                         {job_create_date || "N/A"}

@@ -102,8 +102,8 @@ Buttons Styles
   position: relative;
   text-align: center;
   white-space: nowrap;
-  color: var(--primary-color);
-  background-color: #ffffff;
+  color: #ffffff;
+  background-color: green;
   border: 1px solid #ffffff;
   line-height: 20px;
   border-radius: 8px;
@@ -112,7 +112,7 @@ Buttons Styles
 }
 
 .btn-style-five:hover {
-  color: #ffffff;
+  color:var(--primary-hover-bg-color) ;
   background-color: transparent;
 }
 

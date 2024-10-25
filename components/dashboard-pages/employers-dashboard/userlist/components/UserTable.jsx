@@ -24,9 +24,38 @@ const UserTable = () => {
   const [active, setActive] = useState(1);
   const [search, setSearch] = useState("");
   const [csvFile, setCsvFile] = useState();
+  const [firstSearch, setFirstSearch] = useState('');
 
   // Fetch users with memoized function and debounce the search requests
-  const fetchUserList = useCallback(async (search) => {
+  // const fetchUserList = useCallback(async (search) => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getReq(
+  //       `/usersprofile/?active=${active === 1}&page=${page + 1}${
+  //         search ? `&search=${search}` : ""
+  //       }`
+  //     );
+  //     setUserData(response.data ? response.data.results : []);
+  //     setDataCount(response.data.count);
+  //   } catch (error) {
+  //     toast.error("Failed to fetch users.");
+  //   }
+  //   setLoading(false);
+  // }, [active, page]);
+
+  // const debouncedSearch = useMemo(() => debounce(fetchUserList, 500), [fetchUserList]);
+
+  // useEffect(() => {
+   
+  //   if (search) {
+  //     setPage(0);
+  //     debouncedSearch(search);
+  //   } else {
+  //     fetchUserList();
+  //   }
+  // }, [active, search, page, debouncedSearch]);
+
+  const fetchUserList = async() => {
     setLoading(true);
     try {
       const response = await getReq(
@@ -40,19 +69,21 @@ const UserTable = () => {
       toast.error("Failed to fetch users.");
     }
     setLoading(false);
-  }, [active, page]);
+  };
 
-  const debouncedSearch = useMemo(() => debounce(fetchUserList, 500), [fetchUserList]);
+  // const debouncedSearch = useMemo(() => debounce(fetchUserList, 500), [fetchUserList]);
 
   useEffect(() => {
    
-    if (search) {
+    if (search !== firstSearch) {
+      setFirstSearch(search);
       setPage(0);
-      debouncedSearch(search);
+      fetchUserList();
+      // debouncedSearch(search);
     } else {
       fetchUserList();
     }
-  }, [active, search, page, debouncedSearch]);
+  }, [active, search, page]);
 
   const handleDeleteUser = async (id) => {
     const response = await deleteReq(`/usersprofile/${id}/`);

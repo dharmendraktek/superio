@@ -130,11 +130,9 @@ export const postReq = async (endpoint, data) => {
   const url = BASE_URL + endpoint;
   delete header["responseType"]; 
 
-
   return await axios
     .post(url, data)
     .then((response) => {
-      console.log("----------------response ",response);
       return responseFormatter(true, response.data, null);
     })
     .catch((err) => {
@@ -143,8 +141,6 @@ export const postReq = async (endpoint, data) => {
         // toast.error(err.response.data.non_field_errors[0])
         return handleApiError(err);
       } else {
-      console.log("------------erro ", err)
-
         return handleApiError(err);
       }
     });

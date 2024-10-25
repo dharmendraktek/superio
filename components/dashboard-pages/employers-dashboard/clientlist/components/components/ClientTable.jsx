@@ -44,7 +44,7 @@ const ClientTable = () => {
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [firstSearch, setFirstSearch] = useState('');
 
 
 
@@ -65,7 +65,8 @@ const ClientTable = () => {
  
 
   useEffect(() => {
-    if(search){
+    if(search !== firstSearch){
+      setFirstSearch(search);
       setPage(0);
       getClientList(search);
     }else {

@@ -113,9 +113,11 @@ const index = () => {
       }
     } catch (err) {
       setLoading(false);
-      toast.error(
-        err.response.message[0] || "Something went wrong"
-      );
+      if(err.response){
+        toast.error(
+          err.response.message[0] || "Something went wrong"
+        );
+      }
     }
   };
 

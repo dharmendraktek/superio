@@ -7,7 +7,6 @@ export function extractNumericalValue(input) {
     // If the input is a string, apply the regular expression to extract the number
     if (typeof input === 'string') {
         const match = input.match(/-?\d+(\.\d+)?/); // Match integers or decimal numbers
-        console.log("--------match -------", match);
         return match ? parseFloat(match[0]) : null; // Return the number as a float or null if no match
     }
 

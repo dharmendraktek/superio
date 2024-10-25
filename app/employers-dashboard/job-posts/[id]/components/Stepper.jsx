@@ -33,7 +33,6 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
   const [statusId, setStatusId] = useState();
   const [selectedSubmission, setSelectedSubmission] = useState({});
   
-  console.log("------------submission deetaisl in stepper ", submissionDetails?.job_detail?.client_name);
  
   let {
     mobile,

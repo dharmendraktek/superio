@@ -8,7 +8,7 @@ import { deleteReq, getReq, patchReq,  } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
-import { clientTableField } from "../../clientlist/components/components/constant";
+import { clientApprovalField, clientTableField } from "../../clientlist/components/components/constant";
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const tabsName = [
@@ -136,7 +136,7 @@ const ClientApproval = () => {
         <table className="default-table">
           <thead className="">
             <tr>
-              {clientTableField.map((item, index) => {
+              {clientApprovalField.map((item, index) => {
                 return (
                   <React.Fragment key={index}>
                     {/* {item.title == "input" ? (
@@ -154,7 +154,6 @@ const ClientApproval = () => {
               })}
             </tr>
           </thead>
-
           <tbody className="custom-scroll-sm" style={{height:'300px', overflow:'scroll'}}>
             {clientData?.map((item, index) => {
               return (
@@ -229,9 +228,12 @@ const ClientApproval = () => {
                     <td style={{width:"200px"}}>{item.owner_name || 'N/A'}</td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
-                    {/* <td className="" style={{ width: "200px" }}>
-                      {item.created_by}
-                    </td> */}
+                    <td className="" style={{ width: "200px" }}>
+                      {(item.created_by.first_name || "N/A") + " " + (item.created_by.last_name || "N/A")}
+                    </td>
+                    <td className="" style={{ width: "200px" }}>
+                      {(item.updated_by.first_name || "N/A") + " " + (item.updated_by.last_name || "N/A")}
+                    </td>
                     <td className="" style={{ width: "250px" }}>
                       {item.created_at ? moment(item.created_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
                     </td>
@@ -246,72 +248,6 @@ const ClientApproval = () => {
                        </div>
                     </td>
                   </tr>
-                  {item.id == expand && (
-                    <tr style={{ background: "white" }}>
-                      <td colSpan={7}>
-                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"  style={{ height:'400px', overflow:'auto' }}>
-                          <div></div>
-                          <table>
-                            <thead className="table-inner-thead">
-                              <th>Name</th>
-                              <th>Email</th>
-                              <th>Office number</th>
-                              <th>Designation</th>
-                              <th>Mobile Number</th>
-                              {/* <th>Location</th> */}
-                              <th>OwnerShip</th>
-                              <th>Status</th>
-                              {/* <th>Created By</th> */}
-                            </thead>
-                            <tbody style={{height:'400px !important', overflow:'auto'}}>
-                              {/* <tr>
-                                <td
-                                  className="cursor-pointer"
-                                  data-bs-toggle="offcanvas"
-                                  data-bs-target="#offcanvasLeft"
-                                  aria-controls="offcanvasLeft"
-                                  onClick={() => setContactDetails()}
-                                >
-                                  flex
-                                </td>
-                                <td>flex@mail.com</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>Alaska</td>
-                                <td>Dharmendra patel</td>
-                                <td>-</td>
-                                <td>-</td>
-                              </tr> */}
-                              {item.contact_manager.map((contact, _index) => {
-                                return (
-                                  <tr key={_index}>
-                                    <td
-                                      onClick={() => setContactDetails(contact)}
-                                      data-bs-toggle="offcanvas"
-                                      data-bs-target="#addContactModal"
-                                      aria-controls="offcanvasLeft"
-                                      className="cursor-pointer fw-bold"
-                                    >
-                                      {contact.name || 'N/A'}
-                                    </td>
-                                    <td>{contact.email || 'N/A'}</td>
-                                    <td>{contact.off_cont || 'N/A'}</td>
-                                    <td>{contact.designation || 'N/A'}</td>
-                                    <td>{contact.contact || 'N/A'}</td>
-                                    {/* <td>Alaska</td> */}
-                                    <td>{contact.ownership || 'N/A'}</td>
-                                    <td>{contact.status || 'N/A'}</td>
-                                    {/* <td>{contact.createdBy}</td> */}
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
                 </>
               );
             })}

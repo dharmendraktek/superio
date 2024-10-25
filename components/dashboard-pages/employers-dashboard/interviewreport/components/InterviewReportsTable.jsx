@@ -106,6 +106,8 @@ const InterviewReportsTable = () => {
     setStartDate(null);
     setEndDate(null);
     setSearch("");
+    setType("");
+    setPage(0);
   };
 
   
@@ -154,7 +156,7 @@ const InterviewReportsTable = () => {
             <div className="d-flex gap-2 mt-1">
             <div className="d-flex gap-2 align-items-center">
                   <label className="fw-700">Type</label>
-                  <select onChange={(e) => setType(e.target.value)} className="cursor-pointer border p-1 border-black">
+                  <select value={type} onChange={(e) => setType(e.target.value)} className="cursor-pointer border p-1 border-black">
                     <option>Select</option>
                     <option value={"schedule"}>Schedule</option>
                     <option value="happen">Scheduled Done</option>
@@ -175,7 +177,45 @@ const InterviewReportsTable = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className="d-flex gap-2">
+            <button
+                 className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
+                onClick={() => {
+                  setType("schedule")
+                  setStartDate(new Date());
+                  setEndDate(new Date());
+                }}
+              >
+                Today
+              </button>
+              <button
+               className={` small theme-btn ${
+                moment(startDate).format("DD-MM") ===
+                  moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM") &&
+                moment(endDate).format("DD-MM") ===
+                  moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM")
+                  ? "btn-style-five"
+                  : "btn-style-three"
+              }`}
+                onClick={() => {
+                  const today = new Date();
+                  const yesterday = new Date();
+                  yesterday.setDate(today.getDate() - 1); // Set yesterday's date
+                  setType("schedule")
+                  setStartDate(yesterday);  // Setting yesterday's date
+                  setEndDate(yesterday);        // Setting today's date
+                }}
+                
+              >
+                Yesterday
+              </button>
               <button
                 className="theme-btn btn-style-two small"
                 onClick={handleClear}

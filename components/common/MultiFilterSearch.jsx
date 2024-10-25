@@ -24,7 +24,7 @@ const MultiFilterSearch = ({
           style={{ width: "fit-content" }}
           className="px-2 rounded-start-1 border-end border-primary bg-primary text-white fw-medium  cursor-pointer"
         >
-          <span>{filterKeys.find((item, index) => index == fieldName)?.name}</span>
+          <span>{filterKeys.find((item, index) => index === fieldName)?.name ? filterKeys.find((item, index) => index === fieldName)?.name : 'Filter' }</span>
           <span>{reactIcons.arrowfilldown}</span>
         </div>
         {openFields && (

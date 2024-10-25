@@ -47,6 +47,7 @@ const ApplicantTable = () => {
   const [applicantDetails, setApplicantDetails] = useState(null);
   const [openPrimarySkill, setOpenPrimarySkill] = useState(null);
   const [openSecondarySkill, setOpenSecondarySkill] = useState(null);
+  const [firstSearch, setFirstSearch] = useState('');
 
   useEffect(() => {
     let param;
@@ -64,8 +65,11 @@ const ApplicantTable = () => {
         .toISOString()}&updated_end_date=${moment(endDate)
         .endOf("day")
         .toISOString()}`;
-    } else if (fieldName && search) {
+    } else if (fieldName && search !== firstSearch) {
+      setFirstSearch(search);
       setPage(0);
+      param = `&${fieldName}=${search}`;
+    }else{
       param = `&${fieldName}=${search}`;
     }
     // setTimeout(() => {
@@ -74,6 +78,7 @@ const ApplicantTable = () => {
   }, [search, startDate, endDate, page]);
 
   const handleGetApplicantList = async (param) => {
+    console.log("-----------param ", param);
     setIsLoading(true);
     const response = await getReq(
       `/applicants/?page=${page + 1}&size=25${param ? param : ""}`

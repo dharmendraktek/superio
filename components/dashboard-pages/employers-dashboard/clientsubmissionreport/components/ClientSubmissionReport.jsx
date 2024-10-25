@@ -10,6 +10,7 @@ import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { submissionReportFilterKey } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
+import { cleanString } from "@/utils/regex";
 import FileSaver from "file-saver";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ const ClientSubmissionReport = () => {
   const [clientSubmissionData, setClientSubmissionData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
-  const [fieldName, setFieldName] = useState("search_any");
+  const [fieldName, setFieldName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
@@ -104,6 +105,7 @@ const ClientSubmissionReport = () => {
     setStartDate(null);
     setEndDate(null);
     setSearch("");
+    setPage(0);
   };
 
  
@@ -161,7 +163,44 @@ const ClientSubmissionReport = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className="d-flex gap-2">
+            <button
+                 className={` small theme-btn ${
+                  moment(startDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM") &&
+                  moment(endDate).format("DD-MM") ==
+                    moment(new Date()).format("DD-MM")
+                    ? "btn-style-five"
+                    : "btn-style-three"
+                }`}
+                onClick={() => {
+                  setStartDate(new Date());
+                  setEndDate(new Date());
+                }}
+              >
+                Today
+              </button>
+              <button
+               className={` small theme-btn ${
+                moment(startDate).format("DD-MM") ===
+                  moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM") &&
+                moment(endDate).format("DD-MM") ===
+                  moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM")
+                  ? "btn-style-five"
+                  : "btn-style-three"
+              }`}
+                onClick={() => {
+                  const today = new Date();
+                  const yesterday = new Date();
+                  yesterday.setDate(today.getDate() - 1); // Set yesterday's date
+                  
+                  setStartDate(yesterday);  // Setting yesterday's date
+                  setEndDate(yesterday);        // Setting today's date
+                }}
+                
+              >
+                Yesterday
+              </button>
               <button
                 className="theme-btn btn-style-two small"
                 onClick={handleClear}
@@ -213,7 +252,7 @@ const ClientSubmissionReport = () => {
                   <div className="px-1 bg-secondary cursor-pointer">
                     <span
                       onClick={() => {
-                        setFieldName(0);
+                        setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
                           update[index] = {
@@ -353,15 +392,15 @@ const ClientSubmissionReport = () => {
                       <td className="" style={{ width: "200px" }}>
                         {job_code || "N/A"}
                       </td>
-                      <td style={{ width: "250px" }}>{job_title || "N/A"}</td>
+                      <td className="text-capitalize" style={{ width: "250px" }}>{job_title || "N/A"}</td>
                       <td className="" style={{ width: "200px" }}>
                         {client || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
                         {endclient || "N/A"}
                       </td>
-                      <td className="" style={{ width: "300px" }}>
-                        {job_location || "N/A"}
+                      <td className="text-capitalize" style={{ width: "300px" }}>
+                        {job_location ? cleanString(job_location) : "N/A"}
                       </td>
                       <td
                         className="d-flex flex-wrap gap-2"
@@ -397,8 +436,9 @@ const ClientSubmissionReport = () => {
                       <td style={{ width: "200px" }}>
                         {applicant_source || "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        {applicant_location || "N/A"}
+                      <td className="text-capitalize
+                      " style={{ width: "200px" }}>
+                        {applicant_location ? cleanString(applicant_location)  : "N/A"}
                       </td>
                       <td style={{ width: "220px" }}>{job_type || "N/A"}</td>
                       <td style={{ width: "200px" }}>{lob || "N/A"}</td>
@@ -412,7 +452,7 @@ const ClientSubmissionReport = () => {
                         {delivery_manager || "N/A"}
                       </td>
                       <td style={{ width: "200px" }}>
-                        {job_created_date || "N/A"}
+                        {job_created_date ? job_created_date : "N/A"}
                       </td>
                       <td className="" style={{ width: "160px" }}>
                         {job_status || "N/A"}

@@ -18,6 +18,25 @@ export const clientTableField = [
   {title:'Action', size:'260px'},
 ]
 
+export const clientApprovalField = [
+  {title:'Client Id', size:'150px'},
+  {title:'Client Name', size:'250px'},
+  {title:'Email', size:'300px'},
+  {title:'Contact Number', size:'300px'},
+  {title:'Website', size:'300px'},
+  // {title:'Industry'},
+  {title:'Status', size:'150px'},
+  // {title:'Category'},
+  {title:'Primary Owner', size:'200px'},
+  // {title:'Business Unit'},
+  // {title:'Display on Job Posting'},
+  {title:'Created by', size:'200px'},
+  {title:'Updated by', size:'200px'},
+  {title:'Created On', size:'250px'},
+  {title:'Modified On', size:'250px'},
+  {title:'Action', size:'260px'},
+]
+
 export const clientData = [
     {
       "select":'input',

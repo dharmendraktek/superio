@@ -168,13 +168,12 @@ const ManualCreation = ({
         (item) => item.name == jobData?.job_status
       )?.name;
 
-
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
         title: jobData.title,
         currency: jobData.currency || "USD",
-        amount: jobData.amount !== "Not specified" ? "" :isNumber(jobData.amount) ?jobData.amount : jobData.amount ? extractNumericalValue(jobData.amount) : 0,
+        amount: jobData.amount !== "Not specified" ? jobData.amount :isNumber(jobData.amount) ?jobData.amount : jobData.amount ? extractNumericalValue(jobData.amount) : 0,
         payment_frequency: jobData.payment_frequency ? capitalizeFirstLetter(jobData.payment_frequency) : "Hourly",
         job_type: jobType ? jobType : "",
         client_taxterm: jobData.client_taxterm ? convertToUppercase(jobData.client_taxterm) : "",
@@ -219,6 +218,8 @@ const ManualCreation = ({
         reason_of_priority:jobData.reason_of_priority ? jobData.reason_of_priority : ""
       }));
     }
+
+    console.log("---------------------------form data --------",form);
   }, [jobData]);
 
   useEffect(() => {
@@ -598,6 +599,7 @@ const ManualCreation = ({
 
     setDocuments(filtered);
   };
+
 
   return (
     <div className="py-2">

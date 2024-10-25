@@ -38,7 +38,7 @@ export const jobDelegationFilterKey =  [
     {name:'Contact Manager', value:'contact_manager'},
     {name:'Job Title', value:'job_title'},
     // {name:'Assigned Date', value:'created'},
-    {name:'Assigned Today', value:'assigned_today'},
+    // {name:'Assigned Today', value:'assigned_today'},
     {name:'Assignee Name', value:'assign_full_name'},
     {name:'LOB', value:'lob_name'},
     {name:'City', value:'city'},
