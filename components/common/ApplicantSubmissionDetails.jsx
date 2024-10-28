@@ -455,6 +455,7 @@ const ApplicantSubmissionDetails = ({
     });
   };
 
+  console.log("------------document-------", documents);
   const handleRemoveDoc = (dIndex) => {
     let updated = [...documents];
     let filteredData = updated.filter((item, _index) => _index !== dIndex);
@@ -472,7 +473,9 @@ const ApplicantSubmissionDetails = ({
 
   let applicantDetails =
     applicantData?.length > 0 ? applicantData[index] : applicantData;
-  const handleUploadDoc = async (formIndex) => {
+
+
+  const handleUploadDoc = async (types) => {
     setIsLoading(true);
     const formData = new FormData();
     documents.forEach((file, index) => {
@@ -490,7 +493,7 @@ const ApplicantSubmissionDetails = ({
     formData.append("applicant", applicantDetails.id);
 
     if (documents.length > 0) {
-      const response = await postApiReq(`/applicant-documents/`, formData);
+      const response = await postApiReq(`${ types == "multiple" ? '/applicant-bulk-document-upload/' :'/applicant-documents/'}`, formData);
       setIsLoading(false);
       getApplicantDocuments();
       if (response.status) {
@@ -501,6 +504,8 @@ const ApplicantSubmissionDetails = ({
       }
     }
   };
+
+
   let applicantDocument =
     applicantData?.length > 0
       ? applicantData[index]?.documents
@@ -683,7 +688,6 @@ const ApplicantSubmissionDetails = ({
       toast.error(response.error.error);
     }
   };
-
 
   return (
     <Paper>
@@ -1248,13 +1252,17 @@ const ApplicantSubmissionDetails = ({
             {addDoc ? (
               <div>
                 <div className="row mt-4    ">
-                  <div className="col-4">
+                  <div className="col-2">
                     <p className="mb-2">Upload Document</p>
                     <UploadSingleDocument handleFileUpload={handleFileUpload} />
                     {documents.length > 0 &&
                       documents.map((file) => {
                         return <p className="text-danger">{file?.name}</p>;
                       })}
+                  </div>
+                  <div className="col-2">
+                  <p className="mb-2">Upload Multiple Document</p>
+                  <UploadSingleDocument handleFileUpload={handleFileUpload} multiple={true} />
                   </div>
                   <div className="col-8">
                     <div className="d-flex flex-fill gap-5 ">
@@ -1280,7 +1288,7 @@ const ApplicantSubmissionDetails = ({
                           })}
                         </select>
                       </div>
-                      <div className="w-50">
+                      {/* <div className="w-50">
                         <p className="py-2">Document Title</p>
                         <input
                           onChange={(e) =>
@@ -1293,7 +1301,7 @@ const ApplicantSubmissionDetails = ({
                           value={docDetail?.title}
                           className="client-form-input"
                         />
-                      </div>
+                      </div> */}
                     </div>
                     {docDetail.type == "Resume" && (
                       <div className="my-2">
@@ -1347,7 +1355,14 @@ const ApplicantSubmissionDetails = ({
                     <div className="d-flex justify-content-end gap-2">
                       <button
                         className="theme-btn btn-style-one small"
-                        onClick={handleUploadDoc}
+                        onClick={() => {
+                          if(documents.length > 1){
+                            handleUploadDoc("multiple");
+                          }else{
+                            handleUploadDoc();
+                          }
+                        } 
+                      }
                         disabled={isLoading}
                       >
                         {isLoading ? <BtnBeatLoader /> : "Save"}

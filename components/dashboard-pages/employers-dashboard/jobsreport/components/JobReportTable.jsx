@@ -29,32 +29,12 @@ const JobReportTable = () => {
   const [allParam, setAllParam] = useState("");
   const [filterKeys, setFilterKeys] = useState(jobReportFilterKey);
 
-  // useEffect(() => {
-  //   let param;
-  //   if (startDate && endDate) {
-  //     setPage(0);
-  //     param = `&job_created_start=${moment(startDate).format(
-  //       "yyyy-MM-DD"
-  //     )}&job_created_end=${moment(endDate).format("yyyy-MM-DD")}`;
-  //   }
-
-  //   if (fieldName && search) {
-  //     setPage(0);
-  //     param = param ? param + `&${fieldName}=${search}` : `&${fieldName}=${search}`;
-  //   }
-  //   if (fieldName == "assigned_today") {
-  //     setPage(0);
-  //     param = `&${fieldName}=""`;
-  //   }
-  //   getJobReportList(param);
-  // }, [search, startDate, endDate, page, fieldName]);
 
   useEffect(() => {
     let param = "";
 
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
-      setPage(0);
       param += `&job_created_start=${moment(startDate).format(
         "YYYY-MM-DD"
       )}&job_created_end=${moment(endDate).format("YYYY-MM-DD")}`;
@@ -68,7 +48,7 @@ const JobReportTable = () => {
 
     param += filterParams; // Combine date and filter parameters
 
-    if (param) {
+    if (param !== allParam) {
       setAllParam(param);
       setPage(0); // Set page to 0 if it's falsy
       getJobReportList(param);
@@ -80,18 +60,21 @@ const JobReportTable = () => {
   }, [startDate, endDate, page, filterKeys]);
 
   const handleClear = () => {
-    let update = [...filterKeys];
-    update.map((item) => {
-      delete item["selected"];
-      delete item["search_value"];
-      return item;
-    });
+    const updatedFilters = filterKeys.map((item) => ({
+      ...item,
+      selected: false,
+      search_value: null,
+      rank: null,
+    }));
+    setFilterKeys(updatedFilters); 
     setFieldName("");
     setStartDate(null);
     setEndDate(null);
     setSearch("");
     setPage(0);
   };
+  
+
 
   const handleExportExcel = async () => {
     const response = await getApiReq(
@@ -215,20 +198,21 @@ const JobReportTable = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-2">
-        {filterKeys.map((item, index) => {
+        {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
           return (
             <div className="">
               {item.selected && (
                 <div
-                  key={item.value}
+                  key={item.id}
                   className="border d-flex me-2 justify-content-between border-secondary"
                 >
                   <div
                     onClick={() => {
-                      setFieldName(index);
+                      setFieldName(item.id);
+                      let itemIndex = filterKeys.findIndex((i) => i.id == item.id);
                       setFilterKeys((prevKeys) => {
                         const update = [...prevKeys];
-                        update[index] = { ...update[index], search_value: "" };
+                        update[itemIndex] = { ...update[itemIndex], search_value: "" };
                         return update;
                       });
                     }}
@@ -249,10 +233,12 @@ const JobReportTable = () => {
                         setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
-                          update[index] = {
-                            ...update[index],
+                          let itemIndex = update.findIndex((i) => i.id == item.id);
+                          update[itemIndex] = {
+                            ...update[itemIndex],
                             selected: false,
                             search_value: "",
+                            rank:''
                           };
                           return update;
                         });

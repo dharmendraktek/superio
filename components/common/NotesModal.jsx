@@ -105,6 +105,7 @@ const NotesModal = ({submissionDetails, side=''}) => {
         <div>
           <MyCKEditor
             form={form}
+            height="750px"
             wrapperStyle={{
               border: "1px solid gray",
               minHeight: "750px",

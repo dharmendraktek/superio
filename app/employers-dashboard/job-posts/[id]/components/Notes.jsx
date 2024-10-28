@@ -293,6 +293,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                     {open && (
                       <MyCKEditor
                         form={form}
+                        height="750px"
                         wrapperStyle={{
                           border: "1px solid gray",
                           minHeight: "750px",
@@ -476,6 +477,7 @@ const Notes = ({ jobId, noteData, setNoteData }) => {
                   <div>
                     {open && (
                       <MyCKEditor
+                        height="750px"
                         form={form}
                         wrapperStyle={{
                           border: "1px solid gray",

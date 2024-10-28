@@ -98,14 +98,6 @@ const Documents = ({
 
   const handleDownloadDoc = async(id) => {
     window.open(BASE_URL + `/applicant-documents/${id}/download/`);
-
-      // const response = await getReq(`/applicant-documents/${id}/download/`);
-      // if(response.status){
-      // // let url =  window.URL.createObjectURL(response.blob)
-      //   console.log("-----------reseponse ", response.data);
-      
-      //   toast.success('Document downloaded successfully');
-      // }
   }
 
   return (

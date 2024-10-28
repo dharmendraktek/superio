@@ -464,7 +464,7 @@ const JobPostsTable = () => {
                           <li>
                             <Link
                               href="/employers-dashboard/job-posts/[id]"
-                              as={`/employers-dashboard/job-posts/${item.id}?jobId=${item.id}`}
+                              as={`/employers-dashboard/job-posts/${item.id}`}
                             >
                               <button
                                 // data-bs-toggle="modal"

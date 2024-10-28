@@ -31,12 +31,10 @@ const ConfirmationReport = () => {
 
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate && type == "confirmation") {
-      setPage(0);
       param += `&confirmation_date_start=${moment(startDate).format(
         "YYYY-MM-DD"
       )}&confirmation_date_end=${moment(endDate).format("YYYY-MM-DD")}`;
     } else if (startDate && endDate && type == "submission") {
-      setPage(0);
       param += `&submission_start=${moment(startDate).format(
         "YYYY-MM-DD"
       )}&submission_end=${moment(endDate).format("YYYY-MM-DD")}`;
@@ -58,9 +56,9 @@ const ConfirmationReport = () => {
 
     param += filterParams; // Combine date and filter parameters
 
-    if (param) {
+    if (param !== allParam) {
       setAllParam(param);
-      setPage(page || 0); // Set page to 0 if it's falsy
+      setPage(0); // Set page to 0 if it's falsy
       getJobDelegationReports(param);
     } else if (page) {
       getJobDelegationReports(param);
@@ -219,20 +217,21 @@ const ConfirmationReport = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-2">
-        {filterKeys.map((item, index) => {
+        {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
           return (
             <div className="">
               {item.selected && (
                 <div
-                  key={item.value}
+                  key={item.id}
                   className="border d-flex me-2 justify-content-between border-secondary"
                 >
                   <div
                     onClick={() => {
-                      setFieldName(index);
+                      setFieldName(item.id);
+                      let itemIndex = filterKeys.findIndex((i) => i.id == item.id);
                       setFilterKeys((prevKeys) => {
                         const update = [...prevKeys];
-                        update[index] = { ...update[index], search_value: "" };
+                        update[itemIndex] = { ...update[itemIndex], search_value: "" };
                         return update;
                       });
                     }}
@@ -250,13 +249,15 @@ const ConfirmationReport = () => {
                   <div className="px-1 bg-secondary cursor-pointer">
                     <span
                       onClick={() => {
-                        setFieldName(0);
+                        setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
-                          update[index] = {
-                            ...update[index],
+                          let itemIndex = update.findIndex((i) => i.id == item.id);
+                          update[itemIndex] = {
+                            ...update[itemIndex],
                             selected: false,
                             search_value: "",
+                            rank:''
                           };
                           return update;
                         });

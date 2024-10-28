@@ -57,7 +57,6 @@ const ClientSubmissionReport = () => {
 
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
-      setPage(0);
       param += `&submission_start=${moment(startDate).format(
         "YYYY-MM-DD"
       )}&submission_end=${moment(endDate).format("YYYY-MM-DD")}`;
@@ -71,9 +70,9 @@ const ClientSubmissionReport = () => {
 
     param += filterParams; // Combine date and filter parameters
 
-    if (param) {
+    if (param !== allParam) {
       setAllParam(param);
-      setPage(page || 0); // Set page to 0 if it's falsy
+      setPage(0); // Set page to 0 if it's falsy
       getClientSubmissionList(param);
     } else if (page) {
       getClientSubmissionList(param);
@@ -221,20 +220,21 @@ const ClientSubmissionReport = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-2">
-        {filterKeys.map((item, index) => {
+        {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
           return (
             <div className="">
               {item.selected && (
                 <div
-                  key={item.value}
+                  key={item.id}
                   className="border d-flex me-2 justify-content-between border-secondary"
                 >
                   <div
                     onClick={() => {
-                      setFieldName(index);
+                      setFieldName(item.id);
+                      let itemIndex = filterKeys.findIndex((i) => i.id == item.id);
                       setFilterKeys((prevKeys) => {
                         const update = [...prevKeys];
-                        update[index] = { ...update[index], search_value: "" };
+                        update[itemIndex] = { ...update[itemIndex], search_value: "" };
                         return update;
                       });
                     }}
@@ -255,10 +255,12 @@ const ClientSubmissionReport = () => {
                         setFieldName(null);
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
-                          update[index] = {
-                            ...update[index],
+                          let itemIndex = update.findIndex((i) => i.id == item.id);
+                          update[itemIndex] = {
+                            ...update[itemIndex],
                             selected: false,
                             search_value: "",
+                            rank:''
                           };
                           return update;
                         });

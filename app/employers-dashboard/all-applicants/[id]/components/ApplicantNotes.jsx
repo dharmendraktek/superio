@@ -17,7 +17,7 @@ const tabsName = [
 const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
   const [tab, setTab] = useState("applicant");
   const [form, setForm] = useState({
-    description: "<p></p>",
+    description: "",
   });
   const [descriptionData, setDescriptionData] = useState();
   const [openOption, setOpenOption] = useState();
@@ -41,7 +41,6 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
       created_at:new Date(),
       updated_at:new Date(),
       applicant_ref:applicantData.id,
-      user:209,
     }
        const response =  updateNoteId ? await patchReq(`/applicant-notes/${updateNoteId}/`, data) :await postApiReq('/applicant-notes/', data);
        setIsLoading(false);
@@ -247,12 +246,13 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                 <div>
                   {open && (
                     <MyCKEditor
+                      height="740px"
                       form={form}
-                      wrapperStyle={{
-                        border: "1px solid gray",
-                        minHeight: "750px",
-                        borderRadius: "3px",
-                      }}
+                      // wrapperStyle={{
+                      //   border: "1px solid gray",
+                      //   minHeight: "750px",
+                      //   borderRadius: "3px",
+                      // }}
                       descriptionData={descriptionData}
                       setDescriptionData={setDescriptionData}
                     />
@@ -431,9 +431,10 @@ const ApplicantNotes = ({applicantData, handleGetApplicantDetails}) => {
                   {open && (
                     <MyCKEditor
                       form={form}
+                      height="740px"
                       wrapperStyle={{
                         border: "1px solid gray",
-                        minHeight: "750px",
+                        minHeight: "740px",
                         borderRadius: "3px",
                       }}
                       descriptionData={descriptionData}

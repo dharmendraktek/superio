@@ -20,7 +20,7 @@ const InterviewReportsTable = () => {
   const [InterviewReportData, setInterviewReportData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openFields, setOpenFields] = useState(false);
-  const [fieldName, setFieldName] = useState(0);
+  const [fieldName, setFieldName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [openAct, setOpenAct] = useState(false);
@@ -67,10 +67,8 @@ const InterviewReportsTable = () => {
   
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate && type == "schedule") {
-      setPage(0);
       param += `&interview_schedule_start=${moment(startDate).format("YYYY-MM-DD")}&interview_schedule_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }else if(startDate && endDate && type == "happen"){
-      setPage(0);
       param += `&interview_happen_start=${moment(startDate).format("YYYY-MM-DD")}&interview_happen_end=${moment(endDate).format("YYYY-MM-DD")}`;
     }
   
@@ -81,11 +79,10 @@ const InterviewReportsTable = () => {
       .join(""); // Join them together to form the final string
   
     param += filterParams; // Combine date and filter parameters
-    console.log("----------param value ", param);
   
-    if (param) {
+    if(param !== allParam) {
       setAllParam(param);
-      setPage(page || 0); // Set page to 0 if it's falsy
+      setPage(0); // Set page to 0 if it's falsy
       getInterviewReportList(param);
     } else if (page) {
       getInterviewReportList(param);
@@ -236,49 +233,60 @@ const InterviewReportsTable = () => {
         </div>
       </div>
       <div className="d-flex me-2 my-2">
-         { filterKeys.map((item, index) => {
-            return(
-              <div className="">
-                {item.selected &&
+        {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
+          return (
+            <div className="">
+              {item.selected && (
                 <div
-                  key={item.value}
+                  key={item.id}
                   className="border d-flex me-2 justify-content-between border-secondary"
                 >
-                  <div onClick={() =>{ 
-                    setFieldName(index)
-                    setFilterKeys(prevKeys => {
-                      const update = [...prevKeys];
-                      update[index] = { ...update[index], search_value:'' };
-                      return update;
-                    });
-                    }} className="bg-gray text-white px-2 cursor-pointer" htmlFor={item.value}>
-                    {item.name} 
-                  </div>
-                  {item.search_value &&
-                    <div className="px-2 bg-secondary fw-600">
-                    {item.search_value || ""}
-                    {/* <input type="text" placeholder="Search..." /> */}
-                    </div>
-                  }
-                  <div className="px-1 bg-secondary cursor-pointer">
-                  <span
+                  <div
                     onClick={() => {
-                       setFieldName(0);
-                       setFilterKeys(prevKeys => {
+                      setFieldName(item.id);
+                      let itemIndex = filterKeys.findIndex((i) => i.id == item.id);
+                      setFilterKeys((prevKeys) => {
                         const update = [...prevKeys];
-                        update[index] = { ...update[index], selected: false, search_value:'' };
+                        update[itemIndex] = { ...update[itemIndex], search_value: "" };
                         return update;
                       });
                     }}
+                    className="bg-gray text-white px-2 cursor-pointer"
+                    htmlFor={item.value}
                   >
-                    {reactIcons.normalclose}
-                  </span>
+                    {item.name}
+                  </div>
+                  {item.search_value && (
+                    <div className="px-2 bg-secondary fw-600">
+                      {item.search_value || ""}
+                      {/* <input type="text" placeholder="Search..." /> */}
+                    </div>
+                  )}
+                  <div className="px-1 bg-secondary cursor-pointer">
+                    <span
+                      onClick={() => {
+                        setFieldName(null);
+                        setFilterKeys((prevKeys) => {
+                          const update = [...prevKeys];
+                          let itemIndex = update.findIndex((i) => i.id == item.id);
+                          update[itemIndex] = {
+                            ...update[itemIndex],
+                            selected: false,
+                            search_value: "",
+                            rank:''
+                          };
+                          return update;
+                        });
+                      }}
+                    >
+                      {reactIcons.normalclose}
+                    </span>
                   </div>
                 </div>
-                }
-              </div>
-            )
-          })}
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="mt-2">
         <div className="table_div custom-scroll-sm">
