@@ -196,7 +196,7 @@ const getClientList = async () => {
             </div>
           </div>
         )}
-        {suggestionData.length > 0 &&
+        {/* {suggestionData.length > 0 &&
          <div
             className="position-absolute border px-2 py-2 bg-white"
             style={{
@@ -208,7 +208,7 @@ const getClientList = async () => {
               right: "0px",
             }}
           >
-          {/* {suggestionData.map((item) => {
+           {suggestionData.map((item) => {
              return(
               <div className="hover-bg-change px-2">
                 <li onClick={() => {
@@ -223,9 +223,9 @@ const getClientList = async () => {
               </div>
              )
           })
-          } */}
+          } 
           </div>
-        }
+        } */}
         <input
           type="text"
           onChange={(e) => {
