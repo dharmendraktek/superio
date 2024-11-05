@@ -79,7 +79,9 @@ const Index = () => {
                       ? "border-2 text-primary border-bottom border-primary"
                       : ""
                   }`}
-                  onClick={() => setTab(item.id)}
+                  onClick={() => {
+                     setTab(item.id)
+                    }}
                   key={item.id}
                 >
                   <span className="fw-medium">{item.name}</span>

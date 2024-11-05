@@ -189,6 +189,9 @@ const Index = () => {
         // setOpen(false);
         setMultiSubmissionForm([])
       }
+      if(!response.status){
+        toast.error(response.error.message);
+      }
     }catch(err){
       console.log("-----------error ", err);
       toast.error(err.response || "Somthing went wrong");

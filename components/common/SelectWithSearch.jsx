@@ -18,6 +18,7 @@ const SelectWithSearch = ({setForm,form ,name, email=true}) => {
       `/users/${search ? `?search=${search}` : ""}`
     );
     if (response.status) {
+      console.log("-----------responer of ", response.data);
       setUsersList(response.data);
     }
   };

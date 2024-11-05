@@ -217,8 +217,6 @@
 
 // export default AttendanceCalendar;
 
-
-
 "use client";
 import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -227,6 +225,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { getReq } from "@/utils/apiHandlers";
+import AttendanceUpdateModal from "@/components/common/AttendanceUpdateModal";
 
 const localizer = momentLocalizer(moment);
 
@@ -235,11 +234,12 @@ const AttendanceCalendar = () => {
   const [events, setEvents] = useState([]);
   const userDetails = useSelector((state) => state.employer.user);
 
-
   const getEmployeeAttendanceDetails = async () => {
     try {
-      const response = await getReq(`/attendance-details/?emp_code=${userDetails.empcode}`);
-      console.log("---------------resposne ", response );
+      const response = await getReq(
+        `/attendance-details/?emp_code=${userDetails.empcode}`
+      );
+      console.log("---------------resposne ", response);
       if (response.status) {
         const transformed = transformEvents(response.data);
         setEvents(transformed);
@@ -250,7 +250,7 @@ const AttendanceCalendar = () => {
   };
 
   useEffect(() => {
-    if(userDetails){
+    if (userDetails) {
       getEmployeeAttendanceDetails();
     }
   }, [userDetails]);
@@ -268,34 +268,64 @@ const AttendanceCalendar = () => {
       const checkOutTime = moment(event.last_timestamp);
 
       // Determine the event status
-     if(event.first_timestamp == null && (moment(start).format("ddd") ==  'Sun' || moment(start).format("ddd") ==  'Sat') ){
-         title = <div className="d-flex justify-content-center align-items-center" style={{height:'100px'}}>
-                <p className="text-white fs-5">Week Off</p>
-         </div>
-     backgroundColor='red';
-     }
-     else if (event.first_timestamp && event.last_timestamp) {
+      if (
+        event.first_timestamp == null &&
+        (moment(start).format("ddd") == "Sun" ||
+          moment(start).format("ddd") == "Sat")
+      ) {
+        title = (
+          <div
+            data-bs-target="#attendanceUpdateModal"
+            data-bs-toggle="modal"
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100px" }}
+          >
+            <p className="text-white fs-5">Week Off</p>
+          </div>
+        );
+        backgroundColor = "red";
+      } else if (event.first_timestamp && event.last_timestamp) {
         // const isLate = moment(checkInTime).isAfter(moment.utc(`${event.date_of_attendance}T${shiftInTime}Z`));
-        
+
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-            <p className=" text-white fs-5">{event.late_status  ? "Present" : event.late_status == "NOLATE" ? "Present" : event.late_status}</p>
+            <p className=" text-white fs-5">
+              {event.late_status
+                ? "Present"
+                : event.late_status == "NOLATE"
+                ? "Present"
+                : event.late_status}
+            </p>
             <p className="text-white">
-              Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : '00:00'}</span>  <br />
+              Check-in: {checkInTime.utc().format("hh:mm A")} <br />{" "}
+              <span>
+                Check-out:{" "}
+                {event.last_timestamp
+                  ? checkOutTime.utc().format("hh:mm A")
+                  : "00:00"}
+              </span>{" "}
+              <br />
               (Duration {event.duration})
             </p>
           </div>
         );
-        backgroundColor = event.late_status == 'NOLATE' ? "green" : "gray";
+        backgroundColor = event.late_status == "NOLATE" ? "green" : "gray";
       } else if (event.status_details.type === "Absent") {
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-          <p className=" text-white fs-5">{event.status_details.type}</p>
-          <p className="text-white">
-            Check-in: {checkInTime.utc().format("hh:mm A" )}   <br /> <span>Check-out: {event.last_timestamp ?  checkOutTime.utc().format("hh:mm A") : 'Missing'}</span>  <br />
-            (Duration {event.duration})
-          </p>
-        </div>
+            <p className=" text-white fs-5">{event.status_details.type}</p>
+            <p className="text-white">
+              Check-in: {checkInTime.utc().format("hh:mm A")} <br />{" "}
+              <span>
+                Check-out:{" "}
+                {event.last_timestamp
+                  ? checkOutTime.utc().format("hh:mm A")
+                  : "Missing"}
+              </span>{" "}
+              <br />
+              (Duration {event.duration})
+            </p>
+          </div>
           // <div className="d-flex justify-content-center align-items-center text-center" style={{ height: "100px" }}>
           //   <p className="text-white fs-5">Absent</p>
           // </div>
@@ -303,7 +333,10 @@ const AttendanceCalendar = () => {
         backgroundColor = "red";
       } else {
         title = (
-          <div className="text-white d-flex justify-content-center align-items-center" style={{ height: "100px" }}>
+          <div
+            className="text-white d-flex justify-content-center align-items-center"
+            style={{ height: "100px" }}
+          >
             <p className="fs-5 text-white">Holiday</p>
           </div>
         );
@@ -323,12 +356,13 @@ const AttendanceCalendar = () => {
 
   return (
     <div style={{ height: "500px" }}>
+      <AttendanceUpdateModal />
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "150%", textAlign: 'center' }}
+        style={{ height: "150%", textAlign: "center" }}
         onSelectEvent={(event) => alert(event.title)}
         onMouseOver={(event) => setHoveredEvent(event)}
         onMouseLeave={() => setHoveredEvent(null)}
@@ -340,7 +374,16 @@ const AttendanceCalendar = () => {
         })}
       />
       {hoveredEvent && (
-        <div className="hover-info" style={{ position: 'absolute', background: 'black', color: 'white', padding: '10px', borderRadius: '5px' }}>
+        <div
+          className="hover-info"
+          style={{
+            position: "absolute",
+            background: "black",
+            color: "white",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
           {hoveredEvent.title}
         </div>
       )}

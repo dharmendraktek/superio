@@ -98,6 +98,8 @@ const JobPostsTable = () => {
     }
   };
 
+  
+
   useEffect(() => {
     if (jobPostList.length > 0) {
       const filteredData = jobPostList.filter((item) =>

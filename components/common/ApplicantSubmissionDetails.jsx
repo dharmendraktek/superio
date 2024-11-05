@@ -1252,7 +1252,7 @@ const ApplicantSubmissionDetails = ({
             {addDoc ? (
               <div>
                 <div className="row mt-4    ">
-                  <div className="col-2">
+                  <div className="col-4">
                     <p className="mb-2">Upload Document</p>
                     <UploadSingleDocument handleFileUpload={handleFileUpload} />
                     {documents.length > 0 &&
@@ -1260,10 +1260,10 @@ const ApplicantSubmissionDetails = ({
                         return <p className="text-danger">{file?.name}</p>;
                       })}
                   </div>
-                  <div className="col-2">
+                  {/* <div className="col-2">
                   <p className="mb-2">Upload Multiple Document</p>
                   <UploadSingleDocument handleFileUpload={handleFileUpload} multiple={true} />
-                  </div>
+                  </div> */}
                   <div className="col-8">
                     <div className="d-flex flex-fill gap-5 ">
                       <div className="w-50">
