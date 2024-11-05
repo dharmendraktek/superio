@@ -85,6 +85,9 @@ const InterviewScheduleTable = () => {
     <div>
       {isLoading && <Loader />}
       <div className="d-flex justify-content-between">
+        <div>
+          <h4>Scheduled Interview List</h4>
+        </div>
         {/* <div className="position-relative">
           <input
             type="text"
@@ -110,7 +113,7 @@ const InterviewScheduleTable = () => {
             </span>
           )}
         </div> */}
-        <MultiSearch
+        {/* <MultiSearch
           openFields={openFields}
           setOpenFields={setOpenFields}
           keys={candidateSearchKey}
@@ -122,7 +125,7 @@ const InterviewScheduleTable = () => {
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
-        />
+        /> */}
         {/* <Link href="/employers-dashboard/all-applicants/add-applicant">
           <button className="bg-primary px-3 text-white rounded-1 py-1">
             + New
@@ -269,6 +272,7 @@ const InterviewScheduleTable = () => {
                             </span>
                           );
                         })}
+                        {interviewer.length == 0 && "N/A" }
                        
                       </td>
                       <td
@@ -319,7 +323,7 @@ const InterviewScheduleTable = () => {
                     N/A    
                       </td> */}
                       <td style={{ width: "200px" }}>
-                        {authorization}    
+                        {authorization || "N/A"}    
                       </td>
                       <td style={{ width: "150px" }}>
                         <div className="d-flex gap-2">

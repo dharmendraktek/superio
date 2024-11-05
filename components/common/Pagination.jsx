@@ -1,7 +1,8 @@
 import { reactIcons } from '@/utils/icons';
 import React from 'react';
 import ReactPaginate from 'react-paginate';
-const Pagination = ({ dataCount, pageSize, setPage, page }) => {
+const Pagination = ({ dataCount, pageSize=25, setPage, page }) => {
+  console.log("-------------page size ----", pageSize);
   const handlePageClick = (event) => {
     setPage(event.selected);
   };
@@ -33,6 +34,9 @@ const Pagination = ({ dataCount, pageSize, setPage, page }) => {
         nextClassName="pagination-item-style"
         disabledClassName="disabled-item"
       />
+      <div>
+        <span>{page ? ((pageSize * (page+1))-pageSize+1) : page+1} - {dataCount > pageSize * (page+1) ? pageSize * (page+1) : dataCount } of {dataCount } </span>
+      </div>
     </div>
   );
 };

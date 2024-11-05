@@ -8,8 +8,8 @@ const JobPosts = dynamic(() => import("@/components/dashboard-pages/employers-da
 });
 
 export const metadata = {
-  title: "Employers Dashboard || KatalixAI - Job Board",
-  description: "KatalixAI - Job Board",
+  title: "Employers Dashboard || KatalixAI - Job Posting",
+  description: "KatalixAI - ATS",
 };
 
 const IndexPage = () => {

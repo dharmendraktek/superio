@@ -162,6 +162,9 @@ const AssignJobList = () => {
             )}
           </div>
         </div>
+        <div>
+          <span className="text-primary">{dataCount} records</span>
+        </div>
         {/* <Link href="/employers-dashboard/job-posts/add-job-posts">
           <button className="bg-primary px-3 text-white rounded-1 py-1">
             + New
@@ -387,8 +390,8 @@ const AssignJobList = () => {
                         })}
                         {item.assign_details.length == 0 && "N/A"} */}
                         <span
-                          onMouseEnter={() => setOpenAssign(item.id)}
-                          onMouseLeave={() => setOpenAssign(null)}
+                          // onMouseEnter={() => setOpenAssign(item.id)}
+                          // onMouseLeave={() => setOpenAssign(null)}
                           className="cursor-pointer text-primary fs-5"
                         >
                           {reactIcons.peoplegroup}

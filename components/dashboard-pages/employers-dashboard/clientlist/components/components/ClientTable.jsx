@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {  clientTableField } from "./constant";
+import { clientTableField } from "./constant";
 import { reactIcons } from "@/utils/icons";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Pagination from "@/components/common/Pagination";
-import { getReq, patchReq,  } from "@/utils/apiHandlers";
+import { getReq, patchReq } from "@/utils/apiHandlers";
 import Loader from "@/components/common/Loader";
 import AddClientModal from "@/components/common/AddClientModal";
 import AddContactManagerModal from "@/components/common/AddContactManagerModal";
@@ -30,8 +30,6 @@ const initialState = {
   client_city: "",
 };
 
-
-
 const ClientTable = () => {
   const [expand, setExpand] = useState(null);
   const [client, setClient] = useState();
@@ -44,9 +42,7 @@ const ClientTable = () => {
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [firstSearch, setFirstSearch] = useState('');
-
-
+  const [firstSearch, setFirstSearch] = useState("");
 
   const getClientList = async (search) => {
     setIsLoading(true);
@@ -62,18 +58,15 @@ const ClientTable = () => {
     }
   };
 
- 
-
   useEffect(() => {
-    if(search !== firstSearch){
+    if (search !== firstSearch) {
       setFirstSearch(search);
       setPage(0);
       getClientList(search);
-    }else {
+    } else {
       getClientList();
     }
   }, [search, active, page]);
-
 
   const handleActiveClient = async (id) => {
     // const response = await patchReq(`/activate-client/${id}/`);
@@ -102,14 +95,20 @@ const ClientTable = () => {
     }
   };
 
- 
-
   return (
     <>
       {isLoading && <Loader />}
-      <AddClientModal handleGetClientNames={getClientNameList} client={client} setClient={setClient} />
-      <AddContactManagerModal handleGetClientContactManagers={getClientNameList} contactDetails={contactDetails} setContactDetails={setContactDetails} />
-      <div className="d-flex justify-content-between mt-3">
+      <AddClientModal
+        handleGetClientNames={getClientNameList}
+        client={client}
+        setClient={setClient}
+      />
+      <AddContactManagerModal
+        handleGetClientContactManagers={getClientNameList}
+        contactDetails={contactDetails}
+        setContactDetails={setContactDetails}
+      />
+      <div className="d-flex justify-content-between mt-3 mb-2">
         <div className="d-flex">
           <div
             className="d-flex me-2 border border-primary rounded-1  "
@@ -160,52 +159,39 @@ const ClientTable = () => {
                 </div> */}
           </div>
         </div>
-        <div>
-          <div className="position-relative mb-3">
-            <button
-              onClick={() => setOpen(!open)}
-              className="border px-2 rounded-1"
-            >
-              <span className="fs-6">New</span>
-              <span className="fs-6">{reactIcons.downarrow}</span>
-            </button>
-            {open && (
-              <div
-                className="position-absolute rounded-1 py-1 text-black"
-                style={{
-                  width: "160px",
-                  height: "70px",
-                  right: "0px",
-                  top: "35px",
-                  zIndex: 1000,
-                  border: "1px solid #f9f9f9",
-                  background: "#f9f9f9",
-                }}
-              >
-                <li
-                  data-bs-toggle="offcanvas"
+        <div class="dropdown">
+          <button
+            type="button"
+            class="theme-btn btn-style-one small"
+            data-bs-toggle="dropdown"
+          >
+            New
+          </button>
+          <ul class="dropdown-menu">
+            <li  data-bs-toggle="offcanvas"
                   data-bs-target="#addClientModal"
                   aria-controls="offcanvasRight"
-                  className="cursor-pointer text-black hover-bg-gray px-2"
+                  className="cursor-pointer text-black"
                   onClick={() => {
-                    setOpen(!open);
+                    // setOpen(!open);
                     setClient(initialState);
-                  }}
-                >
-                  Client
-                </li>
-                <li
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#addContactModal"
-                  aria-controls="offcanvasLeft"
-                  className="cursor-pointer  text-black hover-bg-gray px-2"
-                  onClick={() => setOpen(!open)}
-                >
-                  Contact
-                </li>
-              </div>
-            )}
-          </div>
+                  }}>
+              <a class="dropdown-item" href="#">
+                Client
+              </a>
+            </li>
+            <li
+               data-bs-toggle="offcanvas"
+               data-bs-target="#addContactModal"
+               aria-controls="offcanvasLeft"
+               className="cursor-pointer  text-black"
+              //  onClick={() => setOpen(!open)}
+            >
+              <a class="dropdown-item" href="#">
+                Contact
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
       <div className="table_div custom-scroll-sm">
@@ -221,23 +207,29 @@ const ClientTable = () => {
                       </th>
                     ) :
                      ( */}
-                      <th  style={{ width: `${item.size}` }} key={index}>
-                        {item.title}
-                      </th>
-                   {/* )} */}
+                    <th style={{ width: `${item.size}` }} key={index}>
+                      {item.title}
+                    </th>
+                    {/* )} */}
                   </React.Fragment>
                 );
               })}
             </tr>
           </thead>
 
-          <tbody className="custom-scroll-sm" style={{height:'300px', overflow:'scroll'}}>
+          <tbody
+            className="custom-scroll-sm"
+            style={{ height: "300px", overflow: "scroll" }}
+          >
             {clientData?.map((item, index) => {
               return (
                 <>
                   <tr key={index} className="">
                     {
-                      <td className="d-flex align-items-center justify-content-between" style={{width:"130px"}}>
+                      <td
+                        className="d-flex align-items-center justify-content-between"
+                        style={{ width: "130px" }}
+                      >
                         {/* <input type="checkbox" /> */}
                         {item.contact_manager.length > 0 && (
                           <>
@@ -260,35 +252,38 @@ const ClientTable = () => {
                                 }
                               }}
                               className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
-                              style={{background:'var(--primary-2nd-color)'}}
+                              style={{ background: "var(--primary-2nd-color)" }}
                             >
-                            <div
-                              className="text-white "
-                              style={{
-                                width: "24px",
-                                height: "24px",
-                                fontSize: "12px",
-                                borderRadius: "3px",
-                                background:'var(--primary-2nd-color)'
-                              }}
-                            >
-                              <p className="text-white fw-medium" style={{fontSize:'15px'}}>
-
-                              {item.contact_manager.length}
-                              </p>
-
-                            </div>
-                            <span className="cursor-pointer text-white fs-4">
-                                {item.id == expand ? reactIcons.arrowfillup : reactIcons.arrowfilldown}
+                              <div
+                                className="text-white "
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  fontSize: "12px",
+                                  borderRadius: "3px",
+                                  background: "var(--primary-2nd-color)",
+                                }}
+                              >
+                                <p
+                                  className="text-white fw-medium"
+                                  style={{ fontSize: "15px" }}
+                                >
+                                  {item.contact_manager.length}
+                                </p>
+                              </div>
+                              <span className="cursor-pointer text-white fs-4">
+                                {item.id == expand
+                                  ? reactIcons.arrowfillup
+                                  : reactIcons.arrowfilldown}
                               </span>
                             </div>
                           </>
                         )}
                       </td>
                     }
-                    <td style={{width:"150px"}}>{item.id}</td>
+                    <td style={{ width: "150px" }}>{item.id}</td>
                     <td
-                     style={{width:"250px"}}
+                      style={{ width: "250px" }}
                       className=" hover-overlay cursor-pointer text-primary"
                       data-bs-toggle="offcanvas"
                       data-bs-target="#addClientModal"
@@ -297,28 +292,41 @@ const ClientTable = () => {
                     >
                       {item.client_name}
                     </td>
-                    <td style={{width:"300px"}}>{item.client_email || 'N/A'}</td>
-                    <td style={{width:"300px"}}>{item.client_cont || 'N/A'}</td>
-                    <td style={{width:"300px"}}>
-                      <Link href={item.client_website ? item.client_website : "#"} target="_blank" >
-                      {item.client_website || 'N/A'}
+                    <td style={{ width: "300px" }}>
+                      {item.client_email || "N/A"}
+                    </td>
+                    <td style={{ width: "300px" }}>
+                      {item.client_cont || "N/A"}
+                    </td>
+                    <td style={{ width: "300px" }}>
+                      <Link
+                        href={item.client_website ? item.client_website : "#"}
+                        target="_blank"
+                      >
+                        {item.client_website || "N/A"}
                       </Link>
-                      </td>
-                    <td style={{width:"150px"}}>{item.status || 'N/A'}</td>
+                    </td>
+                    <td style={{ width: "150px" }}>{item.status || "N/A"}</td>
                     {/* <td className="remaining">{item.category}</td> */}
-                    <td style={{width:"200px"}}>{item.owner_name || 'N/A'}</td>
+                    <td style={{ width: "200px" }}>
+                      {item.owner_name || "N/A"}
+                    </td>
                     {/* <td className="status">{item.business_unit}</td> */}
                     {/* <td className="expiry">{item.job_posting}</td> */}
                     {/* <td className="" style={{ width: "200px" }}>
                       {item.created_by}
                     </td> */}
                     <td className="" style={{ width: "250px" }}>
-                      {item.created_at ? moment(item.created_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
+                      {item.created_at
+                        ? moment(item.created_at).format("DD-MM-YYYY hh:mm A")
+                        : "N/A"}
                     </td>
                     <td className="" style={{ width: "250px" }}>
-                      {item.updated_at ? moment(item.updated_at).format("DD-MM-YYYY hh:mm A") : 'N/A'}
+                      {item.updated_at
+                        ? moment(item.updated_at).format("DD-MM-YYYY hh:mm A")
+                        : "N/A"}
                     </td>
-                    <td style={{width:"260px"}}>
+                    <td style={{ width: "260px" }}>
                       <div className="option-box">
                         <ul className="d-flex justify-content-start option-list">
                           <li>
@@ -356,7 +364,9 @@ const ClientTable = () => {
                               //     data-bs-target="#userDeleteModal"
 
                               data-text={`${
-                                active == 1 ? "Inactive Client" : "Active Client"
+                                active == 1
+                                  ? "Inactive Client"
+                                  : "Active Client"
                               }`}
                             >
                               <span
@@ -375,7 +385,10 @@ const ClientTable = () => {
                   {item.id == expand && (
                     <tr style={{ background: "white" }}>
                       <td colSpan={7}>
-                        <div className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"  style={{ height:'400px', overflow:'auto' }}>
+                        <div
+                          className="mx-5 my-3 border rounded-1  inner-table shadow custom-scroll-2nd"
+                          style={{ height: "400px", overflow: "auto" }}
+                        >
                           <div></div>
                           <table>
                             <thead className="table-inner-thead">
@@ -389,7 +402,12 @@ const ClientTable = () => {
                               <th>Status</th>
                               {/* <th>Created By</th> */}
                             </thead>
-                            <tbody style={{height:'400px !important', overflow:'auto'}}>
+                            <tbody
+                              style={{
+                                height: "400px !important",
+                                overflow: "auto",
+                              }}
+                            >
                               {/* <tr>
                                 <td
                                   className="cursor-pointer"
@@ -419,15 +437,15 @@ const ClientTable = () => {
                                       aria-controls="offcanvasLeft"
                                       className="cursor-pointer fw-bold"
                                     >
-                                      {contact.name || 'N/A'}
+                                      {contact.name || "N/A"}
                                     </td>
-                                    <td>{contact.email || 'N/A'}</td>
-                                    <td>{contact.off_cont || 'N/A'}</td>
-                                    <td>{contact.designation || 'N/A'}</td>
-                                    <td>{contact.contact || 'N/A'}</td>
+                                    <td>{contact.email || "N/A"}</td>
+                                    <td>{contact.off_cont || "N/A"}</td>
+                                    <td>{contact.designation || "N/A"}</td>
+                                    <td>{contact.contact || "N/A"}</td>
                                     {/* <td>Alaska</td> */}
-                                    <td>{contact.ownership || 'N/A'}</td>
-                                    <td>{contact.status || 'N/A'}</td>
+                                    <td>{contact.ownership || "N/A"}</td>
+                                    <td>{contact.status || "N/A"}</td>
                                     {/* <td>{contact.createdBy}</td> */}
                                   </tr>
                                 );

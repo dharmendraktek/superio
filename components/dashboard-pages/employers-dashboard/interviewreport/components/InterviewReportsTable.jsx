@@ -132,6 +132,9 @@ const InterviewReportsTable = () => {
   return (
     <div>
       {isLoading && <Loader />}
+      <div className="py-1">
+        <h4>Interview Reports</h4>
+      </div>
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-2">
           <MultiFilterSearch
@@ -222,7 +225,10 @@ const InterviewReportsTable = () => {
             </div>
           </div>
         </div>
+        <div className="d-flex align-items-center gap-2">
         <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
           <button
             className="theme-btn btn-style-one small d-flex align-items-center gap-2"
             onClick={() => handleExportExcel()}

@@ -121,6 +121,9 @@ const ClientSubmissionReport = () => {
   return (
     <div className="theme-background">
       {isLoading && <Loader />}
+      <div className="py-1">
+        <h4>Submission</h4>
+      </div>
       <StatusModal
         submissionId={submissionDetails?.submission_id}
         currentStatus={submissionDetails?.current_status}
@@ -209,7 +212,10 @@ const ClientSubmissionReport = () => {
             </div>
           </div>
         </div>
+        <div className="d-flex align-items-center gap-2">
         <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
           <button
             className="theme-btn btn-style-one small d-flex align-items-center gap-2"
             onClick={() => handleExportExcel()}

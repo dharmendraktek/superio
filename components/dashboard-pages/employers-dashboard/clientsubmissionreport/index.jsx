@@ -6,7 +6,7 @@ const index = () => {
     <InnerLayout>
       <section className="user-dashboard">
         <div className="dashboard-outer">
-          <div className="col-lg-12 px-3 mt-4">
+          <div className="col-lg-12 px-3 mt-2">
             <ClientSubmissionReport />
           </div>
         </div>

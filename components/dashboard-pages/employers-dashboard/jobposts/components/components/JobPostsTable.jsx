@@ -171,11 +171,16 @@ const JobPostsTable = () => {
             )}
           </div>
         </div>
+        <div className="d-flex align-items-center gap-2">
+        <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
         <Link href="/employers-dashboard/job-posts/add-job-posts">
           <button className="bg-primary px-3 text-white rounded-1 py-1">
             + New
           </button>
         </Link>
+        </div>
       </div>
       <div className="table_div custom-scroll-sm">
         <table className="default-table ">

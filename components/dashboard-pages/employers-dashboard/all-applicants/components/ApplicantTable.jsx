@@ -117,11 +117,16 @@ const ApplicantTable = () => {
           endDate={endDate}
           setEndDate={setEndDate}
         />
+        <div className="d-flex align-items-center gap-2">
+        <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
         <Link href="/employers-dashboard/all-applicants/add-applicant">
           <button className="bg-primary px-3 text-white rounded-1 py-1">
             + New
           </button>
         </Link>
+        </div>
       </div>
       <div className="mt-2">
         <div className="table_div custom-scroll-sm">

@@ -108,6 +108,9 @@ const JobReportTable = () => {
   return (
     <div>
       {isLoading && <Loader />}
+      <div className="py-1">
+        <h4>Jobs Report</h4>
+      </div>
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-2">
           <MultiFilterSearch
@@ -187,7 +190,10 @@ const JobReportTable = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="d-flex align-items-center gap-2">
+          <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
           <button
             className="theme-btn btn-style-one small d-flex align-items-center gap-2"
             onClick={() => handleExportExcel()}
@@ -197,7 +203,7 @@ const JobReportTable = () => {
           </button>
         </div>
       </div>
-      <div className="d-flex me-2 my-2">
+      <div className="d-flex me-2 mt-1 mb-2">
         {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
           return (
             <div className="">
@@ -461,149 +467,6 @@ const JobReportTable = () => {
                         'Action'    
                       </td> */}
                       </tr>
-                      {/* {item.id == expand && (
-                      <tr>
-                        <div className="my-3 px-5 border rounded-1  inner-table ">
-                      <InterviewScheduleModal   jobPostList={[]}  jobReportData={jobReportData} />  
-                        <div className="mx-3 my-2">
-                          <div className="d-flex gap-2">
-                            {processOptions.map((item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  className="border px-2 rounded-1"
-                                  data-bs-toggle={item.dataToggle}
-                                  data-bs-target={item.dataTarget}
-                                  aria-controls={item.ariaControls}
-                                >
-                                  <span className="text-primary cursor-pointer">
-                                    {item.name}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                        <td colSpan={15}>
-                          <div className="mx-2 border rounded-1  inner-table shadow">
-                           
-                            <table className="custom-scroll-2nd">
-                              <thead className="table-inner-thead">
-                                <th style={{width:'60px'}}>
-                                  <input type="checkbox" className="mx-1" />
-                                </th>
-                                <th>Job Code</th>
-                                <th>Job Title</th>
-                                <th>Submission Record</th>
-                                <th>Delivery Manager</th>
-                                <th>Resume</th>
-                                <th>Profile Status</th>
-                                <th>Submission Rating</th>
-                                <th>Client</th>
-                                <th>Source</th>
-                                <th>Client Bill Rate/Salary</th>
-                                <th style={{ width: "250px" }}>Bill Rate</th>
-                                <th style={{ width: "250px" }}>Pay Rate</th>
-                                <th>Employer Name</th>
-                                <th>Submitted By</th>
-                                <th>Submitted On</th>
-                              </thead>
-                              <tbody>
-                                {item.jobs_associated.map((_item, _index) => {
-                                  let {
-                                    pay_rate_currency,
-                                    pay_rate_amount,
-                                    pay_rate_type,
-                                    pay_rate_contract_type,
-                                    bill_rate_currency,
-                                    bill_rate_amount,
-                                    bill_rate_type,
-                                    bill_rate_contract_type,
-                                    current_status_details,
-                                    applicant_rating,
-                                    applicant_details,
-                                    job_detail,
-                                    submitted_by_details,
-                                    submission_on    
-                                  } = _item;
-
-                                  let { job_code, title, client_name, delivery_manager, amount, currency, payment_frequency } =
-                                    job_detail;
-                                  let {first_name, last_name} = delivery_manager;
-                                  let deliverManagerName = (first_name || '') + (last_name || '')
-                                  let clientRate = (currency || 'N.A') + '/' + (amount || 'N.A') + '/' + (payment_frequency || 'N.A')
-                                  let {source} = applicant_details[0];
-
-                                  let applicantResume = item.documents.find((doc) => doc.is_default == true);
-                                  let {communication, overall, profesionalism, technical} = applicant_rating;
-                                  
-
-                                  let overallRating = (communication + overall + profesionalism + technical)/4
-
- 
-                                  
-                                  return (
-                                    <tr>
-                                      <td style={{width:'60px'}}>
-                                        <input type="checkbox"
-                                         onChange={(e) => {
-                                          let update = [...jobReportData];
-                                          if (e.target.checked) {
-                                            update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
-                                          } else {
-                                            update[index]["jobs_associated"][_index]['selected'] = e.target.checked;
-                                          }
-                                          setJobReportData(update);
-                                        }}
-                                        checked={_item?.selected}
-
-                                        />
-                                      </td>
-                                      <td>{job_code ? job_code : "N/A"}</td>
-                                      <td>{title ? title : "N/A"}</td>
-                                      <td className="cursor-pointer">
-                                        <Link
-                                          href="/employers-dashboard/all-applicants/[id]"
-                                          as={`/employers-dashboard/all-applicants/${item.id}`}
-                                        >
-                                          <span className="text-primary">
-                                            Click Here
-                                          </span>
-                                        </Link>
-                                      </td>
-                                      <td>{deliverManagerName}</td>
-                                      <td>
-                                        <span  onClick={() => {
-                                              window.open(BASE_URL + `/applicant-documents/${applicantResume?.id}/download/`);
-                                        }} className="fs-5 text-primary cursor-pointer">{reactIcons.document}</span>
-                                      </td>
-                                      <td>{current_status_details?.display_name}</td>
-                                      <td>{overallRating}</td>
-                                      <td>{client_name || "N/A"}</td>
-                                      <td>{source}</td>
-                                      <td>{clientRate}</td>
-                                      <td style={{ width: "250px" }}>
-                                        {bill_rate_currency}/{bill_rate_amount}/
-                                        {bill_rate_type}/
-                                        {bill_rate_contract_type}
-                                      </td>
-                                      <td style={{ width: "250px" }}>
-                                        {pay_rate_currency}/{pay_rate_amount}/
-                                        {pay_rate_type}/{pay_rate_contract_type}
-                                      </td>
-                                      <td>Employer Name</td>
-                                      <td>{submitted_by_details?.first_name + ' ' + submitted_by_details?.last_name}</td>
-                                      <td>{moment(submission_on).format('DD-MM-YYYY hh:mm A')}</td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-                          </div>
-                        </td>
-                      </div>
-                      </tr>
-                    )} */}
                     </>
                   );
                 })}

@@ -112,6 +112,9 @@ const ConfirmationReport = () => {
   return (
     <div>
       {isLoading && <Loader />}
+      <div className="py-1">
+        <h4>Confirmation Reports</h4>
+      </div>
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
           <MultiFilterSearch
@@ -206,7 +209,10 @@ const ConfirmationReport = () => {
             </div>
           </div>
         </div>
+        <div className="d-flex align-items-center gap-2">
         <div>
+            <span className="text-primary">{dataCount} records</span>
+          </div>
           <button
             className="theme-btn btn-style-one small d-flex gap-2"
             onClick={() => handleExportExcel()}
@@ -216,7 +222,7 @@ const ConfirmationReport = () => {
           </button>
         </div>
       </div>
-      <div className="d-flex me-2 my-2">
+      <div className="d-flex me-2 mt-1 mb-2">
         {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
           return (
             <div className="">
