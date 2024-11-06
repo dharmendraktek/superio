@@ -537,7 +537,7 @@ const JobPostsTable = () => {
                         <InterviewScheduleModal
                           jobPostList={jobPostList}
                           applicantData={[]}
-                          handleGetJobDetails={handleGetJobDetails}
+                          handleGetJobDetails={getJobpostsList}
                         />
                         <ClientSubmissionModal
                           submissionDetails={jobPostList}
