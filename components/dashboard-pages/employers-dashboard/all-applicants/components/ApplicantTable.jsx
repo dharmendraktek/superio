@@ -9,27 +9,12 @@ import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import ClientSubmissionModal from "../../jobposts/components/components/ClientSubmissionModal";
 import NotesModal from "@/components/common/NotesModal";
 import ResumePreviewModal from "@/components/common/ResumePreviewModal";
 
-// export const applicantData = [
-//   {
-//     id: 672652,
-//     name: "Anil Patel",
-//     email: "anilpatel365@gmail.com",
-//     mobile: "9610465261",
-//     city: "Indore",
-//     source: "Dice",
-//     state: "Madhyapradesh",
-//     status: "New Lead",
-//     title: "Full stack developer",
-//     ownership: "-",
-//     authorization: "-",
-//   },
-// ];
 
 const ApplicantTable = () => {
   const [search, setSearch] = useState("");
@@ -78,7 +63,6 @@ const ApplicantTable = () => {
   }, [search, startDate, endDate, page]);
 
   const handleGetApplicantList = async (param) => {
-    console.log("-----------param ", param);
     setIsLoading(true);
     const response = await getReq(
       `/applicants/?page=${page + 1}&size=25${param ? param : ""}`
@@ -535,6 +519,7 @@ const ApplicantTable = () => {
                           <InterviewScheduleModal
                             jobPostList={[]}
                             applicantData={applicantData}
+                            handleGetJobDetails={handleGetApplicantList}
                           />
                           <ClientSubmissionModal
                             submissionDetails={applicantData}
@@ -652,8 +637,6 @@ const ApplicantTable = () => {
                                         profesionalism +
                                         technical) /
                                       4;
-
-                                    console.log("--------------submitteb by details ", submitted_by_details?.last_name);
                                     return (
                                       <tr
                                         style={{

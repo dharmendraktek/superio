@@ -222,7 +222,6 @@ import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { getReq } from "@/utils/apiHandlers";
 import AttendanceUpdateModal from "@/components/common/AttendanceUpdateModal";
@@ -232,6 +231,7 @@ const localizer = momentLocalizer(moment);
 const AttendanceCalendar = () => {
   const [hoveredEvent, setHoveredEvent] = useState(null);
   const [events, setEvents] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const userDetails = useSelector((state) => state.employer.user);
 
   const getEmployeeAttendanceDetails = async () => {
@@ -239,7 +239,6 @@ const AttendanceCalendar = () => {
       const response = await getReq(
         `/attendance-details/?emp_code=${userDetails.empcode}`
       );
-      console.log("---------------resposne ", response);
       if (response.status) {
         const transformed = transformEvents(response.data);
         setEvents(transformed);
@@ -253,7 +252,17 @@ const AttendanceCalendar = () => {
     if (userDetails) {
       getEmployeeAttendanceDetails();
     }
-  }, [userDetails]);
+  }, [userDetails, currentDate]);
+
+  // Navigate to the previous month
+  const previousMonth = () => {
+    setCurrentDate(moment(currentDate).subtract(1, "month").toDate());
+  };
+
+  // Navigate to the next month
+  const nextMonth = () => {
+    setCurrentDate(moment(currentDate).add(1, "month").toDate());
+  };
 
   // Transform data for calendar
   const transformEvents = (data) => {
@@ -285,8 +294,6 @@ const AttendanceCalendar = () => {
         );
         backgroundColor = "red";
       } else if (event.first_timestamp && event.last_timestamp) {
-        // const isLate = moment(checkInTime).isAfter(moment.utc(`${event.date_of_attendance}T${shiftInTime}Z`));
-
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
             <p className=" text-white fs-5">
@@ -326,9 +333,6 @@ const AttendanceCalendar = () => {
               (Duration {event.duration})
             </p>
           </div>
-          // <div className="d-flex justify-content-center align-items-center text-center" style={{ height: "100px" }}>
-          //   <p className="text-white fs-5">Absent</p>
-          // </div>
         );
         backgroundColor = "red";
       } else {
@@ -362,6 +366,8 @@ const AttendanceCalendar = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
+        date={currentDate}
+        onNavigate={(date) => setCurrentDate(date)}
         style={{ height: "150%", textAlign: "center" }}
         onSelectEvent={(event) => alert(event.title)}
         onMouseOver={(event) => setHoveredEvent(event)}

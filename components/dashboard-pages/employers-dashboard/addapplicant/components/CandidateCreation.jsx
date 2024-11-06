@@ -72,6 +72,7 @@ const CandidateCreation = ({
   applicantDetails,
   setApplicantDetails,
   setActiveForm,
+  resume,
 }) => {
   const [countryCode, setCountryCode] = useState("AF");
   const countryList = Country.getAllCountries();
@@ -97,6 +98,8 @@ const CandidateCreation = ({
   
   const [openPrim, setOpenPrim] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
+  const [document, setDocument] = useState(resume ? resume : "");
+
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -312,6 +315,7 @@ const CandidateCreation = ({
           setApplicantDetails(response.data);
           if (!applicantData.id) {
             setActiveForm(2);
+            handleUploadDoc(response.data.id);
           } else if (applicantData.id) {
             // router.push('/employers-dashboard/all-applicants/{}')
           }
@@ -329,6 +333,41 @@ const CandidateCreation = ({
     }
   };
 
+  useEffect(() => {
+    if (resume) {
+      setForm((prev) => ({ ...prev, type: "Resume" }));
+    }
+  }, [resume]);
+
+  useEffect(() => {
+    if (document) {
+      setForm((prev) => ({ ...prev, title: document.name }));
+    }
+  }, [document]);
+  
+  
+  const handleUploadDoc = async (applicantId) => {
+    const formData = new FormData();
+    setIsLoading(true);
+    // documents.forEach((file, index) => {
+    formData.append("files", document);
+    // });
+    formData.append("title", form.title);
+    formData.append("type", form.type);
+    formData.append("comment", form.comment);
+    formData.append("applicant", applicantId);
+    if(form.is_default){
+      formData.append("is_default", form.is_default);
+    }
+    const response = await postApiReq(`/applicant-documents/`, formData);
+    setIsLoading(false);
+    if (response.status) {
+      // handleGetApplicantDetails();
+      // setOpen(false);
+      // handleClear()
+      // toast.success("Document uploaded successfully");
+    }
+  };
 
   return (
     <div className="shadow py-3 px-3 bg-white">

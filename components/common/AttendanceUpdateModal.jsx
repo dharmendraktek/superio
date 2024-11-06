@@ -19,6 +19,7 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
     shift_out_time: null,
   });
   const [statusList, setStatusList] = useState([]);
+  console.log("-----------select data ", selectDateData);
 
   useEffect(() => {
     if (selectDateData) {
@@ -31,7 +32,6 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
         shift_in_time,
         shift_out_time,
       } = selectDateData;
-      console.log("------------selected data ", selectDateData);
       setForm((prev) => ({
         ...prev,
         status: status.id,
@@ -39,8 +39,8 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
         first_timestamp: first_timestamp,
         last_timestamp: last_timestamp,
         duration: duration,
-        shift_in_time:convertTimeToISOString(shift_in_time),
-        shift_out_time:convertTimeToISOString(shift_out_time),
+        shift_in_time:shift_in_time,
+        shift_out_time:shift_out_time,
       }));
     }
   }, [selectDateData]);
@@ -59,7 +59,7 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
   const handleUpdateStatus = async () => {
     try {
       const response = await patchReq(
-        `/attendance-details/${submissionId}/update-status/`,
+        `/attendance-details/${selectDateData?.id}/`,
         form
       );
       if (response.status) {
@@ -73,22 +73,6 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log("-----------form ", form);
-
-  function convertTimeToISOString(timeStr) {
-   // Get today's date in YYYY-MM-DD format
-   const today = new Date();
-   const dateStr = today.toISOString().split('T')[0]; // "2024-11-04" part of today's date
-   
-   // Combine today's date with the time
-   const dateTimeStr = `${dateStr}T${timeStr}Z`;  // Format: "2024-11-04T18:00:00Z"
-   
-   // Convert to a Date object
-   const dateObj = new Date(dateTimeStr);
-   
-   // Return the ISO string (this will automatically adjust to UTC)
-   return dateObj.toISOString();
- }
 
   return (
     <div
@@ -116,6 +100,7 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
               <div className="my-2">
                 <p>Status</p>
                 <select
+                  name="status"
                   value={form.status}
                   onChange={handleChange}
                   className="client-form-input"
@@ -132,10 +117,10 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
                   ))}
                 </select>
               </div>
-              {/* <div className="my-2">
+              <div className="my-2">
                     <p>Date</p>
                     <input type="text" className="client-form-input"  checked value={moment(form.date_of_attendance).format("DD-MM-yyyy")} />
-                 </div> */}
+                 </div>
               <div className="my-2">
                 <p>In Time</p>
                 <TimePickerCustom
@@ -168,21 +153,23 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
               </div>
               <div className="my-2">
                 <p>Shift In Time</p>
-                <TimePickerCustom
+                {/* <TimePickerCustom
                   // value={form.shift_in_time}
                   handleTime={(date) =>
                     setForm((prev) => ({ ...prev, shift_in_time: date }))
                   }
-                />
+                /> */}
+                <input type="text"  value={form.shift_in_time} disabled onChange={(e) => setForm((prev) => ({...prev, shift_in_time:e.target.value}))} className="client-form-input" />
               </div>
               <div className="my-2">
                 <p>Shift Out Time</p>
-                <TimePickerCustom
+                {/* <TimePickerCustom
                   // value={form.shift_in_time}
                   handleTime={(date) =>
                     setForm((prev) => ({ ...prev, shift_out_time: date }))
                   }
-                />
+                /> */}
+                <input type="text"  value={form.shift_out_time} disabled onChange={(e) => setForm((prev) => ({...prev, shift_out_time:e.target.value}))}  className="client-form-input" />
               </div>
             </div>
           </div>

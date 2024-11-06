@@ -99,12 +99,12 @@ const ClientTable = () => {
     <>
       {isLoading && <Loader />}
       <AddClientModal
-        handleGetClientNames={getClientNameList}
+        handleGetClientNames={getClientList}
         client={client}
         setClient={setClient}
       />
       <AddContactManagerModal
-        handleGetClientContactManagers={getClientNameList}
+        handleGetClientContactManagers={getClientList}
         contactDetails={contactDetails}
         setContactDetails={setContactDetails}
       />

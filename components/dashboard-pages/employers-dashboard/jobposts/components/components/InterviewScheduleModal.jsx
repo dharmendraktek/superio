@@ -9,7 +9,7 @@ import {
   timeType,
 } from "@/utils/constant";
 import { reactIcons } from "@/utils/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import TimeZoneModal from "./TimeZoneModal";
 import moment from "moment";
@@ -70,9 +70,7 @@ const InterviewScheduleModal = ({
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
 
-  // console.log("-------------------job post slist ", jobPostList);
-  // console.log("--------------applicant data ----", applicantData);
-  // console.log("----------------selected item ---------", selectedItem);
+  const closeBtnRef = useRef(null);
 
   useEffect(() => {
     if (jobPostList.length > 0 || selectedItem) {
@@ -115,6 +113,7 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
+    console.log("--------------end time start time start date ", form.endtime, form.starttime, form.startdate);
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
@@ -124,15 +123,16 @@ const InterviewScheduleModal = ({
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
       setIsLoading(false);
+     
       if (response.status) {
+        
         handleSubmitReminder(response.data.id);
         handleAddInterviewDocuments(response.data.id);
-        handleGetJobDetails();
-        let closeBtn = document.getElmentById("closeBtnInterview");
-        closeBtn.click();
         toast.success(
           "Applicant interview has been successfully scheduled"
         );
+        closeBtnRef.current.click();  
+        handleGetJobDetails();
       }
     } catch (err) {
       toast.error(err || "Something went wrong");
@@ -283,10 +283,11 @@ const InterviewScheduleModal = ({
         <button
           type="button"
           className="btn-close text-reset"
+          ref={closeBtnRef}
           data-bs-dismiss="offcanvas"
           aria-label="Close"
           id="closeBtnInterview"
-          // onClick={() => setForm(initialState)}
+          onClick={() => setForm(initialState)}
         ></button>
       </div>
       <div className="offcanvas-body">
@@ -489,7 +490,7 @@ const InterviewScheduleModal = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="my-3">
+            {/* <div className="my-3">
               <div className="cursor-pointer" onClick={() => setOpen(!open)}>
                 <strong>
                   Advance Configurations{" "}
@@ -507,7 +508,6 @@ const InterviewScheduleModal = ({
                           type="checkbox"
                           name="is_notify_applicant"
                           checked={form.is_notify_applicant}
-                          // value={true}
                           onChange={(e) => {
                             setForm((prev) => ({
                               ...prev,
@@ -522,7 +522,6 @@ const InterviewScheduleModal = ({
                           type="checkbox"
                           name="is_notify_interviewer"
                           checked={form.is_notify_interviewer}
-                          // value={true}
                           onChange={(e) => {
                             setForm((prev) => ({
                               ...prev,
@@ -575,10 +574,6 @@ const InterviewScheduleModal = ({
                         }}
                       />
                     </div>
-                    {/* <div className="col-6 my-2">
-                      <p>Evaluation Templates</p>
-                      <textarea className="client-form-input" />
-                    </div> */}
                     <div className="col-6 my-2">
                       <p>
                         Client <strong className="text-danger">*</strong>
@@ -740,10 +735,6 @@ const InterviewScheduleModal = ({
                       <UploadSingleDocument
                         handleFileUpload={(e) => handleFileUpload(e, "resume")}
                       />
-                      {/* <input
-                        type="file"
-                        onChange={(e) => handleFileUpload(e, "resume")}
-                      /> */}
                       <div>
                         {document && (
                           <span className="text-primary">{document.name}</span>
@@ -758,12 +749,6 @@ const InterviewScheduleModal = ({
                         }
                         multiple
                       />
-
-                      {/* <input
-                        type="file"
-                        onChange={(e) => handleFileUpload(e, "additional")}
-                        multiple
-                      /> */}
                       {additionalDoc?.map((item) => {
                         return <p className="text-primary">{item?.name}</p>;
                       })}
@@ -779,7 +764,7 @@ const InterviewScheduleModal = ({
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
             <div className="d-flex gap-2">
               <button
                 onClick={handleScheduleInterview}
@@ -790,6 +775,7 @@ const InterviewScheduleModal = ({
               <button
                 className="theme-btn btn-style-four small"
                 data-bs-dismiss="offcanvas"
+                id="cancelBtn"
               >
                 Cancel
               </button>

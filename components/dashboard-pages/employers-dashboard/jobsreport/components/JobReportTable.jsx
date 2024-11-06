@@ -317,6 +317,9 @@ const JobReportTable = () => {
                 <th style={{ width: "200px" }} className="">
                   Submission Count
                 </th>
+                <th style={{ width: "200px" }} className="">
+                 Total Submission Count
+                </th>
                 <th style={{ width: "250px" }}>Submission Count Done</th>
                 <th style={{ width: "250px" }}>Client Interview Count</th>
                 <th style={{ width: "300px" }}>Client Interview Count Done</th>
@@ -359,6 +362,7 @@ const JobReportTable = () => {
                     l2_interview_done_count,
                     l3_interview_done_count,
                     client_interview_done_count,
+                    today_submission_count,
                   } = item;
 
                   return (
@@ -442,6 +446,7 @@ const JobReportTable = () => {
                         <td className="" style={{ width: "150px" }}>
                           {tagged_count}
                         </td>
+                        <td style={{ width: "200px" }}>{today_submission_count}</td>
                         <td style={{ width: "200px" }}>{submission_count}</td>
                         <td style={{ width: "250px" }}>{submissions_done}</td>
                         <td style={{ width: "250px" }}>

@@ -409,6 +409,9 @@ const Index = () => {
     }
   };
 
+
+  
+
   // const handleAddDefaultResume
 
   return (
@@ -948,7 +951,10 @@ const Index = () => {
                         </button>
                       </Link> */}
                       <button
-                        onClick={() => setTab(null)}
+                        onClick={() =>{ 
+                          setTab(null) 
+                          setActiveForm(1)
+                        }}
                         className="theme-btn btn-style-four small"
                       >
                         Cancel
@@ -961,9 +967,9 @@ const Index = () => {
                             return (
                               <div
                                 onClick={() => {
-                                  // if (applicantDetails?.id) {
+                                  if (applicantDetails?.id) {
                                   setActiveForm(item.id);
-                                  // }
+                                  }
                                 }}
                                 className={`d-flex gap-3 px-3 mb-2 align-items-center rounded-1  ${
                                   activeForm == item.id
@@ -999,6 +1005,7 @@ const Index = () => {
                             setTab={setTab}
                             name="create"
                             setActiveForm={setActiveForm}
+                            resume={resume[0]}
                           />
                         )}
                         {activeForm == 2 && (

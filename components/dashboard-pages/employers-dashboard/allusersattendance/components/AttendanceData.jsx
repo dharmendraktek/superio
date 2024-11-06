@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import AttendanceCalendar from "../../dashboard/components/AttendanceCalender";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
+import ShiftUpdateModal from "@/components/common/ShiftUpdateModal";
 
 // const usersAttendanceData = {
 //   1002: [
@@ -273,15 +274,15 @@ const AttendanceData = () => {
   const [selectDateData, setSelectDateData] = useState(null);
   const [usersAttendanceData, setUsersAttendanceData] = useState([]);
   const [openIndex, setOpenIndex] = useState(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [form, setForm] = useState({
-    user:''
-  })
-  const [allParam, setAllParam] = useState('');
+    user: "",
+  });
+  const [allParam, setAllParam] = useState("");
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [userName, setUserName] = useState('');
+  const [search, setSearch] = useState("");
+  const [userName, setUserName] = useState("");
   const [usersList, setUsersList] = useState([]);
 
   const getAllUsersAttendance = async (param) => {
@@ -296,44 +297,43 @@ const AttendanceData = () => {
   }, []);
 
   useEffect(() => {
-    handleGetUsersList()
-}, [search])
+    handleGetUsersList();
+  }, [search]);
 
-const handleGetUsersList = async () => {
-  const response = await getReq(
-    `/users/${search ? `?search=${search}` : ""}`
-  );
-  if (response.status) {
-    console.log("-----------responer of ", response.data);
-    setUsersList(response.data);
-  }
-};
-
+  const handleGetUsersList = async () => {
+    const response = await getReq(
+      `/users/${search ? `?search=${search}` : ""}`
+    );
+    if (response.status) {
+      console.log("-----------responer of ", response.data);
+      setUsersList(response.data);
+    }
+  };
 
   useEffect(() => {
     let today = new Date();
     let month = moment(today).format("yyyy-MM");
-    let param = ''
+    let param = "";
 
     // Include date parameters if both startDate and endDate are present
     if (startDate && endDate) {
       param += `?start_date=${moment(startDate).format(
         "YYYY-MM-DD"
       )}&end_date=${moment(endDate).format("YYYY-MM-DD")}`;
-    }else{
+    } else {
       param = `?year_month=${month}`;
     }
     console.log("-------------form . user ", form.user);
 
-    if(form.user){
-      param += `&emp_id=${form.user}`
+    if (form.user) {
+      param += `&emp_id=${form.user}`;
     }
-  
+
     if (param !== allParam) {
       setAllParam(param);
       // setPage(0); // Set page to 0 if it's falsy
       getAllUsersAttendance(param);
-    } 
+    }
     // else if (page) {
     //   getJobDelegationReports(param);
     // } else {
@@ -356,73 +356,94 @@ const handleGetUsersList = async () => {
     return { presentCount, absentCount };
   };
 
-  console.log("-----------form ----", form);
-  
+  const handleClear = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setForm((prev) => ({...prev, "user":''}))
+  }
 
   return (
     <div>
       <AttendanceUpdateModal selectDateData={selectDateData} />
+      <ShiftUpdateModal selectDateData={selectDateData} />
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div>
-        <div className="d-flex align-items-center gap-3">
-          <div className="w-20">
-          <div className="position-relative">
-    <div
-      className="client-form-input d-flex justify-content-between cursor-pointer"
-      onClick={() => setOpen(!open)}
-      // onMouseLeave={() => setOpen(false)}
-    >
-      {userName ?
-      <span> {userName.first_name + ' ' + userName.last_name+ ' '}</span>
-      :
-      <span></span>
-      }
-      <span className=" float-end">{reactIcons.downarrow}</span>
-    </div>
-    {open && (
-      <div
-        className="position-absolute bg-white border border-1 w-100 px-2 table_div_custom custom-scroll-sm"
-        style={{ top: "33px", zIndex: 10000, height:'350px' }}
-        onMouseLeave={() => setOpen(false)}
-      >
-        <div className="my-2">
-          <input className="border px-2 border-primary rounded-1 w-100 " placeholder="Search here..." type='text' onChange={(e) => setSearch(e.target.value)}/>
-        </div>
-        {usersList.map((item, index) => {
-          return (
-            <div key={index} className="hover-bg-change">
-              <span className="mx-2" onClick={() =>{ 
-                setUserName(item);
-                setForm((prev) => ({...prev, "user":1972}))
-                setOpen(false);
-                setSearch('')
-                }}>{item.first_name} {item.last_name}</span>
+          <div className="d-flex align-items-center gap-3">
+            <div className="w-20">
+              <div className="position-relative">
+                <div
+                  className="client-form-input d-flex justify-content-between cursor-pointer"
+                  onClick={() => setOpen(!open)}
+                  // onMouseLeave={() => setOpen(false)}
+                >
+                  {userName ? (
+                    <span>
+                      {" "}
+                      {userName.first_name + " " + userName.last_name + " "}
+                    </span>
+                  ) : (
+                    <span></span>
+                  )}
+                  <span className=" float-end">{reactIcons.downarrow}</span>
+                </div>
+                {open && (
+                  <div
+                    className="position-absolute bg-white border border-1 w-100 px-2 table_div_custom custom-scroll-sm"
+                    style={{ top: "33px", zIndex: 10000, height: "350px" }}
+                    onMouseLeave={() => setOpen(false)}
+                  >
+                    <div className="my-2">
+                      <input
+                        className="border px-2 border-primary rounded-1 w-100 "
+                        placeholder="Search here..."
+                        type="text"
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                    {usersList.map((item, index) => {
+                      return (
+                        <div key={index} className="hover-bg-change">
+                          <span
+                            className="mx-2"
+                            onClick={() => {
+                              setUserName(item);
+                              setForm((prev) => ({
+                                ...prev,
+                                user: item.empcode,
+                              }));
+                              setOpen(false);
+                              setSearch("");
+                            }}
+                          >
+                            {item.first_name} {item.last_name} {item.empCode}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-          );
-        })}
-      </div>
-    )}
-  </div>
-          </div>
-        <div>
-        <div className="d-flex gap-2 mt-1">
-              <div className="" style={{ width: "200px" }}>
-                <DatePickerCustom
-                  date={startDate}
-                  handleDate={(date) => setStartDate(date)}
-                  placeholder="From Date"
-                />
+            <div>
+              <div className="d-flex gap-2 mt-1">
+                <div className="" style={{ width: "200px" }}>
+                  <DatePickerCustom
+                    date={startDate}
+                    handleDate={(date) => setStartDate(date)}
+                    placeholder="From Date"
+                  />
+                </div>
+                <div className="" style={{ width: "200px" }}>
+                  <DatePickerCustom
+                    date={endDate}
+                    handleDate={(date) => setEndDate(date)}
+                    placeholder="To Date"
+                  />
+                </div>
+                <button onClick={handleClear} className="theme-btn btn-style-two small">Clear</button>
               </div>
-              <div className="" style={{ width: "200px" }}>
-                <DatePickerCustom
-                  date={endDate}
-                  handleDate={(date) => setEndDate(date)}
-                  placeholder="To Date"
-                />
-              </div>
+            </div>
           </div>
-        </div>
-        </div>
         </div>
 
         <div className="d-flex mb-2">
@@ -453,29 +474,33 @@ const handleGetUsersList = async () => {
                 <th style={{ width: "130px" }}>Leave Balance</th>
                 <th style={{ width: "130px" }}>Compoff</th>
                 <th style={{ width: "160px" }}>Company Name</th>
-                <th style={{ width: "200px" }}>Shift Time</th>
+                <th style={{ width: "210px" }}>Shift Time</th>
                 {/* <th style={{width:"130px"}}>Date</th>
                     <th style={{width:"130px"}}>Check In</th>
                      <th style={{width:"130px"}}>Check out</th>
                     <th style={{width:"130px"}}>Duration</th> */}
-                {usersAttendanceData[ Object.keys(usersAttendanceData)[0]]?.map((header, index) => {
-                  return (
-                    <>
-                      <th key={index} style={{ width: "130px" }}>
-                        {moment(header.date_of_attendance).format("DD MMM/ddd")}
-                      </th>
-                      <th key={index} style={{ width: "130px" }}>
-                        {"Check In"}
-                      </th>
-                      <th key={index} style={{ width: "130px" }}>
-                        {"Check Out"}
-                      </th>
-                      <th key={index} style={{ width: "130px" }}>
-                        {"Duration"}
-                      </th>
-                    </>
-                  );
-                })}
+                {usersAttendanceData[Object.keys(usersAttendanceData)[0]]?.map(
+                  (header, index) => {
+                    return (
+                      <>
+                        <th key={index} style={{ width: "130px" }}>
+                          {moment(header.date_of_attendance).format(
+                            "DD MMM/ddd"
+                          )}
+                        </th>
+                        <th key={index} style={{ width: "130px" }}>
+                          {"Check In"}
+                        </th>
+                        <th key={index} style={{ width: "130px" }}>
+                          {"Check Out"}
+                        </th>
+                        <th key={index} style={{ width: "130px" }}>
+                          {"Duration"}
+                        </th>
+                      </>
+                    );
+                  }
+                )}
               </tr>
             </thead>
             <tbody>
@@ -491,9 +516,18 @@ const handleGetUsersList = async () => {
                     <td style={{ width: "130px" }}>0</td>
                     <td style={{ width: "130px" }}>0</td>
                     <td style={{ width: "160px" }}>Company XYZ</td>
-                    <td
-                      style={{ width: "200px" }}
-                    >{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</td>
+                    <td style={{ width: "210px" }}>
+                      <span>{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</span>{" "}
+                      <span
+                        className="text-primary cursor-pointer"
+                        data-bs-target="#shiftUpdateModal"
+                        data-bs-toggle="modal"
+              
+                        onClick={() => setSelectDateData(records[0])}
+                      >
+                        {reactIcons.edit}
+                      </span>
+                    </td>
 
                     {records.map((record) => (
                       <React.Fragment key={record.id}>
@@ -572,7 +606,7 @@ const handleGetUsersList = async () => {
                       aria-controls={`collapse${index}`}
                       onClick={() => setOpenIndex(isOpen ? null : index)} // Toggle open/close state
                     >
-                     {item[0].username}  {(item[0].user_id)}
+                      {item[0].username} {item[0].user_id}
                     </button>
                   </h2>
                   <div

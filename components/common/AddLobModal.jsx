@@ -18,7 +18,7 @@ const initialStateContact = {
   is_active: 1,
 };
 
-const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails, setContactDetails }) => {
+const AddLobModal = ({ handleGetClientContactManagers, contactDetails, setContactDetails }) => {
   const [contactData, setContactData] = useState(initialStateContact);
   const [contLoading, setContLoading] = useState(false);
   // const [contactDetails, setContactDetails] = useState("");
@@ -104,6 +104,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
         setContLoading(false);
       }
     } catch (err) {
+      console.log("=---------------error s", err);
       setContLoading(false);
       toast.error(err.response || "Something went wrong!");
     }
@@ -159,11 +160,11 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
       style={{ width: "800px !important" }}
       className="offcanvas offcanvas-start"
       tabindex="-1"
-      id="addContactModal"
+      id="addLobModal"
       aria-labelledby="offcanvasLeftLabel"
     >
       <div className="offcanvas-header">
-        <h5 id="offcanvasLeftLabel">Contact Info</h5>
+        <h5 id="offcanvasLeftLabel">LOB Info</h5>
         <div className="d-flex justify-content-end">
           {/* <button className="theme-btn btn-style-one small">New</button>
             <button className="theme-btn btn-style-two mx-2 small">Save</button> */}
@@ -207,7 +208,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
               {contLoading ? (
                 <BtnBeatLoader />
               ) : (
-                 contactDetails?.id ? "Update" :"Save"
+                "Save"
               )}
             </button>
         </div>
@@ -391,4 +392,4 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
   );
 };
 
-export default AddContactManagerModal;
+export default AddLobModal;

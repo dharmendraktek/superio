@@ -25,9 +25,9 @@ const Documents = ({
   resumeUrl,
 }) => {
   const [form, setForm] = useState(initialState);
-  const [document, setDocument] = useState(resume ? resume : "");
+  const [document, setDocument] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(resume ? true : false);
+  const [open, setOpen] = useState(false);
   const [option, setOption] = useState(null);
   const [file, setFile] = useState(resumeUrl ? resumeUrl : "");
 
@@ -36,17 +36,20 @@ const Documents = ({
     setDocument(file);
   };
 
-  useEffect(() => {
-    if (resume) {
-      setForm((prev) => ({ ...prev, type: "Resume" }));
-    }
-  }, [resume]);
+  // useEffect(() => {
+  //   if (resume) {
+  //     setForm((prev) => ({ ...prev, type: "Resume" }));
+  //   }
+  // }, [resume]);
 
   useEffect(() => {
     if (document) {
       setForm((prev) => ({ ...prev, title: document.name }));
     }
   }, [document]);
+  useEffect(() => {
+    handleGetApplicantDetails();
+  }, [])
 
   useEffect(() => {
     if (applicantDetails?.documents?.length > 0) {

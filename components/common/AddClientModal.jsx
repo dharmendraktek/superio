@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import BtnBeatLoader from "./BtnBeatLoader";
 import { toast } from "react-toastify";
 import SelectWithSearch from "./SelectWithSearch";
-import { postApiReq } from "@/utils/apiHandlers";
+import { patchReq, postApiReq } from "@/utils/apiHandlers";
 
 const initialState = {
   client_name: "",
@@ -93,8 +93,8 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
         closeBtn.click();
         setLoading(false);
         setForm(initialState);
-        toast.success("Client has been created successfully!");
         handleGetClientNames();
+        toast.success("Client has been created successfully!");
       }
     } catch (err) {
       setLoading(false);
