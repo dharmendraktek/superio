@@ -278,7 +278,7 @@ const Index = () => {
             mergedData[key] = form.source;
           } else if (item.data.hasOwnProperty(key)) {
             mergedData[key] =
-              !item.data[key] || item.data[key] == "null" ? "" : item.data[key];
+              !item.data[key] || item.data[key] == "null" ? null : item.data[key];
           }
         }
         temp.push(mergedData);
