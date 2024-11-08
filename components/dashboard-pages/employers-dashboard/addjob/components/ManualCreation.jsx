@@ -21,6 +21,9 @@ import AddContactManagerModal from "@/components/common/AddContactManagerModal";
 import UsersListDropdown from "@/components/common/UsersListDropdown";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import  { capitalizeFirstLetter, cleanString, convertToUppercase, extractNumericalValue } from "@/utils/regex";
+import MutliSelectWithSearch from "@/components/common/MultiSelectWithSearch";
+import AddMultipleCity from "@/components/common/AddMultipleCity";
+import CountrySelectWithSearch from "@/components/common/CountrySelectWithSearch";
 
 const initialState = {
   job_code: "",
@@ -78,7 +81,7 @@ const ManualCreation = ({
 
 }) => {
   const [form, setForm] = useState(initialState);
-  const [countryCode, setCountryCode] = useState("AF");
+  const [countryCode, setCountryCode] = useState("US");
   const [clientNameList, setClientNameList] = useState([]);
   const [lobList, setLobList] = useState([]);
   const [clientManagerList, setClientManagerList] = useState([]);
@@ -86,7 +89,6 @@ const ManualCreation = ({
   const [departmentList, setDepartmentList] = useState([]);
 
   const countryList = Country.getAllCountries();
-  const stateList = State.getStatesOfCountry(countryCode);
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState("");
   const [secondarySkills, setSecondarySkills] = useState();
@@ -124,6 +126,11 @@ const ManualCreation = ({
   const [clientSearch, setClientSearch] = useState("");
   const [openPrim, setOpenPrim] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
+  const [selectedState, setSelectedState] = useState([]);
+  const [selectCity, setSelectCity] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+
+
 
   const router = useRouter();
 
@@ -168,6 +175,9 @@ const ManualCreation = ({
         (item) => item.name == jobData?.job_status
       )?.name;
 
+      setSelectCity(jobData.city?.split(/\s{2,}/))  
+      setSelectedState(jobData.state?.split(",").map(state => state.trim()));
+    
       setForm((prev) => ({
         ...prev,
         job_code: jobData.job_code,
@@ -219,13 +229,15 @@ const ManualCreation = ({
       }));
     }
 
-    console.log("---------------------------form data --------",form);
   }, [jobData]);
-
+  
   useEffect(() => {
     if (form.country) {
       let country = countryList.find((item) => item.name == form.country);
       setCountryCode(country?.isoCode);
+      // setSelectedState([]);
+      const stateList = State.getStatesOfCountry(country?.isoCode);
+      setStatesList(stateList);
     }
   }, [form.country]);
 
@@ -599,6 +611,29 @@ const ManualCreation = ({
 
     setDocuments(filtered);
   };
+
+  useEffect(() => {
+     if(selectedState.length > 0 ){
+      setForm((prev) => ({...prev, state:selectedState.map(item => (item.name)).join(", ")}))
+     }
+     if(selectCity.length > 0){
+      setForm((prev) => ({...prev, city:selectCity.join("  ")}))
+     }
+     if(jobData && selectedState.length > 0){
+      let update = [...statesList]
+      let selectState = [...selectedState];
+      let updateArray = update.map(state => {
+        if (selectState.includes((state.name).trim())) {
+          return { ...state, selected: true };
+        }
+        return state;
+      });
+      let filterArray = updateArray.filter((item) => item.selected == true)
+      console.log("--------------filter array ", filterArray);
+      // setSelectedState(([...filterArray]))
+      setStatesList(updateArray);
+    }
+  }, [selectedState, selectCity, jobData])
 
 
   return (
@@ -1028,7 +1063,7 @@ const ManualCreation = ({
             </div>
             <div className="col-4 my-2">
               <p>Country</p>
-              <select
+              {/* <select
                 className="client-form-input"
                 name="country"
                 onChange={handleChange}
@@ -1043,7 +1078,12 @@ const ManualCreation = ({
                     </option>
                   );
                 })}
-              </select>
+              </select> */}
+              <CountrySelectWithSearch 
+               list={countryList}
+               form={form}
+               setForm={setForm}
+              />
             </div>
             <div className="col-4 my-2">
               <p>
@@ -1052,7 +1092,7 @@ const ManualCreation = ({
                   {form.remote == "yes" ? "" : "*"}
                 </strong>
               </p>
-              <select
+              {/* <select
                 className="client-form-input"
                 name="state"
                 onChange={handleChange}
@@ -1070,21 +1110,23 @@ const ManualCreation = ({
                 ) : (
                   <option value={form.country}>{form.country}</option>
                 )}
-              </select>
+              </select> */}
+              <MutliSelectWithSearch statesList={statesList} setStatesList={setStatesList} selectedState={selectedState} setSelectedState={setSelectedState} />
               <span className="text-danger">{error.stateErr}</span>
             </div>
             <div className="col-4 my-2">
               <p>
-                City
+                Location
                 {/* <strong className="text-danger">*</strong> */}
               </p>
-              <input
+              {/* <input
                 name="city"
                 value={form.city}
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
-              />
+              /> */}
+              <AddMultipleCity selectedState={selectedState} setSelectCity={setSelectCity}  selectCity={selectCity}  setSelectedState={setSelectedState} />
               <span className="text-danger">{error.cityErr}</span>
             </div>
             <div className="col-4 my-2">

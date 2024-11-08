@@ -220,7 +220,8 @@ const Index = () => {
       bulkResumeFiles.forEach((item) => {
         if (
           item?.name?.split(".")[1] == "pdf" ||
-          item?.name?.split(".")[1] == "docx"
+          item?.name?.split(".")[1] == "docx" ||
+          item?.name?.split(".")[1] == "doc"
         ) {
           formData.append("resume_files", item);
         }
@@ -234,7 +235,7 @@ const Index = () => {
     const response = await postApiReq("/parse-resumes/", formData);
     setIsLoading(false);
     setSingleParseLoading(false);
-    if (response) {
+    if (response.status) {
       setApplicantDetails(response.data[0].data);
       let filterData = [];
       for (let item of response.data) {
@@ -257,6 +258,9 @@ const Index = () => {
         router.push(`/employers-dashboard/all-applicants`);
       }
     }
+    if(!response.status){
+      toast.error(response.error[0].message);
+    }
   };
 
   useEffect(() => {
@@ -278,7 +282,7 @@ const Index = () => {
             mergedData[key] = form.source;
           } else if (item.data.hasOwnProperty(key)) {
             mergedData[key] =
-              !item.data[key] || item.data[key] == "null" ? "" : item.data[key];
+              !item.data[key] || item.data[key] == "null" ? null : item.data[key];
           }
         }
         temp.push(mergedData);
@@ -757,7 +761,8 @@ const Index = () => {
                               <span>{item.name}</span>
                               {!(
                                 item?.name?.split(".")[1] == "pdf" ||
-                                item?.name?.split(".")[1] == "docx"
+                                item?.name?.split(".")[1] == "docx" || 
+                                item?.name?.split(".")[1] == "doc"
                               ) && (
                                 <p className="text-danger">
                                   This file format is not supported

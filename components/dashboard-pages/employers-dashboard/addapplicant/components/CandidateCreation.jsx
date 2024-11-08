@@ -162,7 +162,7 @@ const CandidateCreation = ({
             : applicantData.email,
         mobile:
           applicantData.mobile == "null" || !applicantData.mobile
-            ? ""
+            ? null
             : applicantData.mobile,
         dob:
           applicantData.dob == "null" || !applicantData.dob

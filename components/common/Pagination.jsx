@@ -2,7 +2,6 @@ import { reactIcons } from '@/utils/icons';
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 const Pagination = ({ dataCount, pageSize=25, setPage, page }) => {
-  console.log("-------------page size ----", pageSize);
   const handlePageClick = (event) => {
     setPage(event.selected);
   };
