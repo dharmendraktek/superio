@@ -52,6 +52,7 @@ const remInitialState = {
 };
 
 const InterviewScheduleModal = ({
+    id,
     jobPostList = [],
     applicantData = [],
     selectedItem,
@@ -113,7 +114,6 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
-    console.log("--------------end time start time start date ", form.endtime, form.starttime, form.startdate);
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
@@ -272,12 +272,12 @@ const InterviewScheduleModal = ({
       style={{ width: "1000px !important" }}
       className="offcanvas offcanvas-end"
       tabindex="-1"
-      id="interviewSchedule"
-      aria-labelledby="interviewScheduleRightLabel"
+      id={id || "interviewSchedule"}
+      aria-labelledby={`${id ? `${id}_label` : 'interviewScheduleRightLabel'}`}
     >
       <TimeZoneModal form={form} setForm={setForm} />
       <div className="offcanvas-header">
-        <h5 id="interviewScheduleRightLabel" className="text-primary fw-500">
+        <h5 id= {`${id ? `${id}_label` : "interviewScheduleRightLabel"}`}   className="text-primary fw-500">
           {reschedule ? "Reschedule Interview" : "Schedule Interview"}
         </h5>
         <button

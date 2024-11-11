@@ -12,6 +12,7 @@ const AddMultipleCity = ({ selectedState, setSelectedState, selectCity, setSelec
   const handleSaveLocation = () => {
     if(selectedState.length > 0){
         let location = city + "," + state;
+        console.log("-----------select city ", selectCity);
         setSelectCity((prev) => ([...prev, location]))
         setCity('');
     }else{ 
@@ -21,7 +22,8 @@ const AddMultipleCity = ({ selectedState, setSelectedState, selectCity, setSelec
   }
 
   useEffect(() => {
-    if(selectedState.length > 0){
+    console.log("-------------selecte state ----", selectedState);
+    if(selectedState && selectedState?.length > 0){
         setState(selectedState[0].name || selectedState[0])
         setError('');
     }else{
@@ -71,7 +73,7 @@ const AddMultipleCity = ({ selectedState, setSelectedState, selectCity, setSelec
         }}>
         <div>
             <select className="client-form-input" onChange={(e) => setState(e.target.value)}>
-                { selectedState?.map((item, index) => {
+                {   selectedState?.map((item, index) => {
                     return(
                         <option key={index} value={item.name || item} >{item.name || item}</option>
                     )

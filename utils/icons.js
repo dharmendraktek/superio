@@ -65,6 +65,8 @@ import { MdFeedback } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { MdMoreHoriz } from "react-icons/md";
+
 
 
 
@@ -126,4 +128,5 @@ export const reactIcons = {
     horizontaldots:<BsThreeDots />,
     normalclose:<IoMdClose />,
     peoplegroup:<FaPeopleGroup />,
+    more:<MdMoreHoriz />,
 }

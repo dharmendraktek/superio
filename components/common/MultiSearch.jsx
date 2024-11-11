@@ -64,7 +64,8 @@ const MultiSearch = ({
           value={search}
         />
          {search &&
-                <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
+                // <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
+                <button className="theme-btn btn-style-one small position-absolute" style={{right:'0px'}}>Search</button>
         }
         {/* <button className="theme-btn btn-style-one small">Search</button> */}
       </div>

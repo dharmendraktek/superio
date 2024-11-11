@@ -63,7 +63,6 @@ const JobPostsTable = () => {
     }
   };
 
-
   useEffect(() => {
     if (search !== firstSearch) {
       setFirstSearch(search);
@@ -97,8 +96,6 @@ const JobPostsTable = () => {
       getJobpostsList();
     }
   };
-
-  
 
   useEffect(() => {
     if (jobPostList.length > 0) {
@@ -174,14 +171,14 @@ const JobPostsTable = () => {
           </div>
         </div>
         <div className="d-flex align-items-center gap-2">
-        <div>
+          <div>
             <span className="text-primary">{dataCount} records</span>
           </div>
-        <Link href="/employers-dashboard/job-posts/add-job-posts">
-          <button className="bg-primary px-3 text-white rounded-1 py-1">
-            + New
-          </button>
-        </Link>
+          <Link href="/employers-dashboard/job-posts/add-job-posts">
+            <button className="bg-primary px-3 text-white rounded-1 py-1">
+              + New
+            </button>
+          </Link>
         </div>
       </div>
       <div className="table_div custom-scroll-sm">
@@ -389,7 +386,55 @@ const JobPostsTable = () => {
                     </td>
                     <td className="">{item.client_name || "N/A"}</td>
                     <td className="">{item.client_job_id || "N/A"}</td>
-                    <td>{item.city || "N/A"}</td>
+                    <td
+                      onMouseEnter={() => setOpenAssign(item.id)}
+                      onMouseLeave={() => setOpenAssign(null)}
+                    >
+                      <div className="d-flex gap-1 flex-wrap">
+                        {item.city &&
+                          item.city
+                            .split("  ")
+                            .slice(0, 1)
+                            .map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  // className="rounded-1 px-1"
+                                  // style={{ background: "rgb(64 69 114 / 81%)" }}
+                                >
+                                  <span className="text-black">{item}</span>
+                                </div>
+                              );
+                            })}
+                        {item.city && item.city.split("  ").length > 1 && (
+                          <span
+                            className="text-primary cursor-pointer fs-4"
+                          >
+                            {reactIcons.more}
+                          </span>
+                        )}
+                        {!item.city && "N/A"}
+                        {openAssign == item.id && (
+                          <div
+                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                            style={{
+                              width: "250px",
+                              minHeight: "30px",
+                              maxHeight: "fit-content",
+                              zIndex: "5",
+                            }}
+                          >
+                            {item.city && item.city.split("  ").map((item) => {
+                              return (
+                                <span className="text-white">
+                                  {item}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </td>
                     <td className="">{item.state || "N/A"}</td>
                     <td className="">{item.job_status || "N/A"}</td>
                     <td className="">
@@ -713,7 +758,9 @@ const JobPostsTable = () => {
                                     </td>
                                     <td>{authorization || "N/A"}</td>
                                     <td>{mobile || "N/A"}</td>
-                                    <td>{address ? cleanString(address) : "N.A"}</td>
+                                    <td>
+                                      {address ? cleanString(address) : "N.A"}
+                                    </td>
                                     <td>{country || "N/A"}</td>
                                     <td>{experience || "N/A"}</td>
                                     <td>{source || "N/A"}</td>

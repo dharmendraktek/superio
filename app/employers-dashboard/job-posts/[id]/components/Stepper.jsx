@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { reactIcons } from "@/utils/icons";
 import StatusModal from "./StatusModal";
 import ClientSubmissionModal from "@/components/dashboard-pages/employers-dashboard/jobposts/components/components/ClientSubmissionModal";
@@ -16,24 +16,22 @@ import InterviewScheduleModal from "@/components/dashboard-pages/employers-dashb
 //   // {id:8, name:'Tagged'},
 // ];
 
-
 const stepsData = [
-  { id: 0, name: "Tagged", value:''},
-  { id: 1, name: "Submission", value:'submission' },
-  { id:2, name: "Client Submission", value:'client_submission' },
-  { id:3,  name:"Turbo Check", value:'turbo_check'},
-  { id:4,  name:"T3 Check", value:'t3_check'},
-  { id: 5, name: "Interview", value:'interview' },
-  { id: 6, name: "Confirmation", value:'confirmation' },
-  { id: 7, name: "Joined", value:'joined' },
-  { id: 8, name: "Back Out", value:'not_joined' },
+  { id: 0, name: "Tagged", value: "" },
+  { id: 1, name: "Submission", value: "submission" },
+  { id: 2, name: "Client Submission", value: "client_submission" },
+  { id: 3, name: "Turbo Check", value: "turbo_check" },
+  { id: 4, name: "T3 Check", value: "t3_check" },
+  { id: 5, name: "Interview", value: "interview" },
+  { id: 6, name: "Confirmation", value: "confirmation" },
+  { id: 7, name: "Joined", value: "joined" },
+  { id: 8, name: "Back Out", value: "not_joined" },
 ];
 
 const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
   const [statusId, setStatusId] = useState();
   const [selectedSubmission, setSelectedSubmission] = useState({});
-  
- 
+
   let {
     mobile,
     firstname,
@@ -45,7 +43,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
     pay_rate_contract_type,
   } = submissionDetails.applicant_details[0];
 
-  let { submitted_by_details, job_detail } = submissionDetails || {} ;
+  let { submitted_by_details, job_detail } = submissionDetails || {};
   let { first_name, last_name } = submitted_by_details || {};
 
   let {
@@ -59,24 +57,28 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
     amount,
   } = job_detail || {};
 
-
   const handleManagePipline = (status, subStatus) => {
-  if((subStatus == "l1_reject") || (subStatus == "l2_reject") || (subStatus == "L3/dm reject") || (subStatus == "client_round_reject")){
-    return false;
-  }else if(status == "not_joined"){
-    return false;
-  }
-  else {
-    return true;
-  }
-  }
+    if (
+      subStatus == "l1_reject" ||
+      subStatus == "l2_reject" ||
+      subStatus == "L3/dm reject" ||
+      subStatus == "client_round_reject"
+    ) {
+      return false;
+    } else if (status == "not_joined") {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   useEffect(() => {
-     if(submissionDetails?.currentStatus){
-     let filterData =  stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)
-     }
-  }, [submissionDetails])
-
+    if (submissionDetails?.currentStatus) {
+      let filterData = stepsData.find(
+        (item) => item.value == submissionDetails?.current_status_details?.name
+      );
+    }
+  }, [submissionDetails]);
 
   const filteredSteps = stepsData.filter((item) => {
     if (
@@ -88,7 +90,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
     return true;
   });
 
-
+  const modalId = `interviewScheduleModal_${submissionDetails.id}`; // Unique ID for each modal instance
 
   return (
     <>
@@ -99,8 +101,18 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
         submissionDetails={submissionDetails}
         handleGetJobDetails={handleGetJobDetails}
       />
-      <ClientSubmissionModal submissionDetails={submissionDetails} handleGetJobDetails={handleGetJobDetails} statusId={statusId}  side="job" />
-      <InterviewScheduleModal selectedItem={submissionDetails} jobPostList={[]}   handleGetJobDetails={handleGetJobDetails} />
+      <ClientSubmissionModal
+        submissionDetails={submissionDetails}
+        handleGetJobDetails={handleGetJobDetails}
+        statusId={statusId}
+        side="job"
+      />
+      <InterviewScheduleModal
+        id={modalId} // Pass unique modal ID
+        selectedItem={submissionDetails}
+        jobPostList={[]}
+        handleGetJobDetails={handleGetJobDetails}
+      />
 
       <div className="py-1 px-1 mb-4 mt-2 d-flex justify-content-between ">
         <div className="" style={{ width: "250px" }}>
@@ -172,32 +184,67 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
                 </span>
                 <ul className="dropdown-menu">
                   <li>
-                    <span class="dropdown-item" onClick={() => setStatusId(2)}  data-bs-toggle='modal' data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission" >
+                    <span
+                      class="dropdown-item"
+                      onClick={() => setStatusId(2)}
+                      data-bs-toggle="modal"
+                      data-bs-target="#clientSubmissionModal"
+                      aria-controls="clientsumbission"
+                    >
                       Submit To Client
                     </span>
                   </li>
-                  {(submissionDetails?.job_detail?.client_name === "Mphasis") &&
-                  <>
+                  {submissionDetails?.job_detail?.client_name === "Mphasis" && (
+                    <>
+                      <li>
+                        <a
+                          class="dropdown-item"
+                          href="#"
+                          data-bs-toggle="modal"
+                          onClick={() => setStatusId(9)}
+                          data-bs-target="#clientSubmissionModal"
+                          aria-controls="clientsumbission"
+                        >
+                          Turbo Check
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item"
+                          href="#"
+                          data-bs-toggle="modal"
+                          onClick={() => setStatusId(10)}
+                          data-bs-target="#clientSubmissionModal"
+                          aria-controls="clientsumbission"
+                        >
+                          T3 Check
+                        </a>
+                      </li>
+                    </>
+                  )}
                   <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(9)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
-                     Turbo Check
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      onClick={() => setSelectedSubmission(submissionDetails)}
+                      // data-bs-target="#interviewSchedule"
+                      // data-bs-toggle="offcanvas"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target={`#${modalId}`}
+                    >
+                      Interview
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(10)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
-                     T3 Check
-                    </a>
-                  </li>
-                  </>
-                  }
-                   <li>
-                    <a class="dropdown-item" href="#" onClick={() => setSelectedSubmission(submissionDetails)}    data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">
-                     Interview
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle='modal' onClick={() => setStatusId(5)}  data-bs-target ="#clientSubmissionModal" aria-controls="clientsumbission">
-                     Confirmation
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      data-bs-toggle="modal"
+                      onClick={() => setStatusId(5)}
+                      data-bs-target="#clientSubmissionModal"
+                      aria-controls="clientsumbission"
+                    >
+                      Confirmation
                     </a>
                   </li>
                   {/* <li>
@@ -218,76 +265,111 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
         </div>
       </div>
       <div className="d-flex align-items-center">
-        {submissionDetails && filteredSteps.map((item) => {
-          return (
-            <div>
-              <div className="d-flex align-items-center">
-                <div
-                  style={{
-                    width:submissionDetails?.job_detail?.client_name === "Mphasis" ? "105px" : "130px" ,
-                    height: "3px",
-                    background: `${
-                      stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id >= item.id
-                        ? "#2bbc26"
-                        : "gray"
-                    }`,
-                  }}
-                ></div>
-                <div>
-                  { stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id == item.id  ? (
-                    <div
-                      className="d-flex justify-content-center align-items-center"
-                      style={{
-                        width: "26px",
-                        height: "26px",
-                        borderRadius: "100%",
-                        background: !handleManagePipline(submissionDetails?.current_status_details.name, submissionDetails?.current_substatus_details?.name) ? 'red' : "#2bbc26",
-                      }}
-                    >
-                      {handleManagePipline(submissionDetails?.current_status_details.name, submissionDetails?.current_substatus_details?.name) ?
-                       <span className="text-white">{reactIcons.checkmark}</span>
-                       :
-                       <span className="text-white fw-700">{reactIcons.normalclose}</span>
-                      }
-                    </div>
-                  ) : stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id > item.id ? (
-                    <div
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                        borderRadius: "100%",
-                        background: "#2bbc26",
-                      }}
-                    ></div>
-                  ) : (
-                    <div
-                      style={{
-                        width: "15px",
-                        height: "15px",
-                        borderRadius: "100%",
-                        background: "gray",
-                      }}
-                    >
-                      {/* <span>{reactIcons.}</span> */}
-                    </div>
-                  )}
-                  {/* <p>Taged</p> */}
+        {submissionDetails &&
+          filteredSteps.map((item) => {
+            return (
+              <div>
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{
+                      width:
+                        submissionDetails?.job_detail?.client_name === "Mphasis"
+                          ? "105px"
+                          : "130px",
+                      height: "3px",
+                      background: `${
+                        stepsData.find(
+                          (item) =>
+                            item.value ==
+                            submissionDetails?.current_status_details?.name
+                        )?.id >= item.id
+                          ? "#2bbc26"
+                          : "gray"
+                      }`,
+                    }}
+                  ></div>
+                  <div>
+                    {stepsData.find(
+                      (item) =>
+                        item.value ==
+                        submissionDetails?.current_status_details?.name
+                    )?.id == item.id ? (
+                      <div
+                        className="d-flex justify-content-center align-items-center"
+                        style={{
+                          width: "26px",
+                          height: "26px",
+                          borderRadius: "100%",
+                          background: !handleManagePipline(
+                            submissionDetails?.current_status_details.name,
+                            submissionDetails?.current_substatus_details?.name
+                          )
+                            ? "red"
+                            : "#2bbc26",
+                        }}
+                      >
+                        {handleManagePipline(
+                          submissionDetails?.current_status_details.name,
+                          submissionDetails?.current_substatus_details?.name
+                        ) ? (
+                          <span className="text-white">
+                            {reactIcons.checkmark}
+                          </span>
+                        ) : (
+                          <span className="text-white fw-700">
+                            {reactIcons.normalclose}
+                          </span>
+                        )}
+                      </div>
+                    ) : stepsData.find(
+                        (item) =>
+                          item.value ==
+                          submissionDetails?.current_status_details?.name
+                      )?.id > item.id ? (
+                      <div
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                          borderRadius: "100%",
+                          background: "#2bbc26",
+                        }}
+                      ></div>
+                    ) : (
+                      <div
+                        style={{
+                          width: "15px",
+                          height: "15px",
+                          borderRadius: "100%",
+                          background: "gray",
+                        }}
+                      >
+                        {/* <span>{reactIcons.}</span> */}
+                      </div>
+                    )}
+                    {/* <p>Taged</p> */}
+                  </div>
+                  <div
+                    style={{
+                      width:
+                        submissionDetails?.job_detail?.client_name === "Mphasis"
+                          ? "80px"
+                          : "110px",
+                      height: "3px",
+                      background: `${
+                        stepsData.find(
+                          (item) =>
+                            item.value ==
+                            submissionDetails?.current_status_details?.name
+                        )?.id > item.id
+                          ? "#2bbc26"
+                          : "gray"
+                      }`,
+                    }}
+                  ></div>
                 </div>
-                <div
-                  style={{
-                    width: submissionDetails?.job_detail?.client_name === "Mphasis" ?  "80px": "110px",
-                    height: "3px",
-                    background: `${
-                      stepsData.find((item) => item.value ==  submissionDetails?.current_status_details?.name)?.id > item.id
-                        ? "#2bbc26"
-                        : "gray"
-                    }`,
-                  }}
-                ></div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <div className="px-1 d-flex justify-content-between ">
         <div className="w-20 text-center">
@@ -299,16 +381,16 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
         <div className="text-center">
           <p>Client Submission</p>
         </div>
-        {(submissionDetails?.job_detail?.client_name === "Mphasis") &&
-        <>
-        <div className="text-center">
-          <p>Turbo</p>
-        </div>
-        <div className="text-center">
-          <p>T3</p>
-        </div>
+        {submissionDetails?.job_detail?.client_name === "Mphasis" && (
+          <>
+            <div className="text-center">
+              <p>Turbo</p>
+            </div>
+            <div className="text-center">
+              <p>T3</p>
+            </div>
           </>
-        }
+        )}
         <div className="text-center">
           <p>Interview</p>
         </div>

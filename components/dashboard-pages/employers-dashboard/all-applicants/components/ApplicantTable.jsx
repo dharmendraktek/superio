@@ -50,7 +50,8 @@ const ApplicantTable = () => {
         .toISOString()}&updated_end_date=${moment(endDate)
         .endOf("day")
         .toISOString()}`;
-    } else if (fieldName && search !== firstSearch) {
+    } 
+    else if (fieldName && search !== firstSearch) {
       setFirstSearch(search);
       setPage(0);
       param = `&${fieldName}=${search}`;
@@ -61,6 +62,8 @@ const ApplicantTable = () => {
     handleGetApplicantList(param);
     // }, 700)
   }, [search, startDate, endDate, page]);
+
+  
 
   const handleGetApplicantList = async (param) => {
     setIsLoading(true);

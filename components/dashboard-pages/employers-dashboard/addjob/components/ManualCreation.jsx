@@ -175,8 +175,8 @@ const ManualCreation = ({
         (item) => item.name == jobData?.job_status
       )?.name;
 
-      setSelectCity(jobData.city?.split(/\s{2,}/))  
-      setSelectedState(jobData.state?.split(",").map(state => state.trim()));
+      setSelectCity(jobData.city ? jobData.city?.split(/\s{2,}/) : [])  
+      setSelectedState(jobData.city ? jobData.state?.split(",").map(state => state.trim()) : []);
     
       setForm((prev) => ({
         ...prev,
@@ -235,9 +235,16 @@ const ManualCreation = ({
     if (form.country) {
       let country = countryList.find((item) => item.name == form.country);
       setCountryCode(country?.isoCode);
-      // setSelectedState([]);
       const stateList = State.getStatesOfCountry(country?.isoCode);
       setStatesList(stateList);
+    }
+    if(jobData.country !== form.country){
+      setSelectedState([])
+      setSelectCity([]);
+      setForm((prev) => ({...prev, state:'', city:''}))
+    }else{
+      setSelectCity(jobData.city ? jobData.city?.split(/\s{2,}/) : [])  
+      setSelectedState(jobData.state ? jobData.state?.split(",").map(state => state.trim()):[]);
     }
   }, [form.country]);
 
@@ -362,10 +369,10 @@ const ManualCreation = ({
     }
     if (
       !form.currency ||
-      !form.payment_frequency ||
-      (!form.amount || !isNumber(form.amount)) ||
+      !form.payment_frequency || !form.amount ||
       !form.client_taxterm
     ) {
+      console.log("---------this is field is required ");
       setError((prev) => ({
         ...prev,
         clientBillRateERr: "This field is required",
@@ -613,13 +620,13 @@ const ManualCreation = ({
   };
 
   useEffect(() => {
-     if(selectedState.length > 0 ){
+     if(selectedState && selectedState.length > 0 ){
       setForm((prev) => ({...prev, state:selectedState.map(item => (item.name)).join(", ")}))
      }
-     if(selectCity.length > 0){
+     if(selectCity && selectCity.length > 0){
       setForm((prev) => ({...prev, city:selectCity.join("  ")}))
      }
-     if(jobData && selectedState.length > 0){
+     if(jobData && selectedState && selectedState.length > 0){
       let update = [...statesList]
       let selectState = [...selectedState];
       let updateArray = update.map(state => {

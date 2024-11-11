@@ -235,12 +235,13 @@ const AttendanceCalendar = () => {
   const userDetails = useSelector((state) => state.employer.user);
 
   const getEmployeeAttendanceDetails = async () => {
+    let month = moment(new Date()).format("yyyy-MM")
     try {
       const response = await getReq(
-        `/attendance-details/?emp_code=${userDetails.empcode}`
+        `/attendance-details/?emp_code=${userDetails.empcode}&year_month=${month}`
       );
       if (response.status) {
-        const transformed = transformEvents(response.data);
+        const transformed = transformEvents(response.data.results);
         setEvents(transformed);
       }
     } catch (error) {
