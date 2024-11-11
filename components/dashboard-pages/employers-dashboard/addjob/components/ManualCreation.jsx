@@ -238,13 +238,13 @@ const ManualCreation = ({
       const stateList = State.getStatesOfCountry(country?.isoCode);
       setStatesList(stateList);
     }
-    if(jobData.country !== form.country){
+    if(jobData?.country !== form.country){
       setSelectedState([])
       setSelectCity([]);
       setForm((prev) => ({...prev, state:'', city:''}))
     }else{
-      setSelectCity(jobData.city ? jobData.city?.split(/\s{2,}/) : [])  
-      setSelectedState(jobData.state ? jobData.state?.split(",").map(state => state.trim()):[]);
+      setSelectCity(jobData?.city ? jobData.city?.split(/\s{2,}/) : [])  
+      setSelectedState(jobData?.state ? jobData.state?.split(",").map(state => state.trim()):[]);
     }
   }, [form.country]);
 
