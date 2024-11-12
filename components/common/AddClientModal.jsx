@@ -53,14 +53,18 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
     setError((prev) => ({
       ...prev,
       client_name: "",
+      client_owner:"",
     }));
 
     if (!form.client_name) {
       setError((prev) => ({ ...prev, client_name: "This field is required" }));
     }
+    if (!form.client_owner) {
+      setError((prev) => ({ ...prev, client_owner: "This field is required" }));
+    }
 
     let { client_name } = form;
-    if (client_name) {
+    if (client_name && client_owner) {
       return true;
     } else {
       return false;

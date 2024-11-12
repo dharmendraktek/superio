@@ -12,7 +12,7 @@ import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import Pagination from "@/components/common/Pagination";
-import { processOptions, removeSpecialChar } from "@/utils/constant";
+import { accessRoles, processOptions, removeSpecialChar } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
 import InterviewScheduleModal from "./InterviewScheduleModal";
@@ -22,6 +22,7 @@ import NotesModal from "@/components/common/NotesModal";
 import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
 import JobAssignModal from "@/components/common/JobAssignModal";
 import { cleanString } from "@/utils/regex";
+import { useSelector } from "react-redux";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -44,6 +45,7 @@ const JobPostsTable = () => {
   const [skillOpen, setSkillOpen] = useState(null);
   const [openAssign, setOpenAssign] = useState(null);
   const [firstSearch, setFirstSearch] = useState(true);
+  const employeeDetails = useSelector((state) => state.employer.user);
 
   useEffect(() => {
     getJobpostsList();
@@ -174,11 +176,13 @@ const JobPostsTable = () => {
           <div>
             <span className="text-primary">{dataCount} records</span>
           </div>
+          {!(employeeDetails?.access_role_details?.access_id == accessRoles.RECRUITER) &&
           <Link href="/employers-dashboard/job-posts/add-job-posts">
             <button className="bg-primary px-3 text-white rounded-1 py-1">
               + New
             </button>
           </Link>
+          }
         </div>
       </div>
       <div className="table_div custom-scroll-sm">

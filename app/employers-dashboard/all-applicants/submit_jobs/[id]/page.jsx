@@ -179,11 +179,11 @@ const Index = () => {
         setMultiSubmissionForm([initialState])
       }
       if(!response.status){
-        toast.error(response.error.message || "Somthing went wrong")
+        toast.error(response.error.message || "Something went wrong")
         router.push(`/employers-dashboard/all-applicants/${id}`)
       }
     }catch(err){
-        toast.error(err.response || "Somthing went wrong")
+        toast.error(err.response || "Something went wrong")
         setSubmissionLoading(false);
     }
   };

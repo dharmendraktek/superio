@@ -109,7 +109,7 @@ const InterviewScheduleModal = ({
         btn.click();
       }
     } catch (err) {
-      toast.error(err || "Somthing went wrong");
+      toast.error(err || "Something went wrong");
     }
   };
 
@@ -769,6 +769,7 @@ const InterviewScheduleModal = ({
               <button
                 onClick={handleScheduleInterview}
                 className="theme-btn btn-style-one small"
+                disabled={isLoading}
               >
                 {isLoading ? <BtnBeatLoader /> : reschedule ? "Reschedule" : "Schedule"}
               </button>

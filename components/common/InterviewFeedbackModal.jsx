@@ -51,7 +51,7 @@ console.log("----------------selected ", selectedItem);
         toast.success('Feedback  has been Saved successfully');
        }
     }catch(err){
-        toast.error(err.response || "Somthing went wrong")
+        toast.error(err.response || "Something went wrong")
     }
   } 
   

@@ -94,7 +94,7 @@ const JobAssignModal = ({jobId, handleReload}) => {
         btn.click();
       }
     }catch(err){
-       toast.error(err.response || 'Somthing went wrong')
+       toast.error(err.response || 'Something went wrong')
        setIsLoading(false);
     }
   };

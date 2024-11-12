@@ -304,7 +304,9 @@ const CandidateCreation = ({
         const response = applicantData?.id
           ? await patchReq(`/applicants/${applicantData?.id}/`, form)
           : await postApiReq("/applicants/", form);
-        setIsLoading(false);
+          console.log("-------------respoenr ", response);
+         setIsLoading(false);
+
         if (response.status) {
           setForm(initialState);
           let message = applicantData.id
@@ -328,7 +330,8 @@ const CandidateCreation = ({
         }
       } catch (err) {
         setIsLoading(false);
-        toast.error(err.response || "Somthing went wrong");
+        console.log("----------------err ", err);
+        toast.error(err.response || "Something went wrong");
       }
     }
   };

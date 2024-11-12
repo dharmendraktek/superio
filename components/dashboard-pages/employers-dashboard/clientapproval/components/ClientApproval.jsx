@@ -122,7 +122,7 @@ const ClientApproval = () => {
         toast.success('Client has been successfully deleted');
       }
     }catch(err){
-      toast.error(err.response || "Somthing went wrong");
+      toast.error(err.response || "Something went wrong");
       setDelLoading(false);
     }
   }

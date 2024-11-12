@@ -311,6 +311,20 @@ const additionalMenuData = [
     routePath: "/employers-dashboard/calendar",
     active: "",
   },
+  {
+    id: 3,
+    name: "MOM (Meeting of minutes)",
+    icon: "la-user-tie",
+    routePath: "/employers-dashboard/mom",
+    active: "",
+  },
+  // {
+  //   id: 4,
+  //   name: "My MOM Actions",
+  //   icon: "la-user-tie",
+  //   routePath: "/employers-dashboard/my-mom-actions",
+  //   active: "",
+  // }
 ];
 
 const subMenuData = [

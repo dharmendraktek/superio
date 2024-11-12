@@ -193,8 +193,7 @@ const Index = () => {
         toast.error(response.error.message);
       }
     }catch(err){
-      console.log("-----------error ", err);
-      toast.error(err.response || "Somthing went wrong");
+      toast.error(err.response || "Something went wrong");
     }
   };
 

@@ -120,7 +120,6 @@ export const postApiReq = async (endpoint ,data) => {
         window.location.href = '/';
         return handleApiError(err);
       } else {
-        console.log("---------------error submit ", err);
         return handleApiError(err);
       }
     });

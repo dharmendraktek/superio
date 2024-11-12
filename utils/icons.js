@@ -66,6 +66,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdMoreHoriz } from "react-icons/md";
+import { BiSolidMessageRoundedAdd } from "react-icons/bi";
+
 
 
 
@@ -129,4 +131,5 @@ export const reactIcons = {
     normalclose:<IoMdClose />,
     peoplegroup:<FaPeopleGroup />,
     more:<MdMoreHoriz />,
+    add:<BiSolidMessageRoundedAdd />,
 }

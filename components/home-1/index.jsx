@@ -152,7 +152,7 @@ const index = () => {
         toast.success("OTP has been sent on email successfully");
       }
       if(!response.status){
-          toast.error(response.error.email[0] || "Somthing went wrong")
+          toast.error(response.error.email[0] || "Something went wrong")
       }
     } catch (err) {
       setIsLoading(false);
@@ -200,7 +200,7 @@ const index = () => {
     } catch (err) {
       setIsLoading(false);
       if (err.response.status == 400) {
-        toast.error(err.response.data.error || "Somthing went wrong");
+        toast.error(err.response.data.error || "Something went wrong");
       }
     }
   };

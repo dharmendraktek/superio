@@ -306,7 +306,7 @@ const AttendanceData = () => {
     );
     if (response.status) {
       console.log("-----------responer of ", response.data);
-      setUsersList(response.data);
+      setUsersList(response.data.results || response.data);
     }
   };
 

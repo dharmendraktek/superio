@@ -27,7 +27,16 @@ const UsersListDropdown = ({
     handleGetUsersList();
   }, [search]);
 
+
+  useEffect(() => {
+    if(selectedUsersIds.length > 0){
+      const filteredUsers = usersList.filter(user => selectedUsersIds.includes(user.id));
+      setSelectedList(filteredUsers)
+    }
+  }, [selectedUsersIds, usersList])
+
   const handleCheckboxChange = (item) => {
+    setSearch('');
     const isSelected = selectedList.find((selected) => selected.id === item.id);
     
     if (isSelected) {
@@ -46,21 +55,21 @@ const UsersListDropdown = ({
   return (
     <div className="position-relative cursor-pointer">
       <div
-        className="client-form-input d-flex justify-content-end"
+        className={`d-flex ${selectedList.length > 0 ? "justify-content-between" : "justify-content-end"}`}
         onClick={() => setOpen(!open)}
-        style={{ minHeight: "36px", maxHeight: "fit-content" }}
+        style={{ minHeight: "36px", maxHeight: "fit-content", borderBottom:"1px solid black", width:'100%' }}
       >
         {showUsersAbove && (
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex justify-content-start  flex-wrap gap-2">
             {selectedList.map((item) => (
               <div
                 key={item.id}
-                className="my-1 px-1 text-black fw-medium d-flex gap-1 rounded-1"
+                className="my-1 px-1 text-black fw-medium justify-content-start d-flex gap-1 rounded-1"
                 style={{
                   background: "var(--primary-2nd-color)",
                 }}
               >
-                <span>{item.first_name}</span>
+                <span>{item.first_name} {item.last_name}</span>
               </div>
             ))}
           </div>
@@ -80,6 +89,7 @@ const UsersListDropdown = ({
           <div className="my-1">
             <input
               type="text"
+              value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search here..."
               className="px-1 bg-background"
@@ -93,7 +103,7 @@ const UsersListDropdown = ({
                 onChange={() => handleCheckboxChange(item)}
               />
               <span className="mx-2">
-                {item.first_name} {item.last_name} {withEmail && item.email}
+                {item.first_name} {item.last_name} {withEmail &&(item.email)}
               </span>
             </div>
           ))}
