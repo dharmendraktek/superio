@@ -238,7 +238,6 @@ const ManualCreation = ({
       const stateList = State.getStatesOfCountry(country?.isoCode);
       setStatesList(stateList);
     }
-    console.log("-----------form .country ", form.country);
     if(jobData?.country !== form.country){
       setSelectedState([])
       setSelectCity([]);
