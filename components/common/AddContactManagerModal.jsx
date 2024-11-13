@@ -18,7 +18,11 @@ const initialStateContact = {
   is_active: 1,
 };
 
-const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails, setContactDetails }) => {
+const AddContactManagerModal = ({
+  handleGetClientContactManagers,
+  contactDetails,
+  setContactDetails,
+}) => {
   const [contactData, setContactData] = useState(initialStateContact);
   const [contLoading, setContLoading] = useState(false);
   // const [contactDetails, setContactDetails] = useState("");
@@ -64,9 +68,12 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
     if (!contactData.email) {
       setError((prev) => ({ ...prev, email: "This field is required" }));
     }
+    if (!contactData.ownership) {
+      setError((prev) => ({ ...prev, ownership: "This field is required" }));
+    }
 
-    let { name, client_ref, contact, email } = contactData;
-    if (name && client_ref && contact && email) {
+    let { name, client_ref, contact, email, ownership } = contactData;
+    if (name && client_ref && contact && email && ownership) {
       return true;
     } else {
       return false;
@@ -86,14 +93,14 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
   };
 
   const handleCreateClientContact = async () => {
-    if(!handleValidation()){
+    if (!handleValidation()) {
       return;
     }
     try {
       setContLoading(true);
       const response = await postApiReq("/contact-manager/", contactData);
       if (response.status) {
-        setContactData(initialStateContact);  
+        setContactData(initialStateContact);
         const closeBtn = document.getElementById("closeBtnContact");
         closeBtn.click();
         setContLoading(false);
@@ -108,7 +115,6 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
       toast.error(err.response || "Something went wrong!");
     }
   };
-
 
   useEffect(() => {
     // getClientNameList();
@@ -129,18 +135,14 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
     }
   }, [contactDetails]);
 
-  
   const handleUpdateClientContact = async (id) => {
     try {
       setContLoading(true);
-      const response = await patchReq(
-        `/contact-manager/${id}/`,
-        contactData
-      );
+      const response = await patchReq(`/contact-manager/${id}/`, contactData);
       setContLoading(false);
       if (response.status) {
         handleGetClientContactManagers();
-        const closeBtn = document.getElementById('closeBtnContact');
+        const closeBtn = document.getElementById("closeBtnContact");
         closeBtn.click();
         setContLoading(false);
         toast.success("Client contact has been updated successfully!");
@@ -150,9 +152,6 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
       toast.error(err.response || "Something went wrong!");
     }
   };
-
-
-
 
   return (
     <div
@@ -194,26 +193,30 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
             New
           </button>
           <button
-              className="theme-btn btn-style-one mx-2 small"
-              onClick={() => {
-                if (contactDetails) {
-                  handleUpdateClientContact(contactDetails.id);
-                } else {
-                  handleCreateClientContact();
-                }
-              }}
-              disabled={contLoading}
-            >
-              {contLoading ? (
-                <BtnBeatLoader />
-              ) : (
-                 contactDetails?.id ? "Update" :"Save"
-              )}
-            </button>
+            className="theme-btn btn-style-one mx-2 small"
+            onClick={() => {
+              if (contactDetails) {
+                handleUpdateClientContact(contactDetails.id);
+              } else {
+                handleCreateClientContact();
+              }
+            }}
+            disabled={contLoading}
+          >
+            {contLoading ? (
+              <BtnBeatLoader />
+            ) : contactDetails?.id ? (
+              "Update"
+            ) : (
+              "Save"
+            )}
+          </button>
         </div>
         <div className="row">
           <div className="col-6 my-1">
-            <p>Client <strong className="text-danger">*</strong></p>
+            <p>
+              Client <strong className="text-danger">*</strong>
+            </p>
             <select
               value={contactData.client_ref}
               className="client-form-input"
@@ -290,7 +293,9 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
               <span className="text-danger">{error.clientErr}</span>
             </div> */}
           <div className="col-6 my-1">
-            <p>Contact Name <strong className="text-danger">*</strong></p>
+            <p>
+              Contact Name <strong className="text-danger">*</strong>
+            </p>
             <input
               name="name"
               value={contactData.name}
@@ -301,7 +306,9 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
             <span className="text-danger">{error.name}</span>
           </div>
           <div className="col-6 my-1">
-            <p>Email <strong className="text-danger">*</strong></p>
+            <p>
+              Email <strong className="text-danger">*</strong>
+            </p>
             <input
               name="email"
               value={contactData.email}
@@ -312,7 +319,9 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
             <span className="text-danger">{error.email}</span>
           </div>
           <div className="col-6 my-1">
-            <p>Ownership</p>
+            <p>
+              Ownership <strong className="text-danger">*</strong>
+            </p>
             {/* <select
                 value={contactData.ownership}
                 className="client-form-input"
@@ -339,6 +348,7 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
               name="ownership"
               email={false}
             />
+            <span className="text-danger">{error.ownership}</span>
           </div>
           <div className="col-6 my-1">
             <p>Designation</p>
@@ -361,7 +371,9 @@ const AddContactManagerModal = ({ handleGetClientContactManagers, contactDetails
             />
           </div>
           <div className="col-6 my-1">
-            <p>Mobile Number <strong className="text-danger">*</strong></p>
+            <p>
+              Mobile Number <strong className="text-danger">*</strong>
+            </p>
             <input
               name="contact"
               value={contactData.contact}

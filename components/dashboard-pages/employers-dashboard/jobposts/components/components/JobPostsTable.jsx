@@ -12,7 +12,11 @@ import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import Pagination from "@/components/common/Pagination";
-import { accessRoles, processOptions, removeSpecialChar } from "@/utils/constant";
+import {
+  accessRoles,
+  processOptions,
+  removeSpecialChar,
+} from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
 import InterviewScheduleModal from "./InterviewScheduleModal";
@@ -176,13 +180,16 @@ const JobPostsTable = () => {
           <div>
             <span className="text-primary">{dataCount} records</span>
           </div>
-          {!(employeeDetails?.access_role_details?.access_id == accessRoles.RECRUITER) &&
-          <Link href="/employers-dashboard/job-posts/add-job-posts">
-            <button className="bg-primary px-3 text-white rounded-1 py-1">
-              + New
-            </button>
-          </Link>
-          }
+          {!(
+            employeeDetails?.access_role_details?.access_id ==
+            accessRoles.RECRUITER
+          ) && (
+            <Link href="/employers-dashboard/job-posts/add-job-posts">
+              <button className="bg-primary px-3 text-white rounded-1 py-1">
+                + New
+              </button>
+            </Link>
+          )}
         </div>
       </div>
       <div className="table_div custom-scroll-sm">
@@ -411,9 +418,7 @@ const JobPostsTable = () => {
                               );
                             })}
                         {item.city && item.city.split("  ").length > 1 && (
-                          <span
-                            className="text-primary cursor-pointer fs-4"
-                          >
+                          <span className="text-primary cursor-pointer fs-4">
                             {reactIcons.more}
                           </span>
                         )}
@@ -428,13 +433,12 @@ const JobPostsTable = () => {
                               zIndex: "5",
                             }}
                           >
-                            {item.city && item.city.split("  ").map((item) => {
-                              return (
-                                <span className="text-white">
-                                  {item}
-                                </span>
-                              );
-                            })}
+                            {item.city &&
+                              item.city.split("  ").map((item) => {
+                                return (
+                                  <span className="text-white">{item}</span>
+                                );
+                              })}
                           </div>
                         )}
                       </div>
@@ -690,7 +694,7 @@ const JobPostsTable = () => {
                                 return (
                                   <tr>
                                     <td style={{ width: "60px" }}>
-                                      <input
+                                      {/* <input
                                         type="checkbox"
                                         onChange={(e) => {
                                           let update = [...jobPostList];
@@ -743,6 +747,53 @@ const JobPostsTable = () => {
                                           }
 
                                           setJobPostList(update);
+                                        }}
+                                        checked={_item?.selected}
+                                      /> */}
+                                      <input
+                                        type="checkbox"
+                                        onChange={(e) => {
+                                          // Clone the jobPostList state to update it immutably
+                                          const updatedJobPostList =
+                                            jobPostList.map(
+                                              (applicant, applicantIndex) => {
+                                                // Reset 'selected' field for all submissions for each applicant
+                                                if (
+                                                  Array.isArray(
+                                                    applicant.submissions
+                                                  )
+                                                ) {
+                                                  applicant.submissions =
+                                                    applicant.submissions.map(
+                                                      (submission) => ({
+                                                        ...submission,
+                                                        selected: false,
+                                                      })
+                                                    );
+                                                }
+
+                                                // Check if this is the applicant we want to update based on the index
+                                                if (applicantIndex === index) {
+                                                  applicant.submissions =
+                                                    applicant.submissions.map(
+                                                      (
+                                                        submission,
+                                                        submissionIndex
+                                                      ) => ({
+                                                        ...submission,
+                                                        selected:
+                                                          e.target.checked &&
+                                                          submissionIndex ===
+                                                            _index,
+                                                      })
+                                                    );
+                                                }
+
+                                                return applicant;
+                                              }
+                                            );
+
+                                          setJobPostList(updatedJobPostList);
                                         }}
                                         checked={_item?.selected}
                                       />

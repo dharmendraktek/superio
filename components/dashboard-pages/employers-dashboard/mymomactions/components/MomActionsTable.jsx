@@ -355,9 +355,9 @@ const MomActionsTable = () => {
                 <th style={{ width: "300px" }}>Action Taken</th>
                 <th style={{ width: "300px" }}>Result</th>
                 <th style={{ width: "150px" }}>Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Head Ownership</th>
+                <th style={{width:'150px'}}>Created At</th>
+                <th style={{width:'150px'}}>Updated At</th>
+                <th style={{width:"200px"}}>Head Ownership</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -438,14 +438,16 @@ const MomActionsTable = () => {
                         <td style={{ width: "150px" }}>
                           {status_details?.name || "N/A"}
                         </td>
-                        <td>{moment(created_at).format("DD-MM-yyyy")}</td>
-                        <td>{moment(updated_at).format("DD-MM-yyyy")}</td>
-                        <td>
+                        <td style={{width:'150px'}}>{moment(created_at).format("DD-MM-yyyy")}</td>
+                        <td style={{width:'150px'}}>{moment(updated_at).format("DD-MM-yyyy")}</td>
+                        <td style={{width:'200px'}} className="d-flex flex-wrap gap-2">
                           {head_ownership_details.map((item) => {
                             return (
-                              <span key={item.id} className="text-black">
+                              <div key={item.id} className="">
+                              <span  className="text-black">
                                 {item.first_name} {item.last_name}
                               </span>
+                              </div>
                             );
                           })}
                         </td>
@@ -456,7 +458,10 @@ const MomActionsTable = () => {
                               data-bs-toggle="offcanvas"
                               data-bs-target="#addMomActionModal"
                               aria-controls="offcanvasLeft"
-                              onClick={() => setContactDetails(item)}
+                              onClick={() => {
+                                setMomActionDetails(item);
+                                setMomItem(item);
+                              }}
                             >
                               {reactIcons.edit}
                             </span>

@@ -38,7 +38,7 @@ const AddMomAction = ({
     result: "",
     ownership: [],
     head_ownership: [],
-    status: "",
+    status:"",
   });
   const [momStatusList, setMomStatusList] = useState([]);
   const [selectedUsersIds, setSelectedUsersIds] = useState([]);
@@ -98,12 +98,12 @@ const AddMomAction = ({
     if (!momActionData.timeline) {
       setError((prev) => ({ ...prev, timeline: "This field is required" }));
     }
-    if (!momActionData.action_taken) {
-      setError((prev) => ({ ...prev, action_taken: "This field is required" }));
-    }
+    // if (!momActionData.action_taken) {
+    //   setError((prev) => ({ ...prev, action_taken: "This field is required" }));
+    // }
 
     let { meeting_ref, task, timeline, action_taken } = momActionData;
-    if (meeting_ref && task && timeline && action_taken) {
+    if (meeting_ref && task && timeline ) {
       return true;
     } else {
       return false;
@@ -140,7 +140,7 @@ const AddMomAction = ({
         const closeBtn = document.getElementById("closeBtnMomAction");
         closeBtn.click();
         setLoading(false);
-        toast.success("Client contact has been created successfully!");
+        toast.success("Action has been successfully created");
         handleGetClientContactManagers();
       }
       if (response.error) {
@@ -183,6 +183,7 @@ const AddMomAction = ({
     setMomActionData(initialState);
     setMomItem("");
   }
+  console.log("-----------mom action detial ", momActionDetails);
 
   return (
     <div
@@ -345,6 +346,8 @@ const AddMomAction = ({
             />
             <span className="text-danger">{error.task}</span>
           </div>
+          {momActionDetails &&
+          <>
           <div className="col-12 my-1">
             <p>Action <strong className="text-danger">*</strong></p>
             <input
@@ -366,6 +369,8 @@ const AddMomAction = ({
               type="text"
             />
           </div>
+          </>
+          }
           <div className="col-6 my-1">
             <p>Head Ownership</p>
             {/* <SelectWithSearch
@@ -392,6 +397,7 @@ const AddMomAction = ({
               showUsersAbove={true}
             />
           </div>
+          {momActionDetails &&
           <div className="col-6 my-1">
             <p>Status</p>
             <select
@@ -410,6 +416,7 @@ const AddMomAction = ({
               })}
             </select>
           </div>
+          }
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { countriesWithTimeZone } from "@/utils/countrieswithtimzone"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
-const TimeZoneModal = ({form, setForm}) => {
+const TimeZoneModal = ({form, setForm, id}) => {
     const [name, setName] = useState('United States');
     const [timeZoneData, setTimeZoneData] = useState([]);
   
@@ -13,11 +13,14 @@ const TimeZoneModal = ({form, setForm}) => {
         if (name) {
             let filtered = countriesWithTimeZone.find((item) => item.country === name);
             setTimeZoneData(filtered?.timezones || []);
+            if(filtered?.timezones.length == 1){
+                setForm((prev) => ({...prev, timezone:filtered.timezones[0].name}))
+            }
         }
     }, [name]);
 
     return (
-        <div className="modal fade time-zone" id="timeZoneModal" tabIndex="-1" aria-labelledby="timeZoneModalLabel" aria-hidden="true" data-bs-backdrop="false">
+        <div className="modal fade time-zone" id={id || "timeZoneModal"} tabIndex="-1" aria-labelledby="timeZoneModalLabel" aria-hidden="true" data-bs-backdrop="false">
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">

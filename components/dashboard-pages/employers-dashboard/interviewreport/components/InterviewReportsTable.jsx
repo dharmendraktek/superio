@@ -300,9 +300,9 @@ const InterviewReportsTable = () => {
             <thead className="position-sticky">
               <tr>
                 <th className="" style={{ width: "200px" }}>
-                  Interview Schedule
+                  Created Date
                 </th>
-                <th style={{ width: "150px" }}>Scheduled Done</th>
+                <th style={{ width: "150px" }}>Interview Date</th>
                 <th style={{ width: "150px" }}>Start Time </th>
                 <th style={{ width: "150px" }}>End Time</th>
                 <th style={{ width: "300px" }}>Time zone</th>
@@ -387,7 +387,9 @@ const InterviewReportsTable = () => {
                         className="text-capitalize"
                         style={{ width: "300px" }}
                       >
+                        <span>
                         {applicant_name || "N/A"}
+                        </span>
                       </td>
                       <td
                         className="text-capitalize"

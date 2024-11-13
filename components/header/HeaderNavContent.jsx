@@ -318,13 +318,13 @@ const additionalMenuData = [
     routePath: "/employers-dashboard/mom",
     active: "",
   },
-  // {
-  //   id: 4,
-  //   name: "My MOM Actions",
-  //   icon: "la-user-tie",
-  //   routePath: "/employers-dashboard/my-mom-actions",
-  //   active: "",
-  // }
+  {
+    id: 4,
+    name: "My MOM Actions",
+    icon: "la-user-tie",
+    routePath: "/employers-dashboard/my-mom-actions",
+    active: "",
+  }
 ];
 
 const subMenuData = [

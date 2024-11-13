@@ -63,7 +63,7 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
       setError((prev) => ({ ...prev, client_owner: "This field is required" }));
     }
 
-    let { client_name } = form;
+    let { client_name, client_owner } = form;
     if (client_name && client_owner) {
       return true;
     } else {
@@ -226,13 +226,14 @@ const AddClientModal = ({ handleGetClientNames, client, setClient }) => {
             />
           </div>
           <div className="col-6 my-1">
-            <p>Ownership</p>
+            <p>Ownership <strong className="text-danger">*</strong></p>   
             <SelectWithSearch
               setForm={setForm}
               form={form}
               name="client_owner"
               email={false}
             />
+            <span className="text-danger">{error.client_owner}</span>
           </div>
           {/* <div className="col-6 my-1">
             <p>Status</p>

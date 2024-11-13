@@ -42,6 +42,8 @@ const InterviewScheduleTable = () => {
   const [openAct, setOpenAct] = useState(false);
   const [expand, setExpand] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [openReschedule, setOpenReschedule] = useState(null);
+
 
   useEffect(() => {
     let param;
@@ -84,6 +86,8 @@ const InterviewScheduleTable = () => {
   return (
     <div>
       {isLoading && <Loader />}
+      <InterviewFeedbackModal selectedItem={selectedItem} />
+      <InterviewScheduleModal  selectedItem={selectedItem} reschedule={true} />
       <div className="d-flex justify-content-between">
         <div>
           <h4>Scheduled Interview List</h4>
@@ -134,8 +138,6 @@ const InterviewScheduleTable = () => {
       </div>
       <div className="mt-2">
         <div className="table_div custom-scroll-sm">
-          <InterviewFeedbackModal selectedItem={selectedItem} />
-          <InterviewScheduleModal selectedItem={selectedItem} reschedule={true} />
           <table className="default-table ">
             <thead className="position-sticky">
               <tr>
@@ -243,8 +245,20 @@ const InterviewScheduleTable = () => {
                       <td className="" style={{ width: "100px" }}>
                         {endtime}
                       </td>
-                      <td className="" style={{ width: "250px" }}>
+                      <td className="" style={{ width: "250px" }}
+                          onMouseEnter={() => {
+                            setOpenReschedule(item.id)
+                        }}
+                        onMouseLeave={() => {
+                            setOpenReschedule(null);
+                        }}
+                      >
+                        <span>
                         {(firstname || '') + ' '+ (middlename || '') + ' ' + (lastname || '') }
+                        </span>
+                        {openReschedule == item.id &&
+                        <span className="text-primary px-2 cursor-pointer"  onClick={() => setSelectedItem(item)} data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">{reactIcons.reschedule}</span>
+                        }
                       </td>
                       <td className="" style={{ width: "300px" }}>
                         {title}
@@ -327,7 +341,7 @@ const InterviewScheduleTable = () => {
                       </td>
                       <td style={{ width: "150px" }}>
                         <div className="d-flex gap-2">
-                           <span className="text-primary cursor-pointer" onClick={() => setSelectedItem(item)} data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">{reactIcons.time}</span>
+                           <span className="text-primary cursor-pointer" onClick={() => setSelectedItem(item)} data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">{reactIcons.reschedule}</span>
                            <span className="text-primary cursor-pointer" onClick={() => setSelectedItem(item)} data-bs-target="#interviewFeedbackModal" data-bs-toggle="modal">{reactIcons.feedback}</span>
                           </div>    
                       </td>

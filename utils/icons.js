@@ -67,6 +67,8 @@ import { IoMdClose } from "react-icons/io";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdMoreHoriz } from "react-icons/md";
 import { BiSolidMessageRoundedAdd } from "react-icons/bi";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+
 
 
 
@@ -132,4 +134,5 @@ export const reactIcons = {
     peoplegroup:<FaPeopleGroup />,
     more:<MdMoreHoriz />,
     add:<BiSolidMessageRoundedAdd />,
+    reschedule:<RiCalendarScheduleFill />
 }

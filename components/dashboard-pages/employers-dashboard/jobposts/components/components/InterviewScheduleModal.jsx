@@ -15,6 +15,7 @@ import TimeZoneModal from "./TimeZoneModal";
 import moment from "moment";
 import UsersListDropdown from "@/components/common/UsersListDropdown";
 import UploadSingleDocument from "@/components/common/UploadSingleDocument";
+import { round } from "lodash";
 
 const initialState = {
   applicant: "",
@@ -38,7 +39,8 @@ const initialState = {
   comment: null,
   additional_notifiers: [],
   timezone: "(UTC-06:00) Central Time (US & Canada)",
-  reschedule:false
+  reschedule:false,
+  reason:''
 };
 
 const remInitialState = {
@@ -70,19 +72,22 @@ const InterviewScheduleModal = ({
   const [reminderUsersIds, setReminderUsersIds] = useState([]);
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
+  const [prevSelectedItem, setPrevSelectedItem] = useState(null);
+
 
   const closeBtnRef = useRef(null);
 
+
   useEffect(() => {
-    if (jobPostList.length > 0 || selectedItem) {
-      const filteredData = jobPostList.filter((item) =>
-        item.submissions.some((submission) => submission.selected === true)
-      );
-      setJobData(filteredData);
-      handleGetInterviewRoundList();
+    if (jobPostList.length > 0 || selectedItem !== prevSelectedItem) {
+       const filteredData = jobPostList.filter(item =>
+          item.submissions.some(submission => submission.selected)
+       );
+       setJobData(filteredData);
+       handleGetInterviewRoundList();
+       setPrevSelectedItem(selectedItem);
     }
-    
-  }, [jobPostList, selectedItem]);
+ }, [selectedItem, jobPostList]);
 
   useEffect(() => {
     if (applicantData.length > 0) {
@@ -117,8 +122,10 @@ const InterviewScheduleModal = ({
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
+     }else{
+      delete form["reason"]
      }
-    form["submission_ref"] = finalFilterData?.id;
+    form["submission_ref"] = (finalFilterData?.id) || (selectedItem?.submission_ref || selectedItem?.id); 
     try {
       setIsLoading(true);
       const response = await postApiReq("/interviews/", form);
@@ -134,6 +141,10 @@ const InterviewScheduleModal = ({
         closeBtnRef.current.click();  
         handleGetJobDetails();
       }
+      if(!response.status){
+        toast.error(response.error.non_field_errors[0] || "Something went wrong")
+      }
+
     } catch (err) {
       toast.error(err || "Something went wrong");
     }
@@ -170,7 +181,7 @@ const InterviewScheduleModal = ({
   };
 
 
-  let jobId = jobData.length > 0 ? jobData[0]?.id : selectedItem?.job_detail?.id;
+  let jobId = jobData.length > 0 ? ((jobData[0]?.jobs_associated && jobData[0]?.jobs_associated[0]?.job) || jobData[0]?.id) : selectedItem?.job_detail?.id ? selectedItem?.job_detail?.id : selectedItem?.job_details?.id ;
 
   let filteredData = jobData[0]?.submissions?.find((item) => {
     if (item.selected) {
@@ -184,7 +195,7 @@ const InterviewScheduleModal = ({
     }
   });
 
-  let finalFilterData = filteredData || filterApplicantData || selectedItem;
+  let finalFilterData = filteredData || filterApplicantData  || (!reschedule && selectedItem)
 
   let applicantId =
     // jobData.length > 0 && applicantData.length > 0
@@ -263,6 +274,12 @@ const InterviewScheduleModal = ({
       applicant: applicantId,
       job: jobId,
     }));
+    if(reschedule){
+      setForm((prev) =>({
+        ...prev, 
+        round:finalFilterData.round || selectedItem?.round
+      }))
+    }
   }, [clientId, applicantContact]);
 
 
@@ -275,7 +292,7 @@ const InterviewScheduleModal = ({
       id={id || "interviewSchedule"}
       aria-labelledby={`${id ? `${id}_label` : 'interviewScheduleRightLabel'}`}
     >
-      <TimeZoneModal form={form} setForm={setForm} />
+      <TimeZoneModal id={`${id}_timeZoneMoal`} form={form} setForm={setForm} />
       <div className="offcanvas-header">
         <h5 id= {`${id ? `${id}_label` : "interviewScheduleRightLabel"}`}   className="text-primary fw-500">
           {reschedule ? "Reschedule Interview" : "Schedule Interview"}
@@ -336,7 +353,7 @@ const InterviewScheduleModal = ({
                 Reschdule Reason <strong className="text-danger">*</strong>
                 </p>
                 <select
-                  name="mode"
+                  name="reason"
                   onChange={handleChange}
                   className="client-form-input"
                 >
@@ -348,16 +365,16 @@ const InterviewScheduleModal = ({
                       </option>
                     );
                   })} */}
-                  <option>Candidate Unavailable</option>
-                  <option>Client Unavailable</option>
-                  <option>Network issue</option>
-                  <option>Slot Booked</option>
+                  <option value="Candidate Unavailable" >Candidate Unavailable</option>
+                  <option value="Client Unavailable">Client Unavailable</option>
+                  <option value="Network issue">Network issue</option>
+                  <option value="Slot Booked">Slot Booked</option>
                 </select>
             </div>
             }
             <div>
               <DatePickerCustom
-                date={form.startdate}
+                date={form?.startdate}
                 handleDate={(date) =>
                   setForm((prev) => ({
                     ...prev,
@@ -373,8 +390,8 @@ const InterviewScheduleModal = ({
                 <div className="flex-wrap w-50">
                   <DatePickerCustom
                     date={
-                      form.starttime
-                        ? moment(form.starttime, "HH:mm:ss").toDate()
+                      form?.starttime
+                        ? moment(form?.starttime, "HH:mm:ss").toDate()
                         : null
                     }
                     handleDate={(date) => {
@@ -395,8 +412,8 @@ const InterviewScheduleModal = ({
                 <div className="w-50">
                   <DatePickerCustom
                     date={
-                      form.endtime
-                        ? moment(form.endtime, "HH:mm:ss").toDate()
+                      form?.endtime
+                        ? moment(form?.endtime, "HH:mm:ss").toDate()
                         : null
                     }
                     handleDate={(date) => {
@@ -416,7 +433,7 @@ const InterviewScheduleModal = ({
                 <span>{form.timezone}</span>
                 <button
                   data-bs-toggle="modal"
-                  data-bs-target="#timeZoneModal"
+                  data-bs-target={`#${id}_timeZoneMoal`}
                   className="theme-btn btn-style-four small cursor-pointer"
                 >
                   Time Zone
@@ -451,6 +468,7 @@ const InterviewScheduleModal = ({
                   name="mode"
                   onChange={handleChange}
                   className="client-form-input"
+                  value={form.mode}
                 >
                   <option>Select</option>
                   {interviewModes.map((item, index) => {
@@ -470,6 +488,7 @@ const InterviewScheduleModal = ({
                   name="round"
                   onChange={handleChange}
                   className="client-form-input"
+                  value={form.round}
                 >
                   <option>Select</option>
                   {roundList.map((item, index) => {

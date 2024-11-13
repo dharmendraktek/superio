@@ -2233,7 +2233,7 @@ const ApplicantSubmissionDetails = ({
                         name="bill_rate_currency"
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
-                        value={multiSubmissionForm[index].bill_rate_currency}
+                        value={multiSubmissionForm[index]?.bill_rate_currency}
                       >
                         <option>Select</option>
                         {currencyJson.map((item, index) => {

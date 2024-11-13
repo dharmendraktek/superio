@@ -25,14 +25,10 @@ const InterviewFeedbackModal = ({selectedItem}) => {
     handleGetStatus();
   }, [])
 
-console.log("----------------selected ", selectedItem);
 
 
   const handleGetStatus = async() => {
     const response = await getReq(`/interview-feedback-status-dropdown/`);
-
-    console.log("----------response ", response);
-
     if(response.status){
       setStatusList(response.data);
     }
