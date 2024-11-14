@@ -1,5 +1,7 @@
+'useClient'
 import { reactIcons } from "@/utils/icons";
 import DatePickerCustom from "./DatePickerCustom";
+import { useEffect, useState } from "react";
 
 const MultiSearch = ({
   openFields,
@@ -14,6 +16,18 @@ const MultiSearch = ({
   endDate,
   setEndDate,
 }) => {
+
+  const [searchValue, setSearchValue] = useState('');
+  
+  useEffect(() => {
+     if(!searchValue){
+      setSearch(searchValue);
+     }
+  }, [searchValue])
+
+  const handleSearch = () => {
+    setSearch(searchValue)
+  }
 
   return (
     <div className="" style={{ minWidth: "400px", maxWidth:'fit-content' }}>
@@ -57,15 +71,22 @@ const MultiSearch = ({
         )}
         <input
           type="text"
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearchValue(e.target.value)}
           className="px-2"
           placeholder="Search..."
           style={{ width: "200px" }}
-          value={search}
+          value={searchValue}
+          onKeyDown={(e) => {
+            if(e.key == "Enter"){
+              handleSearch();
+            }
+          }}
         />
-         {search &&
-                // <span onClick={() => setSearch('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"8px"}}>{reactIcons.close}</span>
-                <button className="theme-btn btn-style-one small position-absolute" style={{right:'0px'}}>Search</button>
+        {search && 
+        <span onClick={() => setSearchValue('')} className="position-absolute cursor-pointer	  text-primary fs-5" style={{right:"85px"}}>{reactIcons.close}</span>
+        }
+         {searchValue &&
+                <button className="theme-btn btn-style-one small position-absolute" onClick={handleSearch} style={{right:'0px', borderRadius:"4px"}}>Search</button>
         }
         {/* <button className="theme-btn btn-style-one small">Search</button> */}
       </div>

@@ -19,7 +19,6 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
     shift_out_time: null,
   });
   const [statusList, setStatusList] = useState([]);
-  console.log("-----------select data ", selectDateData);
 
   useEffect(() => {
     if (selectDateData) {

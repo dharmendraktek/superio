@@ -12,8 +12,8 @@ import { reactIcons } from "@/utils/icons";
 import { cleanString } from "@/utils/regex";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import FileSaver from 'file-saver';
-
+import FileSaver from "file-saver";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const JobDelegationReport = () => {
   const [search, setSearch] = useState("");
@@ -28,6 +28,8 @@ const JobDelegationReport = () => {
   const [filterKeys, setFilterKeys] = useState(jobDelegationFilterKey);
   const [allParam, setAllParam] = useState("");
   const [openAssign, setOpenAssign] = useState(null);
+  const [isExcelLoading, setIsExcelLoading] = useState(false);
+  const [openLoc, setOpenLoc] = useState(null);
 
   // useEffect(() => {
   //   let param;
@@ -112,14 +114,28 @@ const JobDelegationReport = () => {
   };
 
   const handleExportExcel = async () => {
-     const response = await getApiReq(`${allParam ? `/job-assignment-report/report/?${allParam}&export=excel`:'/job-assignment-report/report/?export=excel'}`);
-     if(response.status){
-      var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-      FileSaver.saveAs(blob, 'job-assignment-report.xlsx');   
-     }
+    try {
+      setIsExcelLoading(true);
+      const response = await getApiReq(
+        `${
+          allParam
+            ? `/job-assignment-report/report/?${allParam}&export=excel`
+            : "/job-assignment-report/report/?export=excel"
+        }`
+      );
+      setIsExcelLoading(false);
+      if (response.status) {
+        var blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        FileSaver.saveAs(blob, "job-assignment-report.xlsx");
+      }
+    } catch (err) {
+      setIsExcelLoading(false);
+      toast.error(err.response.data.message || "Something went wrong");
+    }
   };
-  
-  
+
   return (
     <div>
       {isLoading && <Loader />}
@@ -160,8 +176,8 @@ const JobDelegationReport = () => {
               </div>
             </div>
             <div className="d-flex gap-2">
-            <button
-                 className={` small theme-btn ${
+              <button
+                className={` small theme-btn ${
                   moment(startDate).format("DD-MM") ==
                     moment(new Date()).format("DD-MM") &&
                   moment(endDate).format("DD-MM") ==
@@ -179,9 +195,13 @@ const JobDelegationReport = () => {
               <button
                 className={` small theme-btn ${
                   moment(startDate).format("DD-MM") ===
-                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM") &&
+                    moment(new Date().setDate(new Date().getDate() - 1)).format(
+                      "DD-MM"
+                    ) &&
                   moment(endDate).format("DD-MM") ===
-                    moment((new Date()).setDate(new Date().getDate() - 1)).format("DD-MM")
+                    moment(new Date().setDate(new Date().getDate() - 1)).format(
+                      "DD-MM"
+                    )
                     ? "btn-style-five"
                     : "btn-style-three"
                 }`}
@@ -189,11 +209,10 @@ const JobDelegationReport = () => {
                   const today = new Date();
                   const yesterday = new Date();
                   yesterday.setDate(today.getDate() - 1); // Set yesterday's date
-                  
-                  setStartDate(yesterday);  // Setting yesterday's date
-                  setEndDate(yesterday);        // Setting today's date
+
+                  setStartDate(yesterday); // Setting yesterday's date
+                  setEndDate(yesterday); // Setting today's date
                 }}
-                
               >
                 Yesterday
               </button>
@@ -207,73 +226,89 @@ const JobDelegationReport = () => {
           </div>
         </div>
         <div className="d-flex align-items-center gap-2">
-        <div>
+          <div>
             <span className="text-primary">{dataCount} records</span>
           </div>
           <button
             className="theme-btn btn-style-one small d-flex gap-2"
             onClick={() => handleExportExcel()}
+            disabled={isExcelLoading}
           >
-            <span>Excel</span>
-            <span>{reactIcons.download}</span>
+            {isExcelLoading ? (
+              <BtnBeatLoader />
+            ) : (
+              <>
+                <span>Excel</span>
+                <span>{reactIcons.download}</span>
+              </>
+            )}
           </button>
         </div>
       </div>
       <div className="d-flex me-2 mt-1 mb-2">
-        {filterKeys.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity)).map((item, index) => {
-          return (
-            <div className="">
-              {item.selected && (
-                <div
-                  key={item.id}
-                  className="border d-flex me-2 justify-content-between border-secondary"
-                >
+        {filterKeys
+          .sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity))
+          .map((item, index) => {
+            return (
+              <div className="">
+                {item.selected && (
                   <div
-                    onClick={() => {
-                      setFieldName(item.id);
-                      let itemIndex = filterKeys.findIndex((i) => i.id == item.id);
-                      setFilterKeys((prevKeys) => {
-                        const update = [...prevKeys];
-                        update[itemIndex] = { ...update[itemIndex], search_value: "" };
-                        return update;
-                      });
-                    }}
-                    className="bg-gray text-white px-2 cursor-pointer"
-                    htmlFor={item.value}
+                    key={item.id}
+                    className="border d-flex me-2 justify-content-between border-secondary"
                   >
-                    {item.name}
-                  </div>
-                  {item.search_value && (
-                    <div className="px-2 bg-secondary fw-600">
-                      {item.search_value || ""}
-                      {/* <input type="text" placeholder="Search..." /> */}
-                    </div>
-                  )}
-                  <div className="px-1 bg-secondary cursor-pointer">
-                    <span
+                    <div
                       onClick={() => {
-                        setFieldName(null);
+                        setFieldName(item.id);
+                        let itemIndex = filterKeys.findIndex(
+                          (i) => i.id == item.id
+                        );
                         setFilterKeys((prevKeys) => {
                           const update = [...prevKeys];
-                          let itemIndex = update.findIndex((i) => i.id == item.id);
                           update[itemIndex] = {
                             ...update[itemIndex],
-                            selected: false,
                             search_value: "",
-                            rank:''
                           };
                           return update;
                         });
                       }}
+                      className="bg-gray text-white px-2 cursor-pointer"
+                      htmlFor={item.value}
                     >
-                      {reactIcons.normalclose}
-                    </span>
+                      {item.name}
+                    </div>
+                    {item.search_value && (
+                      <div className="px-2 bg-secondary fw-600">
+                        {item.search_value || ""}
+                        {/* <input type="text" placeholder="Search..." /> */}
+                      </div>
+                    )}
+                    <div className="px-1 bg-secondary cursor-pointer">
+                      <span
+                        onClick={() => {
+                          setFieldName(null);
+                          setFilterKeys((prevKeys) => {
+                            const update = [...prevKeys];
+                            let itemIndex = update.findIndex(
+                              (i) => i.id == item.id
+                            );
+                            update[itemIndex] = {
+                              ...update[itemIndex],
+                              selected: false,
+                              search_value: "",
+                              rank: "",
+                            };
+                            return update;
+                          });
+                        }}
+                      >
+                        {reactIcons.normalclose}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
       </div>
       <div className="">
         <div className="table_div custom-scroll-sm">
@@ -371,12 +406,59 @@ const JobDelegationReport = () => {
                       >
                         {job_type || "N/A"}
                       </td>
-                      <td
+                      {/* <td
                         className="text-capitalize"
                         style={{ width: "300px" }}
                       >
                         {job_location ? cleanString(job_location) : "N/A"}
-                      </td>
+                      </td> */}
+                       <td
+                       style={{width:"300px"}}
+                      onMouseEnter={() => setOpenLoc(assigned_time)}
+                      onMouseLeave={() => setOpenLoc(null)}
+                    >
+                      <div className="d-flex gap-1 flex-wrap">
+                        {item.job_location &&
+                          item.job_location
+                            .split("  ")
+                            .slice(0, 1)
+                            .map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  // className="rounded-1 px-1"
+                                  // style={{ background: "rgb(64 69 114 / 81%)" }}
+                                >
+                                  <span className="text-black">{cleanString(item)}</span>
+                                </div>
+                              );
+                            })}
+                        {item.job_location && item.job_location.split("  ").length > 1 && (
+                          <span className="text-primary cursor-pointer fs-4">
+                            {reactIcons.more}
+                          </span>
+                        )}
+                        {!item.job_location && "N/A"}
+                        {openLoc == assigned_time && (
+                          <div
+                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                            style={{
+                              width: "250px",
+                              minHeight: "30px",
+                              maxHeight: "fit-content",
+                              zIndex: "5",
+                            }}
+                          >
+                            {item.job_location &&
+                              item.job_location.split("  ").map((item) => {
+                                return (
+                                  <span className="text-white">{cleanString(item)}</span>
+                                );
+                              })}
+                          </div>
+                        )}
+                      </div>
+                    </td>
                       <td
                         className="text-capitalize"
                         style={{ width: "200px" }}
@@ -391,7 +473,7 @@ const JobDelegationReport = () => {
                       </td>
                       <td
                         className="text-capitalize"
-                        onMouseEnter={() => setOpenAssign(job_code)}
+                        onMouseEnter={() => setOpenAssign(assigned_time)}
                         onMouseLeave={() => setOpenAssign(null)}
                         style={{ width: "150px" }}
                       >
@@ -413,7 +495,7 @@ const JobDelegationReport = () => {
                             {reactIcons.peoplegroup}
                           </span>
                           {/* {assigned_to.length == 0 && "N/A"} */}
-                          {openAssign == job_code && (
+                          {openAssign == assigned_time && (
                             <div
                               className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
                               style={{

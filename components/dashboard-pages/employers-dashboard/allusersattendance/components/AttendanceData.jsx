@@ -272,7 +272,7 @@ const viewType = [
 const AttendanceData = () => {
   const [select, setSelect] = useState("Table");
   const [selectDateData, setSelectDateData] = useState(null);
-  const [usersAttendanceData, setUsersAttendanceData] = useState([]);
+  const [usersAttendanceData, setUsersAttendanceData] = useState();
   const [openIndex, setOpenIndex] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -286,10 +286,13 @@ const AttendanceData = () => {
   const [usersList, setUsersList] = useState([]);
 
   const getAllUsersAttendance = async (param) => {
-    const response = await getReq(`/attendance-details/admin_panel/${param}`);
-    if (response.status) {
-      setUsersAttendanceData(response.data.results || response.data);
-    }
+    // if(param){
+      const response = await getReq(`/attendance-details/admin_panel/${param ? param :''}`);
+      if (response.status) {
+        console.log("----------------response", response.data);
+        setUsersAttendanceData(response.data.results || response.data);
+      }
+    // }
   };
 
   useEffect(() => {
@@ -305,7 +308,6 @@ const AttendanceData = () => {
       `/users/${search ? `?search=${search}` : ""}`
     );
     if (response.status) {
-      console.log("-----------responer of ", response.data);
       setUsersList(response.data.results || response.data);
     }
   };
@@ -323,7 +325,6 @@ const AttendanceData = () => {
     } else {
       param = `?year_month=${month}`;
     }
-    console.log("-------------form . user ", form.user);
 
     if (form.user) {
       param += `&emp_id=${form.user}`;
@@ -345,7 +346,8 @@ const AttendanceData = () => {
     let presentCount = 0;
     let absentCount = 0;
 
-    data.forEach((record) => {
+
+    data.attendance_records.forEach((record) => {
       if (record.status.type === "Present") {
         presentCount++;
       } else {
@@ -361,6 +363,8 @@ const AttendanceData = () => {
     setEndDate(null);
     setForm((prev) => ({...prev, "user":''}))
   }
+
+  // console.log("-----getting error form ",usersAttendanceData && usersAttendanceData[Object.keys(usersAttendanceData)[0].attendance_records]);
 
   return (
     <div>
@@ -479,7 +483,7 @@ const AttendanceData = () => {
                     <th style={{width:"130px"}}>Check In</th>
                      <th style={{width:"130px"}}>Check out</th>
                     <th style={{width:"130px"}}>Duration</th> */}
-                {usersAttendanceData[Object.keys(usersAttendanceData)[0]]?.map(
+                {usersAttendanceData && usersAttendanceData[Object.keys(usersAttendanceData)[0]].attendance_records?.map(
                   (header, index) => {
                     return (
                       <>
@@ -504,11 +508,13 @@ const AttendanceData = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(usersAttendanceData).map(([empCode, records]) => {
+              {usersAttendanceData && Object.entries(usersAttendanceData).map(([empCode, records]) => {
                 const { presentCount, absentCount } =
                   calculateAttendanceCounts(records);
-                const userRecord = records[0]; // Get the first record for common info
-
+                const userRecord = records.attendance_records[0]; // Get the first record for common info
+                // let allRecord = records.attendance_records;
+                // allRecord.push(records.attendance_report)
+                // console.log("----------------attendance report ", allRecord)
                 return (
                   <tr key={empCode}>
                     <td style={{ width: "150px" }}>{userRecord.username}</td>
@@ -529,7 +535,7 @@ const AttendanceData = () => {
                       </span>
                     </td>
 
-                    {records.map((record) => (
+                    {records.attendance_records.map((record) => (
                       <React.Fragment key={record.id}>
                         <td style={{ width: "130px" }}>
                           {/* {record.date_of_attendance 
@@ -553,7 +559,7 @@ const AttendanceData = () => {
                               "Sun" &&
                               !record.first_timestamp)
                               ? "Week Off"
-                              : record.status_details.type}
+                              : record?.status_details?.type}
                           </div>
                         </td>
                         <td style={{ width: "130px" }}>

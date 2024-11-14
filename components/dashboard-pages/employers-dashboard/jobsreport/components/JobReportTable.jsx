@@ -1,18 +1,18 @@
 "use client";
 
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import Loader from "@/components/common/Loader";
 import MultiFilterSearch from "@/components/common/MultiFilterSearch";
-import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
 import { getApiReq, getReq } from "@/utils/apiHandlers";
 import { jobReportFilterKey } from "@/utils/constant";
-import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import { cleanString } from "@/utils/regex";
 import FileSaver from "file-saver";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const JobReportTable = () => {
   const [search, setSearch] = useState("");
@@ -24,10 +24,10 @@ const JobReportTable = () => {
   const [fieldName, setFieldName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [openAct, setOpenAct] = useState(false);
-  const [expand, setExpand] = useState(null);
   const [allParam, setAllParam] = useState("");
   const [filterKeys, setFilterKeys] = useState(jobReportFilterKey);
+  const [isExcelLoading, setIsExcelLoading] = useState(false);
+  const [openAssign, setOpenAssign] = useState(null);
 
 
   useEffect(() => {
@@ -77,18 +77,25 @@ const JobReportTable = () => {
 
 
   const handleExportExcel = async () => {
-    const response = await getApiReq(
-      `${
-        allParam
-          ? `/job-report/report/?${allParam}&export=excel`
-          : "/job-report/report/?export=excel"
-      }`
-    );
-    if (response.status) {
-      var blob = new Blob([response.data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      FileSaver.saveAs(blob, "jobs-report.xlsx");
+    try{
+      setIsExcelLoading(true);
+      const response = await getApiReq(
+        `${
+          allParam
+            ? `/job-report/report/?${allParam}&export=excel`
+            : "/job-report/report/?export=excel"
+        }`
+      );
+      setIsExcelLoading(false);
+      if (response.status) {
+        var blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        FileSaver.saveAs(blob, "jobs-report.xlsx");
+      }
+    }catch(err){
+      toast.error(err.response.data.message || "Something went wrong" )
+      setIsExcelLoading(false);
     }
   };
 
@@ -197,9 +204,16 @@ const JobReportTable = () => {
           <button
             className="theme-btn btn-style-one small d-flex align-items-center gap-2"
             onClick={() => handleExportExcel()}
+            disabled={isLoading}
           >
+            {isExcelLoading ?
+             <BtnBeatLoader />
+             :
+             <>
             <span className="fw-600 fs-6">Excel</span>
             <span>{reactIcons.download}</span>
+             </>
+            }
           </button>
         </div>
       </div>
@@ -410,12 +424,59 @@ const JobReportTable = () => {
                         >
                           {contact_manager || "N/A"}
                         </td>
-                        <td
+                        {/* <td
                           className="text-capitalize"
                           style={{ width: "300px" }}
                         >
                           {job_location ? cleanString(job_location) : "N/A"}
-                        </td>
+                        </td> */}
+                    <td
+                      onMouseEnter={() => setOpenAssign(item.job_code)}
+                      onMouseLeave={() => setOpenAssign(null)}
+                      style={{width:"300px"}}
+                    >
+                      <div className="d-flex gap-1 flex-wrap">
+                        {item.job_location &&
+                          item.job_location
+                            .split("  ")
+                            .slice(0, 1)
+                            .map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  // className="rounded-1 px-1"
+                                  // style={{ background: "rgb(64 69 114 / 81%)" }}
+                                >
+                                  <span className="text-black">{cleanString(item)}</span>
+                                </div>
+                              );
+                            })}
+                        {item.job_location && item.job_location.split("  ").length > 1 && (
+                          <span className="text-primary cursor-pointer fs-4">
+                            {reactIcons.more}
+                          </span>
+                        )}
+                        {!item.job_location && "N/A"}
+                        {openAssign == item.job_code && (
+                          <div
+                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                            style={{
+                              width: "250px",
+                              minHeight: "30px",
+                              maxHeight: "fit-content",
+                              zIndex: "5",
+                            }}
+                          >
+                            {item.job_location &&
+                              item.job_location.split("  ").map((item) => {
+                                return (
+                                  <span className="text-white">{cleanString(item)}</span>
+                                );
+                              })}
+                          </div>
+                        )}
+                      </div>
+                    </td>
                         <td
                           className="text-capitalize"
                           style={{ width: "150px" }}

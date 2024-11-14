@@ -1,7 +1,8 @@
 module.exports = [
   {
     id: 1,
-    label: "Home",
+    label: "Dashboard",
+    routePath:'/employers-dashboard/dashboard',
     items: [
       {
         name: "Home Page 01",
@@ -75,7 +76,8 @@ module.exports = [
   },
   {
     id: 2,
-    label: "Job Listing",
+    label: "User",
+    routePath:'/employers-dashboard/user-list',
     items: [
       {
         name: "Job List V1",
@@ -137,216 +139,178 @@ module.exports = [
   },
   {
     id: 3,
-    label: "Job Single",
-    items: [
-      {
-        name: "Job Single V1",
-        routePath: "/job-single-v1/1",
-      },
-      {
-        name: "Job Single V2",
-        routePath: "/job-single-v2/2",
-      },
-      {
-        name: "Job Single V3",
-        routePath: "/job-single-v3/3",
-      },
-      {
-        name: "Job Single V4",
-        routePath: "/job-single-v4/4",
-      },
-      {
-        name: "Job Single V5",
-        routePath: "/job-single-v5/5",
-      },
-    ],
+    label: "Client",
+    routePath:'/employers-dashboard/client-list',
+    items: [],
   },
   {
     id: 4,
-    label: "Employers List",
+    label: "Job Posting",
+    routePath:'/employers-dashboard/job-posts',
     items: [
-      {
-        name: "Employers List V1",
-        routePath: "/employers-list-v1",
-      },
-      {
-        name: "Employers List V2",
-        routePath: "/employers-list-v2",
-      },
-      {
-        name: "Employers List V3",
-        routePath: "/employers-list-v3",
-      },
-      {
-        name: "Employers List V4",
-        routePath: "/employers-list-v4",
-      },
     ],
   },
   {
     id: 5,
-    label: "Employers Single",
+    label: "Applicants",
+    routePath:'/employers-dashboard/all-applicants',
     items: [
-      {
-        name: "Employers Single V1",
-        routePath: "/employers-single-v1/1",
-      },
-      {
-        name: "Employers Single V2",
-        routePath: "/employers-single-v2/2",
-      },
-      {
-        name: "Employers Single V3",
-        routePath: "/employers-single-v3/3",
-      },
     ],
   },
   {
     id: 6,
-    label: "Candidates List",
+    label: "My Assign Jobs",
+    routePath:'/employers-dashboard/my-assign-jobs',
     items: [
-      {
-        name: "Candidates List V1",
-        routePath: "/candidates-list-v1",
-      },
-      {
-        name: "Candidates List V2",
-        routePath: "/candidates-list-v2",
-      },
-      {
-        name: "Candidates List V3",
-        routePath: "/candidates-list-v3",
-      },
-      {
-        name: "Candidates List V4",
-        routePath: "/candidates-list-v4",
-      },
-      {
-        name: "Candidates List V5",
-        routePath: "/candidates-list-v5",
-      },
+      
     ],
   },
   {
     id: 7,
-    label: "Candidates Single",
+    label: "Reports",
     items: [
       {
-        name: "Candidates Single V1",
-        routePath: "/candidates-single-v1/1",
+        name: "Jobs",
+        routePath: "/employers-dashboard/jobs-report",
       },
       {
-        name: "Candidates Single V2",
-        routePath: "/candidates-single-v2/2",
+        name: "Job Delegation",
+        routePath: "/employers-dashboard/jobs-delegation-report",
       },
       {
-        name: "Candidates Single V3",
-        routePath: "/candidates-single-v3/3",
+        name: "Submission",
+        routePath: "/employers-dashboard/client-submission-report",
+      },
+      {
+        name: "Interview",
+        routePath: "/employers-dashboard/client-submission-report",
+      },
+      {
+        name: "Confirmation & Joining",
+        routePath: "/employers-dashboard/confirmation-joining-report",
       },
     ],
   },
   {
-    id: 8,
-    label: "Blog",
+    id:8,
+    label: "Pending Task",
     items: [
       {
-        name: "Blog List V1",
-        routePath: "/blog-list-v1",
-      },
-      {
-        name: "Blog List V2",
-        routePath: "/blog-list-v2",
-      },
-      {
-        name: "Blog List V3",
-        routePath: "/blog-list-v3",
-      },
-      {
-        name: "Blog Details",
-        routePath: "/blog-details/1",
+        name: "Submission Approval",
+        routePath: "/employers-dashboard/submissions-approval",
       },
     ],
   },
   {
     id: 9,
-    label: "Pages",
+    label: "More",
     items: [
       {
-        name: "About",
-        routePath: "/about",
+        name: "Scheduled Interview",
+        routePath: "/employers-dashboard/manage-jobs",
       },
       {
-        name: "Pricing",
-        routePath: "/pricing",
+        name: "Schedule Calender",
+        routePath: "/employers-dashboard/calendar",
       },
       {
-        name: "FAQ's",
-        routePath: "/faq",
+        name: "MOM (Meeting of Minutes)",
+        routePath: "/employers-dashboard/mom",
       },
       {
-        name: "Terms",
-        routePath: "/terms",
-      },
-      {
-        name: "Invoice",
-        routePath: "/invoice",
-      },
-      {
-        name: "Contact",
-        routePath: "/contact",
-      },
-      {
-        name: "404",
-        routePath: "/404",
+        name: "My MOM Actions",
+        routePath: "/employers-dashboard/my-mom-actions",
       },
     ],
   },
   {
-    id: 10,
-    label: "Shop",
+    id: 9,
+    label: "Account",
     items: [
       {
-        name: "Shop List",
-        routePath: "/shop/shop-list",
+        name: "My Profile",
+        routePath: "/employers-dashboard/my-profile",
       },
       {
-        name: "Shop Single",
-        routePath: "/shop/shop-single/1",
+        name: "Leave Management",
+        routePath: "/employers-dashboard/leave-management",
       },
       {
-        name: " Cart",
-        routePath: "/shop/cart",
+        name: "Helpdesk Ticket",
+        routePath: "/employers-dashboard/helpdesk",
       },
       {
-        name: "Checkout",
-        routePath: "/shop/checkout",
+        name: "Attendance",
+        routePath: "/employers-dashboard/attendance",
       },
       {
-        name: "Order Completed",
-        routePath: "/shop/order-completed",
+        name: "Calender",
+        routePath: "/employers-dashboard/calendar",
       },
       {
-        name: "Login",
-        routePath: "/login",
+        name: "All User Attendance",
+        routePath: "/employers-dashboard/all-users-attendance",
       },
       {
-        name: "Register",
-        routePath: "/register",
+        name: "Employee Helpdesk Tickets",
+        routePath: "/employers-dashboard/employees-help-tickets",
       },
+      {
+        name: "Change Password",
+        routePath: "/employers-dashboard/change-password",
+      },
+      // {
+      //   name: "Change Password",
+      //   routePath: "/404",
+      // },
     ],
   },
-  {
-    id: 11,
-    label: "Dashboard",
-    items: [
-      {
-        name: "Employers Dashboard",
-        routePath: "/employers-dashboard/dashboard",
-      },
-      {
-        name: "Candidates Dashboard",
-        routePath: "/candidates-dashboard/dashboard",
-      },
-    ],
-  },
+  // {
+  //   id: 10,
+  //   label: "Shop",
+  //   items: [
+  //     {
+  //       name: "Shop List",
+  //       routePath: "/shop/shop-list",
+  //     },
+  //     {
+  //       name: "Shop Single",
+  //       routePath: "/shop/shop-single/1",
+  //     },
+  //     {
+  //       name: " Cart",
+  //       routePath: "/shop/cart",
+  //     },
+  //     {
+  //       name: "Checkout",
+  //       routePath: "/shop/checkout",
+  //     },
+  //     {
+  //       name: "Order Completed",
+  //       routePath: "/shop/order-completed",
+  //     },
+  //     {
+  //       name: "Login",
+  //       routePath: "/login",
+  //     },
+  //     {
+  //       name: "Register",
+  //       routePath: "/register",
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: 11,
+  //   label: "Dashboard",
+  //   items: [
+  //     {
+  //       name: "Employers Dashboard",
+  //       routePath: "/employers-dashboard/dashboard",
+  //     },
+  //     {
+  //       name: "Candidates Dashboard",
+  //       routePath: "/candidates-dashboard/dashboard",
+  //     },
+  //   ],
+  // },
 ];

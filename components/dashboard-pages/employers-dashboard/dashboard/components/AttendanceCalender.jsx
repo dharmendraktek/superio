@@ -235,7 +235,7 @@ const AttendanceCalendar = () => {
   const userDetails = useSelector((state) => state.employer.user);
 
   const getEmployeeAttendanceDetails = async () => {
-    let month = moment(new Date()).format("yyyy-MM")
+    let month = moment(currentDate).format("yyyy-MM")
     try {
       const response = await getReq(
         `/attendance-details/?emp_code=${userDetails.empcode}&year_month=${month}`
@@ -255,17 +255,6 @@ const AttendanceCalendar = () => {
     }
   }, [userDetails, currentDate]);
 
-  // Navigate to the previous month
-  const previousMonth = () => {
-    setCurrentDate(moment(currentDate).subtract(1, "month").toDate());
-  };
-
-  // Navigate to the next month
-  const nextMonth = () => {
-    setCurrentDate(moment(currentDate).add(1, "month").toDate());
-  };
-
-  // Transform data for calendar
   const transformEvents = (data) => {
     return data.map((event) => {
       const start = moment(event.date_of_attendance).utc().toDate();
@@ -359,6 +348,23 @@ const AttendanceCalendar = () => {
     });
   };
 
+  const handlePrev = () => {
+    setCurrentDate(moment(currentDate).subtract(1, "month").toDate());
+  };
+
+  const handleNext = () => {
+    setCurrentDate(moment(currentDate).add(1, "month").toDate());
+  };
+
+  const handleNavigate = (date, view, action) => {
+    setCurrentDate(date);
+    if (action === 'PREV') {
+      handlePrev();
+    } else if (action === 'NEXT') {
+      handleNext();
+    }
+  };
+
   return (
     <div style={{ height: "500px" }}>
       <AttendanceUpdateModal />
@@ -368,7 +374,8 @@ const AttendanceCalendar = () => {
         startAccessor="start"
         endAccessor="end"
         date={currentDate}
-        onNavigate={(date) => setCurrentDate(date)}
+        // onNavigate={(date) => setCurrentDate(date)}
+        onNavigate={(date, view, action) => handleNavigate(date, view, action)}
         style={{ height: "150%", textAlign: "center" }}
         onSelectEvent={(event) => alert(event.title)}
         onMouseOver={(event) => setHoveredEvent(event)}

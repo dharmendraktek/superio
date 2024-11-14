@@ -1,12 +1,32 @@
 "use client";
 import Paper from "@/components/common/Paper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LeaveRequestForm from "./components/LeaveRequestForm";
 import InnerLayout from "@/components/common/InnerLayout/InnerLayout";
+import { getApiReq } from "@/utils/apiHandlers";
+import { toast } from "react-toastify";
 
 const Index = () => {
   const [openForm, setOpenForm] = useState(false);
   const [tab, setTab] = useState(false);
+  const [leaveData, setLeaveData] = useState([]);
+
+  const getLeavesHistory = async() => {
+    try{
+      const response = await getApiReq('/leaves/');
+      if(response.status){
+      setLeaveData(response.data.results || response.data);
+      }else if(!response.status){
+        
+      }
+    }catch(err){
+       toast.error('Some Internal Server occured')
+    }
+  }
+
+  useEffect(() => {
+    getLeavesHistory();
+  }, [])
 
   return (
     <InnerLayout>

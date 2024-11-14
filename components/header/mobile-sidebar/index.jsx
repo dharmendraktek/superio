@@ -1,12 +1,6 @@
 "use client";
 
-import {
-
-  Sidebar,
-  Menu,
-  MenuItem,
-  SubMenu,
-} from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 import mobileMenuData from "../../../data/mobileMenuData";
 import SidebarFooter from "./SidebarFooter";
@@ -17,11 +11,8 @@ import {
 } from "../../../utils/linkActiveChecker";
 import { usePathname, useRouter } from "next/navigation";
 
-
 const Index = () => {
-
-  const router = useRouter()
-
+  const router = useRouter();
 
   return (
     <div
@@ -33,41 +24,57 @@ const Index = () => {
       <SidebarHeader />
       {/* End pro-header */}
 
-      
-        <Sidebar>
-          <Menu>
-            {mobileMenuData.map((item) => (
-              <SubMenu
+      <Sidebar>
+        <Menu>
+          {mobileMenuData.map((item) => (
+            <>
+            {(!(item.label === "Reports" || item.label === "More" || item.label == "Pending Task" || item.label== "Account")) &&
+              <MenuItem
                 className={
                   isActiveParentChaild(item.items, usePathname())
-                    ? "menu-active"
+                    ? "menu-active-link"
                     : ""
                 }
-                label={item.label}
+                onClick={() => router.push(item.routePath)}
+                // label={item.label}
                 key={item.id}
               >
-                {item.items.map((menuItem, i) => (
-                  <MenuItem
+                {item.label}
+              </MenuItem>
+            }
+              {(item.label == "Reports" || (item.label == "More") || (item.label == "Pending Task" || item.label == "Account")) && (
+                <SubMenu
+                className={
+                  isActiveParentChaild(item.items, usePathname())
+                    ? "menu-active-link"
+                    : ""
+                }
+                onClick={() => router.push(item.routePath)}
+                label={item.label}
+                key={item.id}
+                >
+                  {item.items.map((menuItem, i) => (
+                    <MenuItem
+                      onClick={() => router.push(menuItem.routePath)}
+                      className={
+                        isActiveLink(menuItem.routePath, usePathname())
+                          ? "menu-active-link"
+                          : ""
+                      }
+                      key={i}
+                      // routerLink={<Link href={menuItem.routePath} />}
+                    >
+                      {menuItem.name}
+                    </MenuItem>
+                  ))}
+                </SubMenu>
+              )}
+            </>
+          ))}
+        </Menu>
+      </Sidebar>
 
-                  onClick={()=>router.push(menuItem.routePath)}
-                    className={
-                      isActiveLink(menuItem.routePath, usePathname())
-                        ? "menu-active-link"
-                        : ""
-                    }
-                    key={i}
-                    // routerLink={<Link href={menuItem.routePath} />}
-                  >
-                    {menuItem.name}
-                  </MenuItem>
-                ))}
-              </SubMenu>
-            ))}
-          </Menu>
-        </Sidebar>
-
-
-      <SidebarFooter />
+      {/* <SidebarFooter /> */}
     </div>
   );
 };

@@ -50,6 +50,7 @@ const JobPostsTable = () => {
   const [openAssign, setOpenAssign] = useState(null);
   const [firstSearch, setFirstSearch] = useState(true);
   const employeeDetails = useSelector((state) => state.employer.user);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     getJobpostsList();
@@ -113,6 +114,16 @@ const JobPostsTable = () => {
     }
   }, [jobPostList]);
 
+  useEffect(() => {
+    if (!searchValue) {
+      setSearch(searchValue);
+    }
+  }, [searchValue]);
+
+  const handleSearch = () => {
+    setSearch(searchValue);
+  };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -153,11 +164,16 @@ const JobPostsTable = () => {
           <div className="position-relative">
             <input
               type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               style={{ width: "350px" }}
               className="border border-primary px-4 rounded-1"
               placeholder="Search anything..."
+              onKeyDown={(e) => {
+                if(e.key == "Enter"){
+                  handleSearch();
+                }
+              }}
             />
             <span
               className="position-absolute fs-4 text-primary"
@@ -167,12 +183,21 @@ const JobPostsTable = () => {
             </span>
             {search && (
               <span
-                onClick={() => setSearch("")}
+                onClick={() => setSearchValue("")}
                 className="position-absolute cursor-pointer	  text-primary fs-5"
-                style={{ right: "8px" }}
+                style={{ right: "85px" }}
               >
                 {reactIcons.close}
               </span>
+            )}
+            {searchValue && (
+              <button
+                className="theme-btn btn-style-one small position-absolute"
+                onClick={handleSearch}
+                style={{ right: "0px", borderRadius: "4px" }}
+              >
+                Search
+              </button>
             )}
           </div>
         </div>

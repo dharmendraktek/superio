@@ -18,7 +18,7 @@ const ShiftUpdateModal = ({ selectDateData }) => {
     empname:'',
     company:''
   });
-  console.log("-----------select data ", selectDateData);
+  const [statusList, setStatusList] = useState([]);
 
   useEffect(() => {
     if (selectDateData) {

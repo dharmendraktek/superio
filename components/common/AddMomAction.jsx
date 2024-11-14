@@ -143,12 +143,12 @@ const AddMomAction = ({
         toast.success("Action has been successfully created");
         handleGetClientContactManagers();
       }
-      if (response.error) {
-        setLoading(false);
+      if (!response.status) {
+        setLoading(response.error.message);
       }
     } catch (err) {
       setLoading(false);
-      toast.error(err.response || "Something went wrong!");
+      // toast.error(err.response || "Something went wrong!....");
     }
   };
 
@@ -172,7 +172,7 @@ const AddMomAction = ({
       }
     } catch (err) {
       setLoading(false);
-      toast.error(err.response || "Something went wrong!");
+      // toast.error(err.response || "Something went wrong!");
     }
   };
 
