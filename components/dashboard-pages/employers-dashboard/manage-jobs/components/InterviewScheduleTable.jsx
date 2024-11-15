@@ -43,7 +43,8 @@ const InterviewScheduleTable = () => {
   const [expand, setExpand] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [openReschedule, setOpenReschedule] = useState(null);
-
+  const [openFeedback, setOpenFeedback] = useState(null);
+  const [openSchedule, setOpenSchedule] = useState(null);
 
   useEffect(() => {
     let param;
@@ -72,8 +73,9 @@ const InterviewScheduleTable = () => {
 
   const handleGetInterviewsList = async (param) => {
     setIsLoading(true);
-    const response = await getReq('/interviews/'
-    //   `/interviews/}`
+    const response = await getReq(
+      "/interviews/"
+      //   `/interviews/}`
     );
     // ?page=${page + 1}&size=25${param ? param : ""
     setIsLoading(false);
@@ -87,7 +89,7 @@ const InterviewScheduleTable = () => {
     <div>
       {isLoading && <Loader />}
       <InterviewFeedbackModal selectedItem={selectedItem} />
-      <InterviewScheduleModal  selectedItem={selectedItem} reschedule={true} />
+      <InterviewScheduleModal selectedItem={selectedItem} reschedule={true} />
       <div className="d-flex justify-content-between">
         <div>
           <h4>Scheduled Interview List</h4>
@@ -209,11 +211,30 @@ const InterviewScheduleTable = () => {
             </thead>
             <tbody>
               {interviewData?.map((item, index) => {
-                 
-                 let {firstname, middlename, lastname, mobile, email, authorization} = item.applicant_details;
-                 let {title, client_name}  = item.job_details;
-                 let {starttime, endtime, startdate, endclient, mode, round, reason, interviewer, created_by, created_at ,updated_by, job_status} = item;
-                
+                let {
+                  firstname,
+                  middlename,
+                  lastname,
+                  mobile,
+                  email,
+                  authorization,
+                } = item.applicant_details;
+                let { title, client_name } = item.job_details;
+                let {
+                  starttime,
+                  endtime,
+                  startdate,
+                  endclient,
+                  mode,
+                  round,
+                  reason,
+                  interviewer,
+                  created_by,
+                  created_at,
+                  updated_by,
+                  job_status,
+                } = item;
+
                 return (
                   <>
                     <tr key={index}>
@@ -235,101 +256,87 @@ const InterviewScheduleTable = () => {
                         </div>
                       </td> */}
                       <td className="" style={{ width: "150px" }}>
-                        
-                          {startdate}
-                        
+                        {startdate}
                       </td>
                       <td className="" style={{ width: "100px" }}>
-                      {starttime}
+                        {starttime}
                       </td>
                       <td className="" style={{ width: "100px" }}>
                         {endtime}
                       </td>
-                      <td className="" style={{ width: "250px" }}
-                          onMouseEnter={() => {
-                            setOpenReschedule(item.id)
+                      <td
+                        className=""
+                        style={{ width: "250px" }}
+                        onMouseEnter={() => {
+                          setOpenReschedule(item.id);
                         }}
                         onMouseLeave={() => {
-                            setOpenReschedule(null);
+                          setOpenReschedule(null);
                         }}
                       >
                         <span>
-                        {(firstname || '') + ' '+ (middlename || '') + ' ' + (lastname || '') }
+                          {(firstname || "") +
+                            " " +
+                            (middlename || "") +
+                            " " +
+                            (lastname || "")}
                         </span>
-                        {openReschedule == item.id &&
-                        <span className="text-primary px-2 cursor-pointer"  onClick={() => setSelectedItem(item)} data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">{reactIcons.reschedule}</span>
-                        }
+                        {openReschedule == item.id && (
+                          <span
+                            className="text-primary px-2 cursor-pointer"
+                            onClick={() => setSelectedItem(item)}
+                            data-bs-target="#interviewSchedule"
+                            data-bs-toggle="offcanvas"
+                          >
+                            {reactIcons.reschedule}
+                          </span>
+                        )}
                       </td>
                       <td className="" style={{ width: "300px" }}>
                         {title}
                       </td>
-                      <td style={{ width: "200px" }}>
-                      {round}
-                      </td>
-                      <td style={{ width: "150px" }}>
-                        {mode}
-                      </td>
+                      <td style={{ width: "200px" }}>{round}</td>
+                      <td style={{ width: "150px" }}>{mode}</td>
                       <td className="" style={{ width: "160px" }}>
-                        {'-'}
+                        {"-"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {client_name}
+                        {client_name || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                        {endclient || 'N/A'}
+                        {endclient || "N/A"}
                       </td>
                       <td className="" style={{ width: "200px" }}>
-                         {interviewer.map((item) => {
-                          return (
-                            <span key={item}>
-                              {item} 
-                            </span>
-                          );
+                        {interviewer.map((item) => {
+                          return <span key={item}>{item}</span>;
                         })}
-                        {interviewer.length == 0 && "N/A" }
-                       
+                        {interviewer.length == 0 && "N/A"}
                       </td>
                       <td
                         className="d-flex flex-wrap gap-2"
                         style={{ width: "250px" }}
                       >
-                       {created_by
-                          ? created_by?.first_name +
-                            " " +
-                            created_by?.last_name
+                        {created_by
+                          ? created_by?.first_name + " " + created_by?.last_name
                           : "N/A"}
                       </td>
                       <td className="" style={{ width: "250px" }}>
                         {moment(created_at).format("DD-MM-YYYY  hh:mm A")}
                       </td>
-                      <td style={{ width: "250px" }}>
-                         {mobile}
-                      </td>
-                      <td style={{ width: "250px" }}>
-                         {email}
-                      </td>
+                      <td style={{ width: "250px" }}>{mobile || "N/A"}</td>
+                      <td style={{ width: "250px" }}>{email || "N/A"}</td>
                       {/* <td style={{ width: "200px" }}>
                         {"pending cancel reason" || 'N/A'}
                       </td> */}
+                      <td style={{ width: "200px" }}>{reason || "N/A"}</td>
                       <td style={{ width: "200px" }}>
-                        {reason || "N/A"}
-                      </td>
-                      <td style={{ width: "200px" }}>
-                      {created_by
-                          ? created_by?.first_name +
-                            " " +
-                            created_by?.last_name
+                        {created_by
+                          ? created_by?.first_name + " " + created_by?.last_name
                           : "N/A"}
                       </td>
-                      <td style={{ width: "200px" }}>
-                        {'owner ship' || "Pending"}
-                      </td>
-                      <td style={{ width: "200px" }}>
-                        {job_status}
-                      </td>
-                      <td style={{ width: "300px" }}>
-                        {created_by?.email}
-                      </td>
+                      <td style={{ width: "200px" }}>{"-"}</td>
+                      <td style={{ width: "200px" }}>{job_status || "N/A"}</td>
+                      <td style={{ width: "300px" }}>{created_by?.email}</td>
                       {/* <td style={{ width: "220px" }}>
                         'scheduled by emplyoee id'
                       </td> */}
@@ -337,13 +344,69 @@ const InterviewScheduleTable = () => {
                     N/A    
                       </td> */}
                       <td style={{ width: "200px" }}>
-                        {authorization || "N/A"}    
+                        {authorization || "N/A"}
                       </td>
                       <td style={{ width: "150px" }}>
                         <div className="d-flex gap-2">
-                           <span className="text-primary cursor-pointer" onClick={() => setSelectedItem(item)} data-bs-target="#interviewSchedule" data-bs-toggle="offcanvas">{reactIcons.reschedule}</span>
-                           <span className="text-primary cursor-pointer" onClick={() => setSelectedItem(item)} data-bs-target="#interviewFeedbackModal" data-bs-toggle="modal">{reactIcons.feedback}</span>
-                          </div>    
+                          <div
+                            className="position-relative"
+                            onMouseLeave={() => setOpenSchedule(null)}
+                            onMouseEnter={() => setOpenSchedule(created_at)}
+                          >
+                            <span
+                              className="text-primary cursor-pointer"
+                              onClick={() => setSelectedItem(item)}
+                              data-bs-target="#interviewSchedule"
+                              data-bs-toggle="offcanvas"
+                            >
+                              {reactIcons.reschedule}
+                            </span>
+                            {created_at == openSchedule && (
+                              <div
+                                className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                                style={{
+                                  width: "110px",
+                                  minHeight: "30px",
+                                  maxHeight: "fit-content",
+                                  zIndex: "5",
+                                }}
+                              >
+                                <span className="text-white">
+                                Reschedule
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            className="position-relative"
+                            onMouseLeave={() => setOpenFeedback(null)}
+                            onMouseEnter={() => setOpenFeedback(created_at)}
+                          >
+                            <span
+                              className="text-primary cursor-pointer"
+                              onClick={() => setSelectedItem(item)}
+                              data-bs-target="#interviewFeedbackModal"
+                              data-bs-toggle="modal"
+                            >
+                              {reactIcons.feedback}
+                            </span>
+                            {created_at == openFeedback && (
+                              <div
+                                className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
+                                style={{
+                                  width: "100px",
+                                  minHeight: "30px",
+                                  maxHeight: "fit-content",
+                                  zIndex: "5",
+                                }}
+                              >
+                                <span className="text-white">
+                                Feedback
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </td>
                     </tr>
                     {/* {item.id == expand && (

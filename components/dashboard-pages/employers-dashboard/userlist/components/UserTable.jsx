@@ -8,6 +8,7 @@ import { deleteReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import Loader from "@/components/common/Loader";
 import debounce from "lodash/debounce";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 
 const tabsName = [
   { id: 1, name: "ACTIVE USERS" },
@@ -25,6 +26,7 @@ const UserTable = () => {
   const [search, setSearch] = useState("");
   const [csvFile, setCsvFile] = useState();
   const [firstSearch, setFirstSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch users with memoized function and debounce the search requests
   // const fetchUserList = useCallback(async (search) => {
@@ -116,12 +118,15 @@ const UserTable = () => {
     const formData = new FormData();
     formData.append("file", csvFile);
     try {
+      setIsLoading(true);
       const response = await postApiReq("/upload-csv/", formData);
+      setIsLoading(false);
       if (response.status) {
         toast.success("CSV file has been successfully uploaded");
         fetchUserList();
       }
     } catch (err) {
+      setIsLoading(false);
       toast.error(err.response?.message || "Something went wrong");
     }
   };
@@ -254,7 +259,11 @@ const UserTable = () => {
               <label>
                 <div htmlFor="#upload">
                   <span className="theme-btn btn-style-one small">
-                    Upload CSV File
+                    {isLoading ?
+                     <BtnBeatLoader />
+                    :
+                     "Upload CSV File"
+                    }
                   </span>
                 </div>
                 <input
@@ -262,6 +271,7 @@ const UserTable = () => {
                   id="upload"
                   onChange={handleFileUpload}
                   className="d-none"
+                  disabled={isLoading}
                 />
               </label>
             </div>

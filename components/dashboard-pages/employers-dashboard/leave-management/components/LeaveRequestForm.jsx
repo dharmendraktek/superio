@@ -8,6 +8,7 @@ import { useScroll } from "framer-motion";
 import moment from "moment";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const initialState = {
   user: "",
@@ -32,6 +33,7 @@ const LeaveRequestForm = ({ setOpenForm }) => {
   const [selectedCcs, setSelectedCcs] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [doc, setDoc] = useState('');
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -49,16 +51,21 @@ const LeaveRequestForm = ({ setOpenForm }) => {
     // formData.append("actual_leave_balance", form.actual_leave_balance);
     formData.append("reason", form.reason);
     // formData.append("reporting_manager", form.reporting_manager);
-    formData.append("document", form.document);
+    if(doc){
+      formData.append("document", doc);
+    }
     formData.append("covering_employee", form.covering_employee);
-    // formData.append("people_in_cc", form.people_in_cc);
+    formData.append("people_in_cc", form.people_in_cc);
 
     try {
       setIsLoading(true);
       const response = await postApiReq("/leaves/", formData);
       setIsLoading(false);
       if (response.status) {
+        setOpenForm(false)
+        toast.success('Leave has been successfully created');
       } else if (!response.status) {
+        toast.error(response.error || "Something went wrong")
       }
     } catch (err) {
         setIsLoading(false);
@@ -202,7 +209,9 @@ const LeaveRequestForm = ({ setOpenForm }) => {
         </div>
         <div className="col-4 my-2">
           <p>Upload Document</p>
-          <input type="file" />
+          <input type="file"  onChange={(e) => {
+            setDoc(e.target.files[0])
+          }} />
         </div>
       </div>
       <div className="d-flex gap-2 justify-content-end">

@@ -57,9 +57,9 @@ module.exports = [
   },
   // {
   //   id: 9,
-  //   name: "Resume Alerts",
+  //   name: "Work From Home",
   //   icon: "la-bell",
-  //   routePath: "/employers-dashboard/resume-alerts",
+  //   routePath: "/employers-dashboard/work-from-home",
   //   active: "",
   // },
   {

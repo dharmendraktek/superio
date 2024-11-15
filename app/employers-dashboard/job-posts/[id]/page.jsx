@@ -65,8 +65,6 @@ const Index = () => {
     }
   }, [id]);
 
-  
-
   return (
     <InnerLayout>
       {!jobData && <Loader />}
@@ -125,39 +123,26 @@ const Index = () => {
                   {/* <div className="border border-secondary px-2 cursor-pointer">
                       <span>{reactIcons.mail}</span>
                     </div> */}
-                  <div className="border rounded-1 border-secondary position-relative px-2">
-                    <div
-                      className="d-flex gap-1  cursor-pointer bg-secondary"
-                      onClick={() => setSubmitOpt(!submitOpt)}
+                  <div className="dropdown">
+                    <button
+                      type="button"
+                      className="theme-btn btn-style-one small"
+                      data-bs-toggle="dropdown"
                     >
-                      <span className="fw-medium">Submit</span>
-                      <span>{reactIcons.downarrow}</span>
-                    </div>
-                    {submitOpt && (
-                      <div
-                        className="position-absolute bg-white  border border-secondary rounded-1"
-                        style={{
-                          width: "200px",
-                          height: "80px",
-                          top: "30px",
-                          zIndex: "1000",
-                          right: 0,
-                        }}
-                      >
-                        <div className="hover-bg-change px-2 my-1">
-                          <Link
+                      Submit
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li>
+                      <Link
+                      className="dropdown-item"
                             href={`/employers-dashboard/job-posts/submit-applicants/${id}`}
                           >
-                            <span className="cursor-pointer text-black">
-                              Submit Applicant
-                            </span>
-                          </Link>
-                        </div>
-                        {/* <div>  
-                                <p className="cursor-pointer">Add & Submit Applicant</p>
-                                 </div> */}
-                      </div>
-                    )}
+                        {/* <a class="dropdown-item" href="#"> */}
+                        Submit Applicant
+                        {/* </a> */}
+                        </Link>
+                      </li>
+                    </ul>
                   </div>
                   {/* <div
                       onClick={() => {
@@ -313,7 +298,10 @@ const Index = () => {
                     </div>
                   </Paper>
                   <div className="my-2">
-                    <Submissions jobData={jobData} handleGetJobDetails={handleGetJobDetails} />
+                    <Submissions
+                      jobData={jobData}
+                      handleGetJobDetails={handleGetJobDetails}
+                    />
                   </div>
                   <div className="my-2">
                     <Notes

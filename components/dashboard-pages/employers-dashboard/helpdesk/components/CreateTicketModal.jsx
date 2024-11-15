@@ -1,5 +1,6 @@
 'use client'
 
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { getReq, postApiReq } from "@/utils/apiHandlers"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
@@ -175,7 +176,7 @@ const CreateTicketModal = () => {
                
             </div>
             <div className="modal-footer">
-              <button  type="button" className="theme-btn btn-style-one small" onClick={handleCreateTicket} >Create</button>
+              <button  type="button" className="theme-btn btn-style-one small" onClick={handleCreateTicket} disabled={isLoading} >{isLoading ?<BtnBeatLoader /> :"Create"}</button>
               <button type="button" className="theme-btn btn-style-four small" data-bs-dismiss="modal">Cancel</button>
             </div>
           </div>

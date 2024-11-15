@@ -67,6 +67,7 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [clearAll, setClearAll] = useState(false);
   const [submissionLoading, setSubmissionLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const router = useRouter();
 
@@ -107,16 +108,21 @@ const Index = () => {
     getJobpostsList(search);
   }, [search, page, active]);
 
+  const handleSearch = () => {
+    setSearch(searchValue);
+  };
+
   const handleAddIsSelected = (index, e) => {
     // Create a new array where all items have isSelected: false, except the current one
     const updatedItems = jobPostList.map((item, i) =>
-      i === index ? { ...item, isSelected: e.target.checked } : { ...item, isSelected: false }
+      i === index
+        ? { ...item, isSelected: e.target.checked }
+        : { ...item, isSelected: false }
     );
-  
+
     // Update state with the new array
     setJobPostList(updatedItems);
   };
-  
 
   const handleAddMultiForm = (jobId) => {
     let applicant = [];
@@ -167,121 +173,150 @@ const Index = () => {
   };
 
   const handleSubmitApplicant = async () => {
-    try{
+    try {
       setSubmissionLoading(true);
       const response = await postApiReq("/submission/", multiSubmissionForm);
       setSubmissionLoading(false);
-      console.log("-------------responser subtmi appi ", response);
       if (response.status) {
         // setClearAll(true);
-        router.push(`/employers-dashboard/all-applicants/${id}`)
+        router.push(`/employers-dashboard/all-applicants/${id}`);
         toast.success("Applicant submitted to job successfully");
-        setMultiSubmissionForm([initialState])
+        setMultiSubmissionForm([initialState]);
       }
-      if(!response.status){
-        toast.error(response.error.message || "Something went wrong")
-        router.push(`/employers-dashboard/all-applicants/${id}`)
+      if (!response.status) {
+        toast.error(response.error.message || "Something went wrong");
+        router.push(`/employers-dashboard/all-applicants/${id}`);
       }
-    }catch(err){
-        toast.error(err.response || "Something went wrong")
-        setSubmissionLoading(false);
+    } catch (err) {
+      toast.error(err.response || "Something went wrong");
+      setSubmissionLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!searchValue) {
+      setSearch(searchValue);
+    }
+  }, [searchValue]);
 
   return (
     <>
       {isLoading && <Loader />}
       <InnerLayout>
-      <div className="px-4 theme-background">
-        <div className="mt-2 d-flex align-items-center justify-content-between">
-          <div className="d-flex align-items-center gap-2">
-            <Link href={`/employers-dashboard/all-applicants/${id}`}>
-              <span className="fs-1 text-primary">{reactIcons.backarrow}</span>
-            </Link>
-            <h5>{applicantData?.firstname + " " + (applicantData?.middlename || "") + " " + applicantData?.lastname}</h5>
-          </div>
-          {open && (
-            <div className="d-flex gap-2">
-              <button
-                onClick={handleSubmitApplicant}
-                className="theme-btn btn-style-one small"
-                disabled={submissionLoading}
-              >
-                {submissionLoading ? <BtnBeatLoader /> : "Submit"}
-              </button>
-              <button
-                onClick={() => setOpen(false)}
-                className="theme-btn btn-style-four small"
-              >
-                Cancel
-              </button>
+        <div className="px-4 theme-background">
+          <div className="mt-2 d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center gap-2">
+              <Link href={`/employers-dashboard/all-applicants/${id}`}>
+                <span className="fs-1 text-primary">
+                  {reactIcons.backarrow}
+                </span>
+              </Link>
+              <h5>
+                {applicantData?.firstname +
+                  " " +
+                  (applicantData?.middlename || "") +
+                  " " +
+                  applicantData?.lastname}
+              </h5>
             </div>
-          )}
-        </div>
-        <div className="d-flex gap-2">
-          <div className="w-75">
-            {open ? (
-              selectedJobs?.map((item, index) => {
-                return (
-                  <div className="mb-3">
-                    <ApplicantSubmissionDetails
-                      applicantData={applicantData}
-                      item={item}
-                      jobData={item}
-                      multiSubmissionForm={multiSubmissionForm}
-                      index={index}
-                      setMultiSubmissionForm={setMultiSubmissionForm}
-                      clearAll={clearAll}
-                    />
-                  </div>
-                );
-              })
-            ) : (
-              <Paper>
-                <div>
-                  <div className="d-flex my-2 justify-content-between">
-                    <div className="position-relative">
-                      <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        style={{ width: "350px" }}
-                        className="border border-primary px-4 rounded-1"
-                        placeholder="Search anything..."
+            {open && (
+              <div className="d-flex gap-2">
+                <button
+                  onClick={handleSubmitApplicant}
+                  className="theme-btn btn-style-one small"
+                  disabled={submissionLoading}
+                >
+                  {submissionLoading ? <BtnBeatLoader /> : "Submit"}
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="theme-btn btn-style-four small"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="d-flex gap-2">
+            <div className="w-75">
+              {open ? (
+                selectedJobs?.map((item, index) => {
+                  return (
+                    <div className="mb-3">
+                      <ApplicantSubmissionDetails
+                        applicantData={applicantData}
+                        item={item}
+                        jobData={item}
+                        multiSubmissionForm={multiSubmissionForm}
+                        index={index}
+                        setMultiSubmissionForm={setMultiSubmissionForm}
+                        clearAll={clearAll}
                       />
-                      <span
-                        className="position-absolute fs-4 text-primary"
-                        style={{ left: "2px" }}
-                      >
-                        {reactIcons.search}
-                      </span>
-                      {search && (
+                    </div>
+                  );
+                })
+              ) : (
+                <Paper>
+                  <div>
+                    <div className="d-flex my-2 justify-content-between">
+                      <div className="position-relative">
+                        <input
+                          type="text"
+                          value={searchValue}
+                          onChange={(e) => setSearchValue(e.target.value)}
+                          style={{ width: "350px" }}
+                          className="border border-primary px-4 rounded-1"
+                          placeholder="Search anything..."
+                          onKeyDown={(e) => {
+                            if (e.key == "Enter") {
+                              handleSearch();
+                            }
+                          }}
+                        />
                         <span
-                          onClick={() => setSearch("")}
-                          className="position-absolute cursor-pointer	  text-primary fs-5"
-                          style={{ right: "8px" }}
+                          className="position-absolute fs-4 text-primary"
+                          style={{ left: "2px" }}
                         >
-                          {reactIcons.close}
+                          {reactIcons.search}
                         </span>
+                        {search && (
+                          <span
+                            onClick={() =>{ 
+                              setSearchValue("")
+                              setSearch('');
+                            }}
+                            className="position-absolute cursor-pointer	  text-primary fs-5"
+                            style={{ right: "85px" }}
+                          >
+                            {reactIcons.close}
+                          </span>
+                        )}
+                        {searchValue && (
+                          <button
+                            className="theme-btn btn-style-one small position-absolute"
+                            onClick={handleSearch}
+                            style={{ right: "0px", borderRadius: "4px" }}
+                          >
+                            Search
+                          </button>
+                        )}
+                      </div>
+                      {jobPostList.find((item) => item.isSelected == true) && (
+                        <div>
+                          <button
+                            className="theme-btn btn-style-one small"
+                            onClick={submitToJobs}
+                          >
+                            Submit to Jobs
+                          </button>
+                        </div>
                       )}
                     </div>
-                    {jobPostList.find((item) => item.isSelected == true) &&
-                    <div>
-                      <button
-                        className="theme-btn btn-style-one small"
-                        onClick={submitToJobs}
-                      >
-                        Submit to Jobs
-                      </button>
-                    </div>
-                    }
-                  </div>
-                  <div className="table_div custom-scroll-sm">
-                    <table className="default-table ">
-                      <thead className="">
-                        <tr>
-                          {/* {jobPostsTableField.map((item, index) => {
+                    <div className="table_div custom-scroll-sm">
+                      <table className="default-table ">
+                        <thead className="">
+                          <tr>
+                            {/* {jobPostsTableField.map((item, index) => {
                 return (
                   <>
                     {item.title == "input" ? (
@@ -296,100 +331,110 @@ const Index = () => {
                   </>
                 );
               })} */}
-                          <th style={{ width: "60px" }}>
-                            {/* <input type="checkbox" /> */}
-                          </th>
-                          <th style={{ width: "150px" }}>Job Code</th>
-                          <th style={{ width: "200px" }}>Job Title</th>
-                          <th style={{ width: "100px" }}>Client Job ID</th>
-                          <th style={{ width: "150px" }}>Client</th>
-                          <th style={{ width: "100px" }}>City</th>
-                          <th style={{ width: "100px" }}>Respond By</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {jobPostList.map((item, index) => {
-                          return (
-                            <>
-                              <tr key={index} className="">
-                                {true && (
-                                  <td style={{ width: "60px" }}>
-                                    <input
-                                      type="checkbox"
-                                      onChange={(e) =>
-                                        handleAddIsSelected(index, e)
-                                      }
-                                      checked={item.isSelected ? item.isSelected : false}
-                                    />
+                            <th style={{ width: "60px" }}>
+                              {/* <input type="checkbox" /> */}
+                            </th>
+                            <th style={{ width: "150px" }}>Job Code</th>
+                            <th style={{ width: "200px" }}>Job Title</th>
+                            <th style={{ width: "100px" }}>Client Job ID</th>
+                            <th style={{ width: "150px" }}>Client</th>
+                            <th style={{ width: "100px" }}>City</th>
+                            <th style={{ width: "100px" }}>Respond By</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {jobPostList.map((item, index) => {
+                            return (
+                              <>
+                                <tr key={index} className="">
+                                  {true && (
+                                    <td style={{ width: "60px" }}>
+                                      <input
+                                        type="checkbox"
+                                        onChange={(e) =>
+                                          handleAddIsSelected(index, e)
+                                        }
+                                        checked={
+                                          item.isSelected
+                                            ? item.isSelected
+                                            : false
+                                        }
+                                      />
+                                    </td>
+                                  )}
+                                  <td style={{ width: "150px" }}>
+                                    {item.job_code || "N/A"}
                                   </td>
-                                )}
-                                <td style={{ width: "150px" }}>
-                                  {item.job_code || 'N/A'}
-                                </td>
-                                <td style={{ width: "200px" }}>{item.title || "N/A"}</td>
-                                <td style={{ width: "100px" }}>N/A</td>
-                                <td className="" style={{ width: "150px" }}>
-                                  {item.client_name || 'N/A'}
-                                </td>
-                                <td style={{ width: "100px" }}>{item.city || 'N/A'}</td>
-                                <td className="" style={{ width: "100px" }}>
-                                  {"N/A"}
-                                </td>
-                              </tr>
-                            </>
-                          );
-                        })}
-                        {/* End tr */}
-                      </tbody>
-                    </table>
+                                  <td style={{ width: "200px" }}>
+                                    {item.title || "N/A"}
+                                  </td>
+                                  <td style={{ width: "100px" }}>N/A</td>
+                                  <td className="" style={{ width: "150px" }}>
+                                    {item.client_name || "N/A"}
+                                  </td>
+                                  <td style={{ width: "100px" }}>
+                                    {item.city || "N/A"}
+                                  </td>
+                                  <td className="" style={{ width: "100px" }}>
+                                    {"N/A"}
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          })}
+                          {/* End tr */}
+                        </tbody>
+                      </table>
+                    </div>
+                    {dataCount > 25 && (
+                      <Pagination
+                        page={page}
+                        setPage={setPage}
+                        dataCount={dataCount}
+                        pageSize={25}
+                        //  setPageSize={setPageSize}
+                      />
+                    )}
                   </div>
-                  {dataCount > 25 && (
-                    <Pagination
-                      page={page}
-                      setPage={setPage}
-                      dataCount={dataCount}
-                      pageSize={25}
-                      //  setPageSize={setPageSize}
-                    />
-                  )}
+                </Paper>
+              )}
+            </div>
+            <div className="w-25" style={{ height: "400px" }}>
+              <Paper>
+                <div>
+                  <h5 className="text-primary">Profile Details</h5>
+                  <div>
+                    <div className="my-2">
+                      <p>Name</p>
+                      <span>
+                        {" "}
+                        {applicantData?.firstname +
+                          " " +
+                          applicantData?.lastname}
+                      </span>
+                    </div>
+                    <div className="my-2">
+                      <p>Email Address</p>
+                      <span>{applicantData?.email || "N/A"}</span>
+                    </div>
+                    <div className="my-2">
+                      <p>Mobile Number</p>
+                      <span>{applicantData?.mobile || "N/A"}</span>
+                    </div>
+                    <div className="my-2">
+                      <p>City</p>
+                      <span>{applicantData?.city || "N/A"}</span>
+                    </div>
+                    <div className="my-2">
+                      <p>Address</p>
+                      <span>{applicantData?.address || "N/A"}</span>
+                    </div>
+                  </div>
                 </div>
               </Paper>
-            )}
-          </div>
-          <div className="w-25" style={{ height: "400px" }}>
-            <Paper>
-              <div>
-                <h5 className="text-primary">Profile Details</h5>
-                <div>
-                  <div className="my-2">
-                    <p>Name</p>
-                    <span>
-                      {" "}
-                      {applicantData?.firstname + " " + applicantData?.lastname}
-                    </span>
-                  </div>
-                  <div className="my-2">
-                    <p>Email Address</p>
-                    <span>{applicantData?.email || 'N/A'}</span>
-                  </div>
-                  <div className="my-2">
-                    <p>Mobile Number</p>
-                    <span>{applicantData?.mobile || 'N/A'}</span>
-                  </div>
-                  <div className="my-2">
-                    <p>City</p>
-                    <span>{applicantData?.city || 'N/A'}</span>
-                  </div>
-                  <div className="my-2">
-                    <p>Address</p>
-                    <span>{applicantData?.address || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-            </Paper>
+            </div>
           </div>
         </div>
-      </div>
       </InnerLayout>
     </>
   );

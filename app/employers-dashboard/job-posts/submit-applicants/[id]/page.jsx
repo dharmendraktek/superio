@@ -64,6 +64,7 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [jobData, setJobData] = useState();
   const [submissionLoading, setSubmissionLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
 
 
@@ -102,6 +103,9 @@ const Index = () => {
     handleGetApplicantList();
   }, [search, page, active]);
 
+  const handleSearch= () => {
+    setSearch(searchValue);
+  }
 
 
   const handleAddIsSelected = (index, e) => {
@@ -197,6 +201,11 @@ const Index = () => {
     }
   };
 
+  useEffect(() => {
+    if (!searchValue) {
+      setSearch(searchValue);
+    }
+  }, [searchValue]);
 
 
   return (
@@ -257,11 +266,16 @@ const Index = () => {
                     <div className="position-relative">
                       <input
                         type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
                         style={{ width: "350px" }}
                         className="border border-primary px-4 rounded-1"
                         placeholder="Search anything..."
+                        onKeyDown={(e) => {
+                          if (e.key == "Enter") {
+                            handleSearch();
+                          }
+                        }}
                       />
                       <span
                         className="position-absolute fs-4 text-primary"
@@ -270,15 +284,25 @@ const Index = () => {
                         {reactIcons.search}
                       </span>
                       {search && (
-                        <span
-                          onClick={() => setSearch("")}
-                          className="position-absolute cursor-pointer	  text-primary fs-5"
-                          style={{ right: "8px" }}
-                        >
-                          {reactIcons.close}
-                        </span>
-                      )}
+                          <span
+                            onClick={() => setSearchValue("")}
+                            className="position-absolute cursor-pointer	  text-primary fs-5"
+                            style={{ right: "85px" }}
+                          >
+                            {reactIcons.close}
+                          </span>
+                        )}
+                        {searchValue && (
+                          <button
+                            className="theme-btn btn-style-one small position-absolute"
+                            onClick={handleSearch}
+                            style={{ right: "0px", borderRadius: "4px" }}
+                          >
+                            Search
+                          </button>
+                        )}
                     </div>
+                    <div className="d-flex gap-2">
                     {applicantData?.find((item) => item.isSelected == true) &&
                     <div>
                       <button
@@ -289,6 +313,17 @@ const Index = () => {
                       </button>
                     </div>
                     }
+                      <div>
+                      <Link href='/employers-dashboard/all-applicants/add-applicant' target="_blank">
+                      <button
+                        className="theme-btn btn-style-three small"
+                      >
+                        Add Applicant
+                      </button>
+                      </Link>
+                      </div>
+                    </div>
+                    
                   </div>
                   <div className="table_div custom-scroll-sm">
                     <table className="default-table ">

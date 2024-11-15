@@ -2248,14 +2248,14 @@ const ApplicantSubmissionDetails = ({
                       <input
                         name="bill_rate_amount"
                         placeholder="Rate"
-                        value={multiSubmissionForm[index].bill_rate_amount}
+                        value={multiSubmissionForm[index]?.bill_rate_amount}
                         onChange={(e) => handleSubmissionChange(e, index)}
                         type="text"
                         className="px-2 client-input-style form-mult-box form-mult-box"
                       />
                       <select
                         name="bill_rate_type"
-                        value={multiSubmissionForm[index].bill_rate_type}
+                        value={multiSubmissionForm[index]?.bill_rate_type}
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
                       >
@@ -2267,7 +2267,7 @@ const ApplicantSubmissionDetails = ({
                       <select
                         name="bill_rate_contract_type"
                         value={
-                          multiSubmissionForm[index].bill_rate_contract_type
+                          multiSubmissionForm[index]?.bill_rate_contract_type
                         }
                         onChange={(e) => handleSubmissionChange(e, index)}
                         className="client-input-style form-mult-box"
@@ -2289,7 +2289,7 @@ const ApplicantSubmissionDetails = ({
                           value={true}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation == "true"
+                            multiSubmissionForm[index]?.relocation == "true"
                               ? true
                               : false
                           }
@@ -2304,7 +2304,7 @@ const ApplicantSubmissionDetails = ({
                           value={false}
                           type="radio"
                           checked={
-                            multiSubmissionForm[index].relocation == "false"
+                            multiSubmissionForm[index]?.relocation == "false"
                               ? true
                               : false
                           }
@@ -2321,7 +2321,7 @@ const ApplicantSubmissionDetails = ({
                     <select
                       name="resume"
                       onChange={(e) => handleSubmissionChange(e, index)}
-                      value={multiSubmissionForm[index].resume}
+                      value={multiSubmissionForm[index]?.resume}
                       type="text"
                       className="client-form-input"
                     >
@@ -2343,7 +2343,7 @@ const ApplicantSubmissionDetails = ({
                       {submissionDetailsErr.resumeErr}
                     </span>
                   </div>
-                  {multiSubmissionForm[index].resume == "Upload new Resume" && (
+                  {multiSubmissionForm[index]?.resume == "Upload new Resume" && (
                     <div className="col-6 my-2">
                       <p>New Resume</p>
                       <input type="file" onChange={handleUploadNewResume} />
@@ -2361,7 +2361,7 @@ const ApplicantSubmissionDetails = ({
                     <input
                       name="video_link"
                       onChange={(e) => handleSubmissionChange(e, index)}
-                      value={multiSubmissionForm[index].video_link}
+                      value={multiSubmissionForm[index]?.video_link}
                       type="text"
                       className="client-form-input"
                     />
@@ -2390,7 +2390,7 @@ const ApplicantSubmissionDetails = ({
                     <select
                       name="eforms"
                       onChange={(e) => handleSubmissionChange(e, index)}
-                      value={multiSubmissionForm[index].eforms}
+                      value={multiSubmissionForm[index]?.eforms}
                       type="text"
                       className="client-form-input"
                     >
@@ -2637,7 +2637,7 @@ const ApplicantSubmissionDetails = ({
                     <textarea
                       name="comment"
                       onChange={(e) => handleSubmissionChange(e, index)}
-                      value={multiSubmissionForm[index].comment}
+                      value={multiSubmissionForm[index]?.comment}
                       type="text"
                       className="client-form-input"
                     />
