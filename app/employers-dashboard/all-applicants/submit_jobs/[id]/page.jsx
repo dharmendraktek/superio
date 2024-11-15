@@ -272,6 +272,7 @@ const Index = () => {
                               handleSearch();
                             }
                           }}
+                          autocomplete="off"
                         />
                         <span
                           className="position-absolute fs-4 text-primary"

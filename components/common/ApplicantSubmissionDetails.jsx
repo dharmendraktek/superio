@@ -2192,10 +2192,11 @@ const ApplicantSubmissionDetails = ({
                       <input
                         name="pay_rate_amount"
                         onChange={(e) => handleSubmissionChange(e, index)}
-                        type="text"
+                        type="number"
                         value={multiSubmissionForm[index]?.pay_rate_amount}
                         placeholder="Rate"
                         className="px-2 client-input-style form-mult-box form-mult-box"
+                        autocomplete="off"
                       />
                       <select
                         name="pay_rate_type"
@@ -2250,8 +2251,9 @@ const ApplicantSubmissionDetails = ({
                         placeholder="Rate"
                         value={multiSubmissionForm[index]?.bill_rate_amount}
                         onChange={(e) => handleSubmissionChange(e, index)}
-                        type="text"
+                        type="number"
                         className="px-2 client-input-style form-mult-box form-mult-box"
+                        autocomplete="off"
                       />
                       <select
                         name="bill_rate_type"

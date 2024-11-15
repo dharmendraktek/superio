@@ -761,6 +761,7 @@ const ManualCreation = ({
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
+                autocomplete="off"
               />
               <span className="text-danger">{error.jobTitleErr}</span>
             </div>
@@ -792,6 +793,7 @@ const ManualCreation = ({
                   placeholder="Rate"
                   onChange={handleChange}
                   className="px-2 client-input-style form-mult-box form-mult-box"
+                  autocomplete="off"
                 />
                 <select
                   value={form.payment_frequency}
@@ -890,6 +892,7 @@ const ManualCreation = ({
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
+                autocomplete="off"
               />
             </div>
             <div className="col-4 my-2">
@@ -939,6 +942,7 @@ const ManualCreation = ({
                         className="border border-primary w-100 rounded-1 px-2"
                         placeholder="Search here..."
                         onChange={(e) => setClientSearch(e.target.value)}
+                        autocomplete="off"
                       />
                     </div>
                     {clientNameList.map((item, index) => {
@@ -1024,6 +1028,7 @@ const ManualCreation = ({
                         className="border border-primary w-100 rounded-1 px-2"
                         placeholder="Search here..."
                         onChange={(e) => setContactSearch(e.target.value)}
+                        autocomplete="off"
                       />
                     </div>
                     {clientManagerList.map((item, index) => {
@@ -1065,6 +1070,7 @@ const ManualCreation = ({
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
+                autocomplete="off"
               />
               {/* <span className="text-danger">{error.cityErr}</span> */}
             </div>
@@ -1162,6 +1168,7 @@ const ManualCreation = ({
                 className="client-form-input"
                 name="job_type"
                 onChange={handleChange}
+                autocomplete="off"
               >
                 <option>Select</option>
                 {jobTypes.map((item) => {
@@ -1195,6 +1202,7 @@ const ManualCreation = ({
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
+                autocomplete="off"
               />
               {/* <span className="text-danger">{error.cityErr}</span> */}
             </div>
@@ -1222,6 +1230,7 @@ const ManualCreation = ({
                 value={form.address}
                 className="client-form-input"
                 style={{ height: "65px" }}
+                autocomplete="off"
               />
             </div>
             <div className="col-12 my-2">
@@ -1240,6 +1249,7 @@ const ManualCreation = ({
                   value={form.experience}
                   onChange={handleChange}
                   style={{ width: "200px" }}
+                  autocomplete="off"
                 />
                 <span>Years</span>
               </div>
@@ -1373,6 +1383,7 @@ const ManualCreation = ({
                 <input
                   name="primary_skills"
                   className="w-100"
+                  autocomplete="off"
                   value={skills}
                   placeholder="Please enter skills by using Enter button or mouse click as separator."
                   onClick={() => {
@@ -1458,6 +1469,7 @@ const ManualCreation = ({
                   className="w-100"
                   placeholder="Please enter skills by using Enter button or mouse click as separator."
                   name="secondary_skills"
+                  autocomplete="off"
                   value={secondarySkills}
                   onClick={() => {
                     if (secondarySkills.trim()) {
@@ -1504,6 +1516,7 @@ const ManualCreation = ({
                 onChange={handleChange}
                 className="client-form-input"
                 type="text"
+                autocomplete="off"
               />
               <span className="text-danger">{error.positionErr}</span>
             </div>

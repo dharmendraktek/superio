@@ -4,7 +4,7 @@ import { getReq, patchReq } from "@/utils/apiHandlers";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails, statusId=''  }) => {
+const ClientSubmissionModal = ({id, submissionDetails, side, handleGetJobDetails, statusId=''  }) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     new_status: "",
@@ -88,7 +88,7 @@ const ClientSubmissionModal = ({ submissionDetails, side, handleGetJobDetails, s
   return (
     <div
       className="modal fade"
-      id="clientSubmissionModal"
+      id={id || "clientSubmissionModal"}
       tabindex="-1"
       aria-labelledby="clientSubmissionModalLabel"
       aria-hidden="true"

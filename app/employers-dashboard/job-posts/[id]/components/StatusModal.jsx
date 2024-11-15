@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 
-const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetails, submissionTable = false}) => {
+const StatusModal = ({id, currentStatus, subStatus, submissionId, handleGetJobDetails, submissionTable = false}) => {
   const [statusList, setStatusList] = useState([]);
   const [form, setForm] = useState({
     // new_status:'',
@@ -50,11 +50,8 @@ const StatusModal = ({currentStatus, subStatus, submissionId, handleGetJobDetail
     }
   } 
   
-  
-
-
     return(
-        <div className="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div className="modal fade" id={id || "statusModal"} tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header border border-bottom-primary">

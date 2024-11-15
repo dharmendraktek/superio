@@ -170,6 +170,7 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
                         type="text"
                         value={form.title}
                         onChange={handleChange}
+                        autocomplete="off"
                       />
                     </div>
                     <div className="w-25">
@@ -224,6 +225,7 @@ const TaskManager = ({ applicantData, handleGetApplicantDetails }) => {
                       onChange={handleChange}
                       type="text"
                       className="client-form-input"
+                      autocomplete="off"
                     />
                   </div>
                 )}

@@ -27,6 +27,7 @@ const Form = () => {
             className="email"
             placeholder="Your Email*"
             required
+            autocomplete="off"
           />
         </div>
         {/* End .col */}

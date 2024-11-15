@@ -73,6 +73,13 @@ const InterviewScheduleModal = ({
   const [clientContactList, setClientContactList] = useState([]);
   const [roundList, setRoundList] = useState([]);
   const [prevSelectedItem, setPrevSelectedItem] = useState(null);
+  const [error, setError] = useState({
+    startdate:'',
+    starttime:'',
+    endtime:'',
+    mode:'',
+    round:'',
+  })
 
 
   const closeBtnRef = useRef(null);
@@ -118,7 +125,46 @@ const InterviewScheduleModal = ({
     }
   };
 
+  const handleValidation = () => {
+    setError((prev) => ({
+      ...prev,
+      startdate: "",
+      starttime:"",
+      endtime:'',
+      mode:'',
+      round:'',
+    }));
+
+    if (!form.startdate) {
+      setError((prev) => ({ ...prev, startdate: "This field is required" }));
+    }
+    if (!form.starttime) {
+      setError((prev) => ({ ...prev, starttime: "This field is required" }));
+    }
+    if (!form.endtime) {
+      setError((prev) => ({ ...prev, endtime: "This field is required" }));
+    }
+    if (!form.mode) {
+      setError((prev) => ({ ...prev, mode: "This field is required" }));
+    }
+    if (!form.round) {
+      setError((prev) => ({ ...prev, round: "This field is required" }));
+    }
+    
+
+    let { startdate, starttime, endtime } = form;
+    if (startdate && starttime && endtime) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleScheduleInterview = async () => {
+    if(handleValidation()){
+      return;
+    }
+
     if(reschedule){
       form["reschedule"] = reschedule;
       reminder["reschedule"] = reschedule;
@@ -383,6 +429,7 @@ const InterviewScheduleModal = ({
                 }
                 showTime={false}
               />
+              <span className="text-danger">{error.startdate}</span>
             </div>
             <div className="my-3 w-100">
               <p>Interview Time</p>
@@ -405,6 +452,7 @@ const InterviewScheduleModal = ({
                     }}
                     showTime={true} // For time picker
                   />
+                  <span className="text-danger">{error.starttime}</span>
                 </div>
                 <div>
                   <span>To</span>
@@ -427,6 +475,7 @@ const InterviewScheduleModal = ({
                     }}
                     showTime={true} // For time picker
                   />
+                  <span className="text-danger">{error.endtime}</span>
                 </div>
               </div>
               <div className="my-2 d-flex gap-1">
@@ -479,6 +528,7 @@ const InterviewScheduleModal = ({
                     );
                   })}
                 </select>
+                <span className="text-danger">{error.mode}</span>
               </div>
               <div className="w-50">
                 <p>
@@ -499,6 +549,7 @@ const InterviewScheduleModal = ({
                     );
                   })}
                 </select>
+                <span className="text-danger">{error.round}</span>
               </div>
             </div>
             <div className="w-100 my-2">

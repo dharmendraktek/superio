@@ -427,6 +427,7 @@ const CandidateCreation = ({
                 value={form.firstname}
                 type="text"
                 className="client-form-input"
+                autocomplete="off"
               />
               <span className="text-danger">{error.firstNameErr}</span>
             </div>
@@ -440,6 +441,7 @@ const CandidateCreation = ({
             value={form.middlename}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-1">
@@ -455,6 +457,7 @@ const CandidateCreation = ({
             value={form.lastname}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
           <span className="text-danger">{error.lastNameErr}</span>
         </div>
@@ -471,6 +474,7 @@ const CandidateCreation = ({
             value={form.email}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
           <span className="text-danger">{error.emailErr}</span>
         </div>
@@ -487,6 +491,7 @@ const CandidateCreation = ({
             value={form.mobile}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
           <span className="text-danger">{error.mobileErr}</span>
         </div>
@@ -515,6 +520,7 @@ const CandidateCreation = ({
             value={form.linkedin}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-1">
@@ -592,6 +598,7 @@ const CandidateCreation = ({
             type="text"
             style={{ height: "70px" }}
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-1">
@@ -643,6 +650,7 @@ const CandidateCreation = ({
             value={form.city}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-1">
@@ -653,6 +661,7 @@ const CandidateCreation = ({
             value={form.zipcode}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-1">
@@ -689,6 +698,7 @@ const CandidateCreation = ({
             value={form.experience}
             onChange={handleChange}
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         {/* <div className="col-4 my-1">
@@ -812,6 +822,7 @@ const CandidateCreation = ({
             onChange={handleChange}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-2">
@@ -840,6 +851,7 @@ const CandidateCreation = ({
               placeholder="Rate"
               onChange={handleChange}
               className="px-2 client-input-style form-mult-box form-mult-box"
+              autocomplete="off"
             />
             <select
               value={form.expect_payment_frequency}
@@ -932,6 +944,7 @@ const CandidateCreation = ({
             value={form.current_company}
             type="text"
             className="client-form-input"
+            autocomplete="off"
           />
         </div>
         <div className="col-4 my-2">
@@ -981,6 +994,7 @@ const CandidateCreation = ({
             </div>
             <input
               name="primary_skills"
+              autocomplete="off"
               placeholder="Please enter skills by using Enter button or mouse click as separator."
               className="w-100"
               value={skills}
@@ -1059,6 +1073,7 @@ const CandidateCreation = ({
             </div>
             <input
               name="secondary_skills"
+              autocomplete="off"
               className="w-100"
               value={secondarySkills}
               placeholder="Please enter skills by using Enter button or mouse click as separator."

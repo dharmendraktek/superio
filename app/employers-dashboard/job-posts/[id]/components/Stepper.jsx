@@ -95,6 +95,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
   return (
     <>
       <StatusModal
+        id={`${modalId}_status`}
         submissionId={submissionDetails.id}
         currentStatus={submissionDetails?.current_status}
         subStatus={submissionDetails?.current_substatus}
@@ -102,6 +103,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
         handleGetJobDetails={handleGetJobDetails}
       />
       <ClientSubmissionModal
+        id={`${modalId}_client`}
         submissionDetails={submissionDetails}
         handleGetJobDetails={handleGetJobDetails}
         statusId={statusId}
@@ -172,7 +174,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
                 </p>
                 <span
                   data-bs-toggle="modal"
-                  data-bs-target="#statusModal"
+                  data-bs-target={`#${modalId}_status`}
                   className="text-primary cursor-pointer"
                 >
                   {reactIcons.edit}
@@ -188,7 +190,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
                       class="dropdown-item"
                       onClick={() => setStatusId(2)}
                       data-bs-toggle="modal"
-                      data-bs-target="#clientSubmissionModal"
+                      data-bs-target={`#${modalId}_client`}
                       aria-controls="clientsumbission"
                     >
                       Submit To Client
@@ -241,7 +243,7 @@ const Stepper = ({ submissionDetails, side, handleGetJobDetails, jobData }) => {
                       href="#"
                       data-bs-toggle="modal"
                       onClick={() => setStatusId(5)}
-                      data-bs-target="#clientSubmissionModal"
+                      data-bs-target={`#${modalId}_status`}
                       aria-controls="clientsumbission"
                     >
                       Confirmation

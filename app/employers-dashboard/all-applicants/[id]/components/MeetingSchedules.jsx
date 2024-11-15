@@ -279,6 +279,7 @@ const MeetingSchedules = ({ applicantData, handleGetApplicantDetails }) => {
                   name="title"
                   value={form.title}
                   onChange={handleChange}
+                  autocomplete="off"
                 />
               </div>
               <div className="col-12 my-1">
