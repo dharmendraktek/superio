@@ -27,6 +27,7 @@ import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
 import JobAssignModal from "@/components/common/JobAssignModal";
 import { cleanString } from "@/utils/regex";
 import { useSelector } from "react-redux";
+import UpdateJobStatusModal from "@/components/common/UpdateJobStatusModal";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -51,6 +52,7 @@ const JobPostsTable = () => {
   const [firstSearch, setFirstSearch] = useState(true);
   const employeeDetails = useSelector((state) => state.employer.user);
   const [searchValue, setSearchValue] = useState("");
+  const [openStatus, setOpenStatus] = useState(null);
 
   useEffect(() => {
     getJobpostsList();
@@ -132,8 +134,10 @@ const JobPostsTable = () => {
         setJobDetails={setJobDetails}
       />
       <JobAssignModal jobId={jobId} handleReload={getJobpostsList} />
+      <UpdateJobStatusModal jobId={jobId} handleReload={getJobpostsList} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
+          {employeeDetails?.access_role_details?.access_id == accessRoles.ADMIN &&
           <div
             className="d-flex border border-primary rounded-1"
             style={{ width: "300px", height: "30px" }}
@@ -161,6 +165,7 @@ const JobPostsTable = () => {
               );
             })}
           </div>
+          }
           <div className="position-relative">
             <input
               type="text"
@@ -371,6 +376,31 @@ const JobPostsTable = () => {
                               }}
                             >
                               <span className="text-white">Assign Job</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="position-relative">
+                          <span
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateJobStatusModal"
+                            onClick={() => setJobId(item.id)}
+                            className="cursor-pointer text-primary"
+                            onMouseEnter={() => setOpenStatus(item.id)}
+                            onMouseLeave={() => setOpenStatus(null)}
+                          >
+                            {reactIcons.edit}
+                          </span>
+                          {item.id == openStatus && (
+                            <div
+                              className="position-absolute  px-2 py-1 rounded-1"
+                              style={{
+                                width: "150px",
+                                height: "35px",
+                                zIndex: "3",
+                                background: "rgb(77 82 129 / 54%)",
+                              }}
+                            >
+                              <span className="text-white">Chagne Job Status</span>
                             </div>
                           )}
                         </div>
@@ -601,8 +631,8 @@ const JobPostsTable = () => {
                               // data-bs-target="#clientDeleteModal"
                               data-text={`${
                                 active == 1
-                                  ? "Inactivate Job Post"
-                                  : "Activate Job Post"
+                                  ? "Delete Job Post"
+                                  : "Delete Job Post"
                               }`}
                               onClick={() => {
                                 if (active == 1) {
@@ -615,12 +645,13 @@ const JobPostsTable = () => {
                               <span
                                 className={`${
                                   active == 1
-                                    ? "la la-window-close"
-                                    : "las la-check-square"
+                                    ? "la la la-trash"
+                                    : "la la-trash"
                                 }`}
                               ></span>
                             </button>
                           </li>
+                          {employeeDetails?.access_role_details?.access_id == accessRoles.ADMIN &&
                           <li>
                             <button
                               // data-bs-toggle="modal"
@@ -633,6 +664,7 @@ const JobPostsTable = () => {
                               <span className="la la-trash"></span>
                             </button>
                           </li>
+                          }
                         </ul>
                       </div>
                     </td>

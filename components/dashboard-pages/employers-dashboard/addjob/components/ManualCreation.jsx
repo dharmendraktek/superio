@@ -364,7 +364,6 @@ const ManualCreation = ({
       !form.payment_frequency || !form.amount ||
       !form.client_taxterm
     ) {
-      console.log("---------this is field is required ");
       setError((prev) => ({
         ...prev,
         clientBillRateERr: "This field is required",
