@@ -161,7 +161,7 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
-    if(handleValidation()){
+    if(!handleValidation()){
       return;
     }
 
