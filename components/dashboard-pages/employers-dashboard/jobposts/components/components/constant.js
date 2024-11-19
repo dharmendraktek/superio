@@ -23,6 +23,7 @@ export const jobPostsTableField = [
   // {title:'Min Salary'},
   // {title:'Max Salary'},
   // {title:'Average Salary'},
+  {title:'B U Head',style:{width:'200px'}},
   {title:'Account Manager',style:{width:'200px'}},
   {title:'Action',style:{width:'150px'}},
   

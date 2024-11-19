@@ -17,6 +17,7 @@ import JobAssignModal from "@/components/common/JobAssignModal";
 import { cleanString } from "@/utils/regex";
 import { useSelector } from "react-redux";
 import { jobPostsTableField } from "../../jobposts/components/components/constant";
+import { isNumber } from "lodash";
 
 const tabsName = [
   { id: 1, name: "ACTIVE JOB POST" },
@@ -41,38 +42,36 @@ const TeamReportTable = () => {
   const [firstSearch, setFirstSearch] = useState(true);
   const employeeDetails = useSelector((state) => state.employer.user);
   const [searchValue, setSearchValue] = useState("");
-
+  const [innerExp, setInnerExp] = useState(null);
+  const [type, setType] = useState(null);
   useEffect(() => {
-    getJobpostsList();
+    getTeamPerformanceReport();
   }, []);
 
-  const getJobpostsList = async () => {
+  const getTeamPerformanceReport = async () => {
     setIsLoading(true);
-    const response = await getReq(
-      `/jobs/?page=${page + 1}&active=${active == 1 ? true : false}${
-        search ? `&search=${search}` : ""
-      }`
-    );
+    const response = await getReq(`/team-performance-report/report/`);
     setIsLoading(false);
+    console.log("--------------team report -----", response.data);
     if (response.status) {
-      setTeamReportData(response.data.results);
+      setTeamReportData(response.data.results || response.data);
       setDataCount(response?.data.count);
     }
   };
 
-  useEffect(() => {
-    if (search !== firstSearch) {
-      setFirstSearch(search);
-      setPage(0);
-    }
-    getJobpostsList(search);
-  }, [search, page, active]);
+  // useEffect(() => {
+  //   if (search !== firstSearch) {
+  //     setFirstSearch(search);
+  //     setPage(0);
+  //   }
+  //   getTeamPerformanceReport(search);
+  // }, [search, page, active]);
 
   const handleInactiveJobPost = async (id) => {
     const response = await deleteReq(`/jobs/${id}/`);
     if (response.status) {
       toast.success("Job post Inactivated successfully");
-      getJobpostsList();
+      getTeamPerformanceReport();
     }
   };
 
@@ -82,7 +81,7 @@ const TeamReportTable = () => {
     );
     if (response.status) {
       toast.success("Job post activated successfully");
-      getJobpostsList();
+      getTeamPerformanceReport();
     }
   };
 
@@ -90,14 +89,14 @@ const TeamReportTable = () => {
     const response = await deleteReq(`/jobs/${id}/?permanent_delete=true`);
     if (response.status) {
       toast.success("Job post has been deleted successfully");
-      getJobpostsList();
+      getTeamPerformanceReport();
     }
   };
 
   useEffect(() => {
     if (teamReportData.length > 0) {
       const filteredData = teamReportData.filter((item) =>
-        item.submissions.some((submission) => submission.selected === true)
+        item.users.some((submission) => submission.selected === true)
       );
       setIsSelected(filteredData);
       // setJobData(filteredData);
@@ -121,10 +120,13 @@ const TeamReportTable = () => {
         jobDetails={jobDetails}
         setJobDetails={setJobDetails}
       />
-      <JobAssignModal jobId={jobId} handleReload={getJobpostsList} />
+      <JobAssignModal jobId={jobId} handleReload={getTeamPerformanceReport} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
-          <div
+          <div>
+            <h4>Team Performance Report</h4>
+          </div>
+          {/* <div
             className="d-flex border border-primary rounded-1"
             style={{ width: "300px", height: "30px" }}
           >
@@ -150,8 +152,8 @@ const TeamReportTable = () => {
                 </div>
               );
             })}
-          </div>
-          <div className="position-relative">
+          </div> */}
+          {/* <div className="position-relative">
             <input
               type="text"
               value={searchValue}
@@ -160,7 +162,7 @@ const TeamReportTable = () => {
               className="border border-primary px-4 rounded-1"
               placeholder="Search anything..."
               onKeyDown={(e) => {
-                if(e.key == "Enter"){
+                if (e.key == "Enter") {
                   handleSearch();
                 }
               }}
@@ -189,12 +191,12 @@ const TeamReportTable = () => {
                 Search
               </button>
             )}
-          </div>
+          </div> */}
         </div>
         <div className="d-flex align-items-center gap-2">
-          <div>
+          {/* <div>
             <span className="text-primary">{dataCount} records</span>
-          </div>
+          </div> */}
           {!(
             employeeDetails?.access_role_details?.access_id ==
             accessRoles.RECRUITER
@@ -210,94 +212,42 @@ const TeamReportTable = () => {
       <div className="table_div custom-scroll-sm">
         <table className="default-table ">
           <thead className="">
-            <tr>
-              {jobPostsTableField.map((item, index) => {
-                return (
-                  <>
-                    {/* {item.title == "input" ? (
-                      <th style={{ width: "200px" }}>
-                        <input className="cursor-pointer" type="checkbox" />
-                      </th>
-                    ) : ( */}
-                    <th style={{ width: `250px` }} key={index}>
-                      {removeSpecialChar(item.title)}
-                    </th>
-                    {/* )} */}
-                  </>
-                );
-              })}
-            </tr>
+            <th></th>
+            <th>Team</th>
+            <th>Submission</th>
+            <th>Confirmation</th>
+            <th>Joining</th>
+            <th>L1</th>
           </thead>
           <tbody>
             {teamReportData.map((item, index) => {
+              const {
+                team_name,
+                total_submissions,
+                total_confirmations,
+                total_joinings,
+                total_l1_interviews,
+              } = item;
               return (
                 <>
                   <tr key={index} className="">
-                    {/* {true && (
-                      <td className="">
-                        <div className="d-flex">
-                          <input type="checkbox" />
-                          {item.submissions.length > 0 && (
-                            <div className="d-flex">
-                              <div
-                                onClick={() => {
-                                  if (expand) {
-                                    setExpand(null);
-                                  } else {
-                                    setExpand(item.id);
-                                  }
-                                }}
-                                className="mx-2 px-2 text-primary fw-bold fs-6"
-                              >
-                                <span className="">
-                                  {item.id == expand ? "-" : "+"}
-                                </span>
-                              </div>
-                              <div
-                                className="bg-primary text-white mt-1 px-2 ml-2"
-                                style={{
-                                  width: "24px",
-                                  height: "24px",
-                                  fontSize: "12px",
-                                  borderRadius: "3px",
-                                }}
-                              >
-                                {item.submissions.length > 0}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    )} */}
-                    <td
-                    // style={{ width: "130px" }}
-                    >
-                      {/* <input type="checkbox" /> */}
+                    <td>
                       <div
                         className={`d-flex gap-2 align-items-center ${
-                          item.submissions.length == 0
+                          item.users.length == 0
                             ? "justify-content-start"
                             : "justify-content-start"
                         }`}
                       >
-                        {item.submissions.length > 0 && (
+                        {item.users.length > 0 && (
                           <>
                             <div
                               onClick={() => {
                                 if (expand == item.id) {
                                   setExpand(null);
-                                  // setClientData((prev) => {
-                                  //   const update = [...prev];
-                                  //   update[index]["open"] = false;
-                                  //   return update;
-                                  // });
                                 } else {
                                   setExpand(item.id);
-                                  // setClientData((prev) => {
-                                  //   const update = [...prev];
-                                  //   update[index]["open"] = true;
-                                  //   return update;
-                                  // });
+                                  setInnerExp(null);
                                 }
                               }}
                               className="mx-2 px-1 d-flex gap-1 justify-content-center align-items-center text-white  rounded-1 cursor-pointer fw-bold fs-6"
@@ -317,7 +267,7 @@ const TeamReportTable = () => {
                                   className="text-white fw-medium"
                                   style={{ fontSize: "15px" }}
                                 >
-                                  {item.submissions.length}
+                                  {item.users.length}
                                 </p>
                               </div>
                               <span className="cursor-pointer text-white fs-4">
@@ -328,547 +278,507 @@ const TeamReportTable = () => {
                             </div>
                           </>
                         )}
-                        {item.submissions.length == 0 && (
-                          <div
-                            className="text-white "
-                            style={{
-                              width: "73px",
-                              height: "24px",
-                              fontSize: "12px",
-                              borderRadius: "3px",
-                            }}
-                          ></div>
-                        )}
-                        <div className="position-relative">
-                          <span
-                            data-bs-toggle="modal"
-                            data-bs-target="#jobAssignModal"
-                            onClick={() => setJobId(item.id)}
-                            className="cursor-pointer"
-                            onMouseEnter={() => setOpen(item.id)}
-                            onMouseLeave={() => setOpen(null)}
-                          >
-                            {reactIcons.settings}
-                          </span>
-                          {item.id == open && (
-                            <div
-                              className="position-absolute  px-2 py-1 rounded-1"
-                              style={{
-                                width: "90px",
-                                height: "35px",
-                                zIndex: "3",
-                                background: "rgb(77 82 129 / 54%)",
-                              }}
-                            >
-                              <span className="text-white">Assign Job</span>
-                            </div>
-                          )}
-                        </div>
                       </div>
                     </td>
-                    <td>
-                      <Link
-                        href="/employers-dashboard/job-posts/[id]"
-                        as={`/employers-dashboard/job-posts/${item.id}`}
-                        target="_blank"
-                      >
-                        {/* <Link href={{ pathname: `/employers-dashboard/job-posts/${item.id}`, query: item }}> */}
-                        {item.job_code}
-                      </Link>
-                    </td>
-                    {/* <td className="trans-id">{item.empcode}</td>   */}
-                    <td>
-                      <div className="d-flex align-items-center gap-2">
-                        {jobDetails?.id == item.id && (
-                          <span
-                            data-bs-toggle="modal"
-                            data-bs-target="#jobDetailsPreviewModal"
-                            className="cursor-pointer text-primary fs-5"
-                            id="jobDetailsPreview"
-                            onMouseEnter={() => {
-                              setJobDetails(item);
-                              let previewBtn =
-                                document.getElementById("jobDetailsPreview");
-                              previewBtn.click();
-                            }}
-                          >
-                            {reactIcons.view}
-                          </span>
-                        )}
-                        <Link
-                          href="/employers-dashboard/job-posts/[id]"
-                          as={`/employers-dashboard/job-posts/${item.id}`}
-                          target="_blank"
-                          onMouseEnter={() => {
-                            setJobDetails(item);
-                            //  let previewBtn= document.getElementById('jobDetailsPreview');
-                            //  previewBtn.click();
-                          }}
-                          className="text-capitalize"
-                        >
-                          {item?.title}
-                        </Link>
-                      </div>
-                    </td>
-                    <td className="">{item.client_name || "N/A"}</td>
-                    <td className="">{item.client_job_id || "N/A"}</td>
-                    <td
-                      onMouseEnter={() => setOpenAssign(item.id)}
-                      onMouseLeave={() => setOpenAssign(null)}
-                    >
-                      <div className="d-flex gap-1 flex-wrap">
-                        {item.city &&
-                          item.city
-                            .split("  ")
-                            .slice(0, 1)
-                            .map((item, index) => {
-                              return (
-                                <div
-                                  key={index}
-                                  // className="rounded-1 px-1"
-                                  // style={{ background: "rgb(64 69 114 / 81%)" }}
-                                >
-                                  <span className="text-black">{item}</span>
-                                </div>
-                              );
-                            })}
-                        {item.city && item.city.split("  ").length > 1 && (
-                          <span className="text-primary cursor-pointer fs-4">
-                            {reactIcons.more}
-                          </span>
-                        )}
-                        {!item.city && "N/A"}
-                        {openAssign == item.id && (
-                          <div
-                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
-                            style={{
-                              width: "250px",
-                              minHeight: "30px",
-                              maxHeight: "fit-content",
-                              zIndex: "5",
-                            }}
-                          >
-                            {item.city &&
-                              item.city.split("  ").map((item) => {
-                                return (
-                                  <span className="text-white">{item}</span>
-                                );
-                              })}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="">{item.state || "N/A"}</td>
-                    <td className="">{item.job_status || "N/A"}</td>
-                    <td className="">
-                      {item.currency || "N.A"}
-                      {item.currency ? "/" : "/"}
-                      {item.amount || "N.A"}
-                      {item.amount ? "/" : "/"}
-                      {item.payment_frequency || "N.A"}
-                      {item.client_taxterm ? "/" : "/"}
-                      {item.client_taxterm || "N.A"}
-                    </td>
-                    <td className="text-capitalize">
-                      {item.delivery_manager_name || "N/A"}
-                    </td>
-                    <td className="text-capitalize">
-                      {item.contact_manager_name || "N/A"}
-                    </td>
-                    <td
-                      className=""
-                      onMouseEnter={() => setOpenAssign(item.id)}
-                      onMouseLeave={() => setOpenAssign(null)}
-                    >
-                      <div className="d-flex px-5 position-relative">
-                        {/* {item.assign_details?.slice(0, 2).map((item) => {
-                          return (
-                            <div className="rounded-1 border border-primary px-1">
-                              <span>
-                                {item.first_name} {item.last_name}
-                              </span>
-                            </div>
-                          );
-                        })} */}
-                        {/* {item.assign_details.length == 0 && "N/A"} */}
-                        <span className="cursor-pointer text-primary fs-5">
-                          {reactIcons.peoplegroup}
-                        </span>
-                        {openAssign == item.id && (
-                          <div
-                            className="position-absolute bg-lightestblue px-2 d-flex gap-2 flex-wrap rounded-1"
-                            style={{
-                              width: "250px",
-                              minHeight: "30px",
-                              maxHeight: "fit-content",
-                              zIndex: "5",
-                            }}
-                          >
-                            {item.assign_details.map((item) => {
-                              return (
-                                <span className="text-white">
-                                  {item.first_name} {item.last_name}
-                                </span>
-                              );
-                            })}
-                            <span className="text-white">
-                              {item.assign_details.length == 0 &&
-                                "Not available"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="">
-                      {(item?.created_by?.first_name || "N/A") +
-                        " " +
-                        (item?.created_by?.last_name || "")}
-                    </td>
-                    <td className="">
-                      {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
-                    </td>
-                    <td className="">
-                      {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
-                    </td>
-                    <td className="">
-                      {item.head_account_manager_name || "N/A"}
-                    </td>
-                    <td>
-                      <div className="option-box">
-                        <ul className="option-list">
-                          <li>
-                            <Link
-                              href="/employers-dashboard/job-posts/[id]"
-                              as={`/employers-dashboard/job-posts/${item.id}`}
-                            >
-                              <button
-                                // data-bs-toggle="modal"
-                                // data-bs-target="#clientUpdateModal"
-                                data-text="Edit Job"
-                              >
-                                {/* <a
-                            href="#"
-                            className="theme-btn btn-style-three call-modal"
-                            data-bs-toggle="modal"
-                            data-bs-target="#userUpdateModal"
-                          > */}
-                                <span className="las la-edit"></span>
-                                {/* </a> */}
-                              </button>
-                            </Link>
-                          </li>
-                          <li>
-                            <button
-                              // data-bs-toggle="modal"
-                              // data-bs-target="#clientDeleteModal"
-                              data-text={`${
-                                active == 1
-                                  ? "Inactivate Job Post"
-                                  : "Activate Job Post"
-                              }`}
-                              onClick={() => {
-                                if (active == 1) {
-                                  handleInactiveJobPost(item.id);
-                                } else {
-                                  handleActivateJobPost(item.id);
-                                }
-                              }}
-                            >
-                              <span
-                                className={`${
-                                  active == 1
-                                    ? "la la-window-close"
-                                    : "las la-check-square"
-                                }`}
-                              ></span>
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              // data-bs-toggle="modal"
-                              // data-bs-target="#clientDeleteModal"
-                              data-text="Delete Job Post"
-                              onClick={() => {
-                                handleDeleteJobPost(item.id);
-                              }}
-                            >
-                              <span className="la la-trash"></span>
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
+                    <td>{team_name}</td>
+                    <td>{total_submissions}</td>
+                    <td>{total_confirmations}</td>
+                    <td>{total_joinings}</td>
+                    <td>{total_l1_interviews}</td>
                   </tr>
                   {item.id == expand && (
-                    <tr>
-                      <div className="mx-5 my-3 border rounded-1  inner-table shadow">
-                        <div className="mx-3 my-2">
-                          {isSelected.length > 0 && (
-                            <div className="d-flex gap-2">
-                              {processOptions.map((item, index) => {
-                                return (
-                                  <div
-                                    key={index}
-                                    className="border px-2 rounded-1"
-                                    data-bs-toggle={item.dataToggle}
-                                    data-bs-target={item.dataTarget}
-                                    // data-bs-toggle='modal'
-                                    // data-bs-target='#clientSubmissionModal'
+                    <>
+                      <tr>
+                        <div className="mx-3 my-3 border rounded-1  inner-table shadow">
+                          <td colSpan={15}>
+                            <table>
+                              <thead className="table-inner-thead">
+                                {/* <th style={{ width: "60px" }}></th> */}
+                                <th>Recruiter</th>
+                                <th>Assigned</th>
+                                <th>Submission</th>
+                                <th>L1</th>
+                                <th>L2</th>
+                                <th>L3</th>
+                                <th>Clinet Interview</th>
+                                <th>Confirm</th>
+                                {/* <th>Reject</th> */}
+                                <th>Join</th>
+                                <th>Backout</th>
+                              </thead>
+                              <tbody>
+                                {item.users.map((_item, _index) => {
+                                  let {
+                                    name,
+                                    assigned_jobs_count,
+                                    submission_count,
+                                    confirmation_count,
+                                    joining_count,
+                                    backout_count,
+                                    l1_interview_count,
+                                    l2_interview_count,
+                                    l3_interview_count,
+                                    client_interview_count,
+                                    assigned_jobs,
+                                  } = _item;
 
-                                    // aria-controls={item.ariaControls}
-                                  >
-                                    <span className="text-primary cursor-pointer">
-                                      {item.name}
-                                    </span>
-                                    {/* <span>|</span> */}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                        <td colSpan={15}>
-                          <table>
-                            <thead className="table-inner-thead">
-                              <th style={{ width: "60px" }}>
-                                {/* <input className="mx-1" type="checkbox" /> */}
-                              </th>
-                              <th>Submission ID</th>
-                              <th>Applicant Name</th>
-                              <th>Work Authorization</th>
-                              <th>Mobile Number</th>
-                              <th>Location</th>
-                              <th>Country</th>
-                              <th>Experience</th>
-                              <th>Source</th>
-                              {/* <th>Revision Status</th> */}
-                              {/* <th>Application Status</th> */}
-                              {/* <th>Outlook MSG</th> */}
-                              <th style={{ width: "250px" }}>Bill Rate</th>
-                              <th style={{ width: "250px" }}>Pay Rate</th>
-                              {/* <th>Employer Name</th> */}
-                              <th>Availability</th>
-                              <th>Submitted By</th>
-                              {/* <th>PW Submission Type</th> */}
-                              <th>Notice Period</th>
-                              <th style={{ width: "200px" }}>Current CTC</th>
-                              <th style={{ width: "200px" }}>Submitted On</th>
-                              {/* <th>Additional Details</th> */}
-                            </thead>
-                            <tbody>
-                              {item.submissions.map((_item, _index) => {
-                                let {
-                                  availability,
-                                  pay_rate_currency,
-                                  pay_rate_amount,
-                                  pay_rate_type,
-                                  pay_rate_contract_type,
-                                  bill_rate_currency,
-                                  bill_rate_amount,
-                                  bill_rate_type,
-                                  bill_rate_contract_type,
-                                  submitted_by_details,
-                                  submission_on,
-                                } = _item;
-                                let {
-                                  id,
-                                  firstname,
-                                  middlename,
-                                  lastname,
-                                  authorization,
-                                  mobile,
-                                  address,
-                                  country,
-                                  experience,
-                                  source,
-                                  notice_period,
-                                  current_amount,
-                                  current_currency,
-                                  current_job_type,
-                                  current_payment_frequency,
-                                } = _item.applicant_details[0];
-                                let current_ctc = `${
-                                  (current_currency || "N.A") +
-                                  "/" +
-                                  (current_amount || "N.A") +
-                                  "/" +
-                                  (current_payment_frequency || "N.A") +
-                                  "/" +
-                                  (current_job_type || "N.A")
-                                }`;
-
-                                return (
-                                  <tr>
-                                    <td style={{ width: "60px" }}>
-                                      {/* <input
-                                        type="checkbox"
-                                        onChange={(e) => {
-                                          let update = [...teamReportData];
-
-                                          update.map((applicant) => {
-                                            // Check if the applicant has a 'jobs_associated' array
-                                            if (
-                                              Array.isArray(
-                                                applicant.submissions
-                                              )
-                                            ) {
-                                              // Iterate over each job and set the 'selected' field to false
-                                              applicant.submissions =
-                                                applicant.submissions.map(
-                                                  (job) => {
-                                                    return {
-                                                      ...job,
-                                                      selected: false, // Set selected to false
-                                                    };
-                                                  }
-                                                );
-                                            }
-                                            return applicant;
-                                          });
-
-                                          // If the new checkbox is checked
-                                          if (e.target.checked) {
-                                            // Loop through all submissions and set 'selected' to false
-                                            update[index]["submissions"] =
-                                              update[index]["submissions"].map(
-                                                (
-                                                  submission,
-                                                  submissionIndex
-                                                ) => {
-                                                  // Set selected to false for all except the newly selected one
-                                                  return {
-                                                    ...submission,
-                                                    selected:
-                                                      submissionIndex === _index
-                                                        ? true
-                                                        : false,
-                                                  };
-                                                }
-                                              );
-                                          } else {
-                                            // If the checkbox is unchecked, just uncheck it
-                                            update[index]["submissions"][
-                                              _index
-                                            ]["selected"] = false;
-                                          }
-
-                                          setTeamReportData(update);
+                                  return (
+                                    <tr>
+                                      <td>{name}</td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("assign");
                                         }}
-                                        checked={_item?.selected}
-                                      /> */}
-                                      <input
-                                        type="checkbox"
-                                        onChange={(e) => {
-                                          // Clone the teamReportData state to update it immutably
-                                          const updatedJobPostList =
-                                            teamReportData.map(
-                                              (applicant, applicantIndex) => {
-                                                // Reset 'selected' field for all submissions for each applicant
-                                                if (
-                                                  Array.isArray(
-                                                    applicant.submissions
-                                                  )
-                                                ) {
-                                                  applicant.submissions =
-                                                    applicant.submissions.map(
-                                                      (submission) => ({
-                                                        ...submission,
-                                                        selected: false,
-                                                      })
-                                                    );
-                                                }
-
-                                                // Check if this is the applicant we want to update based on the index
-                                                if (applicantIndex === index) {
-                                                  applicant.submissions =
-                                                    applicant.submissions.map(
-                                                      (
-                                                        submission,
-                                                        submissionIndex
-                                                      ) => ({
-                                                        ...submission,
-                                                        selected:
-                                                          e.target.checked &&
-                                                          submissionIndex ===
-                                                            _index,
-                                                      })
-                                                    );
-                                                }
-
-                                                return applicant;
-                                              }
-                                            );
-
-                                          setTeamReportData(updatedJobPostList);
-                                        }}
-                                        checked={_item?.selected}
-                                      />
-                                    </td>
-                                    <td>{_item.id}</td>
-                                    <td>
-                                      <Link
-                                        href={`/employers-dashboard/all-applicants/${id}`}
-                                        target="_blank"
+                                        className="text-primary cursor-pointer"
                                       >
-                                        {(firstname || "") +
-                                          " " +
-                                          (middlename || "") +
-                                          " " +
-                                          (lastname || "")}
-                                      </Link>
-                                    </td>
-                                    <td>{authorization || "N/A"}</td>
-                                    <td>{mobile || "N/A"}</td>
-                                    <td>
-                                      {address ? cleanString(address) : "N.A"}
-                                    </td>
-                                    <td>{country || "N/A"}</td>
-                                    <td>{experience || "N/A"}</td>
-                                    <td>{source || "N/A"}</td>
-                                    {/* <td>Revision Status</td> */}
-                                    {/* <td>Application Status</td> */}
-                                    {/* <th>Outlook MSG</th> */}
-                                    <td style={{ width: "250px" }}>
-                                      {bill_rate_currency || "N.A"}/
-                                      {bill_rate_amount || "N.A"}/
-                                      {bill_rate_type || "N.A"}/
-                                      {bill_rate_contract_type || "N.A"}
-                                    </td>
-                                    <td style={{ width: "250px" }}>
-                                      {pay_rate_currency || "N.A"}/
-                                      {pay_rate_amount || "N.A"}/
-                                      {pay_rate_type || "N.A"}/
-                                      {pay_rate_contract_type || "N.A"}
-                                    </td>
-                                    {/* <td>Employer Name</td> */}
-                                    <td>{availability || "N/A"}</td>
-                                    <td>
-                                      {(submitted_by_details?.first_name ||
-                                        "N/A") +
-                                        " " +
-                                        (submitted_by_details?.last_name || "")}
-                                    </td>
-                                    {/* <th>PW Submission Type</th> */}
-                                    <td>{notice_period || "N/A"}</td>
-                                    <td style={{ width: "200px" }}>
-                                      {current_ctc || "N/A"}
-                                    </td>
-                                    <td style={{ width: "200px" }}>
-                                      {submission_on
-                                        ? moment(submission_on).format(
-                                            "DD-MM-YYYY hh:mm A"
-                                          )
-                                        : "N/A"}
-                                    </td>
-                                    {/* <td>Additional Details</td> */}
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </td>
-                      </div>
-                    </tr>
+                                        {assigned_jobs_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("submission");
+                                        }}
+                                        className="text-primary cursor-pointer"
+                                      >
+                                        {submission_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("l1");
+                                        }}
+                                        className="text-primary cursor-pointer"
+
+                                      >
+                                        {l1_interview_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("l2");
+                                        }}
+                                        className="text-primary cursor-pointer"
+
+                                      >
+                                        {l2_interview_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("l3");
+                                        }}
+                                        className="text-primary cursor-pointer"
+
+                                      >
+                                        {l3_interview_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("client");
+                                        }}
+                                        className="text-primary cursor-pointer"
+                                      >
+                                        {client_interview_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("confirmations");
+                                        }}
+                                        className="text-primary cursor-pointer"
+                                      >
+                                        {confirmation_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("joinings");
+                                        }}
+                                        className="text-primary cursor-pointer"
+                                      >
+                                        {joining_count}
+                                      </td>
+                                      <td
+                                        onClick={() => {
+                                          setInnerExp(_index);
+                                          setType("backouts");
+                                        }}
+                                        className="text-primary cursor-pointer"
+                                      >
+                                        {backout_count}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </td>
+                        </div>
+                      </tr>
+                      {isNumber(innerExp) && type == "assign" && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5>Assigned Jobs</h5>
+                              <span>{item?.users[innerExp]?.assigned_jobs?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Client</th>
+                                  <th>Client Job Id</th>
+                                  <th>End Client</th>
+                                  <th>LOB</th>
+                                  <th>Contact Manager</th>
+                                  <th>Job Type</th>
+                                  <th>Job Status</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp].assigned_jobs.map(
+                                    (assignJob, _index) => {
+                                      let {
+                                        job_code,
+                                        job_title,
+                                        client,
+                                        client_job_id,
+                                        endclient,
+                                        lob,
+                                        job_type,
+                                        job_status,
+                                        contact_manager,
+                                      } = assignJob;
+
+                                      return (
+                                        <tr key={assignJob.id}>
+                                          <td>{job_code}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{client || "N/A"}</td>
+                                          <td>{client_job_id || "N/A"}</td>
+                                          <td>{endclient || "N/A"}</td>
+                                          <td>{lob || "N/A"}</td>
+                                          <td>{contact_manager || "N/A"}</td>
+                                          <td>{job_type || "N/A"}</td>
+                                          <td>{job_status || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                              </div>
+                          </div>
+                        </tr>
+                      )}
+                        {isNumber(innerExp) && type == "submission" && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table shadow" >
+                            <div className="px-2 d-flex justify-content-between py-1">
+                              <h5>Submission</h5>
+                              <span>{item?.users[innerExp]?.submissions?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Submisson Date</th>
+                                  <th>Current Status</th>
+                                  <th>Current Sub Status</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp].submissions.map(
+                                    (submission, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        submission_date,
+                                        current_status,
+                                        current_substatus,
+                                      } = submission;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{submission_date || "N/A"}</td>
+                                          <td>{current_status || "N/A"}</td>
+                                          <td>{current_substatus || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                        {isNumber(innerExp) && (type == "confirmations" || type == "joinings" || type == "backouts") && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5 className="text-capitalize" >{type}</h5>
+                              <span>{item?.users[innerExp][`${type}`]?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Submisson Date</th>
+                                  <th>Confirmation Date</th>
+                                  <th>Current Status</th>
+                                  <th>Current Sub Status</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp][`${type}`].map(
+                                    (confirmation, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        confirmation_date,
+                                        submission_date,
+                                        current_status,
+                                        current_substatus,
+                                      } = confirmation;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{confirmation_date || "N/A"}</td>
+                                          <td>{submission_date || "N/A"}</td>
+                                          <td>{current_status || "N/A"}</td>
+                                          <td>{current_substatus || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                          {isNumber(innerExp) && type == "l1"  && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5 className="text-capitalize">{type} Interview</h5>
+                              <span>{item?.users[innerExp]?.l1_interviews?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Interview Date</th>
+                                  <th>Round</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp][`l1_interviews`].map(
+                                    (interview, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        interview_date,
+                                        round,
+                                      } = interview;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{interview_date || "N/A"}</td>
+                                          <td>{round || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                         {isNumber(innerExp) && type =="l2"  && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1 custom-scroll-sm  inner-table shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5 className="text-capitalize">{type} Interview</h5>
+                              <span>{item?.users[innerExp]?.l2_interviews?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Interview Date</th>
+                                  <th>Round</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp].l2_interviews.map(
+                                    (interview, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        interview_date,
+                                        round,
+                                      } = interview;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{interview_date || "N/A"}</td>
+                                          <td>{round || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                         {isNumber(innerExp) && type =="l3" && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table custom-scroll-sm shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5 className="text-capitalize">{type} Interview</h5>
+                              <span>{item?.users[innerExp]?.l3_interviews?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Interview Date</th>
+                                  <th>Round</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp].l3_interviews.map(
+                                    (interview, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        interview_date,
+                                        round,
+                                      } = interview;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{interview_date || "N/A"}</td>
+                                          <td>{round || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                         {isNumber(innerExp) &&  type =="client" && (
+                        <tr>
+                          <div className="mx-5 my-3 border rounded-1  inner-table shadow">
+                            <div className="px-2 py-1 d-flex justify-content-between">
+                              <h5 className="text-capitalize">{type} Interview</h5>
+                              <span>{item?.users[innerExp]?.client_interviews?.length} records</span>
+                            </div>
+                            <div className="table_div custom-scroll-sm" style={{height:"200px"}}>
+                            <td colSpan={10}>
+                              <table>
+                                <thead className="table-inner-thead">
+                                  <th>Submission Id</th>
+                                  <th>Job Code</th>
+                                  <th>Job Title</th>
+                                  <th>Candidate Name</th>
+                                  <th>Interview Date</th>
+                                  <th>Round</th>
+                                </thead>
+                                <tbody>
+                                  {item.users[innerExp].client_interviews.map(
+                                    (interview, _index) => {
+                                      let {
+                                        job_code,
+                                        submission_id,
+                                        job_title,
+                                        applicant_name,
+                                        interview_date,
+                                        round,
+                                      } = interview;
+
+                                      return (
+                                        <tr key={submission_id}>
+                                          <td>{submission_id}</td>
+                                          <td>{job_code || "N/A"}</td>
+                                          <td>{job_title || "N/A"}</td>
+                                          <td>{applicant_name || "N/A"}</td>
+                                          <td>{interview_date || "N/A"}</td>
+                                          <td>{round || "N/A"}</td>
+                                        </tr>
+                                      );
+                                    }
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            </div>
+                          </div>
+                        </tr>
+                      )}
+                    </>
                   )}
                 </>
               );

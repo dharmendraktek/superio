@@ -161,7 +161,7 @@ const InterviewScheduleModal = ({
   };
 
   const handleScheduleInterview = async () => {
-    if(handleValidation()){
+    if(!handleValidation()){
       return;
     }
 
@@ -839,7 +839,7 @@ const InterviewScheduleModal = ({
               <button
                 onClick={handleScheduleInterview}
                 className="theme-btn btn-style-one small"
-                disabled={isLoading}
+                // disabled={isLoading}
               >
                 {isLoading ? <BtnBeatLoader /> : reschedule ? "Reschedule" : "Schedule"}
               </button>

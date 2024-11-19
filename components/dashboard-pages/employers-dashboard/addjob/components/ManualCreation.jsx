@@ -154,14 +154,6 @@ const ManualCreation = ({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // useEffect(() => {
-  //   if(jobData.languages){
-  //       jobData.forEach((item) => {
-
-  //       })
-  //   }
-  // }, [jobData.languages])\
-
 
   useEffect(() => {
     if (jobData) {
@@ -171,7 +163,7 @@ const ManualCreation = ({
         (item) => item.name == jobData?.job_type
       )?.name;
       let country = countryList.find((item) => item.name == jobData?.country);
-      let jobNewStatus = jobStatus.map(
+      let jobNewStatus = jobStatus.find(
         (item) => item.name == jobData?.job_status
       )?.name;
 

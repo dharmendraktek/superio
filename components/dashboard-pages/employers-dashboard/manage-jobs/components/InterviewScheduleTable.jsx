@@ -3,8 +3,8 @@
 import Loader from "@/components/common/Loader";
 import MultiSearch from "@/components/common/MultiSearch";
 import Pagination from "@/components/common/Pagination";
-import { getReq } from "@/utils/apiHandlers";
-import { candidateSearchKey, processOptions } from "@/utils/constant";
+import { deleteReq, getReq } from "@/utils/apiHandlers";
+import { accessRoles, candidateSearchKey, processOptions } from "@/utils/constant";
 import { BASE_URL } from "@/utils/endpoints";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
@@ -12,6 +12,8 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import InterviewScheduleModal from "../../jobposts/components/components/InterviewScheduleModal";
 import InterviewFeedbackModal from "@/components/common/InterviewFeedbackModal";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 // export const interviewData = [
 //   {
@@ -45,6 +47,7 @@ const InterviewScheduleTable = () => {
   const [openReschedule, setOpenReschedule] = useState(null);
   const [openFeedback, setOpenFeedback] = useState(null);
   const [openSchedule, setOpenSchedule] = useState(null);
+  const employee_details = useSelector((state) => state.employer.user)
 
   useEffect(() => {
     let param;
@@ -84,6 +87,16 @@ const InterviewScheduleTable = () => {
       setInterviewData(response.data.results || response.data);
     }
   };
+
+  const handleDeleteInterview = async(id) => {
+     const response = await deleteReq(`/interviews/${id}/`)
+     if(response.status){
+       toast.success('Interview schedule has been successfully deleted');
+       handleGetInterviewsList();
+     }else if(!response.status){
+       toast.error(response.error.detail || "Something went wrong");
+     }
+  }
 
   return (
     <div>
@@ -233,6 +246,7 @@ const InterviewScheduleTable = () => {
                   created_at,
                   updated_by,
                   job_status,
+                  round_details,
                 } = item;
 
                 return (
@@ -295,7 +309,7 @@ const InterviewScheduleTable = () => {
                       <td className="" style={{ width: "300px" }}>
                         {title}
                       </td>
-                      <td style={{ width: "200px" }}>{round}</td>
+                      <td style={{ width: "200px" }}>{round_details?.name}</td>
                       <td style={{ width: "150px" }}>{mode}</td>
                       <td className="" style={{ width: "160px" }}>
                         {"-"}
@@ -406,6 +420,11 @@ const InterviewScheduleTable = () => {
                               </div>
                             )}
                           </div>
+                          {/* {employee_details?.access_role_details?.access_id == accessRoles.ADMIN && */}
+                          <div>
+                            <span  onClick={() => handleDeleteInterview(item.id)} className="text-danger cursor-pointer">{reactIcons.delete}</span>
+                          </div>
+                          {/* } */}
                         </div>
                       </td>
                     </tr>

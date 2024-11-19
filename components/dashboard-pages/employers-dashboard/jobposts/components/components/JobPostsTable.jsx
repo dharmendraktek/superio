@@ -374,6 +374,31 @@ const JobPostsTable = () => {
                             </div>
                           )}
                         </div>
+                        {/* <div className="position-relative">
+                          <span
+                            data-bs-toggle="modal"
+                            data-bs-target="#jobAssignModal"
+                            onClick={() => setJobId(item.id)}
+                            className="cursor-pointer"
+                            onMouseEnter={() => setOpen(item.id)}
+                            onMouseLeave={() => setOpen(null)}
+                          >
+                            {reactIcons.settings}
+                          </span>
+                          {item.id == open && (
+                            <div
+                              className="position-absolute  px-2 py-1 rounded-1"
+                              style={{
+                                width: "90px",
+                                height: "35px",
+                                zIndex: "3",
+                                background: "rgb(77 82 129 / 54%)",
+                              }}
+                            >
+                              <span className="text-white">Assign Job</span>
+                            </div>
+                          )}
+                        </div> */}
                       </div>
                     </td>
                     <td>
@@ -542,6 +567,9 @@ const JobPostsTable = () => {
                     </td>
                     <td className="">
                       {item.head_account_manager_name || "N/A"}
+                    </td>
+                    <td className="">
+                      {item.account_manager_name || "N/A"}
                     </td>
                     <td>
                       <div className="option-box">

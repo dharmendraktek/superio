@@ -13,8 +13,8 @@ const Index = () => {
     <section className="px-4">
     <Paper>
         <div>
-            pending
-          {/* <TeamReportTable /> */}
+            {/* pending */}
+          <TeamReportTable />
         </div>
     </Paper>
     </section>

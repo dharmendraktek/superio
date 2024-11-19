@@ -271,6 +271,10 @@ const menuList = [
         name: "CONFIRMATION & JOINING",
         url: "/employers-dashboard/confirmation-joining-report",
       },
+      {
+        name: "TEAM PERFORMANCE",
+        url: "/employers-dashboard/team-performance-report",
+      },
     ],
   },
   {
