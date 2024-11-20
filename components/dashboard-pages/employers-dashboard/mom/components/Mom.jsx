@@ -36,6 +36,7 @@ const Mom = () => {
   const [momActionDetails, setMomActionDetails] = useState("");
   const [openAssign, setOpenAssign] = useState(null);
   const [openTaskOwner, setOpenTaskOwner] = useState(null);
+  
 
   useEffect(() => {
     let param = "";
@@ -143,7 +144,7 @@ const Mom = () => {
       <JobDetailsPreviewModal jobDetails={momItem} setJobDetails={setMomItem} />
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-2">
-          <div className="py-1">
+          <div className="py-1 d-flex align-item-center gap-2">
             <h4>MOM</h4>
           </div>
           {/* <MultiFilterSearch

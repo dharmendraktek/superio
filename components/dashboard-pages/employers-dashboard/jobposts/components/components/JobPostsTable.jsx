@@ -134,7 +134,7 @@ const JobPostsTable = () => {
         setJobDetails={setJobDetails}
       />
       <JobAssignModal jobId={jobId} handleReload={getJobpostsList} />
-      <UpdateJobStatusModal jobId={jobId} handleReload={getJobpostsList} />
+      <UpdateJobStatusModal jobId={jobId} handleReload={getJobpostsList}  jobDetails={jobDetails} />
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2">
           {employeeDetails?.access_role_details?.access_id == accessRoles.ADMIN &&
@@ -383,7 +383,10 @@ const JobPostsTable = () => {
                           <span
                             data-bs-toggle="modal"
                             data-bs-target="#updateJobStatusModal"
-                            onClick={() => setJobId(item.id)}
+                            onClick={() =>{ 
+                              setJobId(item.id)
+                              setJobDetails(item);
+                            }}
                             className="cursor-pointer text-primary"
                             onMouseEnter={() => setOpenStatus(item.id)}
                             onMouseLeave={() => setOpenStatus(null)}

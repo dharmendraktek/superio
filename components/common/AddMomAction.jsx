@@ -89,21 +89,29 @@ const AddMomAction = ({
       status: "",
     }));
 
+  let selected =  (momActionData.timeline).setHours(0, 0, 0, 0);  // Set selected date to midnight
+  let today = new Date();  
+  today.setHours(0, 0, 0, 0);  
+
     if (!momActionData.meeting_ref) {
       setError((prev) => ({ ...prev, meeting_ref: "This field is required" }));
     }
     if (!momActionData.task) {
       setError((prev) => ({ ...prev, task: "This field is required" }));
     }
+    console.log("------------mom time line ", momActionData.timeline);
     if (!momActionData.timeline) {
       setError((prev) => ({ ...prev, timeline: "This field is required" }));
+    }else if(!(selected >= today) ){
+      setError((prev) => ({ ...prev, timeline: "Please select the future date" }));
+
     }
     // if (!momActionData.action_taken) {
     //   setError((prev) => ({ ...prev, action_taken: "This field is required" }));
     // }
 
     let { meeting_ref, task, timeline, action_taken } = momActionData;
-    if (meeting_ref && task && timeline ) {
+    if (meeting_ref && task && timeline &&  selected >= today) {
       return true;
     } else {
       return false;
@@ -183,7 +191,6 @@ const AddMomAction = ({
     setMomActionData(initialState);
     setMomItem("");
   }
-  console.log("-----------mom action detial ", momActionDetails);
 
   return (
     <div
@@ -343,6 +350,7 @@ const AddMomAction = ({
               onChange={handleChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
             <span className="text-danger">{error.task}</span>
           </div>
@@ -356,6 +364,7 @@ const AddMomAction = ({
               onChange={handleChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
             <span className="text-danger">{error.action_taken}</span>
           </div>
@@ -367,6 +376,7 @@ const AddMomAction = ({
               onChange={handleChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
           </div>
           </>

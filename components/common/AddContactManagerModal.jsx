@@ -16,6 +16,7 @@ const initialStateContact = {
   ownership: "",
   status: "active",
   is_active: 1,
+  lob_ref:""
 };
 
 const AddContactManagerModal = ({
@@ -27,6 +28,8 @@ const AddContactManagerModal = ({
   const [contLoading, setContLoading] = useState(false);
   // const [contactDetails, setContactDetails] = useState("");
   const [clientNameList, setClientNameList] = useState([]);
+  const [lobList, setLobList] = useState([]);
+  const [contactSearch, setContactSearch] = useState('');
   const [error, setError] = useState({
     name: "",
     designation: "",
@@ -36,11 +39,30 @@ const AddContactManagerModal = ({
     email: "",
     ownership: "",
     status: "Active",
+    lobErr:""
   });
 
   useEffect(() => {
     getClientNameList();
   }, []);
+
+  const handleGetLob = async () => {
+    const response = await getReq(
+      `/client-details/${contactData.client_ref}/${
+        contactSearch ? `?contact_manager_name=${contactSearch}` : ""
+      }`
+    );
+    if (response.status) {
+      setLobList(response.data.lob);
+    }
+  };
+
+  useEffect(() => {
+     if(contactData.client_ref){
+      handleGetLob();
+      setContactData((prev) => ({...prev, lob_ref:""}))
+     }
+  }, [contactData.client_ref])
 
   const handleValidation = () => {
     setError((prev) => ({
@@ -54,6 +76,7 @@ const AddContactManagerModal = ({
       ownership: "",
       status: "",
       is_active: 1,
+      lobErr:"",
     }));
 
     if (!contactData.name) {
@@ -71,9 +94,12 @@ const AddContactManagerModal = ({
     if (!contactData.ownership) {
       setError((prev) => ({ ...prev, ownership: "This field is required" }));
     }
+    if (!contactData.lob_ref) {
+      setError((prev) => ({ ...prev, lobErr: "This field is required" }));
+    }
 
-    let { name, client_ref, contact, email, ownership } = contactData;
-    if (name && client_ref && contact && email && ownership) {
+    let { name, client_ref, contact, email, ownership, lob_ref } = contactData;
+    if (name && client_ref && contact && email && ownership && lob_ref) {
       return true;
     } else {
       return false;
@@ -292,6 +318,25 @@ const AddContactManagerModal = ({
               </div>
               <span className="text-danger">{error.clientErr}</span>
             </div> */}
+                 <div className="col-6 my-1">
+              <p>Names of LOB <strong className="text-danger">*</strong></p>
+              <select
+                value={contactData.lob}
+                className="client-form-input"
+                name="lob_ref"
+                onChange={handleContactChange}
+              >
+                <option value="">Select</option>
+                {lobList.map((item, index) => {
+                  return (
+                    <option key={index} value={item.id}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <span className="text-danger">{error.lobErr}</span>
+            </div>
           <div className="col-6 my-1">
             <p>
               Contact Name <strong className="text-danger">*</strong>
@@ -302,6 +347,7 @@ const AddContactManagerModal = ({
               onChange={handleContactChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
             <span className="text-danger">{error.name}</span>
           </div>
@@ -315,6 +361,7 @@ const AddContactManagerModal = ({
               onChange={handleContactChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
             <span className="text-danger">{error.email}</span>
           </div>
@@ -358,6 +405,7 @@ const AddContactManagerModal = ({
               onChange={handleContactChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
           </div>
           <div className="col-6 my-1">
@@ -368,6 +416,7 @@ const AddContactManagerModal = ({
               onChange={handleContactChange}
               className="client-form-input"
               type="number"
+              autoComplete="off"
             />
           </div>
           <div className="col-6 my-1">
@@ -380,6 +429,7 @@ const AddContactManagerModal = ({
               onChange={handleContactChange}
               className="client-form-input"
               type="number"
+              autoComplete="off"
             />
             <span className="text-danger">{error.contact}</span>
           </div>
