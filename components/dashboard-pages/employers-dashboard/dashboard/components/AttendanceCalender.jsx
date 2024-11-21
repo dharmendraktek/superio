@@ -266,7 +266,7 @@ const AttendanceCalendar = () => {
       const shiftInTime = event.shift_in_time;
       const checkInTime = moment(event.first_timestamp);
       const checkOutTime = moment(event.last_timestamp);
-
+      console.log("-----------start time ", moment(checkInTime).format("hh:mm A"));
       // Determine the event status
       if (
         event.first_timestamp == null &&
@@ -295,11 +295,11 @@ const AttendanceCalendar = () => {
                 : event.late_status}
             </p>
             <p className="text-white">
-              Check-in: {checkInTime.utc().format("hh:mm A")} <br />{" "}
+              Check-in: {moment(checkInTime).format("hh:mm A")} <br />{" "}
               <span>
                 Check-out:{" "}
                 {event.last_timestamp
-                  ? checkOutTime.utc().format("hh:mm A")
+                  ? moment(checkOutTime).format("hh:mm A")
                   : "00:00"}
               </span>{" "}
               <br />

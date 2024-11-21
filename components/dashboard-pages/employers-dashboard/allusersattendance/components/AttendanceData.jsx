@@ -295,9 +295,9 @@ const AttendanceData = () => {
     // }
   };
 
-  useEffect(() => {
-    getAllUsersAttendance();
-  }, []);
+  // useEffect(() => {
+  //   getAllUsersAttendance();
+  // }, []);
 
   useEffect(() => {
     handleGetUsersList();
