@@ -596,6 +596,11 @@ const JobPostsTable = () => {
                       {moment(item.created_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
                     <td className="">
+                      {(item?.updated_by?.first_name || "N/A") +
+                        " " +
+                        (item?.updated_by?.last_name || "")}
+                    </td>
+                    <td className="">
                       {moment(item.updated_at).format("DD-MM-yyyy hh:mm A")}
                     </td>
                     <td className="">

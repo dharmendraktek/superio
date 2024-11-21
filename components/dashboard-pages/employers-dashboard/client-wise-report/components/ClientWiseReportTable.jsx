@@ -12,8 +12,8 @@ import {
 } from "@/utils/constant";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
-import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
-import JobAssignModal from "@/components/common/JobAssignModal";
+// import JobDetailsPreviewModal from "@/components/common/JobDetailsPreviewModal";
+// import JobAssignModal from "@/components/common/JobAssignModal";
 import { cleanString } from "@/utils/regex";
 import { useSelector } from "react-redux";
 import { jobPostsTableField } from "../../jobposts/components/components/constant";
@@ -25,9 +25,9 @@ const tabsName = [
   { id: 2, name: "INACTIVE JOB POST" },
 ];
 
-const TeamReportTable = () => {
+const ClientWiseReportTable = () => {
   const [expand, setExpand] = useState(null);
-  const [teamReportData, setTeamReportData] = useState([]);
+  const [clientReportData, setClientReportData] = useState([]);
   const [search, setSearch] = useState();
   const [page, setPage] = useState(0);
   const [dataCount, setDataCount] = useState();
@@ -49,17 +49,17 @@ const TeamReportTable = () => {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    getTeamPerformanceReport();
+    getClientWiseReport();
   }, []);
 
-  const getTeamPerformanceReport = async (param) => {
+  const getClientWiseReport = async (param) => {
     setIsLoading(true);
     const response = await getReq(
-      `/team-performance-report/report/${param ? param : ""}`
+      `/client-report/report/${param ? param : ""}`
     );
     setIsLoading(false);
     if (response.status) {
-      setTeamReportData(response.data.results || response.data);
+      setClientReportData(response.data.results || response.data);
       setDataCount(response?.data.count);
     }
   };
@@ -69,19 +69,19 @@ const TeamReportTable = () => {
       let param = `?start_date=${moment(startDate).format(
         "yyyy-MM-DD"
       )}&end_date=${moment(endDate).format("yyyy-MM-DD")}`;
-      getTeamPerformanceReport(param);
+      getClientWiseReport(param);
     }
   }, [startDate, endDate]);
 
   useEffect(() => {
-    if (teamReportData.length > 0) {
-      const filteredData = teamReportData.filter((item) =>
-        item.users.some((submission) => submission.selected === true)
+    if (clientReportData.length > 0) {
+      const filteredData = clientReportData.filter((item) =>
+        item.lobs.some((submission) => submission.selected === true)
       );
       setIsSelected(filteredData);
       // setJobData(filteredData);
     }
-  }, [teamReportData]);
+  }, [clientReportData]);
 
   useEffect(() => {
     if (!searchValue) {
@@ -96,13 +96,13 @@ const TeamReportTable = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <JobDetailsPreviewModal
+      {/* <JobDetailsPreviewModal
         jobDetails={jobDetails}
         setJobDetails={setJobDetails}
       />
-      <JobAssignModal jobId={jobId} handleReload={getTeamPerformanceReport} />
+      <JobAssignModal jobId={jobId} handleReload={getClientWiseReport} /> */}
       <div>
-            <h4>Team Performance Report</h4>
+            <h4>Client Wise Report</h4>
           </div>
       <div className="d-flex justify-content-between my-2">
         <div className="d-flex gap-2 justify-content-between">
@@ -203,7 +203,7 @@ const TeamReportTable = () => {
         <table className="default-table ">
           <thead className="">
             <th></th>
-            <th>Team</th>
+            <th>Client Name</th>
             <th>Requirment</th>
             <th>Submission</th>
             <th>L1</th>
@@ -212,11 +212,12 @@ const TeamReportTable = () => {
             <th>Client Interview</th>
             <th>Confirmation</th>
             <th>Joining</th>
+            <th>Backout</th>
           </thead>
           <tbody>
-            {teamReportData.map((item, index) => {
+            {clientReportData.map((item, index) => {
               const {
-                team_name,
+                client_name,
                 total_submissions,
                 total_confirmations,
                 total_joinings,
@@ -225,6 +226,7 @@ const TeamReportTable = () => {
                 total_l3_interviews,
                 total_requirements,
                 total_client_interviews,
+                total_backouts,
               } = item;
               return (
                 <>
@@ -232,19 +234,19 @@ const TeamReportTable = () => {
                     <td>
                       <div
                         className={`d-flex gap-2 align-items-center ${
-                          item.users.length == 0
+                          item.lobs.length == 0
                             ? "justify-content-start"
                             : "justify-content-start"
                         }`}
                       >
-                        {item.users.length > 0 && (
+                        {item.lobs.length > 0 && (
                           <>
                             <div
                               onClick={() => {
-                                if (expand == item.id) {
+                                if (expand == item.client_name) {
                                   setExpand(null);
                                 } else {
-                                  setExpand(item.id);
+                                  setExpand(item.client_name);
                                   setInnerExp(null);
                                 }
                               }}
@@ -265,11 +267,11 @@ const TeamReportTable = () => {
                                   className="text-white fw-medium"
                                   style={{ fontSize: "15px" }}
                                 >
-                                  {item.users.length}
+                                  {item.lobs.length}
                                 </p>
                               </div>
                               <span className="cursor-pointer text-white fs-4">
-                                {item.id == expand
+                                {item.client_name == expand
                                   ? reactIcons.arrowfillup
                                   : reactIcons.arrowfilldown}
                               </span>
@@ -278,7 +280,7 @@ const TeamReportTable = () => {
                         )}
                       </div>
                     </td>
-                    <td>{team_name}</td>
+                    <td>{client_name}</td>
                     <td>{total_requirements}</td>
                     <td>{total_submissions}</td>
                     <td>{total_l1_interviews}</td>
@@ -287,8 +289,9 @@ const TeamReportTable = () => {
                     <td>{total_client_interviews}</td>
                     <td>{total_confirmations}</td>
                     <td>{total_joinings}</td>
+                    <td>{total_backouts}</td>
                   </tr>
-                  {item.id == expand && (
+                  {item.client_name == expand && (
                     <>
                       <tr>
                         <div className="mx-3 my-3 border rounded-1  inner-table shadow">
@@ -296,117 +299,122 @@ const TeamReportTable = () => {
                             <table>
                               <thead className="table-inner-thead">
                                 {/* <th style={{ width: "60px" }}></th> */}
-                                <th>Recruiter</th>
-                                <th>Assigned</th>
+                                <th>LOB Name</th>
+                                <th>Requirement</th>
                                 <th>Submission</th>
                                 <th>L1</th>
                                 <th>L2</th>
                                 <th>L3</th>
                                 <th>Clinet Interview</th>
-                                <th>Confirm</th>
+                                <th>Confirmation</th>
                                 {/* <th>Reject</th> */}
-                                <th>Join</th>
+                                <th>Joinings</th>
                                 <th>Backout</th>
                               </thead>
                               <tbody>
-                                {item.users.map((_item, _index) => {
+                                {item.lobs.map((_item, _index) => {
                                   let {
                                     name,
-                                    assigned_jobs_count,
-                                    submission_count,
-                                    confirmation_count,
-                                    joining_count,
-                                    backout_count,
-                                    l1_interview_count,
-                                    l2_interview_count,
-                                    l3_interview_count,
-                                    client_interview_count,
-                                    assigned_jobs,
+                                    total_requirements,
+                                    total_submissions,
+                                    total_confirmations,
+                                    total_joinings,
+                                    total_backouts,
+                                    total_l1_interviews,
+                                    total_l2_interviews,
+                                    total_l3_interviews,
+                                    total_client_interviews,
                                   } = _item;
 
                                   return (
                                     <tr>
-                                      <td>{name}</td>
                                       <td
-                                        onClick={() => {
+                                         onClick={() => {
                                           setInnerExp(_index);
                                           setType("assign");
                                         }}
                                         className="text-primary cursor-pointer"
+                                      >{name}</td>
+                                      <td
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("assign");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {assigned_jobs_count}
+                                        {total_requirements}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("submission");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("submission");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {submission_count}
+                                        {total_submissions}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("l1");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("l1");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {l1_interview_count}
+                                        {total_l1_interviews}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("l2");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("l2");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {l2_interview_count}
+                                        {total_l2_interviews}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("l3");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("l3");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {l3_interview_count}
+                                        {total_l3_interviews}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("client");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("client");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {client_interview_count}
+                                        {total_client_interviews}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("confirmations");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("confirmations");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {confirmation_count}
+                                        {total_confirmations}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("joinings");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("joinings");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {joining_count}
+                                        {total_joinings}
                                       </td>
                                       <td
-                                        onClick={() => {
-                                          setInnerExp(_index);
-                                          setType("backouts");
-                                        }}
-                                        className="text-primary cursor-pointer"
+                                        // onClick={() => {
+                                        //   setInnerExp(_index);
+                                        //   setType("backouts");
+                                        // }}
+                                        // className="text-primary cursor-pointer"
                                       >
-                                        {backout_count}
+                                        {total_backouts}
                                       </td>
                                     </tr>
                                   );
@@ -416,13 +424,13 @@ const TeamReportTable = () => {
                           </td>
                         </div>
                       </tr>
-                      {isNumber(innerExp) && type == "assign" && (
+                       {isNumber(innerExp) && type == "assign" && (
                         <tr>
                           <div className="mx-5 my-3 border rounded-1  inner-table shadow">
                             <div className="px-2 py-1 d-flex justify-content-between">
-                              <h5>Assigned Jobs</h5>
+                              <h5>Contact Managers</h5>
                               <span>
-                                {item?.users[innerExp]?.assigned_jobs?.length}{" "}
+                                {item?.lobs[innerExp]?.contact_managers?.length}{" "}
                                 records
                               </span>
                             </div>
@@ -433,42 +441,45 @@ const TeamReportTable = () => {
                               <td colSpan={10}>
                                 <table>
                                   <thead className="table-inner-thead">
-                                    <th>Job Code</th>
-                                    <th>Job Title</th>
-                                    <th>Client</th>
-                                    <th>Client Job Id</th>
-                                    <th>End Client</th>
-                                    <th>LOB</th>
                                     <th>Contact Manager</th>
-                                    <th>Job Type</th>
-                                    <th>Job Status</th>
+                                    <th>Requirment</th>
+                                    <th>Submission</th>
+                                    <th>L1</th>
+                                    <th>L2</th>
+                                    <th>L3</th>
+                                    <th>Client Interview</th>
+                                    <th>Confirmation</th>
+                                    <th>Joining</th>
+                                    <th>Backouts</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp].assigned_jobs.map(
-                                      (assignJob, _index) => {
+                                    {item.lobs[innerExp].contact_managers.map(
+                                      (details, _index) => {
                                         let {
-                                          job_code,
-                                          job_title,
-                                          client,
-                                          client_job_id,
-                                          endclient,
-                                          lob,
-                                          job_type,
-                                          job_status,
-                                          contact_manager,
-                                        } = assignJob;
+                                          name,
+                                          total_requirements,
+                                          total_submissions,
+                                          total_confirmations,
+                                          total_joinings,
+                                          total_backouts,
+                                          total_l1_interviews,
+                                          total_l2_interviews,
+                                          total_l3_interviews,
+                                          total_client_interviews,
+                                        } = details;
 
                                         return (
-                                          <tr key={assignJob.id}>
-                                            <td>{job_code}</td>
-                                            <td>{job_title || "N/A"}</td>
-                                            <td>{client || "N/A"}</td>
-                                            <td>{client_job_id || "N/A"}</td>
-                                            <td>{endclient || "N/A"}</td>
-                                            <td>{lob || "N/A"}</td>
-                                            <td>{contact_manager || "N/A"}</td>
-                                            <td>{job_type || "N/A"}</td>
-                                            <td>{job_status || "N/A"}</td>
+                                          <tr key={details.name}>
+                                            <td>{name}</td>
+                                            <td>{total_requirements}</td>
+                                            <td>{total_submissions}</td>
+                                            <td>{total_l1_interviews}</td>
+                                            <td>{total_l2_interviews}</td>
+                                            <td>{total_l3_interviews}</td>
+                                            <td>{total_client_interviews}</td>
+                                            <td>{total_confirmations}</td>
+                                            <td>{total_joinings}</td>
+                                            <td>{total_backouts}</td>
                                           </tr>
                                         );
                                       }
@@ -480,13 +491,13 @@ const TeamReportTable = () => {
                           </div>
                         </tr>
                       )}
-                      {isNumber(innerExp) && type == "submission" && (
+                      {/*{isNumber(innerExp) && type == "submission" && (
                         <tr>
                           <div className="mx-5 my-3 border rounded-1  inner-table shadow">
                             <div className="px-2 d-flex justify-content-between py-1">
                               <h5>Submission</h5>
                               <span>
-                                {item?.users[innerExp]?.submissions?.length}{" "}
+                                {item?.lobs[innerExp]?.submissions?.length}{" "}
                                 records
                               </span>
                             </div>
@@ -506,7 +517,7 @@ const TeamReportTable = () => {
                                     <th>Current Sub Status</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp].submissions.map(
+                                    {item.lobs[innerExp].submissions.map(
                                       (submission, _index) => {
                                         let {
                                           job_code,
@@ -549,7 +560,7 @@ const TeamReportTable = () => {
                               <div className="px-2 py-1 d-flex justify-content-between">
                                 <h5 className="text-capitalize">{type}</h5>
                                 <span>
-                                  {item?.users[innerExp][`${type}`]?.length}{" "}
+                                  {item?.lobs[innerExp][`${type}`]?.length}{" "}
                                   records
                                 </span>
                               </div>
@@ -570,7 +581,7 @@ const TeamReportTable = () => {
                                       <th>Current Sub Status</th>
                                     </thead>
                                     <tbody>
-                                      {item.users[innerExp][`${type}`].map(
+                                      {item.lobs[innerExp][`${type}`].map(
                                         (confirmation, _index) => {
                                           let {
                                             job_code,
@@ -618,7 +629,7 @@ const TeamReportTable = () => {
                                 {type} Interview
                               </h5>
                               <span>
-                                {item?.users[innerExp]?.l1_interviews?.length}{" "}
+                                {item?.lobs[innerExp]?.l1_interviews?.length}{" "}
                                 records
                               </span>
                             </div>
@@ -637,7 +648,7 @@ const TeamReportTable = () => {
                                     <th>Round</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp][`l1_interviews`].map(
+                                    {item.lobs[innerExp][`l1_interviews`].map(
                                       (interview, _index) => {
                                         let {
                                           job_code,
@@ -675,7 +686,7 @@ const TeamReportTable = () => {
                                 {type} Interview
                               </h5>
                               <span>
-                                {item?.users[innerExp]?.l2_interviews?.length}{" "}
+                                {item?.lobs[innerExp]?.l2_interviews?.length}{" "}
                                 records
                               </span>
                             </div>
@@ -694,7 +705,7 @@ const TeamReportTable = () => {
                                     <th>Round</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp].l2_interviews.map(
+                                    {item.lobs[innerExp].l2_interviews.map(
                                       (interview, _index) => {
                                         let {
                                           job_code,
@@ -732,7 +743,7 @@ const TeamReportTable = () => {
                                 {type} Interview
                               </h5>
                               <span>
-                                {item?.users[innerExp]?.l3_interviews?.length}{" "}
+                                {item?.lobs[innerExp]?.l3_interviews?.length}{" "}
                                 records
                               </span>
                             </div>
@@ -751,7 +762,7 @@ const TeamReportTable = () => {
                                     <th>Round</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp].l3_interviews.map(
+                                    {item.lobs[innerExp].l3_interviews.map(
                                       (interview, _index) => {
                                         let {
                                           job_code,
@@ -790,7 +801,7 @@ const TeamReportTable = () => {
                               </h5>
                               <span>
                                 {
-                                  item?.users[innerExp]?.client_interviews
+                                  item?.lobs[innerExp]?.client_interviews
                                     ?.length
                                 }{" "}
                                 records
@@ -811,7 +822,7 @@ const TeamReportTable = () => {
                                     <th>Round</th>
                                   </thead>
                                   <tbody>
-                                    {item.users[innerExp].client_interviews.map(
+                                    {item.lobs[innerExp].client_interviews.map(
                                       (interview, _index) => {
                                         let {
                                           job_code,
@@ -840,13 +851,13 @@ const TeamReportTable = () => {
                             </div>
                           </div>
                         </tr>
-                      )}
+                      )} */}
                     </>
                   )}
                 </>
               );
             })}
-            {!isLoading && teamReportData.length == 0 && (
+            {!isLoading && clientReportData.length == 0 && (
               <tr className="text-center mt-5">
                 <td colSpan={5}>No data found</td>
               </tr>
@@ -868,4 +879,4 @@ const TeamReportTable = () => {
   );
 };
 
-export default TeamReportTable;
+export default ClientWiseReportTable;

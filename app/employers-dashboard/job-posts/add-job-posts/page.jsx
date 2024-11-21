@@ -3,8 +3,8 @@
 
 
 // export const metadata = {
-//   title: "Candidates Dashboard || KatalixAI - Job Borad React NextJS Template",
-//   description: "KatalixAI - Job Borad React NextJS Template",
+//   title: "Candidates Dashboard || KatalixAI - Job Board React NextJS Template",
+//   description: "KatalixAI - Job Board React NextJS Template",
 // };
 
 // const index = () => {

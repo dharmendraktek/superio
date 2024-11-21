@@ -2,8 +2,8 @@ import ShopDetails from "@/components/shop/shop-single/ShopDetails";
 import dynamic from "next/dynamic";
 
 export const metadata = {
-  title: "Shop-details || KatalixAI - Job Borad React NextJS Template",
-  description: "KatalixAI - Job Borad React NextJS Template",
+  title: "Shop-details || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const ShopSingleDyanmic = ({ params }) => {

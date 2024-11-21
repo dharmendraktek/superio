@@ -3,8 +3,8 @@ import React from "react";
 import Home from "@/components/home-2";
 
 export const metadata = {
-  title: "Home-2 || KatalixAI - Job Borad React NextJS Template",
-  description: "KatalixAI - Job Borad React NextJS Template",
+  title: "Home-2 || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const index = () => {

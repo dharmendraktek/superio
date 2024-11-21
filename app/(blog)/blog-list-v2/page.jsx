@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 import BlogList from "@/components/blog-meu-pages/blog-list-v2";
 
 export const metadata = {
-  title: 'Blog List V2 || KatalixAI - Job Borad React NextJS Template',
+  title: 'Blog List V2 || KatalixAI - Job Board React NextJS Template',
   description:
-    'KatalixAI - Job Borad React NextJS Template',
+    'KatalixAI - Job Board React NextJS Template',
   
 }
 

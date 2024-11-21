@@ -367,6 +367,7 @@ const InterviewReportsTable = () => {
                 <th style={{ width: "250px" }}>Submission Status</th>
                 <th style={{ width: "250px" }}>Submission Sub Status</th>
                 <th style={{ width: "250px" }}>Scheduled By</th>
+                <th style={{ width: "250px" }}>Submitted By</th>
                 <th style={{ width: "250px" }}>Reschdule</th>
               </tr>
             </thead>
@@ -398,6 +399,7 @@ const InterviewReportsTable = () => {
                     applicant_email,
                     applicant_mobile,
                     scheduled_by,
+                    submitted_by,
                   } = item;
 
                   return (
@@ -482,6 +484,9 @@ const InterviewReportsTable = () => {
                         </td>
                         <td style={{ width: "250px" }}>
                           {scheduled_by || "N/A"}
+                        </td>
+                        <td style={{ width: "250px" }}>
+                          {submitted_by || "N/A"}
                         </td>
                         <td style={{ width: "250px" }}>
                           {reschedule || "N/A"}

@@ -33,10 +33,13 @@ let  refreshTokenData = {
 
 
 const handleGenerateToken = async () => {
-  const response = await postReq('/api/token/refresh/', refreshTokenData);
+  const response = await postReq('/api/token/refresh/', refreshTokenData)
   if (response.status) {
     Cookies.set('is_user_token', response.data.access);
     window.location.reload();
+  }
+  else if(!response.status){
+    window.location.href ='/';
   }
 };
  
@@ -164,6 +167,25 @@ export const patchReq = async (endpoint, data) => {
     });
 };
 
+export const putReq = async (endpoint, data) => {
+  const url = BASE_URL + endpoint;
+  delete header["responseType"]; 
+
+
+  return await axios.put(url,data, header)
+    .then((response) => {
+      return responseFormatter(true, response.data, null);
+    })
+    .catch((err) => {
+      if (err.response.status == 401) {
+        handleGenerateToken();
+        window.location.href = '/';
+      } else {
+        return handleApiError(err);
+      }
+    });
+};
+
 export const getReq = async(endpoint) => {
   const url = BASE_URL + endpoint;
   delete header["responseType"]; 
@@ -175,7 +197,6 @@ export const getReq = async(endpoint) => {
     .catch((err) => {
       if (err?.response?.status == 401) {
         handleGenerateToken();
-        window.location.href ='/';
       } else {
         return handleApiError(err);
       }

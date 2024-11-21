@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 import Terms from "@/components/pages-menu/terms";
 
 export const metadata = {
-  title: 'Terms || KatalixAI - Job Borad React NextJS Template',
+  title: 'Terms || KatalixAI - Job Board React NextJS Template',
   description:
-    'KatalixAI - Job Borad React NextJS Template',
+    'KatalixAI - Job Board React NextJS Template',
   
 }
 

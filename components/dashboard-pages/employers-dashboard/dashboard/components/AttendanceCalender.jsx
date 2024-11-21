@@ -238,7 +238,7 @@ const AttendanceCalendar = () => {
     let month = moment(currentDate).format("yyyy-MM")
     try {
       const response = await getReq(
-        `/attendance-details/?emp_code=${userDetails.empcode}&year_month=${month}`
+        `/attendance-details/?emp_code=${userDetails.empcode}&month=${month}`
       );
       console.log("-------------respoen r", response.data);
       if (response.status) {

@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 import RegisterForm from "@/components/pages-menu/register";
 
 export const metadata = {
-  title: 'Register || KatalixAI - Job Borad React NextJS Template',
+  title: 'Register || KatalixAI - Job Board React NextJS Template',
   description:
-    'KatalixAI - Job Borad React NextJS Template',
+    'KatalixAI - Job Board React NextJS Template',
   
 }
 

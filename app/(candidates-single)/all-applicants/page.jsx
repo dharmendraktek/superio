@@ -3,9 +3,9 @@ import Seo from "../../../components/common/Seo";
 import AllApplicants from "../../../components/dashboard-pages/employers-dashboard/all-applicants";
 
 export const metadata = {
-  title: 'All Applicants || KatalixAI - Job Borad React NextJS Template',
+  title: 'All Applicants || KatalixAI - Job Board React NextJS Template',
   description:
-    'KatalixAI - Job Borad React NextJS Template',
+    'KatalixAI - Job Board React NextJS Template',
   
 }
 

@@ -1,6 +1,6 @@
 "use client";
 import AttendanceUpdateModal from "@/components/common/AttendanceUpdateModal";
-import { getReq } from "@/utils/apiHandlers";
+import { getApiReq, getReq, postApiReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import AttendanceCalendar from "../../dashboard/components/AttendanceCalender";
 import SelectWithSearch from "@/components/common/SelectWithSearch";
 import DatePickerCustom from "@/components/common/DatePickerCustom";
 import ShiftUpdateModal from "@/components/common/ShiftUpdateModal";
+import BtnBeatLoader from "@/components/common/BtnBeatLoader";
+import { toast } from "react-toastify";
 
 // const usersAttendanceData = {
 //   1002: [
@@ -284,14 +286,17 @@ const AttendanceData = () => {
   const [search, setSearch] = useState("");
   const [userName, setUserName] = useState("");
   const [usersList, setUsersList] = useState([]);
+  const [isExcelLoading, setIsExcelLoading] = useState(false);
 
   const getAllUsersAttendance = async (param) => {
     // if(param){
-      const response = await getReq(`/attendance-details/admin_panel/${param ? param :''}`);
-      if (response.status) {
-        console.log("----------------response", response.data);
-        setUsersAttendanceData(response.data.results || response.data);
-      }
+    const response = await getReq(
+      `/attendance-details/admin_panel/${param ? param : ""}`
+    );
+    if (response.status) {
+      console.log("----------------response", response.data);
+      setUsersAttendanceData(response.data.results || response.data);
+    }
     // }
   };
 
@@ -323,7 +328,7 @@ const AttendanceData = () => {
         "YYYY-MM-DD"
       )}&end_date=${moment(endDate).format("YYYY-MM-DD")}`;
     } else {
-      param = `?year_month=${month}`;
+      param = `?month=${month}`;
     }
 
     if (form.user) {
@@ -346,7 +351,6 @@ const AttendanceData = () => {
     let presentCount = 0;
     let absentCount = 0;
 
-
     data.attendance_records.forEach((record) => {
       if (record.status.type === "Present") {
         presentCount++;
@@ -361,15 +365,60 @@ const AttendanceData = () => {
   const handleClear = () => {
     setStartDate(null);
     setEndDate(null);
-    setForm((prev) => ({...prev, "user":''}))
-  }
+    setForm((prev) => ({ ...prev, user: "" }));
+  };
 
+  const handleExportExcel = async () => {
+    try {
+      setIsExcelLoading(true);
+      const response = await getApiReq(
+        `${
+          false
+            ? `/interview-report/report/?${allParam}&export=excel`
+            : "/attendance-details/admin_panel/?export=excel"
+        }`
+      );
+      setIsExcelLoading(false);
+      console.log("------------responer ", response);
+      if (response.status) {
+        var blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        FileSaver.saveAs(blob, "interview-report.xlsx");
+      }
+    } catch (err) {
+      setIsExcelLoading(false);
+      toast.error(err.response.date.message || "Something went wrong");
+    }
+  };
   // console.log("-----getting error form ",usersAttendanceData && usersAttendanceData[Object.keys(usersAttendanceData)[0].attendance_records]);
 
   return (
     <div>
       <AttendanceUpdateModal selectDateData={selectDateData} />
       <ShiftUpdateModal selectDateData={selectDateData} />
+      <div className="d-flex justify-content-between">
+        <div>
+          <h4>All Users Attendance</h4>
+        </div>
+        <div className="d-flex mb-2">
+          {viewType.map((item) => {
+            return (
+              <div
+                onClick={() => setSelect(item.name)}
+                className={`${
+                  item.name == select
+                    ? "bg-primary text-white"
+                    : "bg-white text-primary"
+                } d-flex gap-2 align-items-center fw-700 border cursor-pointer border-primary px-3`}
+              >
+                <span className="fs-6">{item.icon}</span>
+                <span>{item.name}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div>
           <div className="d-flex align-items-center gap-3">
@@ -444,28 +493,24 @@ const AttendanceData = () => {
                     placeholder="To Date"
                   />
                 </div>
-                <button onClick={handleClear} className="theme-btn btn-style-two small">Clear</button>
+                <button
+                  onClick={handleClear}
+                  className="theme-btn btn-style-two small"
+                >
+                  Clear
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="d-flex mb-2">
-          {viewType.map((item) => {
-            return (
-              <div
-                onClick={() => setSelect(item.name)}
-                className={`${
-                  item.name == select
-                    ? "bg-primary text-white"
-                    : "bg-white text-primary"
-                } d-flex gap-2 align-items-center fw-700 border cursor-pointer border-primary px-3`}
-              >
-                <span className="fs-6">{item.icon}</span>
-                <span>{item.name}</span>
-              </div>
-            );
-          })}
+        <div>
+          <button
+            className="theme-btn btn-style-one small"
+            disabled={isExcelLoading}
+            onClick={handleExportExcel}
+          >
+            {isExcelLoading ? <BtnBeatLoader /> : "Excel"}
+          </button>
         </div>
       </div>
       {select == "Table" ? (
@@ -483,8 +528,10 @@ const AttendanceData = () => {
                     <th style={{width:"130px"}}>Check In</th>
                      <th style={{width:"130px"}}>Check out</th>
                     <th style={{width:"130px"}}>Duration</th> */}
-                {usersAttendanceData && usersAttendanceData[Object.keys(usersAttendanceData)[0]].attendance_records?.map(
-                  (header, index) => {
+                {usersAttendanceData &&
+                  usersAttendanceData[
+                    Object.keys(usersAttendanceData)[0]
+                  ].attendance_records?.map((header, index) => {
                     return (
                       <>
                         <th key={index} style={{ width: "130px" }}>
@@ -503,88 +550,93 @@ const AttendanceData = () => {
                         </th>
                       </>
                     );
-                  }
-                )}
+                  })}
               </tr>
             </thead>
             <tbody>
-              {usersAttendanceData && Object.entries(usersAttendanceData).map(([empCode, records]) => {
-                const { presentCount, absentCount } =
-                  calculateAttendanceCounts(records);
-                const userRecord = records.attendance_records[0]; // Get the first record for common info
-                // let allRecord = records.attendance_records;
-                // allRecord.push(records.attendance_report)
-                // console.log("----------------attendance report ", allRecord)
-                return (
-                  <tr key={empCode}>
-                    <td style={{ width: "150px" }}>{userRecord.username}</td>
-                    <td style={{ width: "150px" }}>{empCode}</td>
-                    <td style={{ width: "130px" }}>0</td>
-                    <td style={{ width: "130px" }}>0</td>
-                    <td style={{ width: "160px" }}>Company XYZ</td>
-                    <td style={{ width: "210px" }}>
-                      <span>{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</span>{" "}
-                      <span
-                        className="text-primary cursor-pointer"
-                        data-bs-target="#shiftUpdateModal"
-                        data-bs-toggle="modal"
-              
-                        onClick={() => setSelectDateData(records[0])}
-                      >
-                        {reactIcons.edit}
-                      </span>
-                    </td>
+              {usersAttendanceData &&
+                Object.entries(usersAttendanceData).map(
+                  ([empCode, records]) => {
+                    const { presentCount, absentCount } =
+                      calculateAttendanceCounts(records);
+                    const userRecord = records.attendance_records[0]; // Get the first record for common info
+                    // let allRecord = records.attendance_records;
+                    // allRecord.push(records.attendance_report)
+                    // console.log("----------------attendance report ", allRecord)
+                    return (
+                      <tr key={empCode}>
+                        <td style={{ width: "150px" }}>
+                          {userRecord.username}
+                        </td>
+                        <td style={{ width: "150px" }}>{empCode}</td>
+                        <td style={{ width: "130px" }}>0</td>
+                        <td style={{ width: "130px" }}>0</td>
+                        <td style={{ width: "160px" }}>Company XYZ</td>
+                        <td style={{ width: "210px" }}>
+                          <span>{`${userRecord.shift_in_time} - ${userRecord.shift_out_time}`}</span>{" "}
+                          <span
+                            className="text-primary cursor-pointer"
+                            data-bs-target="#shiftUpdateModal"
+                            data-bs-toggle="modal"
+                            onClick={() => setSelectDateData(records[0])}
+                          >
+                            {reactIcons.edit}
+                          </span>
+                        </td>
 
-                    {records.attendance_records.map((record) => (
-                      <React.Fragment key={record.id}>
-                        <td style={{ width: "130px" }}>
-                          {/* {record.date_of_attendance 
+                        {records.attendance_records.map((record) => (
+                          <React.Fragment key={record.id}>
+                            <td style={{ width: "130px" }}>
+                              {/* {record.date_of_attendance 
                                             ? new Date(record.date_of_attendance).toLocaleDateString() 
                                             : ''} */}
-                          <div
-                            onClick={() => setSelectDateData(record)}
-                            data-bs-target="#attendanceUpdateModal"
-                            data-bs-toggle="modal"
-                            className={`${
-                              record?.status_details?.type == "Present"
-                                ? "bg-green"
-                                : record?.status_details?.type == "Absent"
-                                ? "bg-red"
-                                : "bg-red"
-                            } text-center rounded-1 cursor-pointer text-white fw-700`}
-                          >
-                            {moment(record.date_of_attendance).format("ddd") ==
-                              "Sat" ||
-                            (moment(record.date_of_attendance).format("ddd") ==
-                              "Sun" &&
-                              !record.first_timestamp)
-                              ? "Week Off"
-                              : record?.status_details?.type}
-                          </div>
-                        </td>
-                        <td style={{ width: "130px" }}>
-                          {record.first_timestamp
-                            ? moment(record.first_timestamp)
-                                .utc()
-                                .format("HH:mm:ss")
-                            : "00:00:00"}
-                        </td>
-                        <td style={{ width: "130px" }}>
-                          {record.last_timestamp
-                            ? moment(record.last_timestamp)
-                                .utc()
-                                .format("HH:mm:ss")
-                            : "00:00:00"}
-                        </td>
-                        <td style={{ width: "130px" }}>
-                          {record.duration || "00:00"}
-                        </td>
-                        {/* <td >{record.status.type}</td> */}
-                      </React.Fragment>
-                    ))}
-                  </tr>
-                );
-              })}
+                              <div
+                                onClick={() => setSelectDateData(record)}
+                                data-bs-target="#attendanceUpdateModal"
+                                data-bs-toggle="modal"
+                                className={`${
+                                  record?.status_details?.type == "Present"
+                                    ? "bg-green"
+                                    : record?.status_details?.type == "Absent"
+                                    ? "bg-red"
+                                    : "bg-red"
+                                } text-center rounded-1 cursor-pointer text-white fw-700`}
+                              >
+                                {moment(record.date_of_attendance).format(
+                                  "ddd"
+                                ) == "Sat" ||
+                                (moment(record.date_of_attendance).format(
+                                  "ddd"
+                                ) == "Sun" &&
+                                  !record.first_timestamp)
+                                  ? "Week Off"
+                                  : record?.status_details?.type}
+                              </div>
+                            </td>
+                            <td style={{ width: "130px" }}>
+                              {record.first_timestamp
+                                ? moment(record.first_timestamp)
+                                    .utc()
+                                    .format("HH:mm:ss")
+                                : "00:00:00"}
+                            </td>
+                            <td style={{ width: "130px" }}>
+                              {record.last_timestamp
+                                ? moment(record.last_timestamp)
+                                    .utc()
+                                    .format("HH:mm:ss")
+                                : "00:00:00"}
+                            </td>
+                            <td style={{ width: "130px" }}>
+                              {record.duration || "00:00"}
+                            </td>
+                            {/* <td >{record.status.type}</td> */}
+                          </React.Fragment>
+                        ))}
+                      </tr>
+                    );
+                  }
+                )}
               {/* <tr>
                     <td colSpan={11}>
                         Present: {presentCount}, Absent: {absentCount}

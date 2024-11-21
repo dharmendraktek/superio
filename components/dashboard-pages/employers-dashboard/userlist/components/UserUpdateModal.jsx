@@ -2,8 +2,6 @@
 
 import BtnBeatLoader from "@/components/common/BtnBeatLoader";
 import { getReq, patchReq } from "@/utils/apiHandlers";
-import { BASE_URL } from "@/utils/endpoints";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,6 +14,7 @@ const initialState = {
   user_branch: "",
   user_reportingmanager: "",
   user_skype_id: "",
+  access_role:'',
 };
 
 const UserUpdateModal = ({ item, getUserList }) => {
@@ -26,6 +25,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
   const [branchList, setBranchList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [accessRoleList, setAccessRoleList] = useState([]);
 
   const getUsersList = async () => {
     const response = await getReq("/users/");
@@ -42,6 +42,12 @@ const UserUpdateModal = ({ item, getUserList }) => {
     const response = await getReq("/role-list/");
     if (response.status) {
       setRoleList(response.data);
+    }
+  };
+  const getAccessRoleList = async () => {
+    const response = await getReq("/access-role-list/");
+    if (response.status) {
+      setAccessRoleList(response.data);
     }
   };
   const getDepartmentList = async () => {
@@ -63,6 +69,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
     getDepartmentList();
     getBranchList();
     getUsersList();
+    getAccessRoleList();
   }, []);
 
   useEffect(() => {
@@ -77,6 +84,7 @@ const UserUpdateModal = ({ item, getUserList }) => {
         user_team: item.user_team,
         user_skype_id: item.user_skype_id,
         user_branch: item.user_branch,
+        access_role:item.access_role,
       }));
     }
   }, [item]);
@@ -94,8 +102,10 @@ const UserUpdateModal = ({ item, getUserList }) => {
     user_team: userData.user_team,
     user_skype_id: userData.user_skype_id,
     user_branch: userData.user_branch,
+    access_role:userData.access_role,
   };
   const handleUpdate = async () => {
+    console.log("------data ", data);
     try {
       setIsLoading(true);
       const response = await patchReq(
@@ -219,6 +229,26 @@ const UserUpdateModal = ({ item, getUserList }) => {
                             return (
                               <option key={item.id} value={item.id} >
                                 {item.role_name}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      </div>
+                      <div className="col-6">
+                      <div className="form-group">
+                        <label>Access Role</label>
+                        <select
+                          className="form-select"
+                          aria-label="Default select example"
+                          name="access_role"
+                          onChange={handleChange}
+                          value={userData.access_role}
+                        >
+                          {accessRoleList.map((item) => {
+                            return (
+                              <option key={item.id} value={item.id} >
+                                {item.name}
                               </option>
                             );
                           })}

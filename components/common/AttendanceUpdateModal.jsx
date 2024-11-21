@@ -1,6 +1,6 @@
 "use client";
 
-import { getReq, patchReq } from "@/utils/apiHandlers";
+import { getReq, patchReq, putReq } from "@/utils/apiHandlers";
 import { reactIcons } from "@/utils/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -56,11 +56,19 @@ const AttendanceUpdateModal = ({ selectDateData }) => {
   };
 
   const handleUpdateStatus = async () => {
+    let data = {
+      status: form.status,
+      // date_of_attendance: date_of_attendance,
+      first_timestamp: form.first_timestamp,
+      last_timestamp: form.last_timestamp,
+      duration: form.duration,
+      // shift_in_time:shift_in_time,
+      // shift_out_time:shift_out_time,
+    }
+
     try {
-      const response = await patchReq(
-        `/attendance-details/${selectDateData?.id}/`,
-        form
-      );
+      const response = await putReq(
+        `/attendance-details/${selectDateData?.id}/`, data);
       if (response.status) {
         toast.success("Status has been changed successfully");
       }

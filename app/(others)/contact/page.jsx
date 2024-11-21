@@ -3,9 +3,9 @@ import dynamic from "next/dynamic";
 import Contact from "@/components/pages-menu/contact";
 
 export const metadata = {
-  title: 'Contact || KatalixAI - Job Borad React NextJS Template',
+  title: 'Contact || KatalixAI - Job Board React NextJS Template',
   description:
-    'KatalixAI - Job Borad React NextJS Template',
+    'KatalixAI - Job Board React NextJS Template',
   
 }
 

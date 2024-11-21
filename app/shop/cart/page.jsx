@@ -2,8 +2,8 @@ import dynamic from "next/dynamic";
 import Cart from "@/components/shop/cart";
 
 export const metadata = {
-  title: "Cart || KatalixAI - Job Borad React NextJS Template",
-  description: "KatalixAI - Job Borad React NextJS Template",
+  title: "Cart || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const index = () => {

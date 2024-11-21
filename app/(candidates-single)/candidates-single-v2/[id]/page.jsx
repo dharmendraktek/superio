@@ -14,8 +14,8 @@ import Image from "next/image";
 
 export const metadata = {
   title:
-    "Candidate Single Dynamic V2 || KatalixAI - Job Borad React NextJS Template",
-  description: "KatalixAI - Job Borad React NextJS Template",
+    "Candidate Single Dynamic V2 || KatalixAI - Job Board React NextJS Template",
+  description: "KatalixAI - Job Board React NextJS Template",
 };
 
 const CandidateSingleDynamicV2 = ({ params }) => {
