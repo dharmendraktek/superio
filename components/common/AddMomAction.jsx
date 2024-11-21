@@ -190,6 +190,17 @@ const AddMomAction = ({
     setMomActionDetails("");
     setMomActionData(initialState);
     setMomItem("");
+    setError((prev) => ({
+      ...prev,
+      meeting_ref: "",
+      task: "",
+      timeline: "",
+      action_taken: "",
+      result: "",
+      ownership: "",
+      head_ownership: "",
+      status: "",
+    }));
   }
 
   return (

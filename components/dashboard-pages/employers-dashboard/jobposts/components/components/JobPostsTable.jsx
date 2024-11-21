@@ -72,13 +72,14 @@ const JobPostsTable = () => {
     }
   };
 
-  useEffect(() => {
-    if (search !== firstSearch) {
-      setFirstSearch(search);
-      setPage(0);
-    }
-    getJobpostsList(search);
-  }, [search, page, active]);
+  // useEffect(() => {
+  //   if (search !== firstSearch) {
+  //     setFirstSearch(search);
+  //     setPage(0);
+  //   }
+  //   console.log("---------this is working ----");
+  //   getJobpostsList(search);
+  // }, [search, page, active]);
 
   const handleInactiveJobPost = async (id) => {
     const response = await deleteReq(`/jobs/${id}/`);
@@ -385,7 +386,7 @@ const JobPostsTable = () => {
                             data-bs-target="#updateJobStatusModal"
                             onClick={() =>{ 
                               setJobId(item.id)
-                              setJobDetails(item);
+                            setJobDetails(item);
                             }}
                             className="cursor-pointer text-primary"
                             onMouseEnter={() => setOpenStatus(item.id)}

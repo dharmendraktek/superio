@@ -240,8 +240,9 @@ const AttendanceCalendar = () => {
       const response = await getReq(
         `/attendance-details/?emp_code=${userDetails.empcode}&year_month=${month}`
       );
+      console.log("-------------respoen r", response.data);
       if (response.status) {
-        const transformed = transformEvents(response.data.results);
+        const transformed = transformEvents(response.data ||response.data.results);
         setEvents(transformed);
       }
     } catch (error) {

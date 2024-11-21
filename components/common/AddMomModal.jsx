@@ -211,6 +211,7 @@ const AddMomModal = ({ handleGetMom, momItem, setMomItem }) => {
               onChange={handleChange}
               className="client-form-input"
               type="text"
+              autoComplete="off"
             />
             <span className="text-danger">{error.subject}</span>
           </div>

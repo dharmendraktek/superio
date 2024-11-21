@@ -101,11 +101,11 @@ const TeamReportTable = () => {
         setJobDetails={setJobDetails}
       />
       <JobAssignModal jobId={jobId} handleReload={getTeamPerformanceReport} />
-      <div className="d-flex justify-content-between my-2">
-        <div className="d-flex gap-2 justify-content-between">
-          <div>
+      <div>
             <h4>Team Performance Report</h4>
           </div>
+      <div className="d-flex justify-content-between my-2">
+        <div className="d-flex gap-2 justify-content-between">
           <div className="d-flex align-item-center gap-2  mt-1">
             <div className="" style={{ width: "200px" }}>
               <DatePickerCustom
@@ -219,10 +219,14 @@ const TeamReportTable = () => {
           <thead className="">
             <th></th>
             <th>Team</th>
+            <th>Requirment</th>
             <th>Submission</th>
+            <th>L1</th>
+            <th>L2</th>
+            <th>L3</th>
+            <th>Client Interview</th>
             <th>Confirmation</th>
             <th>Joining</th>
-            <th>L1</th>
           </thead>
           <tbody>
             {teamReportData.map((item, index) => {
@@ -232,6 +236,10 @@ const TeamReportTable = () => {
                 total_confirmations,
                 total_joinings,
                 total_l1_interviews,
+                total_l2_interviews,
+                total_l3_interviews,
+                total_requirements,
+                total_client_interviews,
               } = item;
               return (
                 <>
@@ -286,10 +294,14 @@ const TeamReportTable = () => {
                       </div>
                     </td>
                     <td>{team_name}</td>
+                    <td>{total_requirements}</td>
                     <td>{total_submissions}</td>
+                    <td>{total_l1_interviews}</td>
+                    <td>{total_l2_interviews}</td>
+                    <td>{total_l3_interviews}</td>
+                    <td>{total_client_interviews}</td>
                     <td>{total_confirmations}</td>
                     <td>{total_joinings}</td>
-                    <td>{total_l1_interviews}</td>
                   </tr>
                   {item.id == expand && (
                     <>

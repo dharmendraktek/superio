@@ -96,6 +96,7 @@ const HtmlEditor = ({ setDescriptionData, form, wrapperStyle }) => {
     "<p></p>"
   );
 
+
   useEffect(() => {
     if (form.description) {
       setIntState(form.description);

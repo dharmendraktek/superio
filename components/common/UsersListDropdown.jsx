@@ -23,9 +23,11 @@ const UsersListDropdown = ({
   //   }
   // };
 
-  // useEffect(() => {
-  //   handleGetUsersList();
-  // }, [search]);
+  useEffect(() => {
+    if(selectedUsersIds.length == 0){
+      setSelectedList([]);
+    }
+  }, [selectedUsersIds]);
 
 
   function debounce(func, delay) {
