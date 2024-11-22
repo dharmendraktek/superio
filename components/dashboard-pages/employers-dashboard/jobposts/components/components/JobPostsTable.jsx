@@ -640,7 +640,7 @@ const JobPostsTable = () => {
                               data-text={`${
                                 active == 1
                                   ? "Delete Job Post"
-                                  : "Delete Job Post"
+                                  : "Active Job Post"
                               }`}
                               onClick={() => {
                                 if (active == 1) {
@@ -654,7 +654,7 @@ const JobPostsTable = () => {
                                 className={`${
                                   active == 1
                                     ? "la la la-trash"
-                                    : "la la-trash"
+                                    : "la-check-square"
                                 }`}
                               ></span>
                             </button>

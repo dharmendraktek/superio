@@ -275,10 +275,10 @@ const menuList = [
         name: "TEAM PERFORMANCE",
         url: "/employers-dashboard/team-performance-report",
       },
-      // {
-      //   name: "Client Wise",
-      //   url: "/employers-dashboard/team-performance-report",
-      // },
+      {
+        name: "CLIENT",
+        url: "/employers-dashboard/client-wise-report",
+      },
     ],
   },
   {

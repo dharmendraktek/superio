@@ -15,6 +15,7 @@ import { reactIcons } from "@/utils/icons";
 import { cleanString } from "@/utils/regex";
 import FileSaver from "file-saver";
 import moment from "moment";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -36,7 +37,6 @@ const Mom = () => {
   const [momActionDetails, setMomActionDetails] = useState("");
   const [openAssign, setOpenAssign] = useState(null);
   const [openTaskOwner, setOpenTaskOwner] = useState(null);
-  
 
   useEffect(() => {
     let param = "";
@@ -258,18 +258,19 @@ const Mom = () => {
             </button>
             <ul class="dropdown-menu">
               <li
-                data-bs-toggle="offcanvas"
-                data-bs-target="#addMomModal"
-                aria-controls="offcanvasRight"
+                // data-bs-toggle="offcanvas"
+                // data-bs-target="#addMomModal"
+                // aria-controls="offcanvasRight"
                 className="cursor-pointer text-black"
                 onClick={() => {
-                
-                  setMomItem('');
+                  setMomItem("");
                 }}
               >
-                <a class="dropdown-item" href="#">
-                  MOM
-                </a>
+                <Link href="/employers-dashboard/add-mom">
+                  <span class="dropdown-item" href="">
+                    MOM
+                  </span>
+                </Link>
               </li>
               <li
                 data-bs-toggle="offcanvas"
@@ -360,7 +361,7 @@ const Mom = () => {
                   Action Item
                 </th>
                 <th style={{ width: "250px" }}>Subject</th>
-                <th style={{ width: "250px" }}>Minutes Description</th>
+                <th style={{ width: "200px" }}>Minutes Description</th>
                 <th style={{ width: "150px" }}>Participants</th>
                 <th style={{ width: "200px" }}>Status</th>
                 <th style={{ width: "200px" }}>Created By</th>
@@ -447,14 +448,21 @@ const Mom = () => {
                           className="text-primary cursor-pointer"
                           style={{ width: "250px" }}
                         >
-                          <span
+                          {/* <span
                             data-bs-toggle="offcanvas"
                             data-bs-target="#addMomModal"
                             aria-controls="offcanvasRight"
                             onClick={() => setMomItem(item)}
                           >
                             {subject}
-                          </span>
+                          </span> */}
+                          <Link
+                            href="/employers-dashboard/mom/[id]"
+                            as={`/employers-dashboard/mom/${item.id}`}
+                            // target="_blank"
+                          >
+                            {subject}
+                          </Link>
                           <span
                             data-bs-toggle="offcanvas"
                             data-bs-target="#addMomActionModal"
@@ -466,35 +474,20 @@ const Mom = () => {
                           </span>
                         </td>
                         <td
-                          className="text-capitalize d-flex gap-1"
-                          style={{ width: "250px" }}
+                          className="text-capitalize text-center d-flex gap-1"
+                          style={{ width: "200px" }}
                         >
-                          {/* {momItem?.id == item.id && ( */}
-                          <div className="d-flex"
+                          <span
+                            data-bs-toggle="modal"
+                            data-bs-target="#jobDetailsPreviewModal"
+                            className="cursor-pointer text-primary fs-5"
+                            id="jobDetailsPreview"
                             onClick={() => {
                               setMomItem(item);
-                              let previewBtn =
-                                document.getElementById("jobDetailsPreview");
-                              previewBtn.click();
                             }}
-                            // onMouseLeave={() => {
-                            //   setMomItem(null);
-                            // }}
                           >
-                            <div
-                              // data-bs-toggle="modal"
-                              // data-bs-target="#jobDetailsPreviewModal"
-                              // className="cursor-pointer"
-                              // id="jobDetailsPreview"
-                            
-                             
-                              dangerouslySetInnerHTML={{
-                                __html: description && description.slice(0, 25),
-                              }}
-                            />
-                            <span>{reactIcons.more}</span>
-                          </div>
-                          {/* )} */}
+                            {reactIcons.view}
+                          </span>
                         </td>
                         <td
                           style={{ width: "150px" }}
@@ -624,11 +617,10 @@ const Mom = () => {
                                     return (
                                       <tr key={_index}>
                                         <td
-                                          onClick={() =>{
-                                            setMomActionDetails(action)
+                                          onClick={() => {
+                                            setMomActionDetails(action);
                                             setMomItem(item);
-                                          }
-                                          }
+                                          }}
                                           data-bs-toggle="offcanvas"
                                           data-bs-target="#addMomActionModal"
                                           aria-controls="offcanvasLeft"
@@ -720,17 +712,23 @@ const Mom = () => {
                                         </td>
                                         <td>
                                           <div className="d-flex gap-1">
-                                            <span
-                                              className="text-primary cursor-pointer"
-                                              data-bs-toggle="offcanvas"
-                                              data-bs-target="#addMomActionModal"
-                                              aria-controls="offcanvasLeft"
-                                              onClick={() =>
-                                                setContactDetails(action)
-                                              }
+                                            <Link
+                                              href="/employers-dashboard/mom/[id]"
+                                              as={`/employers-dashboard/mom/${item.id}`}
+                                              // target="_blank"
                                             >
-                                              {reactIcons.edit}
-                                            </span>
+                                              <span
+                                                className="text-primary cursor-pointer"
+                                                // data-bs-toggle="offcanvas"
+                                                // data-bs-target="#addMomActionModal"
+                                                // aria-controls="offcanvasLeft"
+                                                // onClick={() =>
+                                                //   setContactDetails(action)
+                                                // }
+                                              >
+                                                {reactIcons.edit}
+                                              </span>
+                                            </Link>
                                             <span
                                               onClick={() =>
                                                 handleDeleteAction(action.id)

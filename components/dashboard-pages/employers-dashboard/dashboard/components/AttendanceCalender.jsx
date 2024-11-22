@@ -251,7 +251,7 @@ const AttendanceCalendar = () => {
   };
 
   useEffect(() => {
-    if (userDetails) {
+    if (userDetails && userDetails.empcode) {
       getEmployeeAttendanceDetails();
     }
   }, [userDetails, currentDate]);
@@ -264,8 +264,8 @@ const AttendanceCalendar = () => {
       let backgroundColor = "";
 
       const shiftInTime = event.shift_in_time;
-      const checkInTime = moment(event.first_timestamp);
-      const checkOutTime = moment(event.last_timestamp);
+      const checkInTime = moment(event.display_first_timestamp);
+      const checkOutTime = moment(event.display_last_timestamp);
       console.log("-----------start time ", moment(checkInTime).format("hh:mm A"));
       // Determine the event status
       if (
@@ -284,23 +284,35 @@ const AttendanceCalendar = () => {
           </div>
         );
         backgroundColor = "red";
-      } else if (event.first_timestamp && event.last_timestamp) {
+      } else if (event.display_first_timestamp && !event.display_last_timestamp) {
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-            <p className=" text-white fs-5">
-              {event.late_status
-                ? "Present"
-                : event.late_status == "NOLATE"
-                ? "Present"
-                : event.late_status}
+            {/* <p className=" text-white text-capitalize fs-5">
+              {event.display_status ? event.display_status :' '}
+            </p> */}
+            <p className="text-white">
+              Check-in: {moment(checkInTime).format("hh:mm A")} <br />{" "}
+              <span>
+                Check-out:{checkInTime ? moment(checkOutTime).format("hh:mm A") : ""}
+              </span>{" "}
+              <br />
+              {/* (Duration {event.duration}) */}
+            </p>
+          </div>
+        );
+        backgroundColor = event.late_status == "NOLATE" ? "green" : "gray";
+      }
+      
+      else if (event.display_first_timestamp || event.display_last_timestamp) {
+        title = (
+          <div className="text-white text-center" style={{ height: "100px" }}>
+            <p className=" text-white text-capitalize fs-5">
+              {event.display_status ? event.display_status :' '}
             </p>
             <p className="text-white">
               Check-in: {moment(checkInTime).format("hh:mm A")} <br />{" "}
               <span>
-                Check-out:{" "}
-                {event.last_timestamp
-                  ? moment(checkOutTime).format("hh:mm A")
-                  : "00:00"}
+                Check-out:{checkInTime ? moment(checkOutTime).format("hh:mm A") : ""}
               </span>{" "}
               <br />
               (Duration {event.duration})
@@ -308,35 +320,47 @@ const AttendanceCalendar = () => {
           </div>
         );
         backgroundColor = event.late_status == "NOLATE" ? "green" : "gray";
-      } else if (event.status_details.type === "Absent") {
+      }
+      else if(!event.display_first_timestamp && !event.display_last_timestamp){
+        console.log("----------------evnet sdfsdf ", event.display_first_timestamp);
         title = (
           <div className="text-white text-center" style={{ height: "100px" }}>
-            <p className=" text-white fs-5">{event.status_details.type}</p>
-            <p className="text-white">
-              Check-in: {checkInTime.utc().format("hh:mm A")} <br />{" "}
-              <span>
-                Check-out:{" "}
-                {event.last_timestamp
-                  ? checkOutTime.utc().format("hh:mm A")
-                  : "Missing"}
-              </span>{" "}
-              <br />
-              (Duration {event.duration})
+            <p className=" text-white text-capitalize fs-5">
+              {event.display_status ? event.display_status :' '}
             </p>
           </div>
         );
         backgroundColor = "red";
-      } else {
-        title = (
-          <div
-            className="text-white d-flex justify-content-center align-items-center"
-            style={{ height: "100px" }}
-          >
-            <p className="fs-5 text-white">Holiday</p>
-          </div>
-        );
-        backgroundColor = "blue";
       }
+      //  else if (event.status_details.type === "Absent") {
+      //   title = (
+      //     <div className="text-white text-center" style={{ height: "100px" }}>
+      //       <p className=" text-white fs-5">{event.status_details.type}</p>
+      //       <p className="text-white">
+      //         Check-in: {checkInTime.utc().format("hh:mm A")} <br />{" "}
+      //         <span>
+      //           Check-out:{" "}
+      //           {event.last_timestamp
+      //             ? checkOutTime.utc().format("hh:mm A")
+      //             : "Missing"}
+      //         </span>{" "}
+      //         <br />
+      //         (Duration {event.duration})
+      //       </p>
+      //     </div>
+      //   );
+      //   backgroundColor = "red";
+      // } else {
+      //   title = (
+      //     <div
+      //       className="text-white d-flex justify-content-center align-items-center"
+      //       style={{ height: "100px" }}
+      //     >
+      //       <p className="fs-5 text-white">Holiday</p>
+      //     </div>
+      //   );
+      //   backgroundColor = "blue";
+      // }
 
       return {
         id: event.id,
