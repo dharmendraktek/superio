@@ -145,7 +145,7 @@ const Mom = () => {
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-2">
           <div className="py-1 d-flex align-item-center gap-2">
-            <h4>MOM</h4>
+            <h4>MOM (Meetings of Minutes)</h4>
           </div>
           {/* <MultiFilterSearch
             openFields={openFields}
